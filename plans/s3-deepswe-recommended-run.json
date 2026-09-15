@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "run_id": "pinned:hermes:aiomonitor-task-snapshots-diff:0",
+  "started_utc": "2026-09-03T03:18:44.274Z",
+  "source_repository": "https://github.com/datacurve-ai/deep-swe.git",
+  "source_revision": "0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea",
+  "task_id": "aiomonitor-task-snapshots-diff",
+  "upstream_repository": "https://github.com/aio-libs/aiomonitor",
+  "upstream_revision": "b73fea2e0682803bda7531c93cd1dfb360839175",
+  "tool": "hermes",
+  "model": "z-ai/glm-5.3-flash",
+  "condition": "pinned",
+  "regime": "long",
+  "timeout_s": 900,
+  "event_count": 17,
+  "usage_bearing_event_count": 9,
+  "unavailable_usage_event_count": 8,
+  "outcome": "timeout",
+  "verifier": "not_run",
+  "spend_usd_estimate": null,
+  "status": "diagnostic-negative-not-calibration",
+  "notes": "The runner stopped before Codex because complete spend could not be reconciled under the hard cap. This record intentionally does not estimate or claim provider spend."
+}

@@ -1,0 +1,10 @@
+{
+  "psd-tools-blend-range-api": [1, 5],
+  "cattrs-partial-structuring-recovery": [1, 5],
+  "textual-richlog-follow-state": [1, 5],
+  "tomlkit-toml-table-converters": [1, 5],
+  "ink-grid-box-layout": [1, 5],
+  "happy-dom-deterministic-intersectionobserver": [1, 5],
+  "superjson-error-stack-serialization": [1, 5],
+  "true-myth-iterable-collection-combinators": [1, 5]
+}

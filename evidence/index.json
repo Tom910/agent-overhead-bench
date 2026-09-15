@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "status": "pilot",
+  "artifacts": [
+    {
+      "kind": "pilot-report",
+      "path": "evidence/pilot/pilot-report.tgz",
+      "sha256": "1567384899177b4b1e1f7734fcc60906c7b5187ce9c07e989aba0307c64a2540"
+    },
+    {
+      "kind": "campaign-summary",
+      "path": "evidence/nonclaude-results-2026-09-14/summary.json",
+      "sha256": "89c516db823e9422841c1ff5f23870b58e35ddbe01b6ea6cf359d4e87f759857"
+    },
+    {
+      "kind": "campaign-report",
+      "path": "evidence/nonclaude-results-2026-09-14/report-engine.md",
+      "sha256": "d037ce78bf18d0446e532cec954b80fc64d90dba92f34a93110ec0d7d4c65ec0"
+    },
+    {
+      "kind": "campaign-report-json",
+      "path": "evidence/nonclaude-results-2026-09-14/report-engine.json",
+      "sha256": "7ee8af86ca7bda36ac676734bfcdc724ae3ec0bea2c9adfc5f3c1f17a40312e0"
+    }
+  ],
+  "notes": "Pilot leaderboard is the checked-in fixture suite. The 2026-09-14 non-Claude public-repository campaign is a checksummed snapshot, not the v1 public-source dataset; no official S7 archive exists."
+}

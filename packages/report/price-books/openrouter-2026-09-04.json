@@ -1,0 +1,16 @@
+{
+  "id": "openrouter-2026-09-04",
+  "models": {
+    "mock": { "input": 0, "cached_input": 0, "output": 0 },
+    "z-ai/glm-5.3-flash": {
+      "input": 0.000000075,
+      "cached_input": 0.000000015,
+      "output": 0.00000025
+    },
+    "deepseek/deepseek-v4-flash-0731": {
+      "input": 0.000000065,
+      "cached_input": 0.000000016,
+      "output": 0.00000018
+    }
+  }
+}

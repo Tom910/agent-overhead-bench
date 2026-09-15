@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LocalTaskManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "source_adapter", "tasks"],
+  "properties": {
+    "version": { "const": 1 },
+    "source_adapter": { "const": "local-prepared" },
+    "source_provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_adapter", "repository", "revision", "license_notes", "source_manifest_sha256", "review"],
+      "properties": {
+        "source_adapter": { "enum": ["git-canonical", "git-taskpack", "deepswe"] },
+        "repository": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "license_notes": { "type": "string", "minLength": 1 },
+        "source_manifest_sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source_reviewed", "reference_results_verified", "calibration_complete", "maintainer_signed_off", "reviewer", "reviewed_at", "evidence_file", "evidence_sha256", "reviewed_task_ids", "calibration_adapters"],
+          "properties": {
+            "source_reviewed": { "type": "boolean" },
+            "reference_results_verified": { "type": "boolean" },
+            "calibration_complete": { "type": "boolean" },
+            "maintainer_signed_off": { "type": "boolean" },
+            "reviewer": { "type": "string", "minLength": 1 },
+            "reviewed_at": { "type": "string", "minLength": 1 },
+            "evidence_file": { "type": "string", "pattern": "^(?!/)(?!.*\\\\)(?!.*(^|/)\\.\\.?(/|$)).+$" },
+            "evidence_sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+            "reviewed_task_ids": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" }, "uniqueItems": true },
+            "calibration_adapters": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+            "calibration_attestation_file": { "type": "string", "pattern": "^(?!/)(?!.*\\\\)(?!.*(^|/)\\.\\.?(/|$)).+$" },
+            "calibration_attestation_sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+          }
+        }
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+          "required": ["id", "source", "checksum", "preparation"],
+        "properties": {
+          "id": { "type": "string" },
+          "source": { "$ref": "../contracts/schemas/c2.task.schema.json#/properties/source" },
+          "checksum": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+          "preparation": { "const": "copy-task-yaml-prompt-workspace-verifier" },
+          "source_binding": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "source_task_id", "source_checksum"],
+            "properties": {
+              "path": { "type": "string", "pattern": "^(?!/)(?!.*\\\\)(?!.*(^|/)\\.\\.?(/|$)).+$" },
+              "source_task_id": { "type": "string", "minLength": 1 },
+              "source_checksum": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

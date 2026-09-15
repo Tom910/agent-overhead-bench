@@ -1,0 +1,13 @@
+id: dry-run-2
+source:
+  kind: local-development
+  repository: agent-overhead-bench
+  revision: working-tree
+  task_id: dry-run-2
+  license_notes: Infrastructure-only fixture; never used for published measurements.
+language: python
+size: small
+shape: test-fix
+timeout_s: 60
+expected_minutes: [1, 1]
+description: Confirm the reduced runner can complete a second checked-in fixture.

@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "upstream": "https://openrouter.ai/api",
+  "model": "z-ai/glm-5.3-flash",
+  "reviewed_at": "2026-09-04T00:00:00.000Z",
+  "evidence": "plans/s2-evidence/",
+  "tools": [
+    {
+      "tool": "claude-code",
+      "protocol": "anthropic_messages",
+      "reviewed": true,
+      "eligible": true,
+      "reason": "The 2026-08 exclusion is superseded: POST /v1/messages now returns 200 for the pinned model. Verified end to end on 2026-09-04 - completed cell, verifier exit 0, seven turns over anthropic_messages, tool version 2.1.246"
+    },
+    {
+      "tool": "cline",
+      "protocol": "openai_chat",
+      "reviewed": true,
+      "eligible": true,
+      "reason": "Seeded openai-compatible provider in ~/.cline/data/settings/providers.json routes cline through the proxy. Verified 2026-09-04 - completed cell, verifier exit 0, seven turns"
+    },
+    {
+      "tool": "codex",
+      "protocol": "openai_responses",
+      "reviewed": true,
+      "eligible": true,
+      "reason": "S2 evidence and real Flash diagnostic use the OpenAI Responses route"
+    },
+    {
+      "tool": "hermes",
+      "protocol": "openai_chat",
+      "reviewed": true,
+      "eligible": true,
+      "reason": "S2 evidence and real Flash diagnostic use the OpenAI Chat route"
+    },
+    {
+      "tool": "pi",
+      "protocol": "openai_chat",
+      "reviewed": true,
+      "eligible": true,
+      "reason": "Custom OpenAI-compatible provider in ~/.pi/agent/models.json routes pi through the proxy. Verified 2026-09-04 - completed cell, verifier exit 0, six turns, model served z-ai/glm-5.3-flash"
+    },
+    {
+      "tool": "qwen",
+      "protocol": "openai_chat",
+      "reviewed": true,
+      "eligible": true,
+      "reason": "S2 evidence uses the OpenAI Chat route"
+    }
+  ]
+}

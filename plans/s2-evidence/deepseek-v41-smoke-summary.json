@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "diagnostic_only": true,
+  "model": "deepseek/deepseek-v4.1-flash",
+  "upstream": "https://openrouter.ai/api",
+  "provider": "deepseek",
+  "allow_fallbacks": false,
+  "completed_at": "2026-09-10T19:33:42.609Z",
+  "source_directory": "scratch/deepseek-v41-provider-check-20260910/accounting-fix-empty-tools",
+  "successful_generation_records": 29,
+  "provider_names": [
+    "DeepSeek"
+  ],
+  "canonical_models": [
+    "deepseek/deepseek-v4.1-flash-20260910"
+  ],
+  "c4_estimate_usd": 0.027490062,
+  "provider_total_usd": 0.027490062000000003,
+  "account_delta_usd": 0.027490062000000037,
+  "tools": [
+    {
+      "tool": "claude-code",
+      "outcome": "completed",
+      "adapter_exit": 0,
+      "verifier_exit": 0,
+      "requests": 6,
+      "known_rejections": 1,
+      "spend_usd_estimate": 0.015861192,
+      "guard_failure": null,
+      "passed": true,
+      "tool_version": "2.1.246 (Claude Code)",
+      "image_digest": "sha256:b10e1936b2fec1c313b6174dcb599dfef43b04e1782bf3fe689b9cbbeb6c4cf7",
+      "protocols": [
+        "anthropic_messages"
+      ],
+      "run_sha256": "sha256:016a123b425af784b642d843178bd0d1d8313773b741ef54dbcc1f09f62d1271",
+      "events_sha256": "sha256:7fb5b054bce9711d5cb01540324be3a9c6fd8a6190c4d21255dd19a97f9ee13e"
+    },
+    {
+      "tool": "cline",
+      "outcome": "completed",
+      "adapter_exit": 0,
+      "verifier_exit": 0,
+      "requests": 6,
+      "known_rejections": 0,
+      "spend_usd_estimate": 0.0020347799999999995,
+      "guard_failure": null,
+      "passed": true,
+      "tool_version": "3.0.61",
+      "image_digest": "sha256:aab94c6601dd470910c65f371aada011af7057f985764b6fff0c75aab9e5e501",
+      "protocols": [
+        "openai_chat"
+      ],
+      "run_sha256": "sha256:d60959d9ba9589da9c95e4210ab04230f1dc7e24b05ec664a462a583bf2f42f4",
+      "events_sha256": "sha256:b7824ad3c2efd25bcd11e113184cb26f06c12423dd843eb565ec6c23123cdf77"
+    },
+    {
+      "tool": "codex",
+      "outcome": "completed",
+      "adapter_exit": 0,
+      "verifier_exit": 0,
+      "requests": 4,
+      "known_rejections": 0,
+      "spend_usd_estimate": 0.0017788620000000002,
+      "guard_failure": null,
+      "passed": true,
+      "tool_version": "codex-cli 0.149.1",
+      "image_digest": "sha256:d1e248925085500a2d7bebc4f8ef6ae079b4132caed02cc26ba3d521e813dc7e",
+      "protocols": [
+        "openai_responses"
+      ],
+      "run_sha256": "sha256:63646d2e793d48b3cb343919e5c203817f31b9b50071b536d7167b6e0cecc201",
+      "events_sha256": "sha256:aa977e019d825cf8cd714228718904fa34d5f567c1d96d4734ad58bf931facaf"
+    },
+    {
+      "tool": "hermes",
+      "outcome": "completed",
+      "adapter_exit": 0,
+      "verifier_exit": 0,
+      "requests": 6,
+      "known_rejections": 0,
+      "spend_usd_estimate": 0.003138702,
+      "guard_failure": null,
+      "passed": true,
+      "tool_version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "image_digest": "sha256:362a12649d25b78c8ece823687765f31a529b9b6b61135951c51e52bfff2948d",
+      "protocols": [
+        "openai_chat"
+      ],
+      "run_sha256": "sha256:e8301248937f20be83ffbf737b277f969777218de238943650e9521df8d9715c",
+      "events_sha256": "sha256:4427fff8b84f5fba89ea4329ca4eca53ad101ced648ce1c5ae2b3dc73f91a723"
+    },
+    {
+      "tool": "pi",
+      "outcome": "completed",
+      "adapter_exit": 0,
+      "verifier_exit": 0,
+      "requests": 4,
+      "known_rejections": 0,
+      "spend_usd_estimate": 0.0006064079999999998,
+      "guard_failure": null,
+      "passed": true,
+      "tool_version": "0.73.1",
+      "image_digest": "sha256:aa45907f373a6304a06991343d94b18b02755f0bb0596f3c1ed977ce89c1c62b",
+      "protocols": [
+        "openai_chat"
+      ],
+      "run_sha256": "sha256:ac10856d2446616aea8a1695d674007b243f448cbea3fc79a5ad5048822df271",
+      "events_sha256": "sha256:8d7421e2bd6ffe74e2ef52e1065fa622ddb6a72796dc157f12d1b284c6207b52"
+    },
+    {
+      "tool": "qwen",
+      "outcome": "completed",
+      "adapter_exit": 0,
+      "verifier_exit": 0,
+      "requests": 4,
+      "known_rejections": 0,
+      "spend_usd_estimate": 0.004070118,
+      "guard_failure": null,
+      "passed": true,
+      "tool_version": "0.22.2",
+      "image_digest": "sha256:ded59dfc13d84815910cc2540c41c27fb667de70d4cb717070be0ddf7298c302",
+      "protocols": [
+        "openai_chat"
+      ],
+      "run_sha256": "sha256:fa81be05a3e5e8c7efeb61624f46aa5277c22bec664912aafaee5adb1e7172c3",
+      "events_sha256": "sha256:923efe11155caa4b1a0f74e5984887e4419a3b9535ffa2fd5edfc0b4bc67fe01"
+    }
+  ]
+}

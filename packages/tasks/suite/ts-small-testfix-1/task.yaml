@@ -1,0 +1,13 @@
+id: ts-small-testfix-1
+source:
+  kind: local-development
+  repository: agent-overhead-bench
+  revision: working-tree
+  task_id: ts-small-testfix-1
+  license_notes: Local development fixture; not a public-source v1 result.
+language: typescript
+size: small
+shape: test-fix
+timeout_s: 300
+expected_minutes: [1, 5]
+description: Implement sum() so the test passes.

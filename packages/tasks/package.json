@@ -1,0 +1,29 @@
+{
+  "name": "@aob/tasks",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "bin": {
+    "aob-task-manifest": "./src/manifest-wrapper.mjs",
+    "aob-task-validate": "./src/validate-wrapper.mjs",
+    "aob-task-source": "./src/source-wrapper.mjs"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "validate": "vitest run src/validate.test.ts",
+    "validate:reference": "vitest run --config vitest.reference.config.ts",
+    "validate:cli": "node --experimental-strip-types --no-warnings --experimental-loader ../../scripts/ts-source-loader.mjs src/validate-cli.ts",
+    "manifest": "node --experimental-strip-types --no-warnings --experimental-loader ../../scripts/ts-source-loader.mjs src/manifest-cli.ts",
+    "source:prepare": "node --experimental-strip-types --no-warnings --experimental-loader ../../scripts/ts-source-loader.mjs src/source-cli.ts"
+  },
+  "dependencies": {
+    "@aob/contracts": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  }
+}

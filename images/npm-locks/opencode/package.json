@@ -1,0 +1,8 @@
+{
+  "name": "@aob/image-opencode",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "opencode-ai": "1.18.23"
+  }
+}

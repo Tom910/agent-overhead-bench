@@ -1,0 +1,39 @@
+{
+  "method": "POST",
+  "path": "/v1/responses",
+  "protocol": "openai_responses",
+  "status": 200,
+  "content_type": "text/event-stream",
+  "streamed": true,
+  "req_headers": {
+    "authorization": "<redacted>",
+    "content-type": "application/json",
+    "user-agent": "opencode/1.18.23 (linux 6.10.14-linuxkit; arm64) ai-sdk/provider-utils/4.0.38 runtime/bun/1.3.14",
+    "originator": "opencode",
+    "connection": "keep-alive",
+    "accept": "*/*",
+    "host": "127.0.0.1:35981",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "content-length": "32660"
+  },
+  "req_body": {
+    "model": "gpt-4.1-mini",
+    "input": {
+      "stripped_len": 2
+    },
+    "store": false,
+    "tools": {
+      "stripped_len": 10
+    },
+    "tool_choice": "auto",
+    "stream": true
+  },
+  "res_headers": {
+    "content-type": "text/event-stream"
+  },
+  "res_body": {
+    "sse_usage_bearing": [
+      "[DONE]"
+    ]
+  }
+}

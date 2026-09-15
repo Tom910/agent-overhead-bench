@@ -1,0 +1,38 @@
+{
+  "v": 1,
+  "run_id": "default:mock-agent:dry-run-1:0",
+  "tool": "mock-agent",
+  "tool_version": "fixture",
+  "task_id": "dry-run-1",
+  "task_source": "local-development",
+  "task_revision": "working-tree",
+  "task_regime": "short",
+  "condition": "default",
+  "rep": 0,
+  "model": "mock",
+  "ori_version": null,
+  "tool_visibility": "none",
+  "anchors": {
+    "adapter": { "wall_clock_iso": "2026-08-30T00:00:00.000Z", "monotonic_zero": 0 },
+    "proxy": { "wall_clock_iso": "2026-08-30T00:00:00.000Z", "monotonic_zero": 0 }
+  },
+  "adapter_result": {
+    "exitCode": 0,
+    "tStart": 0,
+    "tEnd": 100,
+    "anchor": { "wall_clock_iso": "2026-08-30T00:00:00.000Z", "monotonic_zero": 0 },
+    "artifacts": { "stdoutPath": "stdout.log", "stderrPath": "stderr.log" }
+  },
+  "events_file": "events.jsonl",
+  "verification": { "exit": 0, "duration_ms": 1, "logPath": "verify.log" },
+  "container": {
+    "image_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "verifier_image_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "started_iso": "2026-08-30T00:00:00.000Z"
+  },
+  "task_environment": { "kind": "prepared-local", "network": "disabled" },
+  "host": { "os": "linux", "cpu": "x86_64", "ram_gb": 16 },
+  "spend_usd_estimate": 0,
+  "price_book": "openrouter-2026-08-27",
+  "outcome": "completed"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ts-medium-refactor-1",
+  "source": {
+    "kind": "local-development",
+    "repository": "agent-overhead-bench",
+    "revision": "working-tree",
+    "task_id": "ts-medium-refactor-1",
+    "license_notes": "Local development fixture; not a public-source v1 result."
+  },
+  "language": "typescript",
+  "size": "medium",
+  "shape": "refactor",
+  "timeout_s": 300,
+  "expected_minutes": [1, 5],
+  "description": "Extract a helper used in two call sites without changing behavior."
+}

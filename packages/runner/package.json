@@ -1,0 +1,27 @@
+{
+  "name": "@aob/runner",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "bin": {
+    "aob-runner": "./src/cli-wrapper.mjs"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "docker-route-smoke": "node --experimental-strip-types --no-warnings --experimental-loader ../../scripts/ts-source-loader.mjs src/docker-route-smoke.ts"
+  },
+  "dependencies": {
+    "@aob/adapters": "*",
+    "@aob/contracts": "*",
+    "@aob/proxy": "*",
+    "@aob/tasks": "*"
+  },
+  "devDependencies": {
+    "@aob/mock-upstream": "*",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "method": "POST",
+  "path": "/v1/chat/completions",
+  "protocol": "openai_chat",
+  "status": 200,
+  "content_type": "text/event-stream",
+  "streamed": true,
+  "req_headers": {
+    "host": "127.0.0.1:63957",
+    "accept-encoding": "gzip, deflate",
+    "connection": "keep-alive",
+    "accept": "application/json",
+    "content-type": "application/json",
+    "user-agent": "OpenAI/Python 2.24.0",
+    "x-stainless-lang": "python",
+    "x-stainless-package-version": "2.24.0",
+    "x-stainless-os": "MacOS",
+    "x-stainless-arch": "arm64",
+    "x-stainless-runtime": "CPython",
+    "x-stainless-runtime-version": "3.11.15",
+    "authorization": "<redacted>",
+    "x-stainless-async": "false",
+    "x-stainless-retry-count": "0",
+    "x-stainless-read-timeout": "1800.0",
+    "content-length": "89138"
+  },
+  "req_body": {
+    "messages": {
+      "stripped_len": 4
+    },
+    "model": "openai/gpt-4.1-mini",
+    "stream": true,
+    "stream_options": {
+      "include_usage": true
+    },
+    "tools": {
+      "stripped_len": 21
+    }
+  },
+  "res_headers": {
+    "content-type": "text/event-stream"
+  },
+  "res_body": {
+    "sse_usage_bearing": [
+      {
+        "id": "gen-sanitized",
+        "object": "chat.completion.chunk",
+        "created": 1787757707,
+        "model": "openai/gpt-4.1-mini",
+        "provider": "OpenAI",
+        "choices": {
+          "stripped_len": 1
+        }
+      },
+      {
+        "id": "gen-sanitized",
+        "object": "chat.completion.chunk",
+        "created": 1787757707,
+        "model": "openai/gpt-4.1-mini",
+        "provider": "OpenAI",
+        "choices": {
+          "stripped_len": 1
+        }
+      },
+      {
+        "id": "gen-sanitized",
+        "object": "chat.completion.chunk",
+        "created": 1787757707,
+        "model": "openai/gpt-4.1-mini",
+        "provider": "OpenAI",
+        "choices": {
+          "stripped_len": 1
+        }
+      },
+      {
+        "id": "gen-sanitized",
+        "object": "chat.completion.chunk",
+        "created": 1787757707,
+        "model": "openai/gpt-4.1-mini",
+        "provider": "OpenAI",
+        "choices": {
+          "stripped_len": 1
+        }
+      },
+      {
+        "id": "gen-sanitized",
+        "object": "chat.completion.chunk",
+        "created": 1787757707,
+        "model": "openai/gpt-4.1-mini",
+        "provider": "OpenAI",
+        "service_tier": "default",
+        "choices": {
+          "stripped_len": 1
+        },
+        "usage": {
+          "prompt_tokens": 18214,
+          "completion_tokens": 34,
+          "total_tokens": 18248,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 17920,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      },
+      "[DONE]"
+    ]
+  }
+}

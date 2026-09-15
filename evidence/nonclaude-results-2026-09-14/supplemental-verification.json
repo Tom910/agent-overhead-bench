@@ -1,0 +1,31 @@
+{
+  "kind": "supplemental-native-verification",
+  "harness": "cline",
+  "task": "tomlkit-toml-table-converters",
+  "rep": 0,
+  "original_attempt": "cline.tomlkit-toml-table-converters.rep-0.infra-recovery-20260914",
+  "measurement_eligible": false,
+  "reason": "Post-interruption workspace verification; original stream and timing remain unchanged.",
+  "native_result": "pass",
+  "verification": {
+    "exitCode": 0,
+    "duration_ms": 3870.8709500000004
+  },
+  "source_unchanged": true,
+  "source_files_sha256": {
+    "events.jsonl": "sha256:5666b3050da72214fca2eac2ca4b28ea9ac89e1333204540c4cf18cc6422b11b",
+    "events.jsonl.upstream.jsonl": "sha256:dbdd4e375b22d7feeb6dd782bede7b41e9e1aba19a05adfc51fcba6af6a2cf8e",
+    "stdout.log": "sha256:6c7564b59c1bcd0b2015248e4dc8f51ec184ac80e6bf39a0270985b07e47f0e8",
+    "stderr.log": "sha256:59097eb56b8426f1ee020d4448afaf1d93ea341bde2508e136755e25c13427df",
+    "verifier.json": "sha256:ec924a56c9017192a27841fa7e8d594ade36f55331fc5e147abc47d37da70eb6",
+    "prompt.md": "sha256:f2cad77bd81747e1b66917791cb0dfb1ed349c9f19ebcf2b8c0724151c9c73e8"
+  },
+  "workspace_head": "962de91aaf103135f400e5108a798a59a10dc17e",
+  "workspace_diff_sha256": "sha256:9a1cc5d7b40507b98ec9e603cfc62d5a3428345448865370550bb03472c85d47",
+  "verifier_image": "aob-deepswe-tomlkit-toml-table-converters-verifier:calibration",
+  "verifier_image_digest": "sha256:86a7f7545adc060de810c3aceb9356f3048262a6e0f046d863cc114bdd98dcd3",
+  "verification_log_sha256": "sha256:a8a39ecf1433d28482aeebfc4f943c12435871933ac78fc019d679c8fdbcd9db",
+  "started_at": "2026-09-14T12:19:04.506Z",
+  "ended_at": "2026-09-14T12:19:08.997Z",
+  "private_record_sha256": "sha256:d8bbe9a78ba0f162f54b8230bbfa50a91e05e8c2ea1ea9e1337f890488ca5373"
+}

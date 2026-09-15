@@ -1,0 +1,1736 @@
+{
+  "version": 1,
+  "seed": 1,
+  "spentUsd": 0.45082126499999997,
+  "cells": [
+    {
+      "id": "pinned:pi:py-medium-feature-1:0",
+      "tool": "pi",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-medium-feature-1:0",
+      "tool": "claude-code",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-medium-feature-1:0",
+      "tool": "hermes",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-medium-feature-1:0",
+      "tool": "codex",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-medium-feature-1:0",
+      "tool": "qwen",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-medium-feature-1:0",
+      "tool": "cline",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-medium-refactor-1:0",
+      "tool": "pi",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-medium-refactor-1:0",
+      "tool": "cline",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-medium-refactor-1:0",
+      "tool": "claude-code",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-medium-refactor-1:0",
+      "tool": "qwen",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-medium-refactor-1:0",
+      "tool": "hermes",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-medium-refactor-1:0",
+      "tool": "codex",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-small-bugfix-1:0",
+      "tool": "qwen",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-small-bugfix-1:0",
+      "tool": "claude-code",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-small-bugfix-1:0",
+      "tool": "hermes",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-small-bugfix-1:0",
+      "tool": "pi",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-small-bugfix-1:0",
+      "tool": "codex",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-small-bugfix-1:0",
+      "tool": "cline",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-small-testfix-1:0",
+      "tool": "claude-code",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-small-testfix-1:0",
+      "tool": "hermes",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-small-testfix-1:0",
+      "tool": "codex",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-small-testfix-1:0",
+      "tool": "cline",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-small-testfix-1:0",
+      "tool": "pi",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-small-testfix-1:0",
+      "tool": "qwen",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-medium-feature-1:0",
+      "tool": "qwen",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-medium-feature-1:0",
+      "tool": "codex",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-medium-feature-1:0",
+      "tool": "hermes",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-medium-feature-1:0",
+      "tool": "pi",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-medium-feature-1:0",
+      "tool": "claude-code",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-medium-feature-1:0",
+      "tool": "cline",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-medium-refactor-1:0",
+      "tool": "qwen",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-medium-refactor-1:0",
+      "tool": "hermes",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-medium-refactor-1:0",
+      "tool": "claude-code",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-medium-refactor-1:0",
+      "tool": "cline",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-medium-refactor-1:0",
+      "tool": "codex",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-medium-refactor-1:0",
+      "tool": "pi",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-small-bugfix-1:0",
+      "tool": "hermes",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-small-bugfix-1:0",
+      "tool": "pi",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-small-bugfix-1:0",
+      "tool": "codex",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-small-bugfix-1:0",
+      "tool": "cline",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-small-bugfix-1:0",
+      "tool": "claude-code",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-small-bugfix-1:0",
+      "tool": "qwen",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-small-testfix-1:0",
+      "tool": "claude-code",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-small-testfix-1:0",
+      "tool": "cline",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-small-testfix-1:0",
+      "tool": "pi",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-small-testfix-1:0",
+      "tool": "qwen",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-small-testfix-1:0",
+      "tool": "codex",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-small-testfix-1:0",
+      "tool": "hermes",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 0,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-medium-feature-1:1",
+      "tool": "hermes",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-medium-feature-1:1",
+      "tool": "codex",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-medium-feature-1:1",
+      "tool": "cline",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-medium-feature-1:1",
+      "tool": "claude-code",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-medium-feature-1:1",
+      "tool": "pi",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-medium-feature-1:1",
+      "tool": "qwen",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-medium-refactor-1:1",
+      "tool": "hermes",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-medium-refactor-1:1",
+      "tool": "pi",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-medium-refactor-1:1",
+      "tool": "cline",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-medium-refactor-1:1",
+      "tool": "qwen",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-medium-refactor-1:1",
+      "tool": "codex",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-medium-refactor-1:1",
+      "tool": "claude-code",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-small-bugfix-1:1",
+      "tool": "codex",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-small-bugfix-1:1",
+      "tool": "qwen",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-small-bugfix-1:1",
+      "tool": "pi",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-small-bugfix-1:1",
+      "tool": "hermes",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-small-bugfix-1:1",
+      "tool": "claude-code",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-small-bugfix-1:1",
+      "tool": "cline",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-small-testfix-1:1",
+      "tool": "codex",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-small-testfix-1:1",
+      "tool": "hermes",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-small-testfix-1:1",
+      "tool": "pi",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-small-testfix-1:1",
+      "tool": "qwen",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-small-testfix-1:1",
+      "tool": "cline",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-small-testfix-1:1",
+      "tool": "claude-code",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-medium-feature-1:1",
+      "tool": "hermes",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-medium-feature-1:1",
+      "tool": "qwen",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-medium-feature-1:1",
+      "tool": "cline",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-medium-feature-1:1",
+      "tool": "claude-code",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-medium-feature-1:1",
+      "tool": "codex",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-medium-feature-1:1",
+      "tool": "pi",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-medium-refactor-1:1",
+      "tool": "hermes",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-medium-refactor-1:1",
+      "tool": "cline",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-medium-refactor-1:1",
+      "tool": "codex",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-medium-refactor-1:1",
+      "tool": "pi",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-medium-refactor-1:1",
+      "tool": "claude-code",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-medium-refactor-1:1",
+      "tool": "qwen",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-small-bugfix-1:1",
+      "tool": "claude-code",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-small-bugfix-1:1",
+      "tool": "pi",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-small-bugfix-1:1",
+      "tool": "hermes",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-small-bugfix-1:1",
+      "tool": "qwen",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-small-bugfix-1:1",
+      "tool": "cline",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-small-bugfix-1:1",
+      "tool": "codex",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-small-testfix-1:1",
+      "tool": "hermes",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-small-testfix-1:1",
+      "tool": "cline",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-small-testfix-1:1",
+      "tool": "pi",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-small-testfix-1:1",
+      "tool": "claude-code",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-small-testfix-1:1",
+      "tool": "qwen",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-small-testfix-1:1",
+      "tool": "codex",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 1,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-medium-feature-1:2",
+      "tool": "cline",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-medium-feature-1:2",
+      "tool": "qwen",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-medium-feature-1:2",
+      "tool": "claude-code",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-medium-feature-1:2",
+      "tool": "pi",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-medium-feature-1:2",
+      "tool": "codex",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-medium-feature-1:2",
+      "tool": "hermes",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-medium-refactor-1:2",
+      "tool": "qwen",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-medium-refactor-1:2",
+      "tool": "claude-code",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-medium-refactor-1:2",
+      "tool": "codex",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-medium-refactor-1:2",
+      "tool": "cline",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-medium-refactor-1:2",
+      "tool": "pi",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-medium-refactor-1:2",
+      "tool": "hermes",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-small-bugfix-1:2",
+      "tool": "codex",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-small-bugfix-1:2",
+      "tool": "claude-code",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-small-bugfix-1:2",
+      "tool": "hermes",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-small-bugfix-1:2",
+      "tool": "cline",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-small-bugfix-1:2",
+      "tool": "pi",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-small-bugfix-1:2",
+      "tool": "qwen",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-small-testfix-1:2",
+      "tool": "pi",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-small-testfix-1:2",
+      "tool": "qwen",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-small-testfix-1:2",
+      "tool": "cline",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-small-testfix-1:2",
+      "tool": "codex",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-small-testfix-1:2",
+      "tool": "hermes",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-small-testfix-1:2",
+      "tool": "claude-code",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-medium-feature-1:2",
+      "tool": "hermes",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-medium-feature-1:2",
+      "tool": "codex",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-medium-feature-1:2",
+      "tool": "pi",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-medium-feature-1:2",
+      "tool": "claude-code",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-medium-feature-1:2",
+      "tool": "cline",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-medium-feature-1:2",
+      "tool": "qwen",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-medium-refactor-1:2",
+      "tool": "codex",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-medium-refactor-1:2",
+      "tool": "pi",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-medium-refactor-1:2",
+      "tool": "hermes",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 1
+    },
+    {
+      "id": "pinned:qwen:ts-medium-refactor-1:2",
+      "tool": "qwen",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-medium-refactor-1:2",
+      "tool": "cline",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-medium-refactor-1:2",
+      "tool": "claude-code",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-small-bugfix-1:2",
+      "tool": "cline",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-small-bugfix-1:2",
+      "tool": "claude-code",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-small-bugfix-1:2",
+      "tool": "pi",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-small-bugfix-1:2",
+      "tool": "codex",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-small-bugfix-1:2",
+      "tool": "qwen",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-small-bugfix-1:2",
+      "tool": "hermes",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-small-testfix-1:2",
+      "tool": "hermes",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-small-testfix-1:2",
+      "tool": "claude-code",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-small-testfix-1:2",
+      "tool": "qwen",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-small-testfix-1:2",
+      "tool": "codex",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-small-testfix-1:2",
+      "tool": "pi",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-small-testfix-1:2",
+      "tool": "cline",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 2,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-medium-feature-1:3",
+      "tool": "cline",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-medium-feature-1:3",
+      "tool": "pi",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-medium-feature-1:3",
+      "tool": "codex",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-medium-feature-1:3",
+      "tool": "qwen",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-medium-feature-1:3",
+      "tool": "claude-code",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-medium-feature-1:3",
+      "tool": "hermes",
+      "task_id": "py-medium-feature-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-medium-refactor-1:3",
+      "tool": "pi",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-medium-refactor-1:3",
+      "tool": "hermes",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-medium-refactor-1:3",
+      "tool": "qwen",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-medium-refactor-1:3",
+      "tool": "claude-code",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-medium-refactor-1:3",
+      "tool": "codex",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-medium-refactor-1:3",
+      "tool": "cline",
+      "task_id": "py-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-small-bugfix-1:3",
+      "tool": "hermes",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-small-bugfix-1:3",
+      "tool": "cline",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-small-bugfix-1:3",
+      "tool": "pi",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-small-bugfix-1:3",
+      "tool": "claude-code",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-small-bugfix-1:3",
+      "tool": "qwen",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-small-bugfix-1:3",
+      "tool": "codex",
+      "task_id": "py-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:py-small-testfix-1:3",
+      "tool": "claude-code",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:py-small-testfix-1:3",
+      "tool": "qwen",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:py-small-testfix-1:3",
+      "tool": "cline",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:py-small-testfix-1:3",
+      "tool": "hermes",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:py-small-testfix-1:3",
+      "tool": "codex",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:py-small-testfix-1:3",
+      "tool": "pi",
+      "task_id": "py-small-testfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-medium-feature-1:3",
+      "tool": "claude-code",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-medium-feature-1:3",
+      "tool": "codex",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-medium-feature-1:3",
+      "tool": "pi",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-medium-feature-1:3",
+      "tool": "hermes",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-medium-feature-1:3",
+      "tool": "cline",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-medium-feature-1:3",
+      "tool": "qwen",
+      "task_id": "ts-medium-feature-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-medium-refactor-1:3",
+      "tool": "cline",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-medium-refactor-1:3",
+      "tool": "pi",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-medium-refactor-1:3",
+      "tool": "hermes",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-medium-refactor-1:3",
+      "tool": "codex",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-medium-refactor-1:3",
+      "tool": "qwen",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-medium-refactor-1:3",
+      "tool": "claude-code",
+      "task_id": "ts-medium-refactor-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-small-bugfix-1:3",
+      "tool": "cline",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-small-bugfix-1:3",
+      "tool": "codex",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-small-bugfix-1:3",
+      "tool": "hermes",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-small-bugfix-1:3",
+      "tool": "qwen",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-small-bugfix-1:3",
+      "tool": "pi",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-small-bugfix-1:3",
+      "tool": "claude-code",
+      "task_id": "ts-small-bugfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:pi:ts-small-testfix-1:3",
+      "tool": "pi",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:qwen:ts-small-testfix-1:3",
+      "tool": "qwen",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:claude-code:ts-small-testfix-1:3",
+      "tool": "claude-code",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:cline:ts-small-testfix-1:3",
+      "tool": "cline",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:hermes:ts-small-testfix-1:3",
+      "tool": "hermes",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    },
+    {
+      "id": "pinned:codex:ts-small-testfix-1:3",
+      "tool": "codex",
+      "task_id": "ts-small-testfix-1",
+      "condition": "pinned",
+      "rep": 3,
+      "status": "done",
+      "retries": 0
+    }
+  ],
+  "definition_key": "{\"model\":\"z-ai/glm-5.3-flash\",\"priceBook\":\"openrouter-2026-09-04\",\"tools\":[\"claude-code\",\"cline\",\"codex\",\"hermes\",\"pi\",\"qwen\"],\"conditions\":[\"pinned\"],\"reps\":4,\"tasks\":[{\"id\":\"py-medium-feature-1\",\"source\":\"local-development\",\"sourceRepository\":\"agent-overhead-bench\",\"revision\":\"working-tree\",\"regime\":\"short\",\"timeoutS\":300,\"environment\":{\"kind\":\"prepared-local\",\"network\":\"disabled\"},\"verifier\":\"script\"},{\"id\":\"py-medium-refactor-1\",\"source\":\"local-development\",\"sourceRepository\":\"agent-overhead-bench\",\"revision\":\"working-tree\",\"regime\":\"short\",\"timeoutS\":300,\"environment\":{\"kind\":\"prepared-local\",\"network\":\"disabled\"},\"verifier\":\"script\"},{\"id\":\"py-small-bugfix-1\",\"source\":\"local-development\",\"sourceRepository\":\"agent-overhead-bench\",\"revision\":\"working-tree\",\"regime\":\"short\",\"timeoutS\":300,\"environment\":{\"kind\":\"prepared-local\",\"network\":\"disabled\"},\"verifier\":\"script\"},{\"id\":\"py-small-testfix-1\",\"source\":\"local-development\",\"sourceRepository\":\"agent-overhead-bench\",\"revision\":\"working-tree\",\"regime\":\"short\",\"timeoutS\":300,\"environment\":{\"kind\":\"prepared-local\",\"network\":\"disabled\"},\"verifier\":\"script\"},{\"id\":\"ts-medium-feature-1\",\"source\":\"local-development\",\"sourceRepository\":\"agent-overhead-bench\",\"revision\":\"working-tree\",\"regime\":\"short\",\"timeoutS\":300,\"environment\":{\"kind\":\"prepared-local\",\"network\":\"disabled\"},\"verifier\":\"script\"},{\"id\":\"ts-medium-refactor-1\",\"source\":\"local-development\",\"sourceRepository\":\"agent-overhead-bench\",\"revision\":\"working-tree\",\"regime\":\"short\",\"timeoutS\":300,\"environment\":{\"kind\":\"prepared-local\",\"network\":\"disabled\"},\"verifier\":\"script\"},{\"id\":\"ts-small-bugfix-1\",\"source\":\"local-development\",\"sourceRepository\":\"agent-overhead-bench\",\"revision\":\"working-tree\",\"regime\":\"short\",\"timeoutS\":300,\"environment\":{\"kind\":\"prepared-local\",\"network\":\"disabled\"},\"verifier\":\"script\"},{\"id\":\"ts-small-testfix-1\",\"source\":\"local-development\",\"sourceRepository\":\"agent-overhead-bench\",\"revision\":\"working-tree\",\"regime\":\"short\",\"timeoutS\":300,\"environment\":{\"kind\":\"prepared-local\",\"network\":\"disabled\"},\"verifier\":\"script\"}]}"
+}

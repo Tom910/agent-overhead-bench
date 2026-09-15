@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "source_repository": "https://github.com/datacurve-ai/deep-swe.git",
+  "source_revision": "0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea",
+  "status": "exploratory-candidates-not-approved",
+  "reference_polarity": {
+    "samples_per_task": 5,
+    "expected_exit_codes": [0, 0, 0, 0, 0],
+    "network": "none"
+  },
+  "candidates": [
+    {
+      "id": "aiomonitor-task-snapshots-diff",
+      "language": "python",
+      "native_category": "feature_request",
+      "shape": "feature",
+      "size": "small",
+      "upstream_repository": "https://github.com/aio-libs/aiomonitor",
+      "upstream_revision": "b73fea2e0682803bda7531c93cd1dfb360839175",
+      "upstream_license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "license_sha256": "sha256:98397c300949e0cc1ddc68b0e48e67b10f2d0a4ffada4903d891a1315fe04156",
+      "upstream_file_count": 79,
+      "timeout_s": 900,
+      "expected_minutes": [6, 15],
+      "source_task_checksum": "sha256:962424b64be20cecb1488a0a14ea4bab0835bd0fcf93410f0647e3448ac3f520",
+      "verifier_image_digest": "sha256:8858d6a0a66fbcbd545f5f0b4744826e50c7dce16a4f3c8b1df31aefbb9b71fc",
+      "reference_polarity_sha256": "sha256:93fb85c161f43a57fa676799b937b4c45bf06e7c101aa84a2725e0606ec6e862",
+      "calibration_status": "long-timeout-unavailable-spend-hermes"
+    },
+    {
+      "id": "true-myth-iterable-collection-combinators",
+      "language": "typescript",
+      "native_category": "feature_request",
+      "shape": "feature",
+      "size": "small",
+      "upstream_repository": "https://github.com/true-myth/true-myth",
+      "upstream_revision": "d8fbebc75de4991a32354518beff1abf628d0b07",
+      "upstream_license": "MIT",
+      "license_file": "LICENSE",
+      "license_sha256": "sha256:71e73518b145d77e68ffe83b7c42b1d3890dec591b6ef115a00825601c642c73",
+      "upstream_file_count": 74,
+      "timeout_s": 900,
+      "expected_minutes": [6, 15],
+      "source_task_checksum": "sha256:8d355ae35839d3e82f2a23690f5848f5c19480d7b09dc9d21943f71f72f90398",
+      "verifier_image_digest": "sha256:18a8becb3d36740ad6e9faf86faabf5b35c76f226e6fcd2548d9258e358e41ed",
+      "reference_polarity_sha256": "sha256:f67bd9cbd0b6cc7d3ac4792072768d1b1cfc43b89f503b31b0f274db765e42c3",
+      "calibration_status": "short-timeout-codex-and-hermes"
+    }
+  ]
+}

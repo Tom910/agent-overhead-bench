@@ -1,0 +1,22 @@
+{
+  "reviewed_at": "2026-09-03",
+  "deepswe": {
+    "repository": "https://github.com/datacurve-ai/deep-swe.git",
+    "revision": "0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea",
+    "license_file": "LICENSE",
+    "declared_license": "Apache-2.0",
+    "license_sha256": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+  },
+  "upstream_tasks": [
+    { "id": "psd-tools-blend-range-api", "repository": "https://github.com/psd-tools/psd-tools", "revision": "c5e03189188daa3c5589326a9d74506d7dc48bc9", "license_file": "LICENSE", "declared_license": "MIT", "license_sha256": "sha256:79f7e019a30b97542cce6f6482a75ba26771b4204c374fec305dc8cf558d137f" },
+    { "id": "cattrs-partial-structuring-recovery", "repository": "https://github.com/python-attrs/cattrs", "revision": "6bc4708fb9b2ac52d9a18997e923da6a58916102", "license_file": "LICENSE", "declared_license": "MIT", "license_sha256": "sha256:f5fb9d1ede37a88ca47f420c499dca0f4a05bc993e12c77d23520aad291c01bf" },
+    { "id": "textual-richlog-follow-state", "repository": "https://github.com/Textualize/textual", "revision": "0f0849fd37fbd0d4d6f81889476c22340129df67", "license_file": "LICENSE", "declared_license": "MIT", "license_sha256": "sha256:94f290a762376dfdb7768e42070618b0abfd2a2799eab1b1c097816c3a39eb57" },
+    { "id": "tomlkit-toml-table-converters", "repository": "https://github.com/python-poetry/tomlkit", "revision": "dd05eebc8ed9e30fc6c223088a5a450cb54c1cab", "license_file": "LICENSE", "declared_license": "MIT", "license_sha256": "sha256:f2f9b460ba719da6626add264d3782f275a4ff7aab677beda08b330911e23adb" },
+    { "id": "ink-grid-box-layout", "repository": "https://github.com/vadimdemedes/ink", "revision": "0cea59169ef0f3f83e4aa7fbedbff9d165646472", "license_file": "license", "declared_license": "MIT", "license_sha256": "sha256:de84e62e27d9a970b50446d0af1f713c1439a4180faa098adfa5da94f5158a55" },
+    { "id": "true-myth-iterable-collection-combinators", "repository": "https://github.com/true-myth/true-myth", "revision": "d8fbebc75de4991a32354518beff1abf628d0b07", "license_file": "LICENSE", "declared_license": "MIT", "license_sha256": "sha256:71e73518b145d77e68ffe83b7c42b1d3890dec591b6ef115a00825601c642c73" },
+    { "id": "happy-dom-deterministic-intersectionobserver", "repository": "https://github.com/capricorn86/happy-dom", "revision": "82a0888cb2c87a6123e05424b528f8e8c9b3e426", "license_file": "LICENSE", "declared_license": "MIT", "license_sha256": "sha256:46a5fbffa79b8dc33e512852b5ac5da71317eee5ce122ddb601cf1add07848cf" },
+    { "id": "superjson-error-stack-serialization", "repository": "https://github.com/flightcontrolhq/superjson.git", "revision": "010c4bdb4b8758844fd44eacf38e42b22eba8aea", "license_file": "LICENSE", "declared_license": "MIT", "license_sha256": "sha256:d6b3a220bde9bf72fd0f9aecf71cd48c43ddc652abea727fc98a9b21a9534bb9" }
+  ],
+  "method": "Checked the pinned DeepSWE LICENSE and each pinned upstream top-level license file; checked package metadata where present. This is an evidence record, not maintainer sign-off.",
+  "status": "license-evidence-collected-maintainer-signoff-pending"
+}

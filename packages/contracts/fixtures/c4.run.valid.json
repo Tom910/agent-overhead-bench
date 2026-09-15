@@ -1,0 +1,37 @@
+{
+  "v": 1,
+  "run_id": "s5-cell-uuid",
+  "tool": "aider",
+  "tool_version": "0.86.1",
+  "task_id": "ts-medium-refactor-1",
+  "task_source": "local-development",
+  "task_revision": "working-tree",
+  "task_regime": "short",
+  "condition": "pinned",
+  "rep": 2,
+  "model": "anthropic/claude-x",
+  "ori_version": null,
+  "tool_visibility": "none",
+  "anchors": {
+    "adapter": { "wall_clock_iso": "2026-08-25T00:00:00.000Z", "monotonic_zero": 0 },
+    "proxy": { "wall_clock_iso": "2026-08-25T00:00:00.020Z", "monotonic_zero": 0 }
+  },
+  "adapter_result": {
+    "exitCode": 0,
+    "tStart": 0,
+    "tEnd": 12500,
+    "anchor": { "wall_clock_iso": "2026-08-25T00:00:00.000Z", "monotonic_zero": 0 },
+    "artifacts": {
+      "stdoutPath": "stdout.log",
+      "stderrPath": "stderr.log"
+    }
+  },
+  "events_file": "events.jsonl",
+  "verification": { "exit": 0, "duration_ms": 4100, "logPath": "verify.log" },
+  "container": { "image_digest": "sha256:abc", "verifier_image_digest": "sha256:def", "started_iso": "2026-08-25T00:00:00.000Z" },
+  "task_environment": { "kind": "prepared-local", "network": "disabled" },
+  "host": { "os": "linux", "cpu": "x86_64", "ram_gb": 16 },
+  "spend_usd_estimate": 0.41,
+  "price_book": "openrouter-2026-08-27",
+  "outcome": "completed"
+}

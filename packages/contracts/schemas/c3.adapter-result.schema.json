@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "C3AdapterResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["exitCode", "tStart", "tEnd", "anchor", "artifacts"],
+  "properties": {
+    "exitCode": { "type": "integer", "minimum": 0 },
+    "tStart": { "type": "number", "minimum": 0 },
+    "tEnd": { "type": "number", "minimum": 0 },
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wall_clock_iso", "monotonic_zero"],
+      "properties": {
+        "wall_clock_iso": { "type": "string" },
+        "monotonic_zero": { "type": "number" }
+      }
+    },
+    "startupProbe": { "type": "number" },
+    "toolEvents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["tStart", "tEnd", "kind"],
+        "properties": {
+          "tStart": { "type": "number" },
+          "tEnd": { "type": "number" },
+          "kind": { "type": "string" }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stdoutPath", "stderrPath"],
+      "properties": {
+        "stdoutPath": { "type": "string" },
+        "stderrPath": { "type": "string" },
+        "toolLogPath": { "type": "string" }
+      }
+    }
+  }
+}

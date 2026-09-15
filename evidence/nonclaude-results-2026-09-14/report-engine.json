@@ -1,0 +1,305 @@
+{
+  "as_of": "2026-09-14T16:09:23.683455+00:00",
+  "official_release": false,
+  "implementation_hashes": {
+    "packages/report/src/from-results.ts": "sha256:f1d1271ab581f75204eed13762445bbd687ff7208aba735fd98dd551b772622d",
+    "packages/report/src/derive.ts": "sha256:6bf45a539f4ee44563bc6734ca1ff5e1823443b94f2c4ac7d131b5a06fd95a16",
+    "packages/report/src/aggregate.ts": "sha256:5c716182716e3e45a7c5ea45ec2665743bd9c93e030e03328ba40d9e4de0a57f",
+    "packages/report/src/render.ts": "sha256:0afed8b0b69fe1f2a1cd58c4269e6827b3086deafc53b72379dd3639ce4d3cda"
+  },
+  "groups": [
+    {
+      "host": "Linux",
+      "price_book": "deepseek-v41-low-2026-09-10",
+      "rows": [
+        {
+          "harness": "cline",
+          "version": "3.0.61",
+          "visibility": "partial",
+          "sourceRegime": "https://github.com/datacurve-ai/deep-swe.git / public-task-pack@0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea / extended / excluded providers: relace; only provider: deepseek; fallbacks: disabled",
+          "derived": {
+            "end_to_end": 782267.11362,
+            "startup": 1189.5138109999998,
+            "model_time": 657451.4176180001,
+            "tool_time": null,
+            "harness_time": null,
+            "non_model_time": 123562.87595199991,
+            "parallelism": 1,
+            "first_byte_ms": 1125.5709550000029,
+            "sum_request_durations": 657451.4176180001,
+            "unreconciled": false
+          },
+          "e2eIqr": null,
+          "turns": 151,
+          "inputTokens": 7718549.5,
+          "outputTokens": 143995,
+          "cachedPercent": 96.37881367110742,
+          "costUsd": 0.15581492549999998,
+          "tokenFloorUsd": 1.2427365749999995,
+          "success": "8/18"
+        },
+        {
+          "harness": "qwen",
+          "version": "0.22.2",
+          "visibility": "partial",
+          "sourceRegime": "https://github.com/datacurve-ai/deep-swe.git / public-task-pack@0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea / extended / excluded providers: relace; only provider: deepseek; fallbacks: disabled",
+          "derived": {
+            "end_to_end": 693703.2346035,
+            "startup": 1505.07671725,
+            "model_time": 585486.2640447499,
+            "tool_time": null,
+            "harness_time": null,
+            "non_model_time": 137108.01378799992,
+            "parallelism": 1,
+            "first_byte_ms": 1568.8802837500043,
+            "sum_request_durations": 585486.2640447499,
+            "unreconciled": false
+          },
+          "e2eIqr": null,
+          "turns": 93.5,
+          "inputTokens": 10099825.25,
+          "outputTokens": 80786.25,
+          "cachedPercent": 99.15382907222128,
+          "costUsd": 0.09207324749999998,
+          "tokenFloorUsd": 1.5614146875000001,
+          "success": "10/16"
+        }
+      ]
+    },
+    {
+      "host": "Linux",
+      "price_book": "openrouter-2026-09-04",
+      "rows": [
+        {
+          "harness": "cline",
+          "version": "3.0.61",
+          "visibility": "partial",
+          "sourceRegime": "https://github.com/datacurve-ai/deep-swe.git / public-task-pack@0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea / extended / excluded providers: relace; only provider: deepseek; fallbacks: disabled",
+          "derived": {
+            "end_to_end": 1175831.922459,
+            "startup": 1205.6533935,
+            "model_time": 809861.2455699998,
+            "tool_time": null,
+            "harness_time": null,
+            "non_model_time": 114317.56647400011,
+            "parallelism": 1,
+            "first_byte_ms": 1184.5539804999426,
+            "sum_request_durations": 809861.2455699998,
+            "unreconciled": false
+          },
+          "e2eIqr": null,
+          "turns": 203,
+          "inputTokens": 11019260.75,
+          "outputTokens": 169811,
+          "cachedPercent": 96.39454977913701,
+          "costUsd": null,
+          "tokenFloorUsd": null,
+          "success": "8/20"
+        },
+        {
+          "harness": "codex",
+          "version": "codex-cli 0.149.1",
+          "visibility": "partial",
+          "sourceRegime": "https://github.com/datacurve-ai/deep-swe.git / public-task-pack@0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea / extended / excluded providers: relace; only provider: deepseek; fallbacks: disabled",
+          "derived": {
+            "end_to_end": 537209.242851,
+            "startup": 1027.1636030000002,
+            "model_time": 444008.762253,
+            "tool_time": null,
+            "harness_time": null,
+            "non_model_time": 92173.31699500006,
+            "parallelism": 1,
+            "first_byte_ms": 1353.3379060000298,
+            "sum_request_durations": 444008.762253,
+            "unreconciled": false
+          },
+          "e2eIqr": null,
+          "turns": 101,
+          "inputTokens": 7296046,
+          "outputTokens": 73517,
+          "cachedPercent": 99.15902394255738,
+          "costUsd": null,
+          "tokenFloorUsd": null,
+          "success": "1/3"
+        },
+        {
+          "harness": "pi",
+          "version": "0.73.1",
+          "visibility": "partial",
+          "sourceRegime": "https://github.com/datacurve-ai/deep-swe.git / public-task-pack@0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea / extended / excluded providers: relace; only provider: deepseek; fallbacks: disabled",
+          "derived": null,
+          "e2eIqr": null,
+          "turns": 115,
+          "inputTokens": 10591878,
+          "outputTokens": 88637,
+          "cachedPercent": 98.39992492360656,
+          "costUsd": null,
+          "tokenFloorUsd": null,
+          "success": "0/1"
+        },
+        {
+          "harness": "qwen",
+          "version": "0.22.2",
+          "visibility": "partial",
+          "sourceRegime": "https://github.com/datacurve-ai/deep-swe.git / public-task-pack@0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea / extended / excluded providers: relace; only provider: deepseek; fallbacks: disabled",
+          "derived": {
+            "end_to_end": 490410.765556,
+            "startup": 1776.716136,
+            "model_time": 447476.3535290002,
+            "tool_time": null,
+            "harness_time": null,
+            "non_model_time": 41157.695890999836,
+            "parallelism": 1,
+            "first_byte_ms": 1463.120522749985,
+            "sum_request_durations": 447476.3535290002,
+            "unreconciled": false
+          },
+          "e2eIqr": null,
+          "turns": 79,
+          "inputTokens": 9859279,
+          "outputTokens": 93081,
+          "cachedPercent": 98.88411159417583,
+          "costUsd": null,
+          "tokenFloorUsd": null,
+          "success": "2/6"
+        }
+      ]
+    },
+    {
+      "host": "macOS",
+      "price_book": "deepseek-v41-low-2026-09-10",
+      "rows": [
+        {
+          "harness": "cline",
+          "version": "3.0.61",
+          "visibility": "partial",
+          "sourceRegime": "https://github.com/datacurve-ai/deep-swe.git / public-task-pack@0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea / extended / excluded providers: relace; only provider: deepseek; fallbacks: disabled",
+          "derived": {
+            "end_to_end": 1043040.9045409998,
+            "startup": 1217.477708000224,
+            "model_time": 837417.7237029993,
+            "tool_time": null,
+            "harness_time": null,
+            "non_model_time": 204405.70313000027,
+            "parallelism": 1,
+            "first_byte_ms": 1226.845457999967,
+            "sum_request_durations": 837417.7237029993,
+            "unreconciled": false
+          },
+          "e2eIqr": null,
+          "turns": 231,
+          "inputTokens": 11783047.5,
+          "outputTokens": 146627.5,
+          "cachedPercent": 97.10559708857934,
+          "costUsd": null,
+          "tokenFloorUsd": null,
+          "success": "1/2"
+        },
+        {
+          "harness": "codex",
+          "version": "codex-cli 0.149.1",
+          "visibility": "partial",
+          "sourceRegime": "https://github.com/datacurve-ai/deep-swe.git / public-task-pack@0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea / extended / excluded providers: relace; only provider: deepseek; fallbacks: disabled",
+          "derived": {
+            "end_to_end": 594177.606541,
+            "startup": 701.3169589999998,
+            "model_time": 503108.9619169996,
+            "tool_time": null,
+            "harness_time": null,
+            "non_model_time": 86202.58935549995,
+            "parallelism": 1,
+            "first_byte_ms": 1388.0561659999948,
+            "sum_request_durations": 503108.9619169996,
+            "unreconciled": false
+          },
+          "e2eIqr": null,
+          "turns": 108.5,
+          "inputTokens": 9163308.25,
+          "outputTokens": 85413,
+          "cachedPercent": 99.26831841617289,
+          "costUsd": 0.088497324,
+          "tokenFloorUsd": 1.4239896374999998,
+          "success": "23/37"
+        },
+        {
+          "harness": "hermes",
+          "version": "Hermes Agent v0.20.5 (2026.8.19)",
+          "visibility": "partial",
+          "sourceRegime": "https://github.com/datacurve-ai/deep-swe.git / public-task-pack@0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea / extended / excluded providers: relace; only provider: deepseek; fallbacks: disabled",
+          "derived": {
+            "end_to_end": 418313.4821875,
+            "startup": 3194.3955829999995,
+            "model_time": 376627.459206,
+            "tool_time": null,
+            "harness_time": null,
+            "non_model_time": 52156.45426324985,
+            "parallelism": 1,
+            "first_byte_ms": 1477.4249583750188,
+            "sum_request_durations": 376627.459206,
+            "unreconciled": false
+          },
+          "e2eIqr": null,
+          "turns": 80.5,
+          "inputTokens": 8697027.5,
+          "outputTokens": 78611.5,
+          "cachedPercent": 98.90513469057782,
+          "costUsd": 0.09081014100000001,
+          "tokenFloorUsd": 1.3553495249999998,
+          "success": "18/40"
+        },
+        {
+          "harness": "pi",
+          "version": "0.73.1",
+          "visibility": "partial",
+          "sourceRegime": "https://github.com/datacurve-ai/deep-swe.git / public-task-pack@0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea / extended / excluded providers: relace; only provider: deepseek; fallbacks: disabled",
+          "derived": {
+            "end_to_end": 743364.7244162499,
+            "startup": 616.3112079999999,
+            "model_time": 529289.08870125,
+            "tool_time": null,
+            "harness_time": null,
+            "non_model_time": 133782.40181074996,
+            "parallelism": 1,
+            "first_byte_ms": 1458.9035730000141,
+            "sum_request_durations": 529289.08870125,
+            "unreconciled": false
+          },
+          "e2eIqr": null,
+          "turns": 105,
+          "inputTokens": 10215781,
+          "outputTokens": 91710.5,
+          "cachedPercent": 98.21849626521629,
+          "costUsd": 0.11050431899999999,
+          "tokenFloorUsd": 1.5848881500000003,
+          "success": "18/39"
+        },
+        {
+          "harness": "qwen",
+          "version": "0.22.2",
+          "visibility": "partial",
+          "sourceRegime": "https://github.com/datacurve-ai/deep-swe.git / public-task-pack@0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea / extended / excluded providers: relace; only provider: deepseek; fallbacks: disabled",
+          "derived": {
+            "end_to_end": 514363.43781250017,
+            "startup": 1495.6330835,
+            "model_time": 429207.26166899997,
+            "tool_time": null,
+            "harness_time": null,
+            "non_model_time": 43005.27562350023,
+            "parallelism": 1,
+            "first_byte_ms": 1543.8587079999925,
+            "sum_request_durations": 429207.26166899997,
+            "unreconciled": false
+          },
+          "e2eIqr": null,
+          "turns": 78.5,
+          "inputTokens": 7611916,
+          "outputTokens": 82673,
+          "cachedPercent": 99.01666070247494,
+          "costUsd": 0.08421277499999999,
+          "tokenFloorUsd": 1.1869229999999997,
+          "success": "13/18"
+        }
+      ]
+    }
+  ]
+}

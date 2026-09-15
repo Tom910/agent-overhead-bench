@@ -1,0 +1,12 @@
+{
+  "exitCode": 0,
+  "tStart": 0,
+  "tEnd": 12500,
+  "anchor": { "wall_clock_iso": "2026-08-25T00:00:00.000Z", "monotonic_zero": 0 },
+  "startupProbe": 400,
+  "toolEvents": [{ "tStart": 9200, "tEnd": 11000, "kind": "shell" }],
+  "artifacts": {
+    "stdoutPath": "stdout.log",
+    "stderrPath": "stderr.log"
+  }
+}

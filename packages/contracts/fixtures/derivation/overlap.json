@@ -1,0 +1,23 @@
+{
+  "adapter": { "tStart": 0, "tEnd": 12500 },
+  "events": [
+    { "t_req_start": 2500, "t_last_byte": 9000 },
+    { "t_req_start": 4000, "t_last_byte": 8000 }
+  ],
+  "toolEvents": [{ "tStart": 9200, "tEnd": 11000 }],
+  "toolVisibility": "full",
+  "expected": {
+    "end_to_end": 12500,
+    "startup": 2500,
+    "model_time": 6500,
+    "sum_request_durations": 10500,
+    "parallelism": 1.615,
+    "tool_time": 1800,
+    "harness_time": 1700
+  },
+  "expected_if_visibility_none": {
+    "tool_time": null,
+    "harness_time": null,
+    "non_model_time": 3500
+  }
+}

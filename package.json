@@ -1,0 +1,21 @@
+{
+  "name": "agent-overhead-bench",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "workspaces": ["packages/*"],
+  "bin": {
+    "aob-report": "./scripts/aob-report.mjs",
+    "aob-proxy": "./packages/proxy/src/cli.ts",
+    "aob-runner": "./packages/runner/src/cli.ts",
+    "aob-task-manifest": "./packages/tasks/src/manifest-cli.ts",
+    "aob-task-validate": "./packages/tasks/src/validate-cli.ts",
+    "aob-task-source": "./packages/tasks/src/source-cli.ts",
+    "aob-activity-crosscheck": "./scripts/s7-activity-crosscheck.mjs"
+  },
+  "scripts": {
+    "lint": "node scripts/lint.mjs",
+    "test": "npm run test --workspaces --if-present && node --test \"scripts/*.test.mjs\"",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}

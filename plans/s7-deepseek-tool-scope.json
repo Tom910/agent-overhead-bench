@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "profile": "deepseek-v4.1-flash-openrouter",
+  "model": "deepseek/deepseek-v4.1-flash",
+  "upstream": "https://openrouter.ai/api",
+  "tools": [
+    "claude-code",
+    "cline",
+    "codex",
+    "hermes",
+    "pi",
+    "qwen"
+  ],
+  "excluded": [
+    {
+      "tool": "aider",
+      "reason": "Not comparable: the adapter passes the workspace file list on aider's command line, so aider is handed the files the other adapters must discover. Measured at 1 turn and ~1.1k input tokens against 42k-115k for every agentic tool on the same tasks."
+    },
+    {
+      "tool": "opencode",
+      "reason": "Eligible and working, held out of the official profile to keep the matrix at six adapters; retained as an optional adapter and in the pilot evidence"
+    }
+  ]
+}

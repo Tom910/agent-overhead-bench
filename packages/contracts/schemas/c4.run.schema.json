@@ -1,0 +1,356 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "C4Run",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "v",
+    "run_id",
+    "tool",
+    "tool_version",
+    "task_id",
+    "task_source",
+    "task_revision",
+    "task_base_revision",
+    "task_regime",
+    "condition",
+    "rep",
+    "model",
+    "ori_version",
+    "tool_visibility",
+    "anchors",
+    "adapter_result",
+    "events_file",
+    "verification",
+    "container",
+    "task_environment",
+    "host",
+    "spend_usd_estimate",
+    "price_book",
+    "outcome"
+  ],
+  "not": {
+    "anyOf": [
+      {
+        "required": [
+          "harness_time"
+        ]
+      },
+      {
+        "required": [
+          "harness_share"
+        ]
+      }
+    ]
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "tool_visibility": {
+            "const": "full"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "adapter_result": {
+            "required": [
+              "toolEvents"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "tool_configuration"
+        ]
+      },
+      "then": {
+        "properties": {
+          "tool": {
+            "const": "claude-code"
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "v": {
+      "const": 1
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "tool": {
+      "type": "string"
+    },
+    "tool_version": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "task_source": {
+      "type": "string"
+    },
+    "task_revision": {
+      "type": "string"
+    },
+    "task_repository": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_base_revision": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "task_regime": {
+      "enum": [
+        "short",
+        "long"
+      ]
+    },
+    "condition": {
+      "enum": [
+        "pinned",
+        "default"
+      ]
+    },
+    "rep": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "model": {
+      "type": "string"
+    },
+    "provider_routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ignored_providers"
+      ],
+      "dependentRequired": {
+        "only_provider": [
+          "allow_fallbacks"
+        ],
+        "allow_fallbacks": [
+          "only_provider"
+        ]
+      },
+      "properties": {
+        "only_provider": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9/_-]*$"
+        },
+        "allow_fallbacks": {
+          "const": false
+        },
+        "ignored_providers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Canonical lexicographic order is checked by the runtime validator.",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9/_-]*$"
+          }
+        }
+      }
+    },
+    "ori_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tool_visibility": {
+      "enum": [
+        "none",
+        "partial",
+        "full"
+      ]
+    },
+    "anchors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter",
+        "proxy"
+      ],
+      "properties": {
+        "adapter": {
+          "$ref": "#/definitions/anchor"
+        },
+        "proxy": {
+          "$ref": "#/definitions/anchor"
+        }
+      }
+    },
+    "adapter_result": {
+      "$ref": "c3.adapter-result.schema.json"
+    },
+    "events_file": {
+      "type": "string"
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exit",
+        "duration_ms",
+        "logPath"
+      ],
+      "properties": {
+        "exit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "logPath": {
+          "type": "string"
+        }
+      }
+    },
+    "container": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "image_digest",
+        "verifier_image_digest",
+        "started_iso"
+      ],
+      "properties": {
+        "image_digest": {
+          "type": "string"
+        },
+        "verifier_image_digest": {
+          "type": "string"
+        },
+        "started_iso": {
+          "type": "string"
+        }
+      }
+    },
+    "task_environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "network"
+      ],
+      "oneOf": [
+        {
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "agent_image"
+                ]
+              },
+              {
+                "required": [
+                  "agent_image_digest"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "required": [
+            "agent_image",
+            "agent_image_digest"
+          ]
+        }
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "network": {
+          "const": "disabled"
+        },
+        "agent_image": {
+          "type": "string",
+          "minLength": 1
+        },
+        "agent_image_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "host": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "os",
+        "cpu",
+        "ram_gb"
+      ],
+      "properties": {
+        "os": {
+          "type": "string"
+        },
+        "cpu": {
+          "type": "string"
+        },
+        "ram_gb": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "spend_usd_estimate": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "price_book": {
+      "type": "string"
+    },
+    "outcome": {
+      "enum": [
+        "completed",
+        "timeout",
+        "adapter_error",
+        "verify_error"
+      ]
+    },
+    "tool_configuration": {
+      "enum": [
+        "claude-code-no-web-search"
+      ]
+    }
+  },
+  "definitions": {
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "wall_clock_iso",
+        "monotonic_zero"
+      ],
+      "properties": {
+        "wall_clock_iso": {
+          "type": "string"
+        },
+        "monotonic_zero": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

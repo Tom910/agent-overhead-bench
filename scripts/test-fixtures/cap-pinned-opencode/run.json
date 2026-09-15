@@ -1,0 +1,38 @@
+{
+  "v": 1,
+  "run_id": "pinned:opencode:py-small-bugfix-1:0",
+  "tool": "opencode",
+  "tool_version": "fixture",
+  "task_id": "py-small-bugfix-1",
+  "task_source": "local-development",
+  "task_revision": "working-tree",
+  "task_regime": "short",
+  "condition": "pinned",
+  "rep": 0,
+  "model": "z-ai/glm-5.3-flash",
+  "ori_version": null,
+  "tool_visibility": "partial",
+  "anchors": {
+    "adapter": { "wall_clock_iso": "2026-08-30T00:00:00.000Z", "monotonic_zero": 0 },
+    "proxy": { "wall_clock_iso": "2026-08-30T00:00:00.000Z", "monotonic_zero": 0 }
+  },
+  "adapter_result": {
+    "exitCode": 0,
+    "tStart": 0,
+    "tEnd": 100,
+    "anchor": { "wall_clock_iso": "2026-08-30T00:00:00.000Z", "monotonic_zero": 0 },
+    "artifacts": { "stdoutPath": "stdout.log", "stderrPath": "stderr.log" }
+  },
+  "events_file": "events.jsonl",
+  "verification": { "exit": 0, "duration_ms": 1, "logPath": "verify.log" },
+  "container": {
+    "image_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "verifier_image_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "started_iso": "2026-08-30T00:00:00.000Z"
+  },
+  "task_environment": { "kind": "prepared-local", "network": "disabled" },
+  "host": { "os": "linux", "cpu": "x86_64", "ram_gb": 16 },
+  "spend_usd_estimate": 0.00084666,
+  "price_book": "openrouter-2026-08-27",
+  "outcome": "completed"
+}

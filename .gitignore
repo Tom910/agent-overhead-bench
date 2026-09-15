@@ -1,0 +1,13 @@
+node_modules/
+dist/
+results/
+.env
+.env.*
+*.secret
+**/*.raw.secret
+packages/tasks/**/reference/
+coverage/
+.DS_Store
+scratch/
+**/__pycache__/
+*.pyc

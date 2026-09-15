@@ -1,0 +1,33 @@
+{
+  "source_repository": "https://github.com/usamadar/coding-agent-benchmark.git",
+  "source_revision": "6f46d7c3712164276caef3102ddc07a1310e6276",
+  "selected_task_ids": [
+    "py-small-bugfix-1",
+    "py-small-bugfix-2",
+    "ts-small-feature-1",
+    "py-small-feature-1",
+    "ts-small-feature-2",
+    "py-small-refactor-1",
+    "ts-small-refactor-1",
+    "py-small-feature-2"
+  ],
+  "review": {
+    "source_reviewed": false,
+    "reference_results_verified": false,
+    "calibration_complete": false,
+    "maintainer_signed_off": false
+  },
+  "reviewer": "unassigned",
+  "reviewed_at": "pending",
+  "calibration_adapters": [],
+  "status": "pending",
+  "blocking_findings": [
+    "selected repositories are all small",
+    "the selected TypeScript labels do not contain TypeScript source files",
+    "published reference results are absent",
+    "the native source verifier boundary is not yet validated",
+    "two-CLI calibration is not yet recorded",
+    "maintainer sign-off is not yet recorded"
+  ],
+  "notes": "This evidence record is intentionally non-approving. It prevents the prepared source from being treated as an official v1 input until the replacement-source review is complete."
+}

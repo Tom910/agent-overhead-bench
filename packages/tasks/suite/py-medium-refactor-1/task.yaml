@@ -1,0 +1,13 @@
+id: py-medium-refactor-1
+source:
+  kind: local-development
+  repository: agent-overhead-bench
+  revision: working-tree
+  task_id: py-medium-refactor-1
+  license_notes: Local development fixture; not a public-source v1 result.
+language: python
+size: medium
+shape: refactor
+timeout_s: 300
+expected_minutes: [1, 5]
+description: Extract duplicated area calculation.

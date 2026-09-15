@@ -1,0 +1,24 @@
+{
+  "name": "@aob/proxy",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "bin": {
+    "aob-proxy": "./src/cli-wrapper.mjs"
+  },
+  "dependencies": {
+    "@aob/contracts": "*",
+    "undici": "^7.16.0"
+  },
+  "devDependencies": {
+    "@aob/mock-upstream": "*",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  }
+}

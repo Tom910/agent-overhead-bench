@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "source_repository": "https://github.com/datacurve-ai/deep-swe.git",
+  "source_revision": "0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea",
+  "selected_task_ids": [
+    "psd-tools-blend-range-api",
+    "cattrs-partial-structuring-recovery",
+    "textual-richlog-follow-state",
+    "tomlkit-toml-table-converters",
+    "ink-grid-box-layout",
+    "true-myth-iterable-collection-combinators",
+    "happy-dom-deterministic-intersectionobserver",
+    "superjson-error-stack-serialization"
+  ],
+  "review": {
+    "source_reviewed": true,
+    "reference_results_verified": true,
+    "calibration_complete": true,
+    "maintainer_signed_off": true
+  },
+  "reviewer": "tom910",
+  "reviewed_at": "2026-09-15T06:00:50Z",
+  "calibration_adapters": [
+    "cline",
+    "codex",
+    "hermes",
+    "pi",
+    "qwen"
+  ],
+  "status": "approved",
+  "notes": "Maintainer tom910 approved all four review flags on 2026-09-15. Source suite is the eight DeepSWE public-repository tasks at revision 0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea. Native verifier polarity is accepted as previously recorded. calibration_complete is a maintainer policy exception: the 200-slot DeepSeek native-outcome campaign (five harnesses, Claude excluded) stands in for the original two-CLI short-regime gate. This does not create a portable s3-calibration-attestation.json, an official freeze archive, or a released evidence ledger."
+}

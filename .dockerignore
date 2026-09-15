@@ -1,0 +1,9 @@
+node_modules
+.git
+results
+scratch
+packages/**/node_modules
+**/.DS_Store
+.env
+.env.*
+*.secret

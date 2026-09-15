@@ -1,0 +1,100 @@
+{
+  "id": "deepseek-v41-low-2026-09-10",
+  "as_of": "2026-09-10",
+  "source": "https://openrouter.ai/api/v1/models/deepseek/deepseek-v4.1-flash/endpoints",
+  "models": {
+    "deepseek/deepseek-v4.1-flash": {
+      "input": 1.5e-07,
+      "cached_input": 3e-09,
+      "output": 6e-07
+    }
+  },
+  "provider": "deepseek",
+  "canonical_model": "deepseek/deepseek-v4.1-flash-20260910",
+  "pricing_condition": {
+    "kind": "fixed-provider-tier",
+    "required_guard": "whole-cell-timeout-plus-margin",
+    "provider_schedule": [
+      {
+        "utc_days": [
+          "saturday",
+          "sunday"
+        ],
+        "prompt": "0.00000015",
+        "completion": "0.0000006",
+        "input_cache_read": "0.000000003"
+      },
+      {
+        "utc_start": 0,
+        "utc_end": 100,
+        "utc_days": [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday"
+        ],
+        "prompt": "0.00000015",
+        "completion": "0.0000006",
+        "input_cache_read": "0.000000003"
+      },
+      {
+        "utc_start": 100,
+        "utc_end": 400,
+        "utc_days": [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday"
+        ],
+        "prompt": "0.0000003",
+        "completion": "0.0000012",
+        "input_cache_read": "0.000000006"
+      },
+      {
+        "utc_start": 400,
+        "utc_end": 600,
+        "utc_days": [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday"
+        ],
+        "prompt": "0.00000015",
+        "completion": "0.0000006",
+        "input_cache_read": "0.000000003"
+      },
+      {
+        "utc_start": 600,
+        "utc_end": 1000,
+        "utc_days": [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday"
+        ],
+        "prompt": "0.0000003",
+        "completion": "0.0000012",
+        "input_cache_read": "0.000000006"
+      },
+      {
+        "utc_start": 1000,
+        "utc_end": 0,
+        "utc_days": [
+          "monday",
+          "tuesday",
+          "wednesday",
+          "thursday",
+          "friday"
+        ],
+        "prompt": "0.00000015",
+        "completion": "0.0000006",
+        "input_cache_read": "0.000000003"
+      }
+    ]
+  },
+  "notes": "Only valid for cells wholly contained in a live-confirmed matching tier interval. High-price intervals are excluded; no static-rate extrapolation across UTC boundaries."
+}

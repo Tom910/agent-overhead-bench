@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "upstream": "https://openrouter.ai/api",
+  "model": "z-ai/glm-5.3-flash",
+  "reviewed_at": "2026-08-31T00:00:00.000Z",
+  "evidence": "plans/s2-evidence/",
+  "tools": [
+    {
+      "tool": "claude-code",
+      "protocol": "anthropic_messages",
+      "reviewed": true,
+      "eligible": false,
+      "reason": "OpenRouter returned 404 unrecognized_model for the Anthropic Messages route in the real Flash rerun"
+    },
+    { "tool": "codex", "protocol": "openai_responses", "reviewed": true, "eligible": true, "reason": "S2 evidence and real Flash diagnostic use the OpenAI Responses route" },
+    { "tool": "hermes", "protocol": "openai_chat", "reviewed": true, "eligible": true, "reason": "S2 evidence and real Flash diagnostic use the OpenAI Chat route" },
+    { "tool": "aider", "protocol": "openai_chat", "reviewed": true, "eligible": true, "reason": "S2 evidence and real Flash diagnostic use the OpenAI Chat route" },
+    { "tool": "opencode", "protocol": "openai_responses", "reviewed": true, "eligible": true, "reason": "S2 evidence and real Flash diagnostic use the OpenAI Responses route" },
+    { "tool": "qwen", "protocol": "openai_chat", "reviewed": true, "eligible": true, "reason": "S2 evidence uses the OpenAI Chat route" }
+  ]
+}

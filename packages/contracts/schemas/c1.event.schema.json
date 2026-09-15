@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "C1Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "v", "run_id", "seq", "t_req_start", "t_req_body_end", "t_upstream_sent",
+    "t_first_byte", "t_last_byte", "duration_ms", "method", "path", "protocol",
+    "model_requested", "model_served", "status", "streamed", "usage",
+    "usage_source", "error"
+  ],
+  "allOf": [
+    {
+      "if": { "properties": { "usage_source": { "const": "unavailable" } } },
+      "then": { "properties": { "usage": { "type": "null" } } }
+    },
+    {
+      "if": { "properties": { "usage_source": { "enum": ["response_body", "generation_lookup"] } } },
+      "then": { "required": ["usage"], "not": { "properties": { "usage": { "type": "null" } } } }
+    }
+  ],
+  "properties": {
+    "v": { "const": 1 },
+    "run_id": { "type": "string" },
+    "seq": { "type": "integer", "minimum": 0 },
+    "t_req_start": { "type": "number", "minimum": 0 },
+    "t_req_body_end": { "type": "number", "minimum": 0 },
+    "t_upstream_sent": { "type": "number", "minimum": 0 },
+    "t_first_byte": { "type": "number", "minimum": 0 },
+    "t_last_byte": { "type": "number", "minimum": 0 },
+    "duration_ms": { "type": "number", "minimum": 0 },
+    "method": { "type": "string" },
+    "path": { "type": "string" },
+    "protocol": { "enum": ["anthropic_messages", "openai_chat", "openai_responses", "unknown"] },
+    "model_requested": { "type": ["string", "null"] },
+    "model_served": { "type": ["string", "null"] },
+    "status": { "type": "integer", "minimum": 0, "maximum": 599 },
+    "streamed": { "type": "boolean" },
+    "usage": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["input", "cached_input", "output", "reasoning_output"],
+      "properties": {
+        "input": { "type": "number", "minimum": 0 },
+        "cached_input": { "type": "number", "minimum": 0 },
+        "output": { "type": "number", "minimum": 0 },
+        "reasoning_output": { "type": "number", "minimum": 0 }
+      }
+    },
+    "usage_source": { "enum": ["response_body", "generation_lookup", "unavailable"] },
+    "error": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["kind", "detail"],
+      "properties": {
+        "kind": { "type": "string" },
+        "detail": { "type": "string" }
+      }
+    }
+  }
+}

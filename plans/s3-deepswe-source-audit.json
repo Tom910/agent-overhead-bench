@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "source_repository": "https://github.com/datacurve-ai/deep-swe.git",
+  "source_revision": "0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea",
+  "source_dataset": "swe-bench-ultra",
+  "source_license": "Apache-2.0 for DeepSWE original contributions; upstream task repositories retain their own licenses",
+  "license_basis": "DeepSWE LICENSE, DeepSWE PROVENANCE.md, and each task's upstream repository license",
+  "task_count": 113,
+  "category_counts": {
+    "bugfix": 4,
+    "enhancement": 3,
+    "feature_request": 106
+  },
+  "language_counts": {
+    "go": 34,
+    "javascript": 5,
+    "python": 34,
+    "rust": 5,
+    "typescript": 35
+  },
+  "review": {
+    "source_reviewed": true,
+    "reference_results_verified": true,
+    "calibration_complete": true,
+    "maintainer_signed_off": true,
+    "status": "approved"
+  },
+  "latest_calibration_diagnostic": {
+    "task_id": "cattrs-partial-structuring-recovery",
+    "date": "2026-09-01",
+    "tools": ["codex", "hermes"],
+    "model": "z-ai/glm-5.3-flash",
+    "timeout_s": 900,
+    "regime": "long",
+    "attempts_per_tool": 1,
+    "status": "both-timeout-retry-unavailable-spend-stop",
+    "verifier_execution": "skipped-after-timeout",
+    "spend_usd": 0.063902975,
+    "polarity": {
+      "reference_samples": 5,
+      "reference_passed": true,
+      "reference_execution": "native Docker verifier, network=none",
+      "git_boundary": "immutable-base-model-patch-capture"
+    }
+  },
+  "recent_calibration_diagnostics": [
+    {
+      "task_id": "cattrs-partial-structuring-recovery",
+      "date": "2026-09-01",
+      "tools": ["codex", "hermes"],
+      "model": "z-ai/glm-5.3-flash",
+      "timeout_s": 900,
+      "regime": "long",
+      "attempts_per_tool": 1,
+      "status": "both-timeout-retry-unavailable-spend-stop",
+      "reference_samples": 5,
+      "reference_passed": true,
+      "spend_usd": 0.063902975
+    },
+    {
+      "task_id": "anko-default-function-arguments",
+      "date": "2026-08-30",
+      "tools": ["codex", "hermes"],
+      "model": "z-ai/glm-5.3-flash",
+      "timeout_s": 300,
+      "attempts_per_tool": 2,
+      "status": "quarantined-both-tools",
+      "reference_samples": 5,
+      "reference_passed": true,
+      "spend_usd": 0.03231064
+    },
+    {
+      "task_id": "opa-template-string-reconstruction",
+      "date": "2026-08-30",
+      "tools": ["codex", "hermes"],
+      "model": "z-ai/glm-5.3-flash",
+      "timeout_s": 300,
+      "attempts_per_tool": 2,
+      "status": "quarantined-both-tools",
+      "reference_samples": 5,
+      "reference_passed": true,
+      "spend_usd": 0.0550612
+    },
+    {
+      "task_id": "anko-default-function-arguments",
+      "date": "2026-08-30",
+      "tools": ["codex", "hermes"],
+      "model": "z-ai/glm-5.3-flash",
+      "timeout_s": 900,
+      "regime": "long",
+      "attempts_per_tool": 1,
+      "status": "both-timeout-unavailable-spend-stop",
+      "reference_samples": 5,
+      "reference_passed": true,
+      "spend_usd": 0.030538365
+    },
+    {
+      "task_id": "tomlkit-toml-table-converters",
+      "date": "2026-08-29",
+      "tools": ["codex", "hermes"],
+      "model": "z-ai/glm-5.3-flash",
+      "timeout_s": 300,
+      "attempts_per_tool": 2,
+      "status": "quarantined-both-tools",
+      "reference_samples": 5,
+      "reference_passed": true,
+      "spend_usd": 0.08918645
+    }
+  ],
+  "blocking_findings": [
+    "The audited revision contains no native refactor or test-fix tasks; native category balance is not used as an additional DeepSWE gate.",
+    "Short-regime diagnostics for IPython, FastAPI, Awilix, Mashumaro, Happy DOM, HTTPX, dateutil, True Myth, Tomlkit, Ofetch, the selected cattrs task, ts-pattern, the HTTPX streaming candidate, the LangChain coalescing candidate, happy-dom-abort-pending-body-reads, mashumaro-flattened-dataclass-fields, gql-incremental-graphql-delivery, vulture-persistent-analysis-cache, anko-default-function-arguments, opa-template-string-reconstruction, and the latest Tomlkit two-CLI control timed out or were quarantined at 300 seconds; the latest two native bug-fix candidates timed out in both Codex and Hermes after passing reference polarity.",
+    "A pinned-license evidence record is now collected in plans/s3-deepswe-license-review.json, but source-task review, two-CLI calibration, and maintainer sign-off remain pending."
+  ],
+  "provisional_selection": {
+    "status": "candidate-not-approved",
+    "task_ids": [
+      "psd-tools-blend-range-api",
+      "cattrs-partial-structuring-recovery",
+      "textual-richlog-follow-state",
+      "tomlkit-toml-table-converters",
+      "ink-grid-box-layout",
+      "true-myth-iterable-collection-combinators",
+      "happy-dom-deterministic-intersectionobserver",
+      "superjson-error-stack-serialization"
+    ],
+    "selected_category_counts": {
+      "bugfix": 0,
+      "enhancement": 0,
+      "feature_request": 8
+    },
+    "selected_language_counts": {
+      "python": 4,
+      "typescript": 4
+    },
+    "selected_size_counts": {
+      "small": 2,
+      "medium": 6
+    },
+    "composition_gate": {
+      "required_small": 2,
+      "required_medium": 2,
+      "observed_small": 2,
+      "observed_medium": 6,
+      "status": "passes-composition"
+    },
+    "selection_rule": "exactly four Python and four TypeScript tasks; at least two small and two medium repositories; preserve each task's exact native category and report the selected category distribution without requiring artificial category balance",
+  "unresolved": "The agreed release-candidate slice is provisional. All eight selected tasks pass automated source verifier polarity with reference reward 1, and the proposed composition is four Python, four TypeScript, two small, and six medium repositories. True Myth previously timed out for both Codex and Hermes at the short bound; the long-regime Hermes diagnostic for the reserve aiomonitor task also timed out with unavailable final usage, so neither result is calibration evidence. The remaining selected tasks have no qualifying two-CLI Flash calibration pass. Pinned-license evidence is collected, but source-task review, two-CLI calibration for the selected slice, and maintainer sign-off remain open."
+  },
+  "notes": "This audit is evidence only. It does not approve DeepSWE for the official S7 matrix and does not change task metadata. The repository now preserves source_dataset in generated DeepSWE manifests and rejects restricted lineage during official selection."
+}

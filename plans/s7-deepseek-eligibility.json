@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "upstream": "https://openrouter.ai/api",
+  "model": "deepseek/deepseek-v4.1-flash",
+  "reviewed_at": "2026-09-10T19:52:08.285603Z",
+  "evidence": "plans/s2-evidence/deepseek-v41-smoke-summary.json",
+  "tools": [
+    {
+      "tool": "claude-code",
+      "protocol": "anthropic_messages",
+      "reviewed": true,
+      "eligible": true,
+      "reason": "Native Docker smoke passed with adapter and verifier exit 0; 6 model attempts and complete priced accounting, provider DeepSeek confirmed. Known pre-inference title rejection remains a failed C1 attempt when present."
+    },
+    {
+      "tool": "cline",
+      "protocol": "openai_chat",
+      "reviewed": true,
+      "eligible": true,
+      "reason": "Native Docker smoke passed with adapter and verifier exit 0; 6 model attempts and complete priced accounting, provider DeepSeek confirmed. Known pre-inference title rejection remains a failed C1 attempt when present."
+    },
+    {
+      "tool": "codex",
+      "protocol": "openai_responses",
+      "reviewed": true,
+      "eligible": true,
+      "reason": "Native Docker smoke passed with adapter and verifier exit 0; 4 model attempts and complete priced accounting, provider DeepSeek confirmed. Known pre-inference title rejection remains a failed C1 attempt when present."
+    },
+    {
+      "tool": "hermes",
+      "protocol": "openai_chat",
+      "reviewed": true,
+      "eligible": true,
+      "reason": "Native Docker smoke passed with adapter and verifier exit 0; 6 model attempts and complete priced accounting, provider DeepSeek confirmed. Known pre-inference title rejection remains a failed C1 attempt when present."
+    },
+    {
+      "tool": "pi",
+      "protocol": "openai_chat",
+      "reviewed": true,
+      "eligible": true,
+      "reason": "Native Docker smoke passed with adapter and verifier exit 0; 4 model attempts and complete priced accounting, provider DeepSeek confirmed. Known pre-inference title rejection remains a failed C1 attempt when present."
+    },
+    {
+      "tool": "qwen",
+      "protocol": "openai_chat",
+      "reviewed": true,
+      "eligible": true,
+      "reason": "Native Docker smoke passed with adapter and verifier exit 0; 4 model attempts and complete priced accounting, provider DeepSeek confirmed. Known pre-inference title rejection remains a failed C1 attempt when present."
+    }
+  ]
+}

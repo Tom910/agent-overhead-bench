@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "source_adapter": "local-prepared",
+  "tasks": [
+    {
+      "id": "py-medium-feature-1",
+      "source": {
+        "kind": "local-development",
+        "repository": "agent-overhead-bench",
+        "revision": "working-tree",
+        "task_id": "py-medium-feature-1",
+        "license_notes": "Local development fixture; not a public-source v1 result."
+      },
+      "checksum": "sha256:4610097571b473ed153550fcdcd4a3aa299d5196b0094916569c2a69e59bbae2",
+      "preparation": "copy-task-yaml-prompt-workspace-verifier"
+    },
+    {
+      "id": "py-medium-refactor-1",
+      "source": {
+        "kind": "local-development",
+        "repository": "agent-overhead-bench",
+        "revision": "working-tree",
+        "task_id": "py-medium-refactor-1",
+        "license_notes": "Local development fixture; not a public-source v1 result."
+      },
+      "checksum": "sha256:62a01c4b6183dfedc7fbfdc675c040c525408c2768230b9835395bf5b4034d77",
+      "preparation": "copy-task-yaml-prompt-workspace-verifier"
+    },
+    {
+      "id": "py-small-bugfix-1",
+      "source": {
+        "kind": "local-development",
+        "repository": "agent-overhead-bench",
+        "revision": "working-tree",
+        "task_id": "py-small-bugfix-1",
+        "license_notes": "Local development fixture; not a public-source v1 result."
+      },
+      "checksum": "sha256:40e52409a96b031ee294d838b642d9631f25b2ce96313f4fc988c581da721b25",
+      "preparation": "copy-task-yaml-prompt-workspace-verifier"
+    },
+    {
+      "id": "py-small-testfix-1",
+      "source": {
+        "kind": "local-development",
+        "repository": "agent-overhead-bench",
+        "revision": "working-tree",
+        "task_id": "py-small-testfix-1",
+        "license_notes": "Local development fixture; not a public-source v1 result."
+      },
+      "checksum": "sha256:107f2a3767574d35b1f851757571907911ff03a2174d863a7a5b65401de3620e",
+      "preparation": "copy-task-yaml-prompt-workspace-verifier"
+    },
+    {
+      "id": "ts-medium-feature-1",
+      "source": {
+        "kind": "local-development",
+        "repository": "agent-overhead-bench",
+        "revision": "working-tree",
+        "task_id": "ts-medium-feature-1",
+        "license_notes": "Local development fixture; not a public-source v1 result."
+      },
+      "checksum": "sha256:7985de39d59729c75825a9c7ca6ddfa1b2ed8c3c02a1e4fad08c8c71f3efc4b2",
+      "preparation": "copy-task-yaml-prompt-workspace-verifier"
+    },
+    {
+      "id": "ts-medium-refactor-1",
+      "source": {
+        "kind": "local-development",
+        "repository": "agent-overhead-bench",
+        "revision": "working-tree",
+        "task_id": "ts-medium-refactor-1",
+        "license_notes": "Local development fixture; not a public-source v1 result."
+      },
+      "checksum": "sha256:b4db7cfcbfd69180647609ee3249a9aa6071c08d1d1dff479b96ac33a6889a91",
+      "preparation": "copy-task-yaml-prompt-workspace-verifier"
+    },
+    {
+      "id": "ts-small-bugfix-1",
+      "source": {
+        "kind": "local-development",
+        "repository": "agent-overhead-bench",
+        "revision": "working-tree",
+        "task_id": "ts-small-bugfix-1",
+        "license_notes": "Local development fixture; not a public-source v1 result."
+      },
+      "checksum": "sha256:260f75848b86c3bd19f9e4ec346ce88c10f8d2f960daf1f5cd8d4eeeab019879",
+      "preparation": "copy-task-yaml-prompt-workspace-verifier"
+    },
+    {
+      "id": "ts-small-testfix-1",
+      "source": {
+        "kind": "local-development",
+        "repository": "agent-overhead-bench",
+        "revision": "working-tree",
+        "task_id": "ts-small-testfix-1",
+        "license_notes": "Local development fixture; not a public-source v1 result."
+      },
+      "checksum": "sha256:426906c9ed9d29369dc0d6cc6d3c7ddc275a1de19bbb995da24adb15d030cc1d",
+      "preparation": "copy-task-yaml-prompt-workspace-verifier"
+    }
+  ]
+}

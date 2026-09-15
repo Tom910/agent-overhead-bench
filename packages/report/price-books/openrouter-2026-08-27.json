@@ -1,0 +1,11 @@
+{
+  "id": "openrouter-2026-08-27",
+  "models": {
+    "mock": { "input": 0, "cached_input": 0, "output": 0 },
+    "z-ai/glm-5.3-flash": {
+      "input": 0.000000075,
+      "cached_input": 0.000000015,
+      "output": 0.00000025
+    }
+  }
+}

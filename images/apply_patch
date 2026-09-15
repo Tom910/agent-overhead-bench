@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+"""Apply the patch format emitted by Codex's apply_patch command."""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+
+def fail(message: str) -> None:
+    raise SystemExit(f"apply_patch: {message}")
+
+
+def locate(lines: list[str], needle: list[str], start: int) -> int:
+    if not needle:
+        return start
+    for index in range(start, len(lines) - len(needle) + 1):
+        if lines[index : index + len(needle)] == needle:
+            return index
+    return -1
+
+
+def update_file(path: Path, chunks: list[list[str]]) -> None:
+    if not path.is_file():
+        fail(f"update target does not exist: {path}")
+    original = path.read_text()
+    lines = original.splitlines(keepends=True)
+    cursor = 0
+    for chunk in chunks:
+        old: list[str] = []
+        new: list[str] = []
+        for line in chunk:
+            if line.startswith(" "):
+                old.append(line[1:])
+                new.append(line[1:])
+            elif line.startswith("-"):
+                old.append(line[1:])
+            elif line.startswith("+"):
+                new.append(line[1:])
+            elif line.startswith("\\"):
+                continue
+            else:
+                fail(f"malformed hunk in {path}")
+        position = locate(lines, old, cursor)
+        if position < 0:
+            fail(f"context not found in {path}")
+        lines[position : position + len(old)] = new
+        cursor = position + len(new)
+    path.write_text("".join(lines))
+
+
+def parse_patch(raw: list[str]) -> list[tuple[str, Path, list[list[str]]]]:
+    if not raw or raw[0].rstrip("\n") != "*** Begin Patch":
+        fail("expected *** Begin Patch")
+    operations: list[tuple[str, Path, list[list[str]]]] = []
+    index = 1
+    while index < len(raw):
+        header = raw[index].rstrip("\n")
+        if header == "*** End Patch":
+            return operations
+        if header.startswith("*** Add File: "):
+            path = Path(header.removeprefix("*** Add File: "))
+            content: list[str] = []
+            index += 1
+            while index < len(raw) and not raw[index].startswith("*** "):
+                line = raw[index]
+                if not line.startswith("+"):
+                    fail(f"malformed add operation for {path}")
+                content.append(line[1:])
+                index += 1
+            operations.append(("add", path, [content]))
+            continue
+        if header.startswith("*** Delete File: "):
+            operations.append(("delete", Path(header.removeprefix("*** Delete File: ")), []))
+            index += 1
+            continue
+        if header.startswith("*** Update File: "):
+            path = Path(header.removeprefix("*** Update File: "))
+            chunks: list[list[str]] = []
+            index += 1
+            while index < len(raw) and not raw[index].startswith("*** "):
+                if not raw[index].startswith("@@"):
+                    fail(f"expected hunk in {path}")
+                index += 1
+                chunk: list[str] = []
+                while index < len(raw) and not raw[index].startswith(("@@", "*** ")):
+                    chunk.append(raw[index])
+                    index += 1
+                chunks.append(chunk)
+            operations.append(("update", path, chunks))
+            continue
+        fail(f"unknown operation: {header}")
+    fail("missing *** End Patch")
+
+
+def main() -> None:
+    operations = parse_patch(sys.stdin.readlines())
+    for operation, path, chunks in operations:
+        if operation == "add":
+            if path.exists():
+                fail(f"add target already exists: {path}")
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("".join(chunks[0]))
+        elif operation == "delete":
+            if not path.is_file():
+                fail(f"delete target does not exist: {path}")
+            path.unlink()
+        else:
+            update_file(path, chunks)
+
+
+if __name__ == "__main__":
+    main()

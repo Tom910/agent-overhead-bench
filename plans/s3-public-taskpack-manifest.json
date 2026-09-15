@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "source_adapter": "git-taskpack",
+  "repository": "https://github.com/usamadar/coding-agent-benchmark.git",
+  "revision": "6f46d7c3712164276caef3102ddc07a1310e6276",
+  "license_notes": "Source repository is MIT licensed; selected task-pack metadata, prompts, starter repositories, and test files are prepared from the pinned public revision. Held-out tests are not copied into the agent workspace.",
+  "review": {
+    "source_reviewed": false,
+    "reference_results_verified": false,
+    "calibration_complete": false,
+    "maintainer_signed_off": false,
+    "reviewer": "unassigned",
+    "reviewed_at": "pending",
+    "evidence_file": "plans/s3-public-taskpack-review.json",
+    "evidence_sha256": "sha256:e277cb98c8ad70ac76beb7ab6921515a33b81e30eb594fa7cb4976cda5cbda5e",
+    "reviewed_task_ids": [
+      "py-small-bugfix-1",
+      "py-small-bugfix-2",
+      "ts-small-feature-1",
+      "py-small-feature-1",
+      "ts-small-feature-2",
+      "py-small-refactor-1",
+      "ts-small-refactor-1",
+      "py-small-feature-2"
+    ],
+    "calibration_adapters": []
+  },
+  "tasks": [
+    {
+      "id": "py-small-bugfix-1",
+      "path": "tasks/00-smoke-test",
+      "source_task_id": "00-smoke-test",
+      "language": "python",
+      "shape": "bugfix",
+      "size": "small",
+      "timeout_s": 60,
+      "expected_minutes": [1, 5],
+      "test_runners": ["python-basic"],
+      "checksum": "sha256:5e237751f612a049da92980aea3da38ed1b1e7e8cfe254a59cd1bafe97fb7992"
+    },
+    {
+      "id": "py-small-bugfix-2",
+      "path": "tasks/01-python-bugfix-csv",
+      "source_task_id": "01-python-bugfix-csv",
+      "language": "python",
+      "shape": "bugfix",
+      "size": "small",
+      "timeout_s": 120,
+      "expected_minutes": [1, 5],
+      "test_runners": ["python-basic"],
+      "checksum": "sha256:2c2476e986161de02755418cbd07da406155d0244cfa68f8a24135088d9c2a15"
+    },
+    {
+      "id": "ts-small-feature-1",
+      "path": "tasks/03-typescript-feature-table-filter",
+      "source_task_id": "03-typescript-feature-table-filter",
+      "language": "typescript",
+      "shape": "feature",
+      "size": "small",
+      "timeout_s": 180,
+      "expected_minutes": [1, 5],
+      "test_runners": ["node-basic"],
+      "checksum": "sha256:78063dede4d2f4ed1eae0a4cd6ce5de22903277e6afdfcff64961c6163b602f4"
+    },
+    {
+      "id": "py-small-feature-1",
+      "path": "tasks/04-python-feature-pagination",
+      "source_task_id": "04-python-feature-pagination",
+      "language": "python",
+      "shape": "feature",
+      "size": "small",
+      "timeout_s": 120,
+      "expected_minutes": [1, 5],
+      "test_runners": ["python-basic"],
+      "checksum": "sha256:14d9721366cd9556a8cb160fae0c152893053491c4960f95d99a8c0f12f5cf7c"
+    },
+    {
+      "id": "ts-small-feature-2",
+      "path": "tasks/05-typescript-scratch-task-queue",
+      "source_task_id": "05-typescript-scratch-task-queue",
+      "language": "typescript",
+      "shape": "feature",
+      "size": "small",
+      "timeout_s": 180,
+      "expected_minutes": [1, 5],
+      "test_runners": ["node-basic"],
+      "checksum": "sha256:8a80b25ab4ec97b373bc082982704a82d3f4fada1964efbba83fe1dd0c4d8566"
+    },
+    {
+      "id": "py-small-refactor-1",
+      "path": "tasks/07-python-refactor-monolith",
+      "source_task_id": "07-python-refactor-monolith",
+      "language": "python",
+      "shape": "refactor",
+      "size": "small",
+      "timeout_s": 180,
+      "expected_minutes": [1, 5],
+      "test_runners": ["python-basic"],
+      "checksum": "sha256:b5704c0db6c567b04ec57eb3853672febdee87ad379daa7bb3b06f575dfa6604"
+    },
+    {
+      "id": "ts-small-refactor-1",
+      "path": "tasks/08-typescript-refactor-callbacks",
+      "source_task_id": "08-typescript-refactor-callbacks",
+      "language": "typescript",
+      "shape": "refactor",
+      "size": "small",
+      "timeout_s": 180,
+      "expected_minutes": [1, 5],
+      "test_runners": ["node-basic"],
+      "checksum": "sha256:c67ceefbb0ea64ee0e9ef7a666dd6e063575bb32c2d5f54b45c9282ce7be6638"
+    },
+    {
+      "id": "py-small-feature-2",
+      "path": "tasks/10-fullstack-angular-python",
+      "source_task_id": "10-fullstack-angular-python",
+      "language": "python",
+      "shape": "feature",
+      "size": "small",
+      "timeout_s": 180,
+      "expected_minutes": [1, 5],
+      "test_runners": ["python-basic", "node-basic"],
+      "checksum": "sha256:e6a79e29722d076306423ca1de8d34de7badee5ce54aab21b9dbd402f67b79d5"
+    }
+  ]
+}
