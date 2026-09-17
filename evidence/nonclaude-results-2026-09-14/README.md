@@ -1,6 +1,6 @@
 # Non-Claude campaign results — 14 September 2026
 
-Snapshot: 2026-09-14T16:09:23.683455+00:00. **200/200 slots have completed native outcomes: 102 passes, 98 failures, 0 unresolved.** Claude Code remains excluded and unresolved. This is not the frozen v1 dataset.
+Snapshot: 2026-09-14T16:09:23.683455+00:00. **200/200 slots have completed native outcomes: 102 passes, 98 failures, 0 unresolved.** Claude Code remains excluded and unresolved. This is not the frozen v1 dataset. Start with [INSIGHTS.md](INSIGHTS.md) or the [interactive analysis](analysis.html) (now includes request timelines).
 
 The selected DeepSWE-adapted public-repository campaign uses eight tasks × five repetitions per harness, the extended regime, and `deepseek/deepseek-v4.1-flash` through OpenRouter pinned to the DeepSeek provider with fallbacks disabled. Existing upstream lineage, source review and verifier gates remain applicable. Completing native outcomes does not itself clear release/calibration/accounting gates.
 
@@ -23,6 +23,14 @@ All five non-Claude harnesses have all 40 native outcomes. Every queued recovery
 The earlier [supplemental TOMLKit verifier pass](supplemental-verification.json) remains historical evidence. It is not pooled into the headline results; the new complete attempt supplies the selected outcome. No further retry is queued.
 
 ## Timing, usage and estimated costs
+
+The [interpretation guide](INSIGHTS.md) explains what this snapshot supports.
+The new [analysis tables](analysis.md), [interactive HTML view](analysis.html)
+and [per-attempt JSON](analysis.json) expose matched task comparisons and separate
+pass/fail distributions with explicit denominators. HTML is standalone: download
+and open it locally. [Analysis provenance](provenance.json) binds these generated
+artifacts to this snapshot's summary and selected C1/C4 hashes. The historical
+report-engine files below remain unchanged.
 
 The [standard report-engine output](report-engine.md) provides end-to-end medians/IQR, model/non-model breakdowns, startup, HTTP first byte, parallelism, turns, token counts, cached percentage and available static cost/task estimates. The [structured headline rows](report-engine.json) are returned by the same report implementation; no separate aggregation is substituted.
 

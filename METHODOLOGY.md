@@ -170,7 +170,8 @@ or control when external billing becomes final.
 ## Aggregation and visibility
 
 S6 reads raw `run.json` and sibling `events.jsonl` files. It groups by source,
-revision, regime, condition, model, tool, and price book; computes medians and
+revision, regime, condition, model, tool, price book, provider routing,
+tool configuration, Ori version and recorded host fields; computes medians and
 IQRs only after the raw-file validation and success-denominator checks; and
 never writes those derived values into `run.json`. Harness-share ranking is
 reserved for tools with full tool-event visibility. Partial or absent
@@ -181,7 +182,60 @@ successful-response-only.
 
 ## Statistics
 
-N ≥ 4 per cell, median and IQR. N = 4 is exploratory. Failed verification is excluded from timing aggregates.
+The target is N ≥ 4 per cell. N = 4 is exploratory; actual timing-eligible
+counts can be smaller because failed verification is excluded from headline
+timing. Headline E2E is the median across per-task medians. Headline spread is
+the median of the measurable within-task IQRs; tasks with fewer than two
+eligible repetitions contribute no IQR. This is neither a pooled IQR nor a
+confidence interval. Per-task quartiles use linear interpolation.
+
+The S6 analysis view exposes every loaded attempt and separates `completed`,
+`verify_error`, timeout and adapter-error outcomes. Reconciled failure timing
+is shown only in its own outcome distribution. Every metric shows its available
+and missing sample count. A known static-cost subtotal with missing prices is
+not a total invoice. Successful-response usage and all-attempt turn counts keep
+their existing definitions.
+
+Pairwise comparisons first intersect task identities with successful timing
+on both sides within the same recorded population. Identity includes the task
+base revision, verifier image and environment kind. Each side summarizes the
+same task set using the existing median-of-task-medians hierarchy. The reported
+ratio is the median of within-task right/left ratios; it need not equal the
+ratio of the displayed summary medians. Per-task repetition counts remain
+visible. This is exploratory success-conditioned matching, not paired random
+seeds, matched execution windows, or a causal estimate of harness effects.
+No matched-model comparison is generated for an unspecified model.
+
+Stacked timing charts use arithmetic means within tasks, then arithmetic means
+across those tasks, so the original timing buckets remain additive. Their
+values intentionally differ from headline medians. Independently aggregated
+medians must not be stacked as an E2E decomposition. The historical campaign
+report files retain their original values; the new analysis is a separate view.
+
+`analysis.json` is an allowlisted per-attempt export with C1/C4 hashes, measured
+identity, timing, usage, static costs and reasons for unavailable values. It
+contains no logs, request bodies or workspace paths. The public snapshot export
+contains only its 200 selected outcomes, excluding superseded infrastructure
+attempts. It can reproduce `analysis.md` and `analysis.html` offline using
+`scripts/s6-analysis-replay.mjs`; summaries are recomputed from attempt facts.
+These artifacts do not replace official archive verification or invoice
+reconciliation.
+
+Schema v2 additionally exports allowlisted per-request observations. Requests
+are ordered by start time, gaps are uncovered intervals after the running
+maximum response end, and tail time ends at adapter completion. Tail and gap
+shares use first request through adapter completion, excluding startup; those
+shares are unavailable for unreconciled adapter timing. Network-error closure
+markers are not first-byte observations. Wait and transfer remain unavailable
+for those calls, matching the existing C1 derivation.
+
+Request-summary tables report medians across run-level summaries with separate
+available and missing counts, and per-task tables retain outcome separation.
+Cumulative token trajectories sum successful-response usage only. Cumulative
+cost curves label partial pricing as a known subtotal and mark missing calls;
+they never establish an invoice. Replay validates request geometry, token and
+cost availability, and agreement with attempt facts, then checks and recomputes
+request summaries instead of trusting supplied derived values.
 
 ## Cost
 

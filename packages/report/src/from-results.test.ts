@@ -143,6 +143,50 @@ function writeCell(
 }
 
 describe("generateReport", () => {
+  it("exports allowlisted attempt facts, separates failures, and preserves measurable task spread", () => {
+    const root = mkdtempSync(join(tmpdir(), "aob-analysis-"));
+    try {
+      const results = join(root, "results");
+      writeCell(results, "a0", "completed", false, { tEnd: 10000 });
+      writeCell(results, "a1", "completed", false, { rep: 1, tEnd: 14000 });
+      writeCell(results, "a2", "completed", false, { rep: 2, tEnd: 30000 });
+      writeCell(results, "b0", "completed", false, { taskId: "t2", tEnd: 40000 });
+      writeCell(results, "failed", "verify_error", false, { taskId: "t2", rep: 1, tEnd: 50000 });
+      const out = join(root, "report");
+      const report = generateReport(results, out);
+      expect(report.rows[0]!.e2eIqr).toBe(10000);
+      expect(report.rows[0]!.derived!.end_to_end).toBe(27000);
+      expect(report.html).toContain('data-e2e="29000"');
+      const data = JSON.parse(readFileSync(join(out, "analysis.json"), "utf8"));
+      expect(data.attempts).toHaveLength(5);
+      expect(data.attempts.find((a: { run_id: string }) => a.run_id === "failed").timing.end_to_end).toBe(50000);
+      expect(data.attempts[0].hashes.run).toMatch(/^sha256:[a-f0-9]{64}$/);
+      const serialized = JSON.stringify(data);
+      for (const privateText of [root, "stdout.log", "stderr.log", "verify.log", "adapter_result", "events_file"]) expect(serialized).not.toContain(privateText);
+      expect(readFileSync(join(out, "analysis.md"), "utf8")).toContain("verify_error");
+      expect(readFileSync(join(out, "analysis.html"), "utf8")).toContain("<html");
+    } finally { rmSync(root, { recursive: true, force: true }); }
+  });
+
+  it("separates recorded hosts in both headline and analysis populations", () => {
+    const root = mkdtempSync(join(tmpdir(), "aob-host-analysis-"));
+    try {
+      writeCell(root, "linux", "completed", false);
+      writeCell(root, "linux2", "completed", false, { rep: 2 });
+      writeCell(root, "linux3", "completed", false, { rep: 3 });
+      writeCell(root, "mac", "completed", false, { rep: 1, tEnd: 40000 });
+      const path = join(root, "mac/run.json");
+      const run = JSON.parse(readFileSync(path, "utf8"));
+      run.host.os = "darwin";
+      writeFileSync(path, JSON.stringify(run));
+      const report = generateReport(root, join(root, "out"));
+      expect(report.rows).toHaveLength(2);
+      const data = JSON.parse(readFileSync(join(root, "out/analysis.json"), "utf8"));
+      expect(data.populations).toHaveLength(2);
+      expect(reviewAnomalies(loadResultsTree(root))).toEqual([]);
+    } finally { rmSync(root, { recursive: true, force: true }); }
+  });
+
   it("discloses batch scheduling for raw and archived campaign state", () => {
     const root = mkdtempSync(join(tmpdir(), "aob-batch-report-"));
     try {

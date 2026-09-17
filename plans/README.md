@@ -46,6 +46,8 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
+| [S6-request-timelines-plan.md](./S6-request-timelines-plan.md) | Implemented: sanitized C1 request series, timelines, token/cost curves; no new spend |
+| [S6-analysis-usability-plan.md](./S6-analysis-usability-plan.md) | Implemented and verified: matched tasks, per-attempt export, outcome distributions and additive charts |
 | [S8-github-push-ready-plan.md](./S8-github-push-ready-plan.md) | Remaining action: `git push -u origin main` |
 | [S3-maintainer-sign-off-plan.md](./S3-maintainer-sign-off-plan.md) | Implemented: four DeepSWE review flags approved; freeze still unpublished |
 | [S8-methodology-freeze-plan.md](./S8-methodology-freeze-plan.md) | Implemented: METHODOLOGY is protocol text; archive still unpublished |

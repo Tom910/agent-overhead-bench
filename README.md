@@ -22,6 +22,28 @@ Linux cells ran on a dedicated Linux measurement host. macOS cells ran on the op
 
 Use the host-separated [report-engine tables](evidence/nonclaude-results-2026-09-14/report-engine.md) for medians, model/non-model breakdowns, turns, tokens, caching, and available static cost estimates. The [campaign notes](evidence/nonclaude-results-2026-09-14/README.md) record per-task outcomes and limits. The [machine-readable summary](evidence/nonclaude-results-2026-09-14/summary.json) lists all 200 slot keys and retained C4/C1 hashes. Tool visibility is partial, so non-model time is not pure harness overhead. Hashes bind retained private run files; this checkout is not a verified official archive. An earlier [supplemental TOMLKit verifier pass](evidence/nonclaude-results-2026-09-14/supplemental-verification.json) is historical and is not in the selected 200.
 
+### Explore the campaign data
+
+Start with the [interpretation guide](evidence/nonclaude-results-2026-09-14/INSIGHTS.md),
+then use the [analysis tables](evidence/nonclaude-results-2026-09-14/analysis.md)
+or open the [standalone interactive view](evidence/nonclaude-results-2026-09-14/analysis.html)
+locally. These show matched task comparisons, successful and failed attempts
+separately, individual timing measurements, and the sample count behind each metric.
+The [per-attempt export](evidence/nonclaude-results-2026-09-14/analysis.json)
+contains sanitized measurements and hashes for all 200 selected attempts.
+
+The historical headline tables above and below use different datasets and sample
+filters. A fast success-only median does not imply faster completion across all
+attempts. The analysis view makes those filters visible and keeps recorded host,
+model, source, routing and price-book populations separate.
+
+Rebuild the campaign analysis offline from its public export, with no API keys:
+
+```bash
+node scripts/s6-analysis-replay.mjs \
+  evidence/nonclaude-results-2026-09-14/analysis.json scratch/campaign-analysis
+```
+
 ## Earlier local fixture pilot
 
 The following table is the separate, completed **192-cell local fixture pilot**,

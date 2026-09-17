@@ -55,7 +55,7 @@ export function formatUsd(usd: number): string {
 
 export function renderHeadlineMarkdown(rows: HeadlineRow[]): string {
   const header =
-    "| Harness | vX.Y | Vis. | Source/regime | E2E (med/IQR) | Harness share (full only) | Non-model share (fallback) | Cold start | Parallelism | First byte (med) | Turns | Tokens in/out | Cached % | Cost/task | Cost vs. token floor | Success | Raw |\n" +
+    "| Harness | vX.Y | Vis. | Source/regime | E2E (med / median task IQR) | Harness share (full only) | Non-model share (fallback) | Cold start | Parallelism | First byte (med) | Turns | Tokens in/out | Cached % | Cost/task | Cost vs. token floor | Success | Raw |\n" +
     "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|";
   const body = rows.map((r) => {
     const share = r.derived === null ? null : harnessShare(r.derived);

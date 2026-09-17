@@ -1,11 +1,15 @@
 import { existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, realpathSync, statSync, writeFileSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
 import { ConfigError, isPreInferenceRejection, isModelRequestAttempt, isSuccessfulModelEvent, validateC1Event, validateC4Run, type C1Event, type C4Run } from "@aob/contracts";
-import { aggregateMedians, costBarSvg, costUsd, renderHtml, stackedBarSvg, tokenFloorUsd, type PriceRates } from "./aggregate.js";
+import { aggregateMedians, aggregateTimingMeans, costBarSvg, costUsd, renderHtml, stackedBarSvg, tokenFloorUsd, type PriceRates } from "./aggregate.js";
 import { deriveFromC1, iqr, median, type DerivedRun, type ToolVisibility } from "./derive.js";
+import { requestSeries, summarizeRequests } from "./request-analysis.js";
 import { renderHeadlineMarkdown, renderTaskMarkdown, type HeadlineRow, type TaskDetailRow } from "./render.js";
 import { priceBookPath } from "./price-books.js";
+import { analyzeAttempts, type AnalysisAttempt, type AnalysisExport } from "./analysis.js";
+import { renderAnalysisHtml, renderAnalysisMarkdown } from "./analysis-render.js";
 
 function walkRunJson(dir: string, acc: string[] = []): string[] {
   for (const name of readdirSync(dir)) {
@@ -206,26 +210,26 @@ function ratesFor(run: C4Run, pricing: PricingFile): PriceRates | undefined {
   return rates;
 }
 
-function cellCost(c: LoadedCell, loadPriceBook: (id: string) => PricingFile): { cost: number | null; floor: number | null } {
+function cellCost(c: LoadedCell, loadPriceBook: (id: string) => PricingFile): { cost: number | null; floor: number | null; unavailable?: AnalysisAttempt["cost_unavailable"] } {
   // Match S5 total-spend availability: a successful-request subtotal cannot
   // establish the total after an ambiguous upstream failure.
   if (c.events.some((event) => isModelRequestAttempt(event) &&
       !isSuccessfulModelEvent(event) && !isPreInferenceRejection(event) && event.error?.kind !== "proxy_refused")) {
-    return { cost: null, floor: null };
+    return { cost: null, floor: null, unavailable: "incomplete-accounting" };
   }
   const measuredEvents = c.events.filter((candidate) => isSuccessfulModelEvent(candidate));
   // The default condition deliberately records an empty C4 model because the
   // provider-selected model is not pinned. Never invent a price for it: a
   // request-free fixture is zero, while observed usage remains unavailable.
-  if (c.run.model === "") return measuredEvents.length === 0 ? { cost: 0, floor: 0 } : { cost: null, floor: null };
+  if (c.run.model === "") return measuredEvents.length === 0 ? { cost: 0, floor: 0 } : { cost: null, floor: null, unavailable: "unpriced-model" };
   const rates = ratesFor(c.run, loadPriceBook(c.run.price_book));
-  if (rates === undefined) return { cost: null, floor: null };
+  if (rates === undefined) return { cost: null, floor: null, unavailable: "unpriced-model" };
   let cost = 0;
   let floor = 0;
   for (const event of measuredEvents) {
     const eventCost = costUsd(event.usage, rates);
     const eventFloor = tokenFloorUsd(event.usage === null ? null : { input: event.usage.input, output: event.usage.output }, rates);
-    if (eventCost === null || eventFloor === null) return { cost: null, floor: null };
+    if (eventCost === null || eventFloor === null) return { cost: null, floor: null, unavailable: "incomplete-usage" };
     cost += eventCost;
     floor += eventFloor;
   }
@@ -349,7 +353,7 @@ function headlineRow(cells: LoadedCell[], loadPriceBook: (id: string) => Pricing
     derived: timing,
     // Keep only tasks whose spread is measurable; a single-repetition task
     // contributes no information about spread and must not be folded in as 0.
-    e2eIqr: medianNullable([...timingByTask.values()].map((task) => iqr(task.map((cell) => cell.derived.end_to_end)))),
+    e2eIqr: medianNullable([...timingByTask.values()].map((task) => iqr(task.map((cell) => cell.derived.end_to_end))).filter((value): value is number => value !== null)),
     ...usage,
     costUsd: medianNullable(taskCostMedians),
     tokenFloorUsd: medianNullable(taskFloorMedians),
@@ -396,7 +400,8 @@ export function reviewAnomalies(cells: LoadedCell[]): ReviewAnomaly[] {
   for (const cell of cells) {
     if (cell.run.outcome !== "completed" || cell.derived.unreconciled) continue;
     const key = [cell.run.tool, cell.run.task_id, cell.run.task_repository ?? "", cell.run.task_source, cell.run.task_revision,
-      cell.run.task_regime, cell.run.condition, cell.run.model, cell.run.price_book, JSON.stringify(cell.run.provider_routing ?? null), cell.run.tool_configuration ?? null].join("\0");
+      cell.run.task_regime, cell.run.condition, cell.run.model, cell.run.price_book, JSON.stringify(cell.run.provider_routing ?? null), cell.run.tool_configuration ?? null,
+      cell.run.host.os, cell.run.host.cpu, cell.run.host.ram_gb, cell.run.ori_version ?? ""].join("\0");
     const group = groups.get(key) ?? [];
     group.push(cell);
     groups.set(key, group);
@@ -431,14 +436,60 @@ function campaignScheduling(resultsDir: string): string {
   return "";
 }
 
-export function generateReport(resultsDir: string, outDir: string, options: { allowUnpricedModels?: boolean } = {}): { markdown: string; html: string; rows: HeadlineRow[] } {
+function attemptAnalysis(cell: LoadedCell, loadPriceBook: (id: string) => PricingFile): AnalysisAttempt {
+  const r = cell.run;
+  const usage = usageSummary(cell);
+  const price = cellCost(cell, loadPriceBook);
+  const hash = (path: string) => `sha256:${createHash("sha256").update(readFileSync(path)).digest("hex")}`;
+  return {
+    run_id: r.run_id, harness: r.tool, version: r.tool_version, task: r.task_id, rep: r.rep,
+    outcome: r.outcome, host: { os: r.host.os, cpu: r.host.cpu, ram_gb: r.host.ram_gb },
+    condition: r.condition, model: r.model, price_book: r.price_book,
+    source: { repository: r.task_repository ?? null, name: r.task_source, revision: r.task_revision },
+    regime: r.task_regime,
+    routing: r.provider_routing === undefined ? null : {
+      ignored_providers: [...r.provider_routing.ignored_providers].sort(),
+      ...(r.provider_routing.only_provider === undefined ? {} : { only_provider: r.provider_routing.only_provider }),
+      ...(r.provider_routing.allow_fallbacks === undefined ? {} : { allow_fallbacks: r.provider_routing.allow_fallbacks }),
+    },
+    configuration: r.tool_configuration ?? null, ori_version: r.ori_version,
+    task_base_revision: r.task_base_revision ?? null, verifier_image: r.container.verifier_image_digest,
+    environment: r.task_environment.kind, started_iso: r.container.started_iso, visibility: cell.visibility,
+    hashes: { run: hash(cell.runPath), events: hash(cellEventsPath(dirname(cell.runPath), r.events_file)) },
+    timing: cell.derived.unreconciled ? null : { ...cell.derived },
+    timing_unavailable: cell.derived.unreconciled ? "unreconciled" : null,
+    turns: usage.turns, input_tokens: usage.inputTokens, output_tokens: usage.outputTokens, cached_percent: usage.cachedPercent,
+    usage_unavailable: usage.inputTokens !== null ? null : cell.events.some(isSuccessfulModelEvent) ? "incomplete-usage" : "no-successful-usage",
+    cost_usd: price.cost, token_floor_usd: price.floor, cost_unavailable: price.unavailable ?? null,
+    ...(() => {
+      const rates = r.model === "" ? null : ratesFor(r, loadPriceBook(r.price_book)) ?? null;
+      // Relative to the first request, so export and replay share identical
+      // arithmetic and cannot disagree through absolute-clock roundoff.
+      const adapterEnd = cell.derived.unreconciled ? null : cell.derived.end_to_end - cell.derived.startup;
+      const requests = requestSeries(cell.events, adapterEnd, rates);
+      return { requests, request_summary: summarizeRequests(requests, adapterEnd, adapterEnd === null ? null : 0) };
+    })(),
+  };
+}
+
+function taskWeightedTimingMean(cells: LoadedCell[]): DerivedRun | null {
+  const tasks = new Map<string, DerivedRun[]>();
+  for (const cell of cellsForTiming(cells)) {
+    const values = tasks.get(cell.run.task_id) ?? [];
+    values.push(cell.derived);
+    tasks.set(cell.run.task_id, values);
+  }
+  return aggregateTimingMeans([...tasks.values()].map((runs) => aggregateTimingMeans(runs)!));
+}
+
+export function generateReport(resultsDir: string, outDir: string, options: { allowUnpricedModels?: boolean } = {}): { markdown: string; html: string; rows: HeadlineRow[]; analysis: AnalysisExport } {
   const cells = loadResultsTree(resultsDir);
   const loadPriceBook = priceBookLoader(options.allowUnpricedModels === true);
   const sections = new Map<string, LoadedCell[]>();
   const hasToolConfiguration = cells.some((cell) => cell.run.tool_configuration !== undefined);
   const hasProviderRouting = cells.some((cell) => cell.run.provider_routing !== undefined);
   for (const cell of cells) {
-    const key = `${cell.run.condition}\0${cell.run.price_book}\0${cell.run.model}\0${cell.run.task_repository ?? ""}\0${cell.run.task_source}\0${cell.run.task_revision}\0${cell.run.task_regime}\0${JSON.stringify(cell.run.provider_routing ?? null)}\0${cell.run.tool_configuration ?? ""}`;
+    const key = `${cell.run.condition}\0${cell.run.price_book}\0${cell.run.model}\0${cell.run.task_repository ?? ""}\0${cell.run.task_source}\0${cell.run.task_revision}\0${cell.run.task_regime}\0${JSON.stringify(cell.run.provider_routing ?? null)}\0${cell.run.tool_configuration ?? ""}\0${JSON.stringify([cell.run.host.os, cell.run.host.cpu, cell.run.host.ram_gb])}\0${cell.run.ori_version ?? ""}`;
     const list = sections.get(key) ?? [];
     list.push(cell);
     sections.set(key, list);
@@ -456,6 +507,7 @@ export function generateReport(resultsDir: string, outDir: string, options: { al
     : "Independent measurement instrument reporting materially different task regimes separately. Not a capabilities leaderboard, not a vendor harness cost claim. Results from different regimes are not pooled.\n\n";
   const rows: HeadlineRow[] = [];
   const tables: string[] = [];
+  const chartMeans: Array<DerivedRun | null> = [];
   for (const [key, section] of [...sections.entries()].sort()) {
     const [condition, priceBook, model, taskRepository, taskSource, taskRevision, taskRegime] = key.split("\0");
     const byTool = new Map<string, LoadedCell[]>();
@@ -468,6 +520,7 @@ export function generateReport(resultsDir: string, outDir: string, options: { al
         throw new ConfigError(`raw result path escapes results tree: ${source}`);
       }
       if (!statSync(source).isFile()) throw new ConfigError(`raw result path is not a file: ${source}`);
+      chartMeans.push(taskWeightedTimingMean(toolCells));
       return headlineRow(toolCells, loadPriceBook, relative(resolve(outDir), source));
     });
     rows.push(...sectionRows);
@@ -475,23 +528,30 @@ export function generateReport(resultsDir: string, outDir: string, options: { al
     const sourceLabel = taskRepository === "" ? `${headingValue(taskSource)}@${headingValue(taskRevision)}` : `${headingValue(taskRepository)} / ${headingValue(taskSource)}@${headingValue(taskRevision)}`;
     const routingLabel = hasProviderRouting ? `; ${headingValue(providerRoutingLabel(section[0]?.run.provider_routing))}` : "";
     const toolLabel = hasToolConfiguration ? `; tools: ${headingValue(section[0]?.run.tool_configuration ?? "default tools")}` : "";
-    tables.push(`## Condition: ${headingValue(condition)} (model: ${headingValue(model)}; price book: ${headingValue(priceBook)}; source: ${sourceLabel}; regime: ${headingValue(taskRegime)}${routingLabel}${toolLabel})\n\n${renderHeadlineMarkdown(sectionRows)}\n\n### Per-task drill-down\n\n${renderTaskMarkdown(detailRows)}`);
+    const host = section[0]!.run.host;
+    const hostLabel = `${headingValue(host.os)} / ${headingValue(host.cpu)} / ${host.ram_gb} GiB`;
+    tables.push(`## Condition: ${headingValue(condition)} (model: ${headingValue(model)}; price book: ${headingValue(priceBook)}; source: ${sourceLabel}; regime: ${headingValue(taskRegime)}${routingLabel}${toolLabel}; host: ${hostLabel})\n\n${renderHeadlineMarkdown(sectionRows)}\n\n### Per-task drill-down\n\n${renderTaskMarkdown(detailRows)}`);
   }
   const anomalies = reviewAnomalies(cells);
   const appendix = anomalies.length === 0
     ? "## Review appendix\n\nNo unreconciled runs or >3× within-cell outliers were found."
     : `## Review appendix\n\n${anomalies.map((anomaly) => `- \`${headingValue(anomaly.runId)}\`: ${headingValue(anomaly.reason)}`).join("\n")}`;
   const pricingNotice = options.allowUnpricedModels === true ? "Diagnostic preview: pricing unavailable for models absent from their recorded price book; costs and token floors remain unavailable.\n\n" : "";
-  const markdown = positioning + pricingNotice + campaignScheduling(resultsDir) + tables.join("\n\n") + (tables.length === 0 ? "" : "\n\n") + appendix;
+  const analysisNotice = "[Explore matched tasks, sample counts and outcome distributions](analysis.html) · [Analysis tables](analysis.md) · [Per-attempt data](analysis.json)\n\nHeadline timing uses reconciled native passes; usage and costs include all loaded outcomes. Headline E2E is the median of task medians; its spread is the median within-task IQR over tasks with at least two timing-eligible runs, not a pooled IQR or confidence interval. See the analysis view for contributing samples. Stacked timing charts use task-weighted arithmetic means, not the headline medians.\n\n";
+  const markdown = positioning + pricingNotice + analysisNotice + campaignScheduling(resultsDir) + tables.join("\n\n") + (tables.length === 0 ? "" : "\n\n") + appendix;
   const svgs = rows.flatMap((r, index) => [
-    ...(r.derived === null ? [] : [stackedBarSvg(r.derived, 400, 24, `hatch-${index}`, `${r.harness} timing breakdown`)]),
+    ...(chartMeans[index] == null ? [] : [stackedBarSvg(chartMeans[index]!, 400, 24, `hatch-${index}`, `${r.harness} task-weighted mean timing breakdown`)]),
     costBarSvg(r.costUsd, r.tokenFloorUsd, 400, 16, `${r.harness} cost versus token floor`),
   ]);
   const html = renderHtml(markdown, svgs);
   mkdirSync(outDir, { recursive: true });
   writeFileSync(join(outDir, "README.md"), markdown);
   writeFileSync(join(outDir, "index.html"), html);
-  return { markdown, html, rows };
+  const analysis = analyzeAttempts(cells.map((cell) => attemptAnalysis(cell, loadPriceBook)));
+  writeFileSync(join(outDir, "analysis.json"), `${JSON.stringify(analysis, null, 2)}\n`);
+  writeFileSync(join(outDir, "analysis.md"), renderAnalysisMarkdown(analysis));
+  writeFileSync(join(outDir, "analysis.html"), renderAnalysisHtml(analysis));
+  return { markdown, html, rows, analysis };
 }
 
 function providerRoutingLabel(policy: C4Run["provider_routing"]): string {

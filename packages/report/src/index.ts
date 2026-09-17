@@ -18,6 +18,7 @@ export {
 } from "./render.js";
 export {
   aggregateMedians,
+  aggregateTimingMeans,
   costUsd,
   renderHtml,
   stackedBarSvg,
@@ -25,6 +26,9 @@ export {
   tokenFloorUsd,
 } from "./aggregate.js";
 export { cellsForTiming, generateReport, loadResultsTree, reviewAnomalies, type ReviewAnomaly } from "./from-results.js";
+export { analyzeAttempts, type AnalysisAttempt, type AnalysisExport } from "./analysis.js";
+export { requestSeries, summarizeRequests, type AnalysisRequest, type RequestSummary } from "./request-analysis.js";
+export { renderAnalysisHtml, renderAnalysisMarkdown } from "./analysis-render.js";
 export { copySanitizedProvenance, copySanitizedResults } from "./freeze.js";
 export { parseActivityExportCsv, type ActivityExportSummary } from "./activity.js";
 export { activityBinding, archivedActivityBinding, activityBounds, activityLocalAccounting, runActivityCrosscheck, type ActivityBinding, type ActivityBounds, type ActivityCrosscheckSummary, type ActivityLocalAccounting, type ActivityWindow } from "./activity-cli.js";
