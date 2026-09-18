@@ -14,3 +14,9 @@ Pause S6 implementation for this documentation-only stage.
   with a normal fast-forward push after checking remote history. No release tag.
 
 No dependencies, measurement changes, API requests or new benchmark runs.
+
+## Verified outcome
+
+README generated from the public export; launch check and all 16 launch-check
+tests passed. Diff checks passed. Commit `cf3bc71` pushed to `origin/main` and
+remote SHA verified. S6 report improvements resumed afterward.

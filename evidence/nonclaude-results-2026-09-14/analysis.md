@@ -2,37 +2,21 @@
 
 Selected attempts: 200. Populations: 3.
 
-Pass = completed native verification; verification failure = verify\_error; other = timeout or adapter\_error. verify\_error alone does not distinguish task failure from verifier infrastructure failure. Failure timing stays separate and is not ranked against passes.
+All selected outcomes. Task coverage can differ; these are descriptive summaries, not a ranking. Cost, cache and tokens are medians per measured attempt. Cost is a static estimate, not billing. Cache rate is the median attempt cached-input percentage, not a pooled token ratio. Input includes cached tokens; token counters cover successful model responses. Missing measurements are not zero.
 
-Coverage counts all selected attempts. Each metric has its own valid n and missing n; timing, usage, caching and cost denominators can differ. Unavailable is not zero.
+## Population 1: deepseek/deepseek-v4.1-flash · darwin · deepseek-v41-low-2026-09-10
 
-IQR tasks counts successful timing tasks with at least two eligible repetitions, out of all successful timing tasks. Headline spread is the median measurable within-task IQR, not pooled spread.
+### At a glance
 
-Outcome spend is the sum of selected static estimates. When any costs are missing, the displayed amount is only a known subtotal. Failed attempts and other outcomes are reported separately from pass spend.
+| Harness | Pass rate | Median cost / attempt | Cache rate | Tokens in | Tokens out | Tasks |
+| --- | --- | --- | --- | --- | --- | --- |
+| cline @ 3.0.61 | 50.0% · 1/2 | $0.183 (1/2 measured · partial) | 97.1% (2/2 measured) | 11.78M (2/2 measured) | 146.6K (2/2 measured) | 2 |
+| codex @ codex-cli 0.149.1 | 62.2% · 23/37 | $0.086 (37/37 measured) | 99.2% (37/37 measured) | 8.12M (37/37 measured) | 85.8K (37/37 measured) | 8 |
+| hermes @ Hermes Agent v0.20.5 (2026.8.19) | 45.0% · 18/40 | $0.089 (40/40 measured) | 98.9% (40/40 measured) | 9.01M (40/40 measured) | 80.1K (40/40 measured) | 8 |
+| pi @ 0.73.1 | 46.2% · 18/39 | $0.107 (39/39 measured) | 98.1% (39/39 measured) | 8.47M (39/39 measured) | 88.8K (39/39 measured) | 8 |
+| qwen @ 0.22.2 | 72.2% · 13/18 | $0.096 (18/18 measured) | 99.2% (18/18 measured) | 8.95M (18/18 measured) | 83.7K (18/18 measured) | 7 |
 
-Distributions describe repetitions within one task, harness/version and outcome. Q1–Q3 and min–max describe observed samples, not confidence intervals; singleton quartiles are unavailable.
-
-Matched comparisons include only common successful task identities. Each task contributes one within-task median; summary times are medians across those task medians. The descriptive ratio is the median of right / left task ratios, not a causal effect or ratio of unrelated headline medians.
-
-Task identity includes base revision, verifier image and environment. Repetitions are not paired seeds; execution windows can differ. Recorded host fields do not establish machine identity.
-
-Request metrics come from sanitized C1 model attempts. Wait is first-byte minus request start; transfer is last-byte minus first-byte. Synthetic first-byte markers from network failures are unavailable. Gaps exclude overlapping model intervals; time after last is reconciled adapter end minus the latest response end. Request summary duration, wait, transfer and gap columns are medians of within-run medians, with metric-specific available and missing run counts.
-
-Timing uses the existing C1 interval-union derivation. Unreconciled timing is unavailable; outcome groups remain separate.
-
-Usage covers successful model responses; turns count identifiable API attempts. Static costs are not invoices and exclude attempts absent from this export.
-
-Matched comparisons use only common tasks with reconciled native passes on both sides. Repetition indices are not paired seeds. Samples and execution windows can differ.
-
-No matched-model comparison is produced when the recorded model is unspecified.
-
-Host fields describe recorded hardware, not unique machine identity. Same-host populations do not establish causal harness effects.
-
-Quartiles describe observed runs, not confidence intervals. Singleton spread is unavailable. Non-model time includes unobserved tool and harness work.
-
-Request series are sanitized C1 model attempts: duration, wait, transfer, gaps and per-call tokens/cost. Paths, bodies and logs are not exported. Relationships are within a run or matched task, not ratios of unrelated headline medians.
-
-## Population 1
+### Recorded population identity
 
 | Recorded identity | Value |
 | --- | --- |
@@ -1442,7 +1426,16 @@ codex @ codex-cli 0.149.1 · true-myth-iterable-collection-combinators · Pass (
 
 cline @ 3.0.61 · cattrs-partial-structuring-recovery · Verification failure (verify_error). Calls 229 (228 successful). Median duration 2.47s; largest gap 30.08s; time after last 1.35s.
 
-## Population 2
+## Population 2: deepseek/deepseek-v4.1-flash · linux · deepseek-v41-low-2026-09-10
+
+### At a glance
+
+| Harness | Pass rate | Median cost / attempt | Cache rate | Tokens in | Tokens out | Tasks |
+| --- | --- | --- | --- | --- | --- | --- |
+| cline @ 3.0.61 | 44.4% · 8/18 | $0.137 (18/18 measured) | 96.5% (18/18 measured) | 7.71M (18/18 measured) | 122.6K (18/18 measured) | 8 |
+| qwen @ 0.22.2 | 62.5% · 10/16 | $0.092 (16/16 measured) | 99.2% (16/16 measured) | 10.09M (16/16 measured) | 82.1K (16/16 measured) | 8 |
+
+### Recorded population identity
 
 | Recorded identity | Value |
 | --- | --- |
@@ -2038,7 +2031,18 @@ cline @ 3.0.61 · textual-richlog-follow-state · Pass (completed). Calls 499 (4
 
 qwen @ 0.22.2 · tomlkit-toml-table-converters · Pass (completed). Calls 100 (100 successful). Median duration 2.99s; largest gap 7.84s; time after last 197.6457 ms.
 
-## Population 3
+## Population 3: deepseek/deepseek-v4.1-flash · linux · openrouter-2026-09-04
+
+### At a glance
+
+| Harness | Pass rate | Median cost / attempt | Cache rate | Tokens in | Tokens out | Tasks |
+| --- | --- | --- | --- | --- | --- | --- |
+| cline @ 3.0.61 | 40.0% · 8/20 | Unavailable (0/20 measured · partial) | 96.3% (20/20 measured) | 10.38M (20/20 measured) | 186.9K (20/20 measured) | 8 |
+| codex @ codex-cli 0.149.1 | 33.3% · 1/3 | Unavailable (0/3 measured · partial) | 99.2% (3/3 measured) | 7.30M (3/3 measured) | 73.5K (3/3 measured) | 3 |
+| pi @ 0.73.1 | 0.0% · 0/1 | Unavailable (0/1 measured · partial) | 98.4% (1/1 measured) | 10.59M (1/1 measured) | 88.6K (1/1 measured) | 1 |
+| qwen @ 0.22.2 | 33.3% · 2/6 | Unavailable (0/6 measured · partial) | 98.9% (6/6 measured) | 9.80M (6/6 measured) | 86.6K (6/6 measured) | 3 |
+
+### Recorded population identity
 
 | Recorded identity | Value |
 | --- | --- |
@@ -2641,3 +2645,35 @@ Selected attempts: 1. Task identity: \[&quot;true-myth-iterable-collection-combi
 #### pinned:cline:textual-richlog-follow-state:1:funded-recovery-20260914 — most model calls among verification failures
 
 cline @ 3.0.61 · textual-richlog-follow-state · Verification failure (verify_error). Calls 422 (422 successful). Median duration 2.89s; largest gap 30.08s; time after last 1.38s.
+
+## Measurement notes
+
+Pass = completed native verification; verification failure = verify\_error; other = timeout or adapter\_error. verify\_error alone does not distinguish task failure from verifier infrastructure failure. Failure timing stays separate and is not ranked against passes.
+
+Coverage counts all selected attempts. Each metric has its own valid n and missing n; timing, usage, caching and cost denominators can differ. Unavailable is not zero.
+
+IQR tasks counts successful timing tasks with at least two eligible repetitions, out of all successful timing tasks. Headline spread is the median measurable within-task IQR, not pooled spread.
+
+Outcome spend is the sum of selected static estimates. When any costs are missing, the displayed amount is only a known subtotal. Failed attempts and other outcomes are reported separately from pass spend.
+
+Distributions describe repetitions within one task, harness/version and outcome. Q1–Q3 and min–max describe observed samples, not confidence intervals; singleton quartiles are unavailable.
+
+Matched comparisons include only common successful task identities. Each task contributes one within-task median; summary times are medians across those task medians. The descriptive ratio is the median of right / left task ratios, not a causal effect or ratio of unrelated headline medians.
+
+Task identity includes base revision, verifier image and environment. Repetitions are not paired seeds; execution windows can differ. Recorded host fields do not establish machine identity.
+
+Request metrics come from sanitized C1 model attempts. Wait is first-byte minus request start; transfer is last-byte minus first-byte. Synthetic first-byte markers from network failures are unavailable. Gaps exclude overlapping model intervals; time after last is reconciled adapter end minus the latest response end. Request summary duration, wait, transfer and gap columns are medians of within-run medians, with metric-specific available and missing run counts.
+
+Timing uses the existing C1 interval-union derivation. Unreconciled timing is unavailable; outcome groups remain separate.
+
+Usage covers successful model responses; turns count identifiable API attempts. Static costs are not invoices and exclude attempts absent from this export.
+
+Matched comparisons use only common tasks with reconciled native passes on both sides. Repetition indices are not paired seeds. Samples and execution windows can differ.
+
+No matched-model comparison is produced when the recorded model is unspecified.
+
+Host fields describe recorded hardware, not unique machine identity. Same-host populations do not establish causal harness effects.
+
+Quartiles describe observed runs, not confidence intervals. Singleton spread is unavailable. Non-model time includes unobserved tool and harness work.
+
+Request series are sanitized C1 model attempts: duration, wait, transfer, gaps and per-call tokens/cost. Paths, bodies and logs are not exported. Relationships are within a run or matched task, not ratios of unrelated headline medians.

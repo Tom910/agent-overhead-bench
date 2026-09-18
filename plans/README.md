@@ -46,6 +46,8 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
+| [S6-metric-overview-plan.md](./S6-metric-overview-plan.md) | Implemented and verified: primary pass/cost/cache/token overview with sortable rows and secondary detail panels |
+| [S8-readme-metric-overview-plan.md](./S8-readme-metric-overview-plan.md) | Implemented and pushed: compact host-separated metric summaries lead README |
 | [S6-request-timelines-plan.md](./S6-request-timelines-plan.md) | Implemented: sanitized C1 request series, timelines, token/cost curves; no new spend |
 | [S6-analysis-usability-plan.md](./S6-analysis-usability-plan.md) | Implemented and verified: matched tasks, per-attempt export, outcome distributions and additive charts |
 | [S8-github-push-ready-plan.md](./S8-github-push-ready-plan.md) | Remaining action: `git push -u origin main` |

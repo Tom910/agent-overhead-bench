@@ -21,6 +21,22 @@ function attempt(id: string, harness: string, ms: number, extra: Partial<Analysi
 }
 
 describe("analysis views", () => {
+  it("leads with five primary metrics and keeps partial coverage next to the values", () => {
+    const data = analyzeAttempts([
+      attempt("pass", "alpha", 100, { cost_usd: 1, input_tokens: 1000000 }),
+      attempt("fail", "alpha", 200, { rep: 1, outcome: "verify_error", cost_usd: null, input_tokens: 3000000 }),
+    ]);
+    const rendered = renderAnalysisHtml(data);
+    expect(rendered).toContain('class="metric-overview"');
+    expect(rendered).toContain("50.0%");
+    expect(rendered).toContain("2.00M");
+    expect(rendered).toContain("1/2 measured · partial");
+    expect(rendered).toContain("Tokens out");
+    expect(rendered.indexOf('class="metric-overview"')).toBeLessThan(rendered.indexOf("<h3>Coverage</h3>"));
+    const markdown = renderAnalysisMarkdown(data);
+    expect(markdown.indexOf("### At a glance")).toBeLessThan(markdown.indexOf("### Coverage"));
+    expect(markdown).toContain("Median cost / attempt");
+  });
   it("shows selected coverage and each distribution's actual denominators", () => {
     const data = analyzeAttempts([
       attempt("good", "alpha", 100),
@@ -156,7 +172,7 @@ describe("analysis views", () => {
     const outcome = control();
     runInNewContext(script, { document: {
       getElementById: (id: string) => id === "population-filter" ? population : outcome,
-      querySelectorAll: (selector: string) => selector === "[data-population]" ? populationRows : outcomeRows,
+      querySelectorAll: (selector: string) => selector === "[data-population]" ? populationRows : selector === "[data-outcome]" ? outcomeRows : [],
     } });
     expect(populationRows.every((row) => !row.hidden)).toBe(true);
     population.value = "1";
@@ -168,6 +184,36 @@ describe("analysis views", () => {
     outcome.value = "all";
     listeners.forEach((listener) => listener());
     expect(outcomeRows.every((row) => !row.hidden)).toBe(true);
+  });
+
+  it("sorts overview values at full precision with unknowns last and preserves separate populations", () => {
+    const rendered = renderAnalysisHtml(analyzeAttempts([attempt("a", "alpha", 100)]));
+    const script = rendered.match(/<script>([\s\S]*?)<\/script>/)![1]!;
+    const listeners = new Map<string, () => void>();
+    const controls = Object.fromEntries(["population-filter", "outcome-filter", "overview-sort"].map((id) => [id, {
+      value: id === "overview-sort" ? "name" : "all",
+      addEventListener: (_event: string, listener: () => void) => listeners.set(id, listener),
+    }]));
+    const a = { dataset: { name: "alpha", cost: "0.10004", pass: "50" } };
+    const b = { dataset: { name: "beta", cost: "0.10001", pass: "75" } };
+    const unknown = { dataset: { name: "missing", cost: "", pass: "0" } };
+    const zero = { dataset: { name: "zero", cost: "0", pass: "0" } };
+    const container = (children: typeof a[]) => ({ children, appendChild(row: typeof a) {
+      this.children = this.children.filter((item) => item !== row).concat(row);
+    } });
+    const first = container([unknown, a, b, zero]);
+    const second = container([{ dataset: { name: "other", cost: "0.001", pass: "100" } }]);
+    runInNewContext(script, { document: {
+      getElementById: (id: string) => controls[id],
+      querySelectorAll: (selector: string) => selector === ".overview-rows" ? [first, second] : [],
+    } });
+    controls["overview-sort"]!.value = "cost";
+    listeners.get("overview-sort")!();
+    expect(first.children.map((row) => row.dataset.name)).toEqual(["zero", "beta", "alpha", "missing"]);
+    expect(second.children.map((row) => row.dataset.name)).toEqual(["other"]);
+    controls["overview-sort"]!.value = "pass";
+    listeners.get("overview-sort")!();
+    expect(first.children.slice(0, 2).map((row) => row.dataset.name)).toEqual(["beta", "alpha"]);
   });
 });
 

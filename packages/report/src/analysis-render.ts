@@ -1,6 +1,7 @@
 import type { AnalysisAttempt, AnalysisExport, AnalysisMetric, AnalysisPopulation, MatchedComparison, TaskDistribution } from "./analysis.js";
 import type { AnalysisRequest } from "./request-analysis.js";
 import { median } from "./derive.js";
+import { summarizeOverview, overviewValue, type OverviewRow } from "./overview.js";
 
 type Table = { headers: string[]; rows: string[][]; outcomes?: AnalysisAttempt["outcome"][] };
 
@@ -151,12 +152,44 @@ function htmlTable(table: Table): string {
   return `<div class="table-scroll"><table><thead><tr>${table.headers.map((value) => `<th scope="col">${html(value)}</th>`).join("")}</tr></thead><tbody>${table.rows.map((row, index) => `<tr${table.outcomes?.[index] === undefined ? "" : ` data-outcome="${html(table.outcomes[index]!)}"`}>${row.map((value) => `<td>${html(value)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 
+const overviewNote = "All selected outcomes. Task coverage can differ; these are descriptive summaries, not a ranking. Cost, cache and tokens are medians per measured attempt. Cost is a static estimate, not billing. Cache rate is the median attempt cached-input percentage, not a pooled token ratio. Input includes cached tokens; token counters cover successful model responses. Missing measurements are not zero.";
+const primaryMetrics = [
+  ["cost", "Median cost / attempt", "cost"], ["cache", "Cache rate", "percent"],
+  ["input", "Tokens in", "tokens"], ["output", "Tokens out", "tokens"],
+] as const;
+
+function overviewCoverage(row: OverviewRow, n: number): string {
+  return `${n}/${row.selected} measured${n < row.selected ? " · partial" : ""}`;
+}
+
+function overviewMarkdown(attempts: AnalysisAttempt[]): string {
+  return markdownTable({
+    headers: ["Harness", "Pass rate", ...primaryMetrics.map(([, label]) => label), "Tasks"],
+    rows: summarizeOverview(attempts).map((row) => [
+      `${row.harness} @ ${row.version}`, `${overviewValue(row.pass_rate, "percent")} · ${row.passes}/${row.selected}`,
+      ...primaryMetrics.map(([key, , kind]) => `${overviewValue(row[key].value, kind)} (${overviewCoverage(row, row[key].n)})`), String(row.tasks),
+    ]),
+  });
+}
+
+function overviewHtml(attempts: AnalysisAttempt[]): string {
+  const rows = summarizeOverview(attempts);
+  const maximum = (key: "cost" | "input" | "output") => Math.max(0, ...rows.map((row) => row[key].value ?? 0));
+  const bar = (value: number | null, max: number) => value === null ? "" : `<span class="metric-track" aria-hidden="true"><span style="width:${max === 0 ? 0 : (value / max * 100).toFixed(2)}%"></span></span>`;
+  return `<div class="metric-overview"><div class="overview-heading"><h3>At a glance</h3><span class="snapshot-label">Descriptive snapshot</span></div><p class="overview-note">All selected outcomes · task coverage can differ · medians over measured attempts</p><div class="overview-rows">${rows.map((row) =>
+    `<div class="overview-row" data-name="${html(row.harness + " @ " + row.version)}" data-pass="${row.pass_rate}" ${primaryMetrics.map(([key]) => `data-${key}="${row[key].value ?? ""}"`).join(" ")}>
+<div class="harness-label"><strong>${html(row.harness)}</strong><span>${html(row.version)}</span><small>${row.tasks} tasks · ${row.selected} attempts</small></div>
+<div class="primary-metric" data-metric="pass"><span class="metric-label">Pass rate</span><strong>${overviewValue(row.pass_rate, "percent")}</strong>${bar(row.pass_rate, 100)}<small>${row.passes}/${row.selected} passed</small></div>
+${primaryMetrics.map(([key, label, kind]) => `<div class="primary-metric" data-metric="${key}"><span class="metric-label">${label}</span><strong tabindex="0" title="${html(row[key].value === null ? "No measured values" : String(row[key].value))}" aria-label="${html(label + ': ' + (row[key].value === null ? 'Unavailable' : String(row[key].value)))}">${overviewValue(row[key].value, kind)}</strong>${bar(row[key].value, key === "cache" ? 100 : maximum(key))}<small>${overviewCoverage(row, row[key].n)}</small></div>`).join("")}</div>`).join("")}</div><details><summary>Metric definitions</summary><p>${overviewNote}</p><p>Cache rate is the median attempt cached-input percentage, not a pooled token ratio. K = 1,000; M = 1,000,000. Focus a value for its exact accessible value. Sorting is descriptive; no winners are inferred from unequal samples. Overview values include every selected outcome and do not change with the detail outcome filter.</p></details></div>`;
+}
+
 export function renderAnalysisMarkdown(data: AnalysisExport): string {
-  const lines = ["# Selected-attempt analysis", "", `Selected attempts: ${data.attempts.length}. Populations: ${data.populations.length}.`, "", ...[...explanation, ...data.notes].flatMap((note) => [md(note), ""])];
+  const lines = ["# Selected-attempt analysis", "", `Selected attempts: ${data.attempts.length}. Populations: ${data.populations.length}.`, "", overviewNote, ""];
   if (data.attempts.length === 0) lines.push("No selected attempts.", "");
   for (const [index, population] of data.populations.entries()) {
     const attempts = populationAttempts(data, population);
-    lines.push(`## Population ${index + 1}`, "", markdownTable({ headers: ["Recorded identity", "Value"], rows: identity(population) }), "", "### Coverage", "", markdownTable(coverage(attempts, population.distributions)), "", "### Selected spend by outcome", "", markdownTable(outcomeCosts(attempts)), "", "### Request-level summaries", "", markdownTable(requestCoverage(attempts)), "", "### Common successful tasks", "");
+    lines.push(`## Population ${index + 1}: ${md(population.model)} · ${md(population.host.os)} · ${md(population.price_book)}`, "", "### At a glance", "", overviewMarkdown(attempts), "");
+    lines.push("### Recorded population identity", "", markdownTable({ headers: ["Recorded identity", "Value"], rows: identity(population) }), "", "### Coverage", "", markdownTable(coverage(attempts, population.distributions)), "", "### Selected spend by outcome", "", markdownTable(outcomeCosts(attempts)), "", "### Request-level summaries", "", markdownTable(requestCoverage(attempts)), "", "### Common successful tasks", "");
     if (population.comparisons.length === 0) lines.push("No cross-harness pairs in this population.", "");
     for (const pair of population.comparisons) {
       lines.push(`#### ${md(pair.left)} (left) vs ${md(pair.right)} (right)`, "", md(comparisonSummary(pair)), "",
@@ -178,6 +211,7 @@ export function renderAnalysisMarkdown(data: AnalysisExport): string {
       }
     }
   }
+  lines.push("## Measurement notes", "", ...[...explanation, ...data.notes].flatMap((note) => [md(note), ""]));
   return lines.join("\n");
 }
 
@@ -318,6 +352,21 @@ function applyFilters() {
 populationFilter.addEventListener('change', applyFilters);
 outcomeFilter.addEventListener('change', applyFilters);
 applyFilters();
+const overviewSort = document.getElementById('overview-sort');
+function sortOverview() {
+  const key = overviewSort.value;
+  for (const container of document.querySelectorAll('.overview-rows')) {
+    const rows = Array.from(container.children);
+    rows.sort((a, b) => {
+      if (key === 'name') return a.dataset.name.localeCompare(b.dataset.name);
+      const left = a.dataset[key], right = b.dataset[key];
+      if (left === '' || right === '') return left === right ? a.dataset.name.localeCompare(b.dataset.name) : left === '' ? 1 : -1;
+      return (Number(left) - Number(right)) * (key === 'pass' || key === 'cache' ? -1 : 1) || a.dataset.name.localeCompare(b.dataset.name);
+    });
+    for (const row of rows) container.appendChild(row);
+  }
+}
+overviewSort.addEventListener('change', sortOverview);
 `;
 
 export function renderAnalysisHtml(data: AnalysisExport): string {
@@ -331,11 +380,13 @@ export function renderAnalysisHtml(data: AnalysisExport): string {
       `<h4>Comparison overview</h4>${htmlTable(comparisonOverview)}<p>Descriptive common-success-task comparisons. Open a pair for task names and per-side sample counts. A zero common-task count means no comparison is available.</p>` + population.comparisons.map((pair) =>
         `<details><summary>${html(pair.left)} (left) vs ${html(pair.right)} (right) · ${pair.tasks.length} common tasks</summary><p>${html(comparisonSummary(pair, true))}</p>${pair.tasks.length === 0 ? "<p>No common successful tasks; comparison unavailable.</p>" : htmlTable(comparisonTable(pair, true))}</details>`).join("");
     const distributions = population.distributions.map((row) => `<div data-outcome="${html(row.outcome)}"><details><summary>${html(row.task)} · ${html(row.harness)} @ ${html(row.version)} · ${outcome(row.outcome)} · selected ${row.attempts.length}, timing n=${row.metrics.end_to_end.n}, missing=${row.metrics.end_to_end.missing}, median ${duration(row.metrics.end_to_end.median)}</summary><p class="identity">Task identity: ${html(row.task_key)}</p>${htmlTable(distributionTable(row, true))}</details></div>`).join("");
-    return `<section class="population" data-population="${index}"><h2>Population ${index + 1}: ${html(population.model)} · ${html(population.host.os)}</h2><details><summary>Recorded population identity</summary><dl>${identity(population).map(([name, value]) => `<dt>${html(name)}</dt><dd>${html(value)}</dd>`).join("")}</dl></details><h3>Coverage</h3><p>All selected outcomes; these denominators remain visible when outcome filters are applied.</p>${htmlTable(coverage(attempts, population.distributions))}<h3>Selected spend by outcome</h3>${htmlTable(outcomeCosts(attempts))}<h3>Request-level summaries</h3>${htmlTable(requestCoverage(attempts))}<h3>Common successful tasks</h3>${comparisons}<details><summary>Individual run timings</summary>${timingDots(attempts, population.distributions)}</details><h3>Per-task outcome distributions</h3>${distributions}${annotatedSection(data, attempts)}</section>`;
+    return `<section class="population" data-population="${index}"><h2>Population ${index + 1}: ${html(population.model)} · ${html(population.host.os)}</h2>${overviewHtml(attempts)}<details><summary>Recorded population identity</summary><dl>${identity(population).map(([name, value]) => `<dt>${html(name)}</dt><dd>${html(value)}</dd>`).join("")}</dl></details><details class="secondary-details"><summary>Explore timing, outcomes and request evidence</summary><h3>Coverage</h3><p>All selected outcomes; these denominators remain visible when outcome filters are applied.</p>${htmlTable(coverage(attempts, population.distributions))}<h3>Selected spend by outcome</h3>${htmlTable(outcomeCosts(attempts))}<h3>Request-level summaries</h3>${htmlTable(requestCoverage(attempts))}<h3>Common successful tasks</h3>${comparisons}<details><summary>Individual run timings</summary>${timingDots(attempts, population.distributions)}</details><h3>Per-task outcome distributions</h3>${distributions}${annotatedSection(data, attempts)}</details></section>`;
   }).join("\n");
   const options = data.populations.map((population, index) => `<option value="${index}">Population ${index + 1}: ${html(population.model)} · ${html(population.price_book)} · ${html(population.host.os)} · ${html(population.condition)}</option>`).join("");
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Selected-attempt analysis</title><style>
 body{font:15px/1.5 system-ui,sans-serif;color:#182639;background:#f6f8fb;margin:0}main{max-width:1200px;margin:auto;padding:2rem}h1,h2,h3{line-height:1.2}section{margin:2rem 0;padding:1.5rem;background:white;border:1px solid #dce2ec;border-radius:12px}table{border-collapse:collapse;width:100%;font-size:.88rem}th,td{text-align:left;padding:.5rem;border-bottom:1px solid #dce2ec;white-space:nowrap}th{background:#edf2f8}.table-scroll{overflow:auto;margin:1rem 0}details{margin:.8rem 0;padding:.6rem;border:1px solid #dce2ec;border-radius:6px}summary{cursor:pointer;font-weight:600}dl{display:grid;grid-template-columns:minmax(120px,1fr) 3fr;gap:.3rem 1rem}dt{font-weight:600}dd{margin:0;overflow-wrap:anywhere}.identity{overflow-wrap:anywhere}figure{margin:1rem 0}figcaption{font-size:.85rem}svg{display:block;width:100%;max-height:100px}circle{fill:#2763ad;stroke:white;stroke-width:1}circle:focus{stroke:#111;stroke-width:3}svg text{font-size:12px;fill:#48566a}.filters{display:flex;flex-wrap:wrap;gap:1rem;margin:1rem 0}select{font:inherit;max-width:100%;padding:.3rem}[hidden]{display:none!important}article{border-left:3px solid #dce2ec;padding-left:1rem}@media(max-width:600px){main{padding:1rem}section{padding:.7rem}dl{display:block}dd{margin-bottom:.5rem}}
-</style></head><body><main><h1>Selected-attempt analysis</h1><p>Selected attempts: ${data.attempts.length}. Populations: ${data.populations.length}.</p><details><summary>How to read this analysis</summary>${[...explanation, ...data.notes].map((note) => `<p>${html(note)}</p>`).join("")}</details><div class="filters"><label>Population <select id="population-filter"><option value="all">All populations</option>${options}</select></label><label>Outcome distributions and dots <select id="outcome-filter"><option value="all">All outcomes</option><option value="completed">Pass</option><option value="verify_error">Verification failure</option><option value="timeout">Timeout</option><option value="adapter_error">Adapter error</option></select></label></div>${data.attempts.length === 0 ? "<p>No selected attempts.</p>" : ""}${populations}</main><script>${filterScript}</script></body></html>\n`;
+
+body{background:#f7f7f2;color:#18232b}main{max-width:1400px}h1{font-size:clamp(2rem,4vw,3.8rem);letter-spacing:-.045em;margin:.3em 0}.eyebrow{font:700 .72rem ui-monospace,monospace;letter-spacing:.14em;color:#52645d}.intro{font-size:1.15rem;color:#52645d}.population{border-radius:4px;padding:1.6rem}.population h2{font-size:1.1rem;color:#52645d}.overview-heading{display:flex;align-items:center;justify-content:space-between;gap:1rem}.overview-heading h3{font-size:1.7rem;margin:.6rem 0}.snapshot-label{font-size:.75rem;background:#edf2ec;padding:.3rem .6rem;border-radius:3px}.overview-note{font-size:.82rem;color:#59665f}.overview-row{display:grid;grid-template-columns:minmax(150px,1.35fr) repeat(5,minmax(0,1fr));gap:1.2rem;padding:1.5rem 0;border-top:1px solid #e0e4dc}.harness-label{display:flex;flex-direction:column;gap:.25rem;overflow-wrap:anywhere}.harness-label>strong{font-size:1.2rem}.harness-label>span{font-size:.72rem;color:#59665f}.primary-metric{display:flex;flex-direction:column;gap:.4rem;min-width:0}.metric-label{font-size:.72rem;color:#59665f}.primary-metric>strong{font:600 clamp(.95rem,1.6vw,1.35rem) ui-monospace,monospace;letter-spacing:-.05em;overflow-wrap:anywhere}.primary-metric small,.harness-label small{font-size:.69rem;color:#59665f}.metric-track{display:block;height:5px;background:#edf0ea;border-radius:2px;overflow:hidden}.metric-track>span{display:block;height:100%;background:#397763}[data-metric=cost] .metric-track>span{background:#c97a36}[data-metric=cache] .metric-track>span{background:#528397}[data-metric=input] .metric-track>span,[data-metric=output] .metric-track>span{background:#7974a7}.secondary-details{margin-top:1.8rem}select{border:1px solid #cbd4c9;border-radius:4px;background:white;padding:.5rem}.filters label{font-size:.8rem;display:flex;flex-direction:column;gap:.3rem;min-width:0}.filters{align-items:end}:focus-visible{outline:2px solid #397763;outline-offset:3px}@media(max-width:900px){.overview-row{grid-template-columns:repeat(3,minmax(0,1fr))}.harness-label{grid-column:1/-1}}@media(max-width:600px){.overview-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.2rem}.population{padding:1rem}.overview-heading{align-items:flex-start;flex-direction:column;gap:0}.primary-metric>strong{font-size:1.4rem}.filters{display:grid;grid-template-columns:minmax(0,1fr)}main{padding:.7rem}}
+</style></head><body><main><p class="eyebrow">AGENT OVERHEAD BENCH / CAMPAIGN SNAPSHOT</p><h1>Every attempt, at a glance.</h1><p class="intro">Pass rate. Cost. Cache. Tokens. Explore the measurements behind each harness.</p><p>Selected attempts: ${data.attempts.length}. Populations: ${data.populations.length}.</p><div class="filters"><label>Population <select id="population-filter"><option value="all">All populations</option>${options}</select></label><label>Sort overview <select id="overview-sort"><option value="name">Harness name</option><option value="pass">Pass rate · high to low</option><option value="cost">Cost · low to high</option><option value="cache">Cache rate · high to low</option><option value="input">Input tokens · low to high</option><option value="output">Output tokens · low to high</option></select></label><label>Outcome distributions and dots <select id="outcome-filter"><option value="all">All outcomes</option><option value="completed">Pass</option><option value="verify_error">Verification failure</option><option value="timeout">Timeout</option><option value="adapter_error">Adapter error</option></select></label></div>${data.attempts.length === 0 ? "<p>No selected attempts.</p>" : ""}${populations}<details><summary>How to read this analysis</summary>${[...explanation, ...data.notes].map((note) => `<p>${html(note)}</p>`).join("")}</details></main><script>${filterScript}</script></body></html>\n`;
 }
