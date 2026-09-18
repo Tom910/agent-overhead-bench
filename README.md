@@ -8,6 +8,48 @@ Results are unpublished until the v1 dataset ships. The snapshots below are not 
 
 This is a completed non-Claude campaign snapshot, **not the frozen v1 dataset**. Source sign-off is recorded; the official archive freeze has not been run. Claude Code remains unresolved and excluded.
 
+### At a glance
+
+Pass rate, cost, cache and tokens for **all selected outcomes**, shown separately
+by recorded host and price book. Rows are alphabetical. Task coverage differs;
+these are descriptive summaries, not a harness ranking.
+
+#### macOS · `deepseek-v41-low-2026-09-10`
+
+| Harness | Pass rate | Cost / attempt | Cache rate | Tokens in | Tokens out | Tasks |
+|---|---:|---:|---:|---:|---:|---:|
+| cline | 50.0% · 1/2 | $0.183 · 1/2 measured | 97.1% | 11.78M | 146.6K | 2 |
+| codex | 62.2% · 23/37 | $0.086 | 99.2% | 8.12M | 85.8K | 8 |
+| hermes | 45.0% · 18/40 | $0.089 | 98.9% | 9.01M | 80.1K | 8 |
+| pi | 46.2% · 18/39 | $0.107 | 98.1% | 8.47M | 88.8K | 8 |
+| qwen | 72.2% · 13/18 | $0.096 | 99.2% | 8.95M | 83.7K | 7 |
+
+#### Linux · `deepseek-v41-low-2026-09-10`
+
+| Harness | Pass rate | Cost / attempt | Cache rate | Tokens in | Tokens out | Tasks |
+|---|---:|---:|---:|---:|---:|---:|
+| cline | 44.4% · 8/18 | $0.137 | 96.5% | 7.71M | 122.6K | 8 |
+| qwen | 62.5% · 10/16 | $0.092 | 99.2% | 10.09M | 82.1K | 8 |
+
+#### Linux · `openrouter-2026-09-04`
+
+| Harness | Pass rate | Cost / attempt | Cache rate | Tokens in | Tokens out | Tasks |
+|---|---:|---:|---:|---:|---:|---:|
+| cline | 40.0% · 8/20 | Unavailable | 96.3% | 10.38M | 186.9K | 8 |
+| codex | 33.3% · 1/3 | Unavailable | 99.2% | 7.30M | 73.5K | 3 |
+| pi | 0.0% · 0/1 | Unavailable | 98.4% | 10.59M | 88.6K | 1 |
+| qwen | 33.3% · 2/6 | Unavailable | 98.9% | 9.80M | 86.6K | 3 |
+
+**Definitions:** Pass rate = native verifier passes / selected attempts. Other
+columns are medians per measured attempt across passes and failures. Cost is a
+static estimate, not billing; missing cost is never zero. Cache rate is cached
+input / total input within each attempt, then the median across attempts. Token
+counters cover successful model responses; input includes cached tokens. K =
+1,000; M = 1,000,000. All token/cache observations are available in this snapshot;
+cost coverage is marked where incomplete. Earlier unselected attempts are excluded.
+
+[Full precision, sample counts and details](evidence/nonclaude-results-2026-09-14/analysis.md) · [Interactive report](evidence/nonclaude-results-2026-09-14/analysis.html) · [Source data](evidence/nonclaude-results-2026-09-14/analysis.json)
+
 Selected condition: eight DeepSWE public-repository tasks × five harnesses × five repetitions (200 slots) in the `extended` regime, using `deepseek/deepseek-v4.1-flash` through OpenRouter pinned to the DeepSeek provider with fallbacks disabled and Relace excluded. Harnesses: Cline 3.0.61, Codex CLI 0.149.1, Hermes Agent v0.20.5, Pi 0.73.1, Qwen 0.22.2. Completing a slot means the CLI finished and the native task verifier ran. A verifier failure is a measured outcome, not a missing cell. Twenty completed recoveries replaced unresolved originals only.
 
 These 200 slots are **not one comparable matrix**. Timing, tokens, and available static costs are reported only inside a host × price-book population:
@@ -49,6 +91,9 @@ node scripts/s6-analysis-replay.mjs \
 The following table is the separate, completed **192-cell local fixture pilot**,
 not the public-repository campaign summarized above.
 
+<details>
+<summary>Show the earlier fixture pilot and detailed timing table</summary>
+
 | Harness | vX.Y | Vis. | Source/regime | E2E (med/IQR) | Harness share (full only) | Non-model share (fallback) | Cold start | Parallelism | First byte (med) | Turns | Tokens in/out | Cached % | Cost/task | Cost vs. token floor | Success | Raw |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | claude-code | 2.1.246 (Claude Code) | partial | agent-overhead-bench / local-development@working-tree / short | 29.32s / 10.63s | — | — (non-model 1%) | 371ms | 1.24 | 4.79s | 6.75 | 126345.5/671 | 74% | $0.0040 | 0.4× | 32/32 | [run.json](evidence/pilot/pilot-report.tgz) |
@@ -59,6 +104,8 @@ not the public-repository campaign summarized above.
 | qwen | 0.22.2 | partial | agent-overhead-bench / local-development@working-tree / short | 32.43s / 13.07s | — | — (non-model 1%) | 943ms | 1.00 | 5.45s | 5 | 114459.75/472.75 | 70% | $0.0034 | 0.4× | 32/32 | [run.json](evidence/pilot/pilot-report.tgz) |
 
 The table above is a **pilot** measured on this repository's checked-in fixture suite, not the v1 public-source dataset. Complete matrix: 192 of 192 cells.
+
+</details>
 
 Monthly re-runs will be announced here after v1.
 
