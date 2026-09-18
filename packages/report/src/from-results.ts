@@ -482,6 +482,31 @@ function taskWeightedTimingMean(cells: LoadedCell[]): DerivedRun | null {
   return aggregateTimingMeans([...tasks.values()].map((runs) => aggregateTimingMeans(runs)!));
 }
 
+/** Validated attempt analysis without a legacy cross-repetition timing headline. */
+export function generateAnalysisReport(resultsDir: string, outDir: string, options: { allowUnpricedModels?: boolean } = {}): AnalysisExport {
+  const cells = loadResultsTree(resultsDir);
+  // Analysis task identities include verifier images, not CLI-specific agent
+  // images. Do not silently combine agent-only rebuilds under one identity.
+  const agentImages = new Map<string, string>();
+  for (const { run } of cells) {
+    const key = JSON.stringify([run.tool, run.tool_version, run.task_id,
+      run.task_base_revision ?? null, run.container.verifier_image_digest,
+      run.task_environment.kind]);
+    const previous = agentImages.get(key);
+    if (previous !== undefined && previous !== run.container.image_digest) {
+      throw new ConfigError(`agent image digest differs within one analysis task identity for ${run.tool}/${run.task_id}`);
+    }
+    agentImages.set(key, run.container.image_digest);
+  }
+  const loadPriceBook = priceBookLoader(options.allowUnpricedModels === true);
+  const analysis = analyzeAttempts(cells.map(cell => attemptAnalysis(cell, loadPriceBook)));
+  mkdirSync(outDir, { recursive: true });
+  writeFileSync(join(outDir, "analysis.json"), `${JSON.stringify(analysis, null, 2)}\n`);
+  writeFileSync(join(outDir, "analysis.md"), renderAnalysisMarkdown(analysis));
+  writeFileSync(join(outDir, "analysis.html"), renderAnalysisHtml(analysis));
+  return analysis;
+}
+
 export function generateReport(resultsDir: string, outDir: string, options: { allowUnpricedModels?: boolean } = {}): { markdown: string; html: string; rows: HeadlineRow[]; analysis: AnalysisExport } {
   const cells = loadResultsTree(resultsDir);
   const loadPriceBook = priceBookLoader(options.allowUnpricedModels === true);

@@ -116,3 +116,32 @@ it("rejects missing, extra, duplicate and substituted selected runs", () => {
   substituted.save();
   expect(substituted.build).toThrow(/unexpected campaign run/);
 });
+
+it.each([false, true])("requires explicit analysis-only export for image variants (agent-only: %s) and retains evidence binding", (agentOnly) => {
+  const f = fixture();
+  const second = join(f.results, "two");
+  cpSync(f.cell, second, { recursive: true });
+  const run = JSON.parse(readFileSync(join(second, "run.json"), "utf8")) as C4Run;
+  run.run_id = "second-run";
+  run.rep += 1;
+  if (agentOnly) run.container.image_digest = "sha256:changed";
+  else run.container.verifier_image_digest = "sha256:changed";
+  const event = JSON.parse(readFileSync(join(second, "events.jsonl"), "utf8")) as C1Event;
+  event.run_id = run.run_id;
+  writeFileSync(join(second, "run.json"), JSON.stringify(run));
+  writeFileSync(join(second, "events.jsonl"), `${JSON.stringify(event)}\n`);
+  f.summary.slots.push({ ...f.summary.slots[0]!, run_id: run.run_id, rep: run.rep,
+    run_sha256: hash(readFileSync(join(second, "run.json"))), events_sha256: hash(readFileSync(join(second, "events.jsonl"))) });
+  f.save();
+  expect(f.build).toThrow(/image digest differs/);
+  if (agentOnly) {
+    expect(() => buildCampaignAnalysis(f.results, f.summaryPath, f.out, { allowImageVariants: true })).toThrow(/agent image digest differs/);
+    return;
+  }
+  buildCampaignAnalysis(f.results, f.summaryPath, f.out, { allowImageVariants: true });
+  const data = JSON.parse(readFileSync(join(f.out, "analysis.json"), "utf8"));
+  expect(new Set(data.attempts.map((a: { verifier_image: string }) => a.verifier_image)).size).toBe(2);
+  expect(readFileSync(join(f.out, "analysis.md"), "utf8")).toContain("Image variants");
+  writeFileSync(join(second, "events.jsonl"), `${JSON.stringify(event)}\n\n`);
+  expect(() => buildCampaignAnalysis(f.results, f.summaryPath, f.out, { allowImageVariants: true })).toThrow(/hash mismatch/);
+});

@@ -4,87 +4,71 @@ An independent measurement instrument that decomposes where coding-agent CLIs sp
 
 Results are unpublished until the v1 dataset ships. The snapshots below are not a frozen v1 dataset. See [METHODOLOGY.md](./METHODOLOGY.md) and [CONTRIBUTING.md](./CONTRIBUTING.md) for the correction path.
 
-## Public-repository campaign snapshot — 14 September 2026
+## Linux campaign snapshot — 18 September 2026
 
-This is a completed non-Claude campaign snapshot, **not the frozen v1 dataset**. Source sign-off is recorded; the official archive freeze has not been run. Claude Code remains unresolved and excluded.
+**Model: `deepseek/deepseek-v4.1-flash` · one Linux host · 107/200 attempts collected.**
+The campaign is in progress: existing Linux attempts are retained, only missing
+slots are queued, and Claude CLI is excluded. Rows are alphabetical.
 
-### At a glance
+Bold percentages compare each metric with its observed best (**100%**).
+Actual measurements come first. Higher pass/cache rates score higher; lower
+cost and token usage score higher. Each column has its own baseline.
 
-Pass rate, cost, cache and tokens for **all selected outcomes**, shown separately
-by recorded host and price book. Rows are alphabetical. Task coverage differs;
-these are descriptive summaries, not a harness ranking.
+| Harness | Pass rate | Reference cost | Cache rate | Tokens in | Tokens out |
+|---|---:|---:|---:|---:|---:|
+| cline | 45.0% (18/40) · **79.6%** | $0.167 · **43.4%** | 96.4% · **97.3%** | 9.77M · **74.7%** | 158.2K · **46.5%** |
+| codex | 33.3% (1/3) · **59.0%** | $0.073 · **100.0%** | 99.2% · **100.0%** | 7.30M · **100.0%** | 73.5K · **100.0%** |
+| hermes | 50.0% (20/40) · **88.5%** | $0.135 (38/40 measured) | 99.2% (39/40 measured) | 16.43M (39/40 measured) | 119.9K (39/40 measured) |
+| pi | 0.0% (0/1) · **0.0%** | $0.110 · **66.2%** | 98.4% · **99.2%** | 10.59M · **68.9%** | 88.6K · **82.9%** |
+| qwen | 56.5% (13/23) · **100.0%** | $0.090 · **80.4%** | 99.1% · **99.9%** | 9.86M · **74.0%** | 81.2K · **90.6%** |
 
-#### macOS · `deepseek-v41-low-2026-09-10`
+Cost, cache and tokens are **medians per measured attempt**, including failed
+outcomes. Pass rate is native verifier passes / selected attempts. Partial
+measurements show their coverage and receive no relative score. Task coverage
+is currently uneven (for example, Pi has only one attempt); these indices are
+provisional descriptions, not a quality ranking. Lower tokens alone do not mean
+better task performance.
 
-| Harness | Pass rate | Cost / attempt | Cache rate | Tokens in | Tokens out | Tasks |
-|---|---:|---:|---:|---:|---:|---:|
-| cline | 50.0% · 1/2 | $0.183 · 1/2 measured | 97.1% | 11.78M | 146.6K | 2 |
-| codex | 62.2% · 23/37 | $0.086 | 99.2% | 8.12M | 85.8K | 8 |
-| hermes | 45.0% · 18/40 | $0.089 | 98.9% | 9.01M | 80.1K | 8 |
-| pi | 46.2% · 18/39 | $0.107 | 98.1% | 8.47M | 88.8K | 8 |
-| qwen | 72.2% · 13/18 | $0.096 | 99.2% | 8.95M | 83.7K | 7 |
+**Reference cost** uses the same fixed rates for every row: **$0.15/M uncached
+input + $0.003/M cached input + $0.60/M output**. We price each attempt's exact
+request counters before taking the median. These are reference estimates, not
+actual billing. Input includes cached tokens; cache rate is the median cached
+input percentage per attempt. K = 1,000; M = 1,000,000.
 
-#### Linux · `deepseek-v41-low-2026-09-10`
+[Interactive report](evidence/linux-results-2026-09-18/analysis.html) ·
+[Full tables and sample counts](evidence/linux-results-2026-09-18/analysis.md) ·
+[Data](evidence/linux-results-2026-09-18/analysis.json) ·
+[Snapshot provenance and reproduction](evidence/linux-results-2026-09-18/README.md)
 
-| Harness | Pass rate | Cost / attempt | Cache rate | Tokens in | Tokens out | Tasks |
-|---|---:|---:|---:|---:|---:|---:|
-| cline | 44.4% · 8/18 | $0.137 | 96.5% | 7.71M | 122.6K | 8 |
-| qwen | 62.5% · 10/16 | $0.092 | 99.2% | 10.09M | 82.1K | 8 |
+<details>
+<summary>Collection conditions and earlier snapshots</summary>
 
-#### Linux · `openrouter-2026-09-04`
+The target is eight selected DeepSWE public-repository tasks × five harnesses ×
+five repetitions, in the `extended` regime. OpenRouter routing is pinned to the
+DeepSeek provider, with fallbacks disabled and Relace excluded. Harness versions
+and original accounting books remain in the detailed evidence. The original
+book name does not identify a different model.
 
-| Harness | Pass rate | Cost / attempt | Cache rate | Tokens in | Tokens out | Tasks |
-|---|---:|---:|---:|---:|---:|---:|
-| cline | 40.0% · 8/20 | Unavailable | 96.3% | 10.38M | 186.9K | 8 |
-| codex | 33.3% · 1/3 | Unavailable | 99.2% | 7.30M | 73.5K | 3 |
-| pi | 0.0% · 0/1 | Unavailable | 98.4% | 10.59M | 88.6K | 1 |
-| qwen | 33.3% · 2/6 | Unavailable | 98.9% | 9.80M | 86.6K | 3 |
+Some task images were rebuilt after host cleanup. Original verifier-image
+identities remain separate in detailed comparisons; the overview includes both
+versions and is not a controlled image-matched experiment. The report's task
+counts include distinct environment identities. Timing detail is secondary;
+non-model time is not pure harness overhead when tool visibility is partial.
 
-**Definitions:** Pass rate = native verifier passes / selected attempts. Other
-columns are medians per measured attempt across passes and failures. Cost is a
-static estimate, not billing; missing cost is never zero. Cache rate is cached
-input / total input within each attempt, then the median across attempts. Token
-counters cover successful model responses; input includes cached tokens. K =
-1,000; M = 1,000,000. All token/cache observations are available in this snapshot;
-cost coverage is marked where incomplete. Earlier unselected attempts are excluded.
+This is an in-progress snapshot, not the frozen v1 dataset. Source sign-off is
+recorded; the official archive freeze has not been run. The earlier
+[14 September mixed-host snapshot](evidence/nonclaude-results-2026-09-14/README.md)
+and its [original reports](evidence/nonclaude-results-2026-09-14/analysis.md)
+remain available as historical evidence.
 
-[Full precision, sample counts and details](evidence/nonclaude-results-2026-09-14/analysis.md) · [Interactive report](evidence/nonclaude-results-2026-09-14/analysis.html) · [Source data](evidence/nonclaude-results-2026-09-14/analysis.json)
-
-Selected condition: eight DeepSWE public-repository tasks × five harnesses × five repetitions (200 slots) in the `extended` regime, using `deepseek/deepseek-v4.1-flash` through OpenRouter pinned to the DeepSeek provider with fallbacks disabled and Relace excluded. Harnesses: Cline 3.0.61, Codex CLI 0.149.1, Hermes Agent v0.20.5, Pi 0.73.1, Qwen 0.22.2. Completing a slot means the CLI finished and the native task verifier ran. A verifier failure is a measured outcome, not a missing cell. Twenty completed recoveries replaced unresolved originals only.
-
-These 200 slots are **not one comparable matrix**. Timing, tokens, and available static costs are reported only inside a host × price-book population:
-
-| Population | Host | Price book | Selected outcomes |
-|---|---|---|---:|
-| macOS / DeepSeek book | macOS | `deepseek-v41-low-2026-09-10` | 136 |
-| Linux / DeepSeek book | Linux | `deepseek-v41-low-2026-09-10` | 34 |
-| Linux / OpenRouter book | Linux | `openrouter-2026-09-04` | 30 |
-
-Linux cells ran on a dedicated Linux measurement host. macOS cells ran on the operator Mac. Across all populations, 102 of 200 selected attempts passed the native verifier and 98 failed it after a completed attempt. That count is coverage, not a harness ranking.
-
-Use the host-separated [report-engine tables](evidence/nonclaude-results-2026-09-14/report-engine.md) for medians, model/non-model breakdowns, turns, tokens, caching, and available static cost estimates. The [campaign notes](evidence/nonclaude-results-2026-09-14/README.md) record per-task outcomes and limits. The [machine-readable summary](evidence/nonclaude-results-2026-09-14/summary.json) lists all 200 slot keys and retained C4/C1 hashes. Tool visibility is partial, so non-model time is not pure harness overhead. Hashes bind retained private run files; this checkout is not a verified official archive. An earlier [supplemental TOMLKit verifier pass](evidence/nonclaude-results-2026-09-14/supplemental-verification.json) is historical and is not in the selected 200.
-
-### Explore the campaign data
-
-Start with the [interpretation guide](evidence/nonclaude-results-2026-09-14/INSIGHTS.md),
-then use the [analysis tables](evidence/nonclaude-results-2026-09-14/analysis.md)
-or open the [standalone interactive view](evidence/nonclaude-results-2026-09-14/analysis.html)
-locally. These show matched task comparisons, successful and failed attempts
-separately, individual timing measurements, and the sample count behind each metric.
-The [per-attempt export](evidence/nonclaude-results-2026-09-14/analysis.json)
-contains sanitized measurements and hashes for all 200 selected attempts.
-
-The historical headline tables above and below use different datasets and sample
-filters. A fast success-only median does not imply faster completion across all
-attempts. The analysis view makes those filters visible and keeps recorded host,
-model, source, routing and price-book populations separate.
-
-Rebuild the campaign analysis offline from its public export, with no API keys:
+Rebuild the Linux report offline, without API calls:
 
 ```bash
 node scripts/s6-analysis-replay.mjs \
-  evidence/nonclaude-results-2026-09-14/analysis.json scratch/campaign-analysis
+  evidence/linux-results-2026-09-18/analysis.json scratch/linux-analysis
 ```
+
+</details>
 
 ## Earlier local fixture pilot
 

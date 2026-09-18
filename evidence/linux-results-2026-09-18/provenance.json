@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "analysis_only_image_variants": true,
+  "summary_sha256": "sha256:ce49883e42f0638e109a1c1685b3b37030a1a38b968942df5c01298e5ea62148",
+  "as_of": "2026-09-18T23:17:32.099082+00:00",
+  "official_release": false,
+  "selected_attempt_count": 107,
+  "artifacts": {
+    "analysis.json": "sha256:38d152cd155e862445cc005163cb423f501389a2d2a88a7c38faff68bfa20310",
+    "analysis.md": "sha256:cd9ee4d73974b4205087f0e7e93cf6dde145e754d8820ed4e1786c96643d5daa",
+    "analysis.html": "sha256:a4785c4d0581183439d48e7fe90904d56ada55f88c05fe51b77f5656aac0f2aa"
+  }
+}

@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { ConfigError } from "@aob/contracts";
-import { generateReport, loadResultsTree } from "./from-results.js";
+import { generateAnalysisReport, generateReport, loadResultsTree } from "./from-results.js";
 
 type Slot = {
   run_id: string; harness: string; task: string; rep: number; outcome: string;
@@ -48,7 +48,7 @@ function readSummary(bytes: Buffer): Summary {
 }
 
 /** Verify the selected raw evidence, then publish only the S6 allowlisted views. */
-export function buildCampaignAnalysis(resultsDir: string, summaryPath: string, outDir: string): void {
+export function buildCampaignAnalysis(resultsDir: string, summaryPath: string, outDir: string, options: { allowImageVariants?: boolean } = {}): void {
   const summaryBytes = readFileSync(summaryPath);
   const summary = readSummary(summaryBytes);
   const slots = new Map(summary.slots.map((slot) => [slot.run_id, slot]));
@@ -82,11 +82,13 @@ export function buildCampaignAnalysis(resultsDir: string, summaryPath: string, o
       }
     }
     const reportDir = join(temporary, "report");
-    generateReport(staged, reportDir, { allowUnpricedModels: true });
+    const generate = options.allowImageVariants === true ? generateAnalysisReport : generateReport;
+    generate(staged, reportDir, { allowUnpricedModels: true });
     const files = ["analysis.json", "analysis.md", "analysis.html"];
     const outputs = files.map((name) => ({ name, bytes: readFileSync(join(reportDir, name)) }));
     const provenance = {
       schema_version: 1,
+      analysis_only_image_variants: options.allowImageVariants === true,
       summary_sha256: digest(summaryBytes),
       as_of: summary.as_of,
       official_release: false,
@@ -110,11 +112,11 @@ export function buildCampaignAnalysis(resultsDir: string, summaryPath: string, o
 
 if (process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
-    const [resultsDir, summaryPath, outDir, extra] = process.argv.slice(2);
-    if (resultsDir === undefined || summaryPath === undefined || outDir === undefined || extra !== undefined) {
-      throw new ConfigError("usage: node scripts/s6-campaign-analysis.mjs <selected-results-dir> <summary.json> <output-dir>");
+    const [resultsDir, summaryPath, outDir, extra, excess] = process.argv.slice(2);
+    if (resultsDir === undefined || summaryPath === undefined || outDir === undefined || (extra !== undefined && extra !== "--allow-image-variants") || excess !== undefined) {
+      throw new ConfigError("usage: node scripts/s6-campaign-analysis.mjs <selected-results-dir> <summary.json> <output-dir> [--allow-image-variants]");
     }
-    buildCampaignAnalysis(resultsDir, summaryPath, outDir);
+    buildCampaignAnalysis(resultsDir, summaryPath, outDir, { allowImageVariants: extra === "--allow-image-variants" });
     process.stdout.write("Wrote verified campaign analysis and snapshot provenance.\n");
   } catch (error) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);

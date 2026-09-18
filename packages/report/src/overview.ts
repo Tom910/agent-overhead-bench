@@ -8,7 +8,7 @@ export type OverviewRow = {
 };
 
 /** Caller supplies one recorded population; summaries include all selected outcomes. */
-export function summarizeOverview(attempts: AnalysisAttempt[]): OverviewRow[] {
+export function summarizeOverview(attempts: AnalysisAttempt[], costForAttempt: (attempt: AnalysisAttempt) => number | null = attempt => attempt.cost_usd): OverviewRow[] {
   const groups = new Map<string, AnalysisAttempt[]>();
   for (const attempt of attempts) {
     const key = JSON.stringify([attempt.harness, attempt.version]);
@@ -18,7 +18,7 @@ export function summarizeOverview(attempts: AnalysisAttempt[]): OverviewRow[] {
   }
   return [...groups.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([, rows]) => {
     const measured = (key: "cost_usd" | "cached_percent" | "input_tokens" | "output_tokens"): Measurement => {
-      const values = rows.map((row) => row[key]).filter((value): value is number => value !== null);
+      const values = rows.map((row) => key === "cost_usd" ? costForAttempt(row) : row[key]).filter((value): value is number => value !== null);
       return { value: values.length === 0 ? null : median(values), n: values.length };
     };
     const passes = rows.filter((row) => row.outcome === "completed").length;

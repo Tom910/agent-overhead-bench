@@ -20,11 +20,19 @@ test("README keeps unpublished positioning and does not open as a capabilities r
   assert.doesNotMatch(readme, /\$64\.219276/);
 });
 
-test("README campaign snapshot separates host and price-book populations", () => {
-  assert.match(readme, /macOS/);
-  assert.match(readme, /Linux/);
-  assert.match(readme, /deepseek-v41-low-2026-09-10/);
-  assert.match(readme, /openrouter-2026-09-04/);
+test("README leads with a Linux-only reference-price snapshot and preserves historical evidence", () => {
+  assert.match(readme, /one Linux host/);
+  assert.match(readme, /deepseek\/deepseek-v4\.1-flash/);
+  assert.match(readme, /Reference cost/);
+  assert.match(readme, /Each column has its own baseline/);
+  assert.match(readme, /not\s+actual billing/);
+  assert.match(readme, /in progress/);
+  assert.match(readme, /evidence\/nonclaude-results-2026-09-14\/README\.md/);
+  const linux = JSON.parse(readFileSync(join(root, "evidence/linux-results-2026-09-18/summary.json"), "utf8"));
+  assert.equal(linux.official_release, false);
+  assert.ok(linux.slots.every(slot => slot.host === "linux"));
+  assert.equal(linux.selected_slots, linux.slots.length);
+  assert.ok(readme.includes(`${linux.selected_slots}/${linux.expected_slots} attempts collected`));
   assert.match(readme, /not the frozen v1 dataset/i);
   const measurement = readme.indexOf("| Harness | vX.Y |");
   assert.ok(measurement > 0, "pilot measurement table must exist");

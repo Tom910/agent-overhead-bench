@@ -46,6 +46,9 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
+| [S6-reference-token-comparison-plan.md](./S6-reference-token-comparison-plan.md) | Implemented: Linux-only reference token costs and per-metric best=100% overview; collection remains in progress |
+| [S7-linux-only-completion-plan.md](./S7-linux-only-completion-plan.md) | Running: reuse 104 Linux slots, schedule only 96 missing slots, exclude Claude CLI |
+| [S5-linux-image-restoration-plan.md](./S5-linux-image-restoration-plan.md) | Complete: pruned images restored and validated without model calls; rebuilt identities disclosed |
 | [S6-metric-overview-plan.md](./S6-metric-overview-plan.md) | Implemented and verified: primary pass/cost/cache/token overview with sortable rows and secondary detail panels |
 | [S8-readme-metric-overview-plan.md](./S8-readme-metric-overview-plan.md) | Implemented and pushed: compact host-separated metric summaries lead README |
 | [S6-request-timelines-plan.md](./S6-request-timelines-plan.md) | Implemented: sanitized C1 request series, timelines, token/cost curves; no new spend |
