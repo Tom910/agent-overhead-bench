@@ -26,13 +26,14 @@ test("README leads with a Linux-only reference-price snapshot and preserves hist
   assert.match(readme, /Reference cost/);
   assert.match(readme, /Each column has its own baseline/);
   assert.match(readme, /not\s+actual billing/);
-  assert.match(readme, /in progress/);
+  assert.match(readme, /Collection is complete/);
   assert.match(readme, /evidence\/nonclaude-results-2026-09-14\/README\.md/);
-  const linux = JSON.parse(readFileSync(join(root, "evidence/linux-results-2026-09-18/summary.json"), "utf8"));
+  const pointer = JSON.parse(readFileSync(join(root, "evidence/current-campaign.json"), "utf8"));
+  const linux = JSON.parse(readFileSync(join(root, "evidence", pointer.dataset, "summary.json"), "utf8"));
   assert.equal(linux.official_release, false);
   assert.ok(linux.slots.every(slot => slot.host === "linux"));
   assert.equal(linux.selected_slots, linux.slots.length);
-  assert.ok(readme.includes(`${linux.selected_slots}/${linux.expected_slots} attempts collected`));
+  assert.ok(readme.includes(`${linux.selected_slots}/${linux.expected_slots} attempts`));
   assert.match(readme, /not the frozen v1 dataset/i);
   const measurement = readme.indexOf("| Harness | vX.Y |");
   assert.ok(measurement > 0, "pilot measurement table must exist");

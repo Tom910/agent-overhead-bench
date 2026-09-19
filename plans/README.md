@@ -46,8 +46,9 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
-| [S6-reference-token-comparison-plan.md](./S6-reference-token-comparison-plan.md) | Implemented: Linux-only reference token costs and per-metric best=100% overview; collection remains in progress |
-| [S7-linux-only-completion-plan.md](./S7-linux-only-completion-plan.md) | Running: reuse 104 Linux slots, schedule only 96 missing slots, exclude Claude CLI |
+| [S6-current-campaign-source-plan.md](./S6-current-campaign-source-plan.md) | Complete: one canonical 200-attempt Linux export generates current README/report; offline CI freshness check |
+| [S6-reference-token-comparison-plan.md](./S6-reference-token-comparison-plan.md) | Implemented: Linux-only reference token costs and per-metric best=100% overview; completed collection now uses the current-source publisher |
+| [S7-linux-only-completion-plan.md](./S7-linux-only-completion-plan.md) | Complete: 104 reused + 96 new slots; 200/200 on Linux, Claude CLI excluded |
 | [S5-linux-image-restoration-plan.md](./S5-linux-image-restoration-plan.md) | Complete: pruned images restored and validated without model calls; rebuilt identities disclosed |
 | [S6-metric-overview-plan.md](./S6-metric-overview-plan.md) | Implemented and verified: primary pass/cost/cache/token overview with sortable rows and secondary detail panels |
 | [S8-readme-metric-overview-plan.md](./S8-readme-metric-overview-plan.md) | Implemented and pushed: compact host-separated metric summaries lead README |

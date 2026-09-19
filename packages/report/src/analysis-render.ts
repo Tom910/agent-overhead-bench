@@ -185,8 +185,21 @@ function referenceNote(group: ComparisonGroup): string {
   const rates = group.rates;
   return rates === null ? "Costs use original recorded price books." : `Reference cost at fixed prices from ${group.reference_book}: $${rates.input * 1e6}/M uncached input + $${rates.cached_input * 1e6}/M cached input + $${rates.output * 1e6}/M output tokens. Calculated per attempt from exact counters, then summarized by median; not actual billing. Original price books remain in the evidence below.`;
 }
-function overviewMarkdown(attempts: AnalysisAttempt[], rates: PriceRates | null = null): string {
+export function overviewMarkdown(attempts: AnalysisAttempt[], rates: PriceRates | null = null, compact = false): string {
   const rows = summarizeOverview(attempts, rates === null ? undefined : attempt => referenceCost(attempt, rates));
+  if (compact) {
+    const score = (row: OverviewRow, key: RelativeMetric) => {
+      const text = relativeText(row, rows, key);
+      return text === "Not scored" ? "unscored" : `**${text.replace(" of best", "")}**`;
+    };
+    return markdownTable({
+      headers: ["Harness", "Pass rate", "Reference cost / attempt", "Cache rate", "Tokens in", "Tokens out"],
+      rows: rows.map(row => [row.harness,
+        `${overviewValue(row.pass_rate, "percent")} (${row.passes}/${row.selected}) · ${score(row, "pass")}`,
+        ...primaryMetrics.map(([key, , kind]) => `${overviewValue(row[key].value, kind)} · ${score(row, key)}${row[key].n < row.selected ? ` (${row[key].n}/${row.selected} measured)` : ""}`),
+      ]),
+    }).replace(/\\\*\\\*(\d+(?:\.\d+)?%)\\\*\\\*/g, "**$1**");
+  }
   return markdownTable({
     headers: ["Harness", "Pass rate", ...primaryMetrics.map(([key, label]) => key === "cost" && rates !== null ? "Median reference cost / attempt" : label), "Task identities"],
     rows: rows.map((row) => [

@@ -54,3 +54,16 @@ The published 23:17 UTC snapshot contains 107 selected attempts (104 reused plus
 three new outcomes). Collection is not complete; the remaining queue and account
 ceiling remain unchanged. S6 presents common reference prices without modifying
 original accounting or rerunning attempts.
+
+## Final collection status — 19 September 2026
+
+All 96 newly scheduled jobs are terminal; the service exited normally with status
+0 at 16:53 UTC. The selected matrix contains 200 unique Linux slots: 104 reused
+plus 96 new, with zero overlap. All five harnesses have 40 measured outcomes.
+106 passed native verification; 94 have verify_error outcomes. All selected C4
+records name the approved model and Linux host. All 400 selected C4/C1 file hashes
+were verified. No automatic retries or additional paid runs were launched.
+
+The completed source is selected by `evidence/current-campaign.json`; the S6
+current-source publisher generates README and detailed views from its validated
+attempt facts. Collection completion does not constitute the official v1 freeze.

@@ -15,6 +15,8 @@
   },
   "scripts": {
     "lint": "node scripts/lint.mjs",
+    "report:refresh": "node scripts/s6-current-campaign.mjs",
+    "report:check": "node scripts/s6-current-campaign.mjs --check",
     "test": "npm run test --workspaces --if-present && node --test \"scripts/*.test.mjs\"",
     "typecheck": "npm run typecheck --workspaces --if-present"
   }
