@@ -2,11 +2,13 @@ import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { summarizeBenchmarkCosts } from "./benchmark-cost.js";
 import { ConfigError } from "@aob/contracts";
 import { replayAnalysis } from "./analysis-replay.js";
-import { overviewMarkdown, renderAnalysisHtml, renderAnalysisMarkdown } from "./analysis-render.js";
-import { comparisonGroups, REFERENCE_BOOK } from "./comparison-overview.js";
+import { benchmarkTotalNote, overviewMarkdown, renderAnalysisHtml, renderAnalysisMarkdown } from "./analysis-render.js";
+import { comparisonGroups, referenceCost, REFERENCE_BOOK } from "./comparison-overview.js";
 
+const DATASET = /^linux-results-\d{4}-\d{2}-\d{2}(?:-r[1-9]\d*)?$/;
 const START = "<!-- CURRENT-CAMPAIGN:START -->";
 const END = "<!-- CURRENT-CAMPAIGN:END -->";
 const harnesses = ["cline", "codex", "hermes", "pi", "qwen"];
@@ -25,7 +27,7 @@ function json(path: string): Record<string, unknown> {
 /** One canonical attempt export drives all current presentation; check never writes. */
 export function publishCurrentCampaign(root: string, check = false): void {
   const pointer = json(join(root, "evidence/current-campaign.json"));
-  requireValid(typeof pointer.dataset === "string" && /^linux-results-\d{4}-\d{2}-\d{2}$/.test(pointer.dataset), "invalid dataset pointer");
+  requireValid(typeof pointer.dataset === "string" && DATASET.test(pointer.dataset), "invalid dataset pointer");
   const dir = join(root, "evidence", pointer.dataset);
   const source = readFileSync(join(dir, "analysis.json"));
   const summaryBytes = readFileSync(join(dir, "summary.json"));
@@ -62,6 +64,44 @@ export function publishCurrentCampaign(root: string, check = false): void {
   const groups = comparisonGroups(data);
   requireValid(groups.length === 1 && groups[0]!.rates !== null, "one reference-price comparison group required");
   const group = groups[0]!;
+  let replacementNote = "";
+  let collectionNote = "All 200 unique slots are from the same Linux host: 104 retained attempts and 96 previously missing slots. Completed attempts were not rerun.";
+  if (summary.replacements !== undefined) {
+    requireValid(typeof summary.prior_dataset === "string" && DATASET.test(summary.prior_dataset) && summary.prior_dataset !== pointer.dataset, "invalid prior dataset");
+    requireValid(Array.isArray(summary.replacements) && summary.replacements.length === 4, "exactly four authorized replacements required");
+    const priorDir = join(root, "evidence", summary.prior_dataset);
+    const priorBytes = readFileSync(join(priorDir, "analysis.json"));
+    const priorProvenance = json(join(priorDir, "provenance.json"));
+    requireValid((priorProvenance.artifacts as Record<string, unknown>)?.["analysis.json"] === digest(priorBytes), "prior source hash mismatch");
+    const prior = replayAnalysis(JSON.parse(priorBytes.toString()) as unknown);
+    const oldById = new Map(prior.attempts.map(a => [a.run_id, a]));
+    const newById = new Map(data.attempts.map(a => [a.run_id, a]));
+    const replaced = new Set<string>(); const replacements = new Set<string>();
+    const oldAttempts = [];
+    for (const value of summary.replacements) {
+      requireValid(typeof value === "object" && value !== null, "invalid replacement mapping");
+      const mapping = value as Record<string, unknown>;
+      requireValid(typeof mapping.original_run_id === "string" && typeof mapping.replacement_run_id === "string", "replacement IDs required");
+      const old = oldById.get(mapping.original_run_id); const next = newById.get(mapping.replacement_run_id);
+      requireValid(old !== undefined && next !== undefined && !replaced.has(old.run_id) && !replacements.has(next.run_id) && !newById.has(old.run_id) && !oldById.has(next.run_id), "invalid replacement membership");
+      requireValid(old.harness === next.harness && old.task === next.task && old.rep === next.rep && old.version === next.version && old.model === next.model && old.task_base_revision === next.task_base_revision, "replacement slot mismatch");
+      requireValid(referenceCost(old, group.rates!) === null && referenceCost(next, group.rates!) !== null, "replacement must fix incomplete accounting");
+      replaced.add(old.run_id); replacements.add(next.run_id); oldAttempts.push(old);
+    }
+    requireValid(prior.attempts.length === 200, "prior completed matrix required");
+    for (const old of prior.attempts.filter(a => !replaced.has(a.run_id))) {
+      const next = newById.get(old.run_id);
+      requireValid(next !== undefined && JSON.stringify(next) === JSON.stringify(old), "unselected attempt changed during replacement");
+    }
+    const extra = summarizeBenchmarkCosts(oldAttempts, group.rates);
+    const subtotal = extra.reduce((sum, h) => sum + (h.known_usd ?? 0), 0);
+    replacementNote = `Four user-authorized replacements repaired incomplete accounting. The benchmark columns cover the selected 200 runs. The four superseded runs consumed **at least $${subtotal.toFixed(3)}** in additional reference cost (${extra.map(h => `${h.harness}: ≥ $${(h.known_usd ?? 0).toFixed(3)}`).join("; ")}), excluded from those columns. Their full costs remain unknown. [Original measurements](evidence/${summary.prior_dataset}/analysis.json) and [replacement mapping](evidence/${pointer.dataset}/summary.json) remain available. Replacements are selected for complete accounting, regardless of pass/fail outcome.\n\n`;
+    if (summary.interrupted_recovery_note !== undefined) {
+      requireValid(typeof summary.interrupted_recovery_note === "string", "invalid interrupted recovery note");
+      replacementNote += "One additional Hermes recovery startup was interrupted by a model-metadata capture issue. Its extra spend is also outside the selected benchmark columns and is not included in the lower bound above; its raw evidence is retained on Linux.\n\n";
+    }
+    collectionNote = "All 200 selected slots are from the same Linux host. The original collection reused 104 attempts and filled 96 missing slots. Four incomplete-measurement slots were subsequently rerun with explicit user authorization; all other slots are unchanged.";
+  }
   const passes = data.attempts.filter(a => a.outcome === "completed").length;
   const path = `evidence/${pointer.dataset}`;
   const rates = group.rates!;
@@ -78,14 +118,20 @@ score higher; lower cost/token usage scores higher.
 
 ${overviewMarkdown(group.attempts, rates, true)}
 
-Cost, cache and tokens are medians per measured attempt, including failed outcomes.
+${benchmarkTotalNote(group.attempts, rates)}
+
+**Average cost per task** averages each task’s five runs, then averages across the
+eight tasks. **Whole benchmark** sums all 40 selected runs per harness, including
+failures. Expand “Cost by task” in the report for each task’s five-run average
+and all-repetition total. Cache and tokens remain medians per measured attempt.
+A ≥ cost is a known lower bound: missing costs are not treated as zero.
 Pass rate is native verifier passes / all 40 attempts. Incomplete measurements are
 **unscored** and excluded from best-baseline selection, even when their known median
 looks better. Lower token usage alone does not establish better task performance.
 
-**Reference cost:** $${rates.input * 1e6}/M uncached input + $${rates.cached_input * 1e6}/M cached input +
+${replacementNote}**Reference cost:** $${rates.input * 1e6}/M uncached input + $${rates.cached_input * 1e6}/M cached input +
 $${rates.output * 1e6}/M output, from \`${REFERENCE_BOOK}\`. Exact request tokens are priced
-per attempt, then summarized by median. These are reference estimates, not
+across all selected requests, then averaged per task and summed per benchmark. These are reference estimates, not
 actual billing. Input includes cached tokens. Cache rate is the median per-attempt
 cached input percentage. K = 1,000; M = 1,000,000.
 
@@ -95,8 +141,8 @@ cached input percentage. K = 1,000; M = 1,000,000.
 <details>
 <summary>Conditions, provenance and how to refresh</summary>
 
-All 200 unique slots are from the same Linux host: 104 retained attempts and 96
-previously missing slots. Completed attempts were not rerun. Model routing is
+${collectionNote}
+Model routing is
 pinned to DeepSeek through OpenRouter, with fallbacks disabled and Relace excluded.
 Original accounting books remain provenance; they do not split this model overview.
 

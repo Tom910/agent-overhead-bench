@@ -15,22 +15,28 @@ Actual measurements come first; **bold percentages compare each metric with its
 observed best (100%)**. Each column has its own baseline. Higher pass/cache rates
 score higher; lower cost/token usage scores higher.
 
-| Harness | Pass rate | Reference cost / attempt | Cache rate | Tokens in | Tokens out |
-| --- | --- | --- | --- | --- | --- |
-| cline | 45.0% (18/40) · **72.0%** | $0.167 · **60.3%** | 96.4% · **97.2%** | 9.77M · **87.4%** | 158.2K · **54.1%** |
-| codex | 50.0% (20/40) · **80.0%** | $0.090 · unscored (39/40 measured) | 99.2% · **100.0%** | 8.54M · **100.0%** | 89.0K · **96.2%** |
-| hermes | 50.0% (20/40) · **80.0%** | $0.135 · unscored (38/40 measured) | 99.2% · unscored (39/40 measured) | 16.43M · unscored (39/40 measured) | 119.9K · unscored (39/40 measured) |
-| pi | 57.5% (23/40) · **92.0%** | $0.098 · unscored (39/40 measured) | 98.3% · **99.1%** | 9.46M · **90.2%** | 86.7K · **98.7%** |
-| qwen | 62.5% (25/40) · **100.0%** | $0.101 · **100.0%** | 99.2% · **99.9%** | 10.55M · **80.9%** | 85.6K · **100.0%** |
+| Harness | Pass rate | Avg cost / task | Whole benchmark | Cache rate | Tokens in | Tokens out |
+| --- | --- | --- | --- | --- | --- | --- |
+| cline | 45.0% (18/40) · **72.0%** | $0.205 · **53.5%** | $8.191 · **53.5%** | 96.4% · **97.2%** | 9.77M · **87.4%** | 158.2K · **54.1%** |
+| codex | 50.0% (20/40) · **80.0%** | ≥ $0.095 · unscored (39/40 measured) | ≥ $3.804 · unscored (39/40 measured) | 99.2% · **100.0%** | 8.54M · **100.0%** | 89.0K · **96.2%** |
+| hermes | 50.0% (20/40) · **80.0%** | ≥ $0.174 · unscored (38/40 measured) | ≥ $6.952 · unscored (38/40 measured) | 99.2% · unscored (39/40 measured) | 16.43M · unscored (39/40 measured) | 119.9K · unscored (39/40 measured) |
+| pi | 57.5% (23/40) · **92.0%** | ≥ $0.103 · unscored (39/40 measured) | ≥ $4.132 · unscored (39/40 measured) | 98.3% · **99.1%** | 9.46M · **90.2%** | 86.7K · **98.7%** |
+| qwen | 62.5% (25/40) · **100.0%** | $0.109 · **100.0%** | $4.380 · **100.0%** | 99.2% · **99.9%** | 10.55M · **80.9%** | 85.6K · **100.0%** |
 
-Cost, cache and tokens are medians per measured attempt, including failed outcomes.
+All harnesses combined: ≥ $27.459 for 200 selected runs at the shared reference prices. Incomplete accounting: known lower bound only.
+
+**Average cost per task** averages each task’s five runs, then averages across the
+eight tasks. **Whole benchmark** sums all 40 selected runs per harness, including
+failures. Expand “Cost by task” in the report for each task’s five-run average
+and all-repetition total. Cache and tokens remain medians per measured attempt.
+A ≥ cost is a known lower bound: missing costs are not treated as zero.
 Pass rate is native verifier passes / all 40 attempts. Incomplete measurements are
 **unscored** and excluded from best-baseline selection, even when their known median
 looks better. Lower token usage alone does not establish better task performance.
 
 **Reference cost:** $0.15/M uncached input + $0.003/M cached input +
 $0.6/M output, from `deepseek-v41-low-2026-09-10`. Exact request tokens are priced
-per attempt, then summarized by median. These are reference estimates, not
+across all selected requests, then averaged per task and summed per benchmark. These are reference estimates, not
 actual billing. Input includes cached tokens. Cache rate is the median per-attempt
 cached input percentage. K = 1,000; M = 1,000,000.
 
@@ -40,8 +46,8 @@ cached input percentage. K = 1,000; M = 1,000,000.
 <details>
 <summary>Conditions, provenance and how to refresh</summary>
 
-All 200 unique slots are from the same Linux host: 104 retained attempts and 96
-previously missing slots. Completed attempts were not rerun. Model routing is
+All 200 unique slots are from the same Linux host: 104 retained attempts and 96 previously missing slots. Completed attempts were not rerun.
+Model routing is
 pinned to DeepSeek through OpenRouter, with fallbacks disabled and Relace excluded.
 Original accounting books remain provenance; they do not split this model overview.
 

@@ -57,7 +57,7 @@ export function comparisonGroups(data: AnalysisExport): ComparisonGroup[] {
   return [...groups.values()];
 }
 
-export type RelativeMetric = "pass" | "cost" | "cache" | "input" | "output";
+export type RelativeMetric = "pass" | "cost" | "benchmark" | "cache" | "input" | "output";
 export function relativeMetricScore(row: OverviewRow, rows: OverviewRow[], key: RelativeMetric): number | null {
   const value = (r: OverviewRow) => key === "pass" ? r.pass_rate : r[key].n === r.selected ? r[key].value : null;
   const current = value(row);

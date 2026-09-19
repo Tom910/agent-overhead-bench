@@ -46,6 +46,9 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
+| [S6-task-and-benchmark-cost-plan.md](./S6-task-and-benchmark-cost-plan.md) | Implemented: task repetition averages and full selected benchmark totals; known lower bounds disclosed |
+| [S7-four-usage-replacements-plan.md](./S7-four-usage-replacements-plan.md) | Running: four authorized usage replacements under $2 allowance; originals retained and final publication gated |
+| [S1-full-request-model-metadata-plan.md](./S1-full-request-model-metadata-plan.md) | Fixed: complete bounded JSON model extraction; guard stays enabled |
 | [S6-current-campaign-source-plan.md](./S6-current-campaign-source-plan.md) | Complete: one canonical 200-attempt Linux export generates current README/report; offline CI freshness check |
 | [S6-reference-token-comparison-plan.md](./S6-reference-token-comparison-plan.md) | Implemented: Linux-only reference token costs and per-metric best=100% overview; completed collection now uses the current-source publisher |
 | [S7-linux-only-completion-plan.md](./S7-linux-only-completion-plan.md) | Complete: 104 reused + 96 new slots; 200/200 on Linux, Claude CLI excluded |

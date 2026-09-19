@@ -4,7 +4,7 @@ import { median } from "./derive.js";
 type Measurement = { value: number | null; n: number };
 export type OverviewRow = {
   harness: string; version: string; selected: number; passes: number; pass_rate: number; tasks: number;
-  cost: Measurement; cache: Measurement; input: Measurement; output: Measurement;
+  cost: Measurement; benchmark: Measurement; cache: Measurement; input: Measurement; output: Measurement;
 };
 
 /** Caller supplies one recorded population; summaries include all selected outcomes. */
@@ -21,12 +21,13 @@ export function summarizeOverview(attempts: AnalysisAttempt[], costForAttempt: (
       const values = rows.map((row) => key === "cost_usd" ? costForAttempt(row) : row[key]).filter((value): value is number => value !== null);
       return { value: values.length === 0 ? null : median(values), n: values.length };
     };
+    const costValues = rows.map(costForAttempt).filter((value): value is number => value !== null);
     const passes = rows.filter((row) => row.outcome === "completed").length;
     return {
       harness: rows[0]!.harness, version: rows[0]!.version, selected: rows.length,
       passes, pass_rate: passes / rows.length * 100,
       tasks: new Set(rows.map((row) => JSON.stringify([row.task, row.task_base_revision, row.verifier_image, row.environment]))).size,
-      cost: measured("cost_usd"), cache: measured("cached_percent"), input: measured("input_tokens"), output: measured("output_tokens"),
+      cost: measured("cost_usd"), benchmark: { value: costValues.length === 0 ? null : costValues.reduce((sum, value) => sum + value, 0), n: costValues.length }, cache: measured("cached_percent"), input: measured("input_tokens"), output: measured("output_tokens"),
     };
   });
 }

@@ -33,7 +33,10 @@ contains no raw logs, prompts, account credentials or host filesystem paths.
 
 ## Reading the results
 
-Pass rate, reference cost, cache rate and tokens in/out lead every view. Each
+Pass rate, average task cost, whole-benchmark cost, cache rate and tokens in/out
+lead every view. Each task cost averages its five runs; the headline averages
+those eight task means. Whole-benchmark cost sums all 40 selected runs, including
+failures. Per-task averages and all-repetition totals are available in the report. Each
 metric has its own best-observed 100% baseline: value/maximum for pass/cache;
 minimum/value for cost/tokens. These are descriptive resource and outcome indices,
 not a composite quality ranking. Partial measurement coverage is shown, unscored,
@@ -41,8 +44,10 @@ and excluded from baseline selection. Thus a lower known median from incomplete
 measurements does not become the reference best.
 
 Reference prices use the immutable `deepseek-v41-low-2026-09-10` book. Exact
-successful-response counters are priced for each attempt before median aggregation.
-Missing usage and ambiguous accounting stay unavailable. Original recorded price
+successful-response counters are priced per request, summed across all selected
+runs for benchmark cost, and averaged across repetitions for each task.
+Incomplete costs show a known lower bound (≥), including known request costs
+within an incomplete run. They are never presented as complete totals. Original recorded price
 books, costs and task identities are preserved in the export and detailed sections.
 Reference pricing is not a claim about actual billing.
 

@@ -21,7 +21,7 @@ function attempt(id: string, harness: string, ms: number, extra: Partial<Analysi
 }
 
 describe("analysis views", () => {
-  it("leads with five primary metrics and keeps partial coverage next to the values", () => {
+  it("leads with task-average and benchmark costs and keeps partial coverage next to the values", () => {
     const data = analyzeAttempts([
       attempt("pass", "alpha", 100, { cost_usd: 1, input_tokens: 1000000 }),
       attempt("fail", "alpha", 200, { rep: 1, outcome: "verify_error", cost_usd: null, input_tokens: 3000000 }),
@@ -35,7 +35,10 @@ describe("analysis views", () => {
     expect(rendered.indexOf('class="metric-overview"')).toBeLessThan(rendered.indexOf("<h3>Coverage</h3>"));
     const markdown = renderAnalysisMarkdown(data);
     expect(markdown.indexOf("### At a glance")).toBeLessThan(markdown.indexOf("### Coverage"));
-    expect(markdown).toContain("Median cost / attempt");
+    expect(markdown).toContain("Average cost / task");
+    expect(markdown).toContain("Whole benchmark cost");
+    expect(markdown).toContain("≥ $0.500");
+    expect(markdown).toContain("≥ $1.000");
   });
   it("shows selected coverage and each distribution's actual denominators", () => {
     const data = analyzeAttempts([

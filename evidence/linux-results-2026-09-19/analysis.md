@@ -2,21 +2,70 @@
 
 Selected attempts: 200. Populations: 2.
 
-All selected outcomes. Task coverage can differ; these are descriptive summaries, not a ranking. Cost, cache and tokens are medians per measured attempt. Cost is a static estimate, not billing. Cache rate is the median attempt cached-input percentage, not a pooled token ratio. Input includes cached tokens; token counters cover successful model responses. Missing measurements are not zero.
+All selected outcomes. Task coverage can differ; these are descriptive summaries, not a ranking. Cost per task is the mean across repetitions, then equally averaged across tasks. Whole benchmark cost sums every selected run, including failures. Cache and tokens are medians per measured attempt. Partial costs are known lower bounds. Cost is a static estimate, not billing. Cache rate is the median attempt cached-input percentage, not a pooled token ratio. Input includes cached tokens; token counters cover successful model responses. Missing measurements are not zero.
 
 ## Comparison 1: deepseek/deepseek-v4.1-flash · linux
 
 ### At a glance
 
-| Harness | Pass rate | Median reference cost / attempt | Cache rate | Tokens in | Tokens out | Task identities |
-| --- | --- | --- | --- | --- | --- | --- |
-| cline @ 3.0.61 | 45.0% · 18/40 · 72.0% of best | $0.167 · 60.3% of best (40/40 measured) | 96.4% · 97.2% of best (40/40 measured) | 9.77M · 87.4% of best (40/40 measured) | 158.2K · 54.1% of best (40/40 measured) | 10 |
-| codex @ codex-cli 0.149.1 | 50.0% · 20/40 · 80.0% of best | $0.090 · Not scored (39/40 measured · partial) | 99.2% · 100.0% of best (40/40 measured) | 8.54M · 100.0% of best (40/40 measured) | 89.0K · 96.2% of best (40/40 measured) | 11 |
-| hermes @ Hermes Agent v0.20.5 (2026.8.19) | 50.0% · 20/40 · 80.0% of best | $0.135 · Not scored (38/40 measured · partial) | 99.2% · Not scored (39/40 measured · partial) | 16.43M · Not scored (39/40 measured · partial) | 119.9K · Not scored (39/40 measured · partial) | 8 |
-| pi @ 0.73.1 | 57.5% · 23/40 · 92.0% of best | $0.098 · Not scored (39/40 measured · partial) | 98.3% · 99.1% of best (40/40 measured) | 9.46M · 90.2% of best (40/40 measured) | 86.7K · 98.7% of best (40/40 measured) | 9 |
-| qwen @ 0.22.2 | 62.5% · 25/40 · 100.0% of best | $0.101 · 100.0% of best (40/40 measured) | 99.2% · 99.9% of best (40/40 measured) | 10.55M · 80.9% of best (40/40 measured) | 85.6K · 100.0% of best (40/40 measured) | 15 |
+| Harness | Pass rate | Average reference cost / task | Whole benchmark cost | Cache rate | Tokens in | Tokens out | Task identities |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| cline @ 3.0.61 | 45.0% · 18/40 · 72.0% of best | $0.205 · 53.5% of best (40/40 measured) | $8.191 · 53.5% of best (40/40 measured) | 96.4% · 97.2% of best (40/40 measured) | 9.77M · 87.4% of best (40/40 measured) | 158.2K · 54.1% of best (40/40 measured) | 10 |
+| codex @ codex-cli 0.149.1 | 50.0% · 20/40 · 80.0% of best | ≥ $0.095 · Not scored (39/40 measured · partial) | ≥ $3.804 · Not scored (39/40 measured · partial) | 99.2% · 100.0% of best (40/40 measured) | 8.54M · 100.0% of best (40/40 measured) | 89.0K · 96.2% of best (40/40 measured) | 11 |
+| hermes @ Hermes Agent v0.20.5 (2026.8.19) | 50.0% · 20/40 · 80.0% of best | ≥ $0.174 · Not scored (38/40 measured · partial) | ≥ $6.952 · Not scored (38/40 measured · partial) | 99.2% · Not scored (39/40 measured · partial) | 16.43M · Not scored (39/40 measured · partial) | 119.9K · Not scored (39/40 measured · partial) | 8 |
+| pi @ 0.73.1 | 57.5% · 23/40 · 92.0% of best | ≥ $0.103 · Not scored (39/40 measured · partial) | ≥ $4.132 · Not scored (39/40 measured · partial) | 98.3% · 99.1% of best (40/40 measured) | 9.46M · 90.2% of best (40/40 measured) | 86.7K · 98.7% of best (40/40 measured) | 9 |
+| qwen @ 0.22.2 | 62.5% · 25/40 · 100.0% of best | $0.109 · 100.0% of best (40/40 measured) | $4.380 · 100.0% of best (40/40 measured) | 99.2% · 99.9% of best (40/40 measured) | 10.55M · 80.9% of best (40/40 measured) | 85.6K · 100.0% of best (40/40 measured) | 15 |
 
-Reference cost at fixed prices from deepseek-v41-low-2026-09-10: $0.15/M uncached input + $0.003/M cached input + $0.6/M output tokens. Calculated per attempt from exact counters, then summarized by median; not actual billing. Original price books remain in the evidence below.
+All harnesses combined: ≥ $27.459 for 200 selected runs at the shared reference prices. Incomplete accounting: known lower bound only.
+
+### Cost by task
+
+Average across each task’s repetitions; all-repetition totals sum to the whole benchmark. ≥ marks a known lower bound where accounting is incomplete.
+
+| Harness | Task | Runs | Average cost / task | All repetitions cost | Complete cost coverage |
+| --- | --- | --- | --- | --- | --- |
+| cline | cattrs-partial-structuring-recovery | 5 | $0.155 | $0.774 | 5/5 |
+| cline | happy-dom-deterministic-intersectionobserver | 5 | $0.200 | $0.998 | 5/5 |
+| cline | ink-grid-box-layout | 5 | $0.134 | $0.672 | 5/5 |
+| cline | psd-tools-blend-range-api | 5 | $0.199 | $0.994 | 5/5 |
+| cline | superjson-error-stack-serialization | 5 | $0.082 | $0.410 | 5/5 |
+| cline | textual-richlog-follow-state | 5 | $0.446 | $2.231 | 5/5 |
+| cline | tomlkit-toml-table-converters | 5 | $0.273 | $1.363 | 5/5 |
+| cline | true-myth-iterable-collection-combinators | 5 | $0.150 | $0.751 | 5/5 |
+| codex | cattrs-partial-structuring-recovery | 5 | $0.085 | $0.424 | 5/5 |
+| codex | happy-dom-deterministic-intersectionobserver | 5 | $0.086 | $0.430 | 5/5 |
+| codex | ink-grid-box-layout | 5 | $0.096 | $0.481 | 5/5 |
+| codex | psd-tools-blend-range-api | 5 | $0.075 | $0.373 | 5/5 |
+| codex | superjson-error-stack-serialization | 5 | ≥ $0.065 | ≥ $0.326 | 4/5 |
+| codex | textual-richlog-follow-state | 5 | $0.145 | $0.727 | 5/5 |
+| codex | tomlkit-toml-table-converters | 5 | $0.125 | $0.626 | 5/5 |
+| codex | true-myth-iterable-collection-combinators | 5 | $0.083 | $0.416 | 5/5 |
+| hermes | cattrs-partial-structuring-recovery | 5 | $0.129 | $0.643 | 5/5 |
+| hermes | happy-dom-deterministic-intersectionobserver | 5 | $0.129 | $0.647 | 5/5 |
+| hermes | ink-grid-box-layout | 5 | $0.140 | $0.699 | 5/5 |
+| hermes | psd-tools-blend-range-api | 5 | $0.100 | $0.500 | 5/5 |
+| hermes | superjson-error-stack-serialization | 5 | $0.077 | $0.387 | 5/5 |
+| hermes | textual-richlog-follow-state | 5 | ≥ $0.296 | ≥ $1.480 | 4/5 |
+| hermes | tomlkit-toml-table-converters | 5 | ≥ $0.334 | ≥ $1.671 | 4/5 |
+| hermes | true-myth-iterable-collection-combinators | 5 | $0.185 | $0.925 | 5/5 |
+| pi | cattrs-partial-structuring-recovery | 5 | $0.108 | $0.538 | 5/5 |
+| pi | happy-dom-deterministic-intersectionobserver | 5 | $0.085 | $0.427 | 5/5 |
+| pi | ink-grid-box-layout | 5 | $0.121 | $0.603 | 5/5 |
+| pi | psd-tools-blend-range-api | 5 | $0.090 | $0.449 | 5/5 |
+| pi | superjson-error-stack-serialization | 5 | $0.027 | $0.136 | 5/5 |
+| pi | textual-richlog-follow-state | 5 | ≥ $0.144 | ≥ $0.719 | 4/5 |
+| pi | tomlkit-toml-table-converters | 5 | $0.153 | $0.766 | 5/5 |
+| pi | true-myth-iterable-collection-combinators | 5 | $0.099 | $0.494 | 5/5 |
+| qwen | cattrs-partial-structuring-recovery | 5 | $0.099 | $0.495 | 5/5 |
+| qwen | happy-dom-deterministic-intersectionobserver | 5 | $0.083 | $0.413 | 5/5 |
+| qwen | ink-grid-box-layout | 5 | $0.125 | $0.624 | 5/5 |
+| qwen | psd-tools-blend-range-api | 5 | $0.089 | $0.445 | 5/5 |
+| qwen | superjson-error-stack-serialization | 5 | $0.067 | $0.333 | 5/5 |
+| qwen | textual-richlog-follow-state | 5 | $0.164 | $0.822 | 5/5 |
+| qwen | tomlkit-toml-table-converters | 5 | $0.152 | $0.760 | 5/5 |
+| qwen | true-myth-iterable-collection-combinators | 5 | $0.097 | $0.487 | 5/5 |
+
+Reference cost at fixed prices from deepseek-v41-low-2026-09-10: $0.15/M uncached input + $0.003/M cached input + $0.6/M output tokens. Calculated from exact request counters, averaged across repetitions per task and summed for the whole benchmark; not actual billing. Original price books remain in the evidence below.
 
 Image variants: retained and rebuilt task environments occur in this snapshot. Task counts include distinct environment identities; detailed comparisons preserve those identities. These summaries are not a controlled image-matched comparison.
 
