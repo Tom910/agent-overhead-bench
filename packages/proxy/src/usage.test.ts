@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { extractGenerationUsage, extractUsage, peekServedModel } from "./usage.js";
+import { extractGenerationUsage, extractUsage, peekModel, peekServedModel } from "./usage.js";
 
 const httpDir = join(dirname(fileURLToPath(import.meta.url)), "../../contracts/fixtures/http");
 
@@ -266,5 +266,23 @@ describe("peekServedModel", () => {
 
   it("returns null when no model is present", () => {
     expect(peekServedModel(Buffer.from('data: {"type":"ping"}\n'))).toBeNull();
+  });
+});
+
+
+describe("complete request model metadata", () => {
+  it("reads a trailing top-level model after a large message list instead of a nested decoy", () => {
+    const body = Buffer.from(JSON.stringify({ messages: [{ model: "nested-decoy", content: "x".repeat(100000) }], model: "pinned-model" }));
+    expect(peekModel(body)).toBe("pinned-model");
+  });
+  it("never promotes nested fields or malformed JSON into requested-model evidence", () => {
+    expect(peekModel(Buffer.from('{"messages":[{"model":"nested"}]}'))).toBeNull();
+    expect(peekModel(Buffer.from('{"model":"incomplete",'))).toBeNull();
+    expect(peekModel(Buffer.from('null'))).toBeNull();
+    expect(peekModel(Buffer.from('[{"model":"array"}]'))).toBeNull();
+  });
+  it("retains bounded capture and decodes JSON strings", () => {
+    expect(peekModel(Buffer.from(JSON.stringify({ model: "escaped\\model" })))).toBe("escaped\\model");
+    expect(peekModel(Buffer.from('{"model":"over-limit"}'), 8)).toBeNull();
   });
 });

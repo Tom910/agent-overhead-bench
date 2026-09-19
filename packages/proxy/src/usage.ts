@@ -221,14 +221,15 @@ export function extractGenerationUsage(body: Buffer): C1Usage | null {
   }
 }
 
-export function peekModel(body: Buffer, cap = 65536): string | null {
-  const slice = body.subarray(0, cap).toString("utf8");
+export function peekModel(body: Buffer, cap = 16 * 1024 * 1024): string | null {
+  if (body.length > cap) return null;
   try {
-    const obj = JSON.parse(slice) as { model?: unknown };
-    return typeof obj.model === "string" ? obj.model : null;
+    const obj: unknown = JSON.parse(body.toString("utf8"));
+    if (typeof obj !== "object" || obj === null || Array.isArray(obj)) return null;
+    const model = (obj as Record<string, unknown>).model;
+    return typeof model === "string" ? model : null;
   } catch {
-    const m = /"model"\s*:\s*"([^"]+)"/.exec(slice);
-    return m?.[1] ?? null;
+    return null;
   }
 }
 

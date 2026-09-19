@@ -238,11 +238,12 @@ describe("proxy passthrough", () => {
   });
 
   it("forwards SSE streams including data: lines", async () => {
-    await withProxy({ delayMs: 0, streamed: true, includeUsage: true, status: 200 }, async (baseUrl, eventsPath) => {
+    await withProxy({ delayMs: 0, streamed: true, includeUsage: true, status: 200 }, async (baseUrl, eventsPath, flush) => {
       const res = await fetch(`${baseUrl}/v1/chat/completions`, { method: "POST", body: "{}" });
       const text = await res.text();
       expect(text).toContain("data:");
       expect(text).toContain("[DONE]");
+      await flush();
       const events = await loadEvents(eventsPath);
       expect(events[0]?.streamed).toBe(true);
       expect(events[0]?.usage_source).toBe("response_body");
