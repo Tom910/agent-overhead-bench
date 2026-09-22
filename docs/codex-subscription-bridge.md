@@ -45,8 +45,7 @@ exclusive ownership across programs. This mode may optionally use `--meter-url`;
 without it, the legacy bundle has no controlled reasoning policy or meter route.
 The two credential modes are mutually exclusive.
 
-This command has not been run against real credentials during development. Do
-not put token contents into command arguments, environment variables, issue
+Do not put token contents into command arguments, environment variables, issue
 reports or Git. The helper prints only a generic completion or error message.
 
 The supported input is the standard nested subscription record: `tokens` with
@@ -174,6 +173,96 @@ DeepSeek results and completed Linux attempts are unchanged.
 See [the S2 preparation plan](../plans/S2-codex-bridge-preparation-plan.md) and
 [bounded live qualification plan](../plans/S2-luna-live-qualification-plan.md)
 for the stage boundaries. No existing benchmark profile is enabled by this helper.
+
+## Build the pinned bridge on Linux
+
+Build from the exact upstream commit with both reviewed patches. From this
+repository's root, select a new private build directory outside the checkout:
+
+```sh
+set -eu
+umask 077
+aob_checkout="$PWD"
+aob_bridge_build=/absolute/private/path/to/new-bridge-build
+aob_go_image=golang@sha256:2a0ba12e116687098780d3ce700f9ce3cb340783779646aafbabed748fa6677c
+mkdir -m 700 "$aob_bridge_build"
+git clone --no-checkout https://github.com/router-for-me/CLIProxyAPI.git "$aob_bridge_build/src"
+git -C "$aob_bridge_build/src" checkout --detach 2430354330af80b645f9ffb1a51e1e7c72c4cc8e
+node --test scripts/s2-codex-bridge-prepare.test.mjs
+git -C "$aob_bridge_build/src" apply --check "$aob_checkout/plans/s2-evidence/codex-bridge/cli-proxy-api-benchmark-guards.patch"
+git -C "$aob_bridge_build/src" apply "$aob_checkout/plans/s2-evidence/codex-bridge/cli-proxy-api-benchmark-guards.patch"
+git -C "$aob_bridge_build/src" apply --check "$aob_checkout/plans/s2-evidence/codex-bridge/cli-proxy-api-local-meter.patch"
+git -C "$aob_bridge_build/src" apply "$aob_checkout/plans/s2-evidence/codex-bridge/cli-proxy-api-local-meter.patch"
+docker run --rm --cpus 4 --memory 8g \
+  -v "$aob_bridge_build:/build" -w /build/src -e GOTOOLCHAIN=local \
+  "$aob_go_image" go build -trimpath -o /build/cli-proxy-api ./cmd/server
+sha256sum "$aob_bridge_build/cli-proxy-api"
+```
+
+Stop if any command fails. The helper tests check the exact tracked patch bytes
+against their required hashes. Source and Go dependency downloads need network
+access but no model credentials or inference. Retain the commit, patch hashes and
+binary hash as build provenance. Passing a binary to the qualifier does not by
+itself prove how that binary was built.
+
+## Run the bounded qualifier
+
+**Live qualification is pending.** The reusable
+[qualifier](../scripts/s2-codex-bridge-qualify.mjs) first supports a zero-spend
+mock run through the actual native clients, bridge, controlled policy and C1
+meter. Run it on the designated Linux collection host with repository dependencies
+installed and Docker available. It uses the five exact image IDs recorded in the
+[native smoke evidence](../plans/s2-evidence/codex-bridge/native-smoke/sanitized-summary.json),
+plus the pinned Go and Node runtime images declared in the script. These images
+must already be available locally; runtime launches use `--pull=never`.
+
+Choose separate private output directories outside the checkout. Their parents
+must exist; new output directories are created with mode 0700. Existing output
+directories must be private, regular directories. Mock mode is the default and
+rejects credential arguments:
+
+```sh
+node scripts/s2-codex-bridge-qualify.mjs \
+  --bridge "$aob_bridge_build/cli-proxy-api" \
+  --output /absolute/private/path/to/luna-mock
+```
+
+The mock uses synthetic subscription credentials and an isolated fake Responses
+backend. It must pass for all five harnesses before live mode accepts its
+`state.json`. The gate binds the bridge binary hash, qualifier implementation
+hash and controlled policy; changes to the binary or included source files require
+new mock evidence before a live launch.
+
+After that gate passes, use the existing Codex CLI credential file by explicit
+path. The runner prepares non-renewable access-token snapshots itself; do not
+pass a flat bridge record as `--auth-file`:
+
+```sh
+node scripts/s2-codex-bridge-qualify.mjs \
+  --mode live \
+  --bridge "$aob_bridge_build/cli-proxy-api" \
+  --output /absolute/private/path/to/luna-live \
+  --auth-file /absolute/private/path/to/codex/auth.json \
+  --mock-evidence /absolute/private/path/to/luna-mock/state.json
+```
+
+Live mode consumes subscription allowance. Each client receives an empty scratch
+workspace and a prompt requesting one shell write/read action followed by a final
+answer. C1 admits at most two provider model requests per client, ten across all
+five; each native invocation has a 120-second timeout. A failed slot halts the
+run without an automatic replacement or fallback. Reusing the same output resumes
+only slots that have never started; completed or interrupted slots are not rerun,
+and a halted run stays halted. Investigate retained locks or failures before any
+new allowance-bearing action.
+
+The runner keeps C1 events, condition observations and private diagnostics beside
+`state.json`, removes temporary snapshot bundles during normal cleanup, and does
+not modify the original credential file. Keep the output private; publish only
+reviewed sanitized evidence. Abrupt process termination can leave private
+artifacts requiring cleanup. Successful qualification would establish this
+bounded two-request tool loop for exact `gpt-6-luna` on these five clients. It
+does not run or approve a 200-attempt campaign, long-context compaction, or the
+scientific validity of benchmark tasks.
 
 Offline validation also confirmed different effective reasoning: Codex high, the
 four Chat clients medium. The bridge loses encrypted reasoning history on Chat
