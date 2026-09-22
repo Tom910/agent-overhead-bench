@@ -12,6 +12,7 @@ import https from "node:https";
 import net from "node:net";
 import { syncBuiltinESMExports } from "node:module";
 import { convertCodexAuth, prepareCodexBridge, BridgePreparationError, BRIDGE_COMMIT, REQUIRED_PATCH_SHA256 } from "./s2-codex-bridge-prepare.mjs";
+import * as preparation from "./s2-codex-bridge-prepare.mjs";
 
 const roots = [];
 afterEach(() => { for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true }); });
@@ -68,7 +69,7 @@ test("creates a private unqualified bundle and preserves the original auth bytes
   for (const privateValue of [authFile, auth.tokens.account_id, auth.tokens.refresh_token, auth.tokens.access_token, "private-fixture@example.invalid"]) assert.equal(manifestText.includes(privateValue), false);
 });
 
-test("requires explicit source, destination and exclusive refresh ownership before reading anything", () => {
+test("requires explicit source, destination and credential mode before reading anything", () => {
   const { authFile, output } = fixture();
   for (const options of [{}, { authFile, output }, { authFile, output, exclusiveRefreshOwner: false }, { output, exclusiveRefreshOwner: true }, { authFile, exclusiveRefreshOwner: true }]) rejects(() => prepareCodexBridge(options));
   assert.throws(() => statSync(output), { code: "ENOENT" });
@@ -129,13 +130,16 @@ test("cleans its private output after a write failure and does not expose the fa
 });
 
 test("preparation performs no network or subprocess action", t => {
-  const { authFile, output } = fixture();
+  const { authFile, output, root } = fixture();
   const noExternalAction = () => { assert.fail("unexpected external action"); };
   for (const method of ["spawn", "spawnSync", "exec", "execSync", "execFile", "execFileSync", "fork"]) t.mock.method(childProcess, method, noExternalAction);
   for (const module of [http, https]) for (const method of ["get", "request"]) t.mock.method(module, method, noExternalAction);
   for (const method of ["connect", "createConnection"]) t.mock.method(net, method, noExternalAction);
   t.mock.method(globalThis, "fetch", noExternalAction); syncBuiltinESMExports();
-  try { assert.equal(prepareCodexBridge({ authFile, output, exclusiveRefreshOwner: true }).status, "unqualified"); }
+  try {
+    assert.equal(prepareCodexBridge({ authFile, output, exclusiveRefreshOwner: true }).status, "unqualified");
+    assert.equal(prepareCodexBridge({ authFile, output: join(root, "snapshot"), accessTokenSnapshot: true, meterUrl: "http://127.0.0.1:33117", nowMs: 1999998800000 }).status, "unqualified");
+  }
   finally { t.mock.restoreAll(); syncBuiltinESMExports(); }
 });
 
@@ -151,5 +155,95 @@ test("importing the module does not run its CLI or discover HOME credentials", (
 test("bundle requirement binds the exact reviewed source patch bytes", () => {
   const patch = readFileSync(new URL("../plans/s2-evidence/codex-bridge/cli-proxy-api-benchmark-guards.patch", import.meta.url));
   assert.equal(REQUIRED_PATCH_SHA256, `sha256:${createHash("sha256").update(patch).digest("hex")}`);
+  assert.match(patch.toString("utf8"), /^diff --git /);
+});
+
+const meterUrl = "http://127.0.0.1:33117";
+const snapshotNow = 1999998800000;
+
+test("snapshot conversion permits absent refresh credentials and never exports them", () => {
+  const { auth } = fixture();
+  for (const includeRefresh of [true, false]) {
+    const input = structuredClone(auth);
+    if (!includeRefresh) delete input.tokens.refresh_token;
+    const before = JSON.stringify(input);
+    const converted = convertCodexAuth(input, { accessTokenSnapshot: true, nowMs: snapshotNow });
+    assert.equal(Object.hasOwn(converted, "refresh_token"), false);
+    assert.equal(JSON.stringify(converted).includes("private-fixture-refresh"), false);
+    assert.equal(converted.access_token, auth.tokens.access_token);
+    assert.equal(JSON.stringify(input), before);
+  }
+  const missing = structuredClone(auth); delete missing.tokens.refresh_token;
+  rejects(() => convertCodexAuth(missing));
+});
+
+test("snapshot expiry requires at least fifteen minutes and a finite validation clock", () => {
+  const { auth } = fixture();
+  assert.equal(preparation.MIN_SNAPSHOT_LIFETIME_MS, 15 * 60 * 1000);
+  const expiresMs = 2000000000000;
+  for (const nowMs of [expiresMs, expiresMs - 899999, expiresMs + 1, NaN, Infinity]) {
+    rejects(() => convertCodexAuth(auth, { accessTokenSnapshot: true, nowMs }));
+  }
+  assert.equal(convertCodexAuth(auth, { accessTokenSnapshot: true, nowMs: expiresMs - 900000 }).expired, new Date(expiresMs).toISOString());
+});
+
+test("snapshot bundle requires a meter and records no-refresh ownership and controlled policy", () => {
+  const { authFile, output, auth } = fixture(); const source = readFileSync(authFile);
+  rejects(() => prepareCodexBridge({ authFile, output, accessTokenSnapshot: true, nowMs: snapshotNow }));
+  prepareCodexBridge({ authFile, output, accessTokenSnapshot: true, meterUrl, nowMs: snapshotNow });
+  assert.deepEqual(readFileSync(authFile), source);
+  const record = readJSON(join(output, "auth/codex.json"));
+  assert.equal(Object.hasOwn(record, "refresh_token"), false);
+  assert.equal(record.aob_meter_base_url, meterUrl);
+  const meterKey = readFileSync(join(output, "meter-key"), "utf8").trim();
+  assert.match(meterKey, /^[a-f0-9]{64}$/);
+  assert.equal(statSync(join(output, "meter-key")).mode & 0o777, 0o600);
+  assert.notEqual(meterKey, readFileSync(join(output, "bridge-key"), "utf8").trim());
+  assert.deepEqual(record.headers, { "x-aob-proxy-token": meterKey });
+  const manifest = readJSON(join(output, "manifest.json"));
+  assert.equal(manifest.auth_mode, "access-token-snapshot");
+  assert.equal(manifest.refresh_owner, "none-snapshot-only");
+  assert.equal(manifest.refresh_token_imported, false);
+  assert.equal(manifest.access_token_expires_at, record.expired);
+  assert.equal(manifest.policy, preparation.CONTROLLED_POLICY);
+  assert.equal(manifest.required_meter_patch_sha256, preparation.REQUIRED_METER_PATCH_SHA256);
+  assert.equal(manifest.provider_accounting_verified, false);
+  assert.equal(manifest.model_allowlist_enforced, false);
+  for (const secret of [meterKey, auth.tokens.refresh_token, auth.tokens.account_id]) assert.equal(JSON.stringify(manifest).includes(secret), false);
+  const config = readJSON(join(output, "config.json"));
+  assert.deepEqual(config.payload.override, [{ models: [{ name: "gpt-6-luna", protocol: "codex" }], params: { "reasoning.effort": "low", "reasoning.summary": "auto", store: false } }]);
+  assert.deepEqual(config.payload.filter, [{ models: [{ name: "gpt-6-luna", protocol: "codex" }], params: ['input.#(type=="reasoning")#', "previous_response_id", "conversation"] }]);
+});
+
+test("snapshot rejects conflicting and malformed mode flags before producing output", () => {
+  const { authFile, output } = fixture();
+  for (const flags of [{ accessTokenSnapshot: true, exclusiveRefreshOwner: true }, { accessTokenSnapshot: "true" }, { accessTokenSnapshot: true, exclusiveRefreshOwner: "yes" }]) {
+    rejects(() => prepareCodexBridge({ authFile, output, meterUrl, ...flags }));
+  }
+  assert.throws(() => statSync(output), { code: "ENOENT" });
+});
+
+test("meter accepts only exact local HTTP host and canonical nonzero port", () => {
+  const { authFile, root } = fixture();
+  const invalid = ["http://127.1:33117", "http://2130706433:33117", "http://localhost:033117", "http://localhost:0", "http://localhost:65536", "http://localhost:33117/", "http://localhost:33117?", "http://localhost:33117#", "http://a:b@localhost:33117", "http://localhost.evil:33117", "https://localhost:33117", " http://localhost:33117", null, 1];
+  for (const [i, value] of invalid.entries()) rejects(() => prepareCodexBridge({ authFile, output: join(root, `invalid-${i}`), accessTokenSnapshot: true, meterUrl: value, nowMs: snapshotNow }));
+  for (const [i, value] of [meterUrl, "http://localhost:65535"].entries()) prepareCodexBridge({ authFile, output: join(root, `valid-${i}`), accessTokenSnapshot: true, meterUrl: value, nowMs: snapshotNow });
+});
+
+test("snapshot CLI supports explicit meter and rejects mixed ownership flags", () => {
+  const { authFile, output } = fixture();
+  const cli = new URL("./s2-codex-bridge-prepare.mjs", import.meta.url);
+  const args = [cli.pathname, "--auth-file", authFile, "--output", output, "--access-token-snapshot", "--meter-url", meterUrl];
+  const bad = spawnSync(process.execPath, [...args, "--exclusive-refresh-owner"], { encoding: "utf8" });
+  assert.equal(bad.status, 1);
+  const good = spawnSync(process.execPath, args, { encoding: "utf8" });
+  assert.equal(good.status, 0, good.stderr);
+  assert.equal(Object.hasOwn(readJSON(join(output, "auth/codex.json")), "refresh_token"), false);
+  assert.equal((good.stdout + good.stderr + bad.stderr).includes("private-fixture"), false);
+});
+
+test("required meter patch constant binds reviewed patch bytes", () => {
+  const patch = readFileSync(new URL("../plans/s2-evidence/codex-bridge/cli-proxy-api-local-meter.patch", import.meta.url));
+  assert.equal(preparation.REQUIRED_METER_PATCH_SHA256, `sha256:${createHash("sha256").update(patch).digest("hex")}`);
   assert.match(patch.toString("utf8"), /^diff --git /);
 });

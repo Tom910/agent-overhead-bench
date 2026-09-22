@@ -6,6 +6,10 @@ import { fileURLToPath } from "node:url";
 
 export const BRIDGE_COMMIT = "2430354330af80b645f9ffb1a51e1e7c72c4cc8e";
 export const REQUIRED_PATCH_SHA256 = "sha256:6a17e7ad40cff90e5b26722c13fdaea3255346d73a3d7966ec4af0014c54dc88";
+export const REQUIRED_METER_PATCH_SHA256 = "sha256:a7c497eee5f37098d08cf1f55168746f5c245eb8fb3b76bbb70440a62506cb9b";
+export const LUNA_MODEL = "gpt-6-luna";
+export const CONTROLLED_POLICY = "luna-low-reasoning-replay-disabled";
+export const MIN_SNAPSHOT_LIFETIME_MS = 15 * 60 * 1000;
 const MAX_AUTH_BYTES = 256 * 1024;
 export class BridgePreparationError extends Error {
   constructor(message) { super(message); this.name = "BridgePreparationError"; }
@@ -27,29 +31,32 @@ function claims(value) {
 }
 
 /** Structural conversion only: JWT signatures, account access and allowance are not verified. */
-export function convertCodexAuth(auth) {
+export function convertCodexAuth(auth, { accessTokenSnapshot = false, nowMs = Date.now() } = {}) {
+  if (typeof accessTokenSnapshot !== "boolean") throw invalidAuth();
   if (!object(auth) || !knownKeys(auth, ["auth_mode", "OPENAI_API_KEY", "tokens", "last_refresh"]) ||
       (auth.auth_mode !== undefined && auth.auth_mode !== "chatgpt") ||
       (auth.OPENAI_API_KEY !== undefined && auth.OPENAI_API_KEY !== null) || !object(auth.tokens) ||
       !knownKeys(auth.tokens, ["id_token", "access_token", "refresh_token", "account_id"])) throw invalidAuth();
   const tokens = auth.tokens;
-  if (!token(tokens.refresh_token) || typeof tokens.account_id !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(tokens.account_id)) throw invalidAuth();
+  if ((!accessTokenSnapshot || tokens.refresh_token !== undefined) && !token(tokens.refresh_token)) throw invalidAuth();
+  if (typeof tokens.account_id !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(tokens.account_id)) throw invalidAuth();
   const identity = claims(tokens.id_token); const access = claims(tokens.access_token);
   for (const payload of [identity, access]) {
     const account = payload["https://api.openai.com/auth"];
     if (account !== undefined && (!object(account) || (account.chatgpt_account_id !== undefined && account.chatgpt_account_id !== tokens.account_id))) throw invalidAuth();
   }
   if (!Number.isSafeInteger(access.exp) || access.exp <= 0 || access.exp > 253402300799) throw invalidAuth();
+  if (accessTokenSnapshot && (!Number.isFinite(nowMs) || access.exp * 1000 - nowMs < MIN_SNAPSHOT_LIFETIME_MS)) throw invalidAuth();
   if (auth.last_refresh !== undefined && (typeof auth.last_refresh !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(auth.last_refresh) || !Number.isFinite(Date.parse(auth.last_refresh)))) throw invalidAuth();
   return {
     type: "codex", aob_disable_unauthorized_replay: true, id_token: tokens.id_token, access_token: tokens.access_token,
-    refresh_token: tokens.refresh_token, account_id: tokens.account_id,
+    ...(accessTokenSnapshot ? {} : { refresh_token: tokens.refresh_token }), account_id: tokens.account_id,
     ...(auth.last_refresh === undefined ? {} : { last_refresh: auth.last_refresh }),
     expired: new Date(access.exp * 1000).toISOString(),
   };
 }
 
-function readAuth(path) {
+function readAuth(path, options) {
   let fd;
   try {
     const initial = lstatSync(path);
@@ -65,12 +72,19 @@ function readAuth(path) {
     }
     const after = fstatSync(fd);
     if (count > MAX_AUTH_BYTES || count !== before.size || before.size !== after.size || before.mtimeMs !== after.mtimeMs || before.ctimeMs !== after.ctimeMs) throw invalidAuth();
-    return convertCodexAuth(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(buffer.subarray(0, count))));
+    return convertCodexAuth(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(buffer.subarray(0, count))), options);
   } catch { throw new BridgePreparationError("Cannot read a supported regular Codex subscription credential file."); }
   finally { if (fd !== undefined) closeSync(fd); }
 }
 
-function bridgeConfig(authDir, key) {
+function validatedMeterUrl(value) {
+  if (typeof value !== "string") throw new BridgePreparationError("Meter URL must be a local HTTP origin with an explicit port.");
+  const match = /^http:\/\/(?:127\.0\.0\.1|localhost):([1-9][0-9]{0,4})$/.exec(value);
+  if (!match || Number(match[1]) > 65535) throw new BridgePreparationError("Meter URL must be a local HTTP origin with an explicit port.");
+  return value;
+}
+
+function bridgeConfig(authDir, key, controlled) {
   return {
     host: "127.0.0.1", port: 8317, tls: { enable: false }, "auth-dir": authDir, "api-keys": [key],
     "remote-management": { "allow-remote": false, "secret-key": "", "disable-control-panel": true, "disable-auto-update-panel": true },
@@ -87,7 +101,11 @@ function bridgeConfig(authDir, key) {
     "disable-claude-cloak-mode": true, "claude-code": { "disable-cloaking-model-list": true },
     "disable-image-generation": "passthrough", "oauth-model-alias": {}, "oauth-excluded-models": {},
     "codex-api-key": [], "claude-api-key": [], "gemini-api-key": [], "vertex-api-key": [], "openai-compatibility": [],
-    payload: { default: [], override: [], filter: [] },
+    payload: controlled ? {
+      default: [],
+      override: [{ models: [{ name: LUNA_MODEL, protocol: "codex" }], params: { "reasoning.effort": "low", "reasoning.summary": "auto", store: false } }],
+      filter: [{ models: [{ name: LUNA_MODEL, protocol: "codex" }], params: ['input.#(type=="reasoning")#', "previous_response_id", "conversation"] }],
+    } : { default: [], override: [], filter: [] },
   };
 }
 function privateWrite(path, value) {
@@ -96,10 +114,15 @@ function privateWrite(path, value) {
 }
 
 /** Prepare only. No implicit auth discovery, subprocesses, network or bridge startup. */
-export function prepareCodexBridge({ authFile, output, exclusiveRefreshOwner } = {}) {
-  if (exclusiveRefreshOwner !== true) throw new BridgePreparationError("Explicit --exclusive-refresh-owner acknowledgement is required.");
+export function prepareCodexBridge({ authFile, output, exclusiveRefreshOwner, accessTokenSnapshot, meterUrl, nowMs = Date.now() } = {}) {
+  if ((exclusiveRefreshOwner !== undefined && typeof exclusiveRefreshOwner !== "boolean") ||
+      (accessTokenSnapshot !== undefined && typeof accessTokenSnapshot !== "boolean") ||
+      (exclusiveRefreshOwner === true && accessTokenSnapshot === true)) throw new BridgePreparationError("Choose exactly one credential mode; ownership and snapshot modes are mutually exclusive.");
+  if (exclusiveRefreshOwner !== true && accessTokenSnapshot !== true) throw new BridgePreparationError("Explicit --exclusive-refresh-owner or --access-token-snapshot mode is required.");
+  if (accessTokenSnapshot === true && meterUrl === undefined) throw new BridgePreparationError("Access-token snapshot mode requires --meter-url.");
+  const localMeter = meterUrl === undefined ? undefined : validatedMeterUrl(meterUrl);
   if (typeof authFile !== "string" || !authFile || typeof output !== "string" || !output) throw new BridgePreparationError("Explicit --auth-file and --output paths are required.");
-  const auth = readAuth(authFile);
+  const auth = readAuth(authFile, { accessTokenSnapshot: accessTokenSnapshot === true, nowMs });
   let destination; let created = false; let identity;
   try {
     const requested = resolve(output);
@@ -108,14 +131,24 @@ export function prepareCodexBridge({ authFile, output, exclusiveRefreshOwner } =
     identity = lstatSync(destination); chmodSync(destination, 0o700);
     const authDir = join(destination, "auth"); mkdirSync(authDir, { mode: 0o700 }); chmodSync(authDir, 0o700);
     const key = randomBytes(32).toString("hex");
+    if (localMeter !== undefined) {
+      const meterKey = randomBytes(32).toString("hex");
+      auth.aob_meter_base_url = localMeter;
+      auth.headers = { "x-aob-proxy-token": meterKey };
+      privateWrite(join(destination, "meter-key"), `${meterKey}\n`);
+    }
     privateWrite(join(authDir, "codex.json"), `${JSON.stringify(auth, null, 2)}\n`);
     privateWrite(join(destination, "bridge-key"), `${key}\n`);
-    privateWrite(join(destination, "config.json"), `${JSON.stringify(bridgeConfig(authDir, key), null, 2)}\n`);
+    privateWrite(join(destination, "config.json"), `${JSON.stringify(bridgeConfig(authDir, key, localMeter !== undefined), null, 2)}\n`);
     // Last file is a completion marker, never a campaign-admission certificate.
     privateWrite(join(destination, "manifest.json"), `${JSON.stringify({
       schema_version: 1, status: "unqualified", source: "https://github.com/router-for-me/CLIProxyAPI", source_commit: BRIDGE_COMMIT,
       required_source_patch_sha256: REQUIRED_PATCH_SHA256, build_verified: false, patch_applied_verified: false,
-      model: "gpt-6-luna", refresh_owner: "bridge-exclusive-acknowledged", account_access_verified: false,
+      ...(localMeter === undefined ? {} : { required_meter_patch_sha256: REQUIRED_METER_PATCH_SHA256, policy: CONTROLLED_POLICY }),
+      model: LUNA_MODEL, auth_mode: accessTokenSnapshot === true ? "access-token-snapshot" : "exclusive-refresh-owner",
+      refresh_owner: accessTokenSnapshot === true ? "none-snapshot-only" : "bridge-exclusive-acknowledged",
+      refresh_token_imported: accessTokenSnapshot !== true,
+      ...(accessTokenSnapshot === true ? { access_token_expires_at: auth.expired } : {}), account_access_verified: false,
       native_harnesses_verified: false, provider_accounting_verified: false,
       model_allowlist_enforced: false, original_auth_modified: false,
     }, null, 2)}\n`);
@@ -134,11 +167,12 @@ function main(args) {
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i];
     if (arg === "--exclusive-refresh-owner" && options.exclusiveRefreshOwner === undefined) options.exclusiveRefreshOwner = true;
-    else if ((arg === "--auth-file" || arg === "--output") && args[i + 1] !== undefined && !args[i + 1].startsWith("--")) {
-      const field = arg === "--auth-file" ? "authFile" : "output";
+    else if (arg === "--access-token-snapshot" && options.accessTokenSnapshot === undefined) options.accessTokenSnapshot = true;
+    else if (["--auth-file", "--output", "--meter-url"].includes(arg) && args[i + 1] !== undefined && !args[i + 1].startsWith("--")) {
+      const field = arg === "--auth-file" ? "authFile" : arg === "--output" ? "output" : "meterUrl";
       if (options[field] !== undefined) throw new BridgePreparationError("Duplicate preparation option.");
       options[field] = args[++i];
-    } else throw new BridgePreparationError("Use --auth-file PATH --output NEW_DIRECTORY --exclusive-refresh-owner.");
+    } else throw new BridgePreparationError("Use --auth-file PATH --output NEW_DIRECTORY with --exclusive-refresh-owner or --access-token-snapshot --meter-url LOCAL_HTTP_ORIGIN.");
   }
   prepareCodexBridge(options);
   process.stdout.write("Prepared an unqualified private bridge bundle. No bridge was started or account access verified.\n");
