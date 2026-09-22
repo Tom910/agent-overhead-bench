@@ -46,6 +46,7 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
+| [S5-ci-local-base-plan.md](./S5-ci-local-base-plan.md) | Linux reproduction and full image validation pass; CI uses the default builder to resolve its locally built parent |
 | [S5-execution-condition-evidence-plan.md](./S5-execution-condition-evidence-plan.md) | Verified: post-execution Docker observations, exact C4 binding, explicit unknown cache/ancestor controls; Linux normal/timeout smoke and full package/script checks pass |
 | [S1-request-condition-evidence-plan.md](./S1-request-condition-evidence-plan.md) | Implemented: bounded forwarded-setting metadata, private C1-bound sidecar; 116 proxy tests pass |
 | [S7-task-contract-revision-plan.md](./S7-task-contract-revision-plan.md) | Implemented: three amendments, 33 original-grade replays, 13 corrected Textual replays; four verified false negatives |

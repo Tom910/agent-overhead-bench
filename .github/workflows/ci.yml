@@ -17,11 +17,11 @@ jobs:
       - run: npm test
       - name: Verify current report matches canonical data (offline)
         run: npm run report:check
-      - uses: docker/setup-buildx-action@v3
       - name: Build and validate zero-spend adapter images
         env:
-          AOB_DOCKER_CACHE_FROM: type=gha,scope=aob-images
-          AOB_DOCKER_CACHE_TO: type=gha,scope=aob-images,mode=max
+          # Child images consume aob-base:s2 from the local Docker image store.
+          # A separate docker-container builder cannot resolve that parent tag.
+          BUILDX_BUILDER: default
         run: scripts/s5-build-images.sh
       - name: Exercise Docker-to-host proxy route without provider traffic
         run: npm run docker-route-smoke --workspace @aob/runner
