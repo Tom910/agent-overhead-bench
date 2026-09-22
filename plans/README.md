@@ -4,6 +4,10 @@ This directory is the implementation layer of `agent-overhead-bench`.
 
 Current engineering handoff: [CURRENT-REVIEW-AND-NEXT.md](./CURRENT-REVIEW-AND-NEXT.md).
 
+Active implementation: [benchmark validity packages](./benchmark-validity-packages-2026-09-22.md),
+based on the [independent September 22 audit](./harness-benchmark-audit-2026-09-22.md).
+Engineering and verifier checks use no model calls; a new measured campaign is separate.
+
 | Document | Role |
 |---|---|
 | North-star design (case working copy) | Thesis, measurement model, fairness, v1 scope. Not a coding brief. |
@@ -46,6 +50,14 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
+| [S5-attempt-evidence-retention-plan.md](./S5-attempt-evidence-retention-plan.md) | In progress: private retry retention implemented; independent review correction and candidate capture next |
+| [S3-task-validity-gate-plan.md](./S3-task-validity-gate-plan.md) | Packaged: evidence-bound validity cards, control checks and fresh verifier execution |
+| [S5-controlled-collection-policy-plan.md](./S5-controlled-collection-policy-plan.md) | Packaged: resource enforcement and reproducible randomized blocks |
+| [S7-controlled-evidence-admission-plan.md](./S7-controlled-evidence-admission-plan.md) | Packaged: admission, continuation, portable conditions and private image retention |
+| [S4-tool-timing-qualification-plan.md](./S4-tool-timing-qualification-plan.md) | Packaged: offline interval qualification with explicit native coverage limits |
+| [S6-validity-diagnostics-analysis-plan.md](./S6-validity-diagnostics-analysis-plan.md) | Packaged: reliability, sensitivity, uncertainty, collection ledger and model views |
+| [S3-diagnostic-portfolio-plan.md](./S3-diagnostic-portfolio-plan.md) | Packaged: four original workflow diagnostics with alternate and mutation controls |
+| [S2-gpt-6-luna-subscription-feasibility.md](./S2-gpt-6-luna-subscription-feasibility.md) | Reviewed: exact Luna documented; no supported all-five raw-model subscription interface established |
 | [S5-ci-local-base-plan.md](./S5-ci-local-base-plan.md) | Linux reproduction and full image validation pass; CI uses the default builder to resolve its locally built parent |
 | [S5-execution-condition-evidence-plan.md](./S5-execution-condition-evidence-plan.md) | Verified: post-execution Docker observations, exact C4 binding, explicit unknown cache/ancestor controls; Linux normal/timeout smoke and full package/script checks pass |
 | [S1-request-condition-evidence-plan.md](./S1-request-condition-evidence-plan.md) | Implemented: bounded forwarded-setting metadata, private C1-bound sidecar; 116 proxy tests pass |
