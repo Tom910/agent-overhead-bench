@@ -23,7 +23,7 @@ it("generates all current views from one source and detects drift without writin
   expect(readFileSync(join(f.root, "README.md"), "utf8")).toContain("stale");
   f.run(); f.run(true);
   const site = join(f.root, "site/index.html");
-  expect(readFileSync(site, "utf8")).toContain("The numbers, side by side.");
+  expect(readFileSync(site, "utf8")).toContain("side by side.</span>");
   writeFileSync(site, "stale site");
   expect(() => f.run(true)).toThrow(/stale/);
   f.run(); f.run(true);
