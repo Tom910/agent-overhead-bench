@@ -144,11 +144,11 @@ npm test
 
 Running the full comparison matrix (later stages) needs API keys and will cost money. CI never holds keys and never spends tokens.
 
-For the proposed `gpt-6-luna` subscription route, see
-[Codex bridge setup and qualification](docs/codex-subscription-bridge.md).
-The offline helper does not launch a model or enable a benchmark profile; live
-account access and measurement qualification remain pending. All five pinned
-clients passed an offline Linux tool-call smoke through the bridge.
+The `gpt-6-luna` route through Codex subscription credentials completed native
+tool loops across all five harnesses on Linux, using ten provider requests.
+Four have complete provider accounting; Codex's initial missing metadata remains
+explicitly unknown. These are transport checks, not new benchmark scores. See
+[setup and qualification evidence](docs/codex-subscription-bridge.md).
 
 ## Local validation
 

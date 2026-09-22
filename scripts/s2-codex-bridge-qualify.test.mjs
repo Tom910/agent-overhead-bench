@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { summarizeQualification, mayStartSlot, parseOptions, verifyMockEvidence } from './s2-codex-bridge-qualify.mjs';
+import { summarizeQualification, mayStartSlot, parseOptions, verifyMockEvidence, qualificationPrompt } from './s2-codex-bridge-qualify.mjs';
 const event = { method:'POST', protocol:'openai_responses', t_upstream_sent:1, status:200, error:null, model_requested:'gpt-6-luna', model_served:'gpt-6-luna', usage:{input:100,cached_input:40,output:30,reasoning_output:10} };
 const summarize = (events=[event,event], extra={}) => summarizeQualification({ events, exit:0, markerMatches:true, observations:{requests:[{accepted:true,tool_result_observed:false},{accepted:true,tool_result_observed:true}]}, ...extra });
 test('strict qualification totals canonical usage once and leaves subscription cost unknown',()=>{
@@ -36,4 +36,11 @@ test('live admission binds successful mock evidence to binary, implementation an
 
 test('unexpected protocol requests stay counted and fail qualification',()=>{
  const r=summarize([event,event,{...event,protocol:'openai_chat'}]);assert.equal(r.passed,false);assert.equal(r.provider_requests,3);assert.equal(r.tokens.input,300);
+});
+
+test('native qualification uses an absolute marker path regardless of shell default directory',()=>{
+ const prompt=qualificationPrompt('aob-native-hermes-ok');
+ assert.ok(prompt.includes("> /work/workspace/bridge-smoke.txt && cat /work/workspace/bridge-smoke.txt"));
+ assert.ok(prompt.includes("'aob-native-hermes-ok'"));
+ assert.throws(()=>qualificationPrompt("bad' marker"));
 });

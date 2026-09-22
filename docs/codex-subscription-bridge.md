@@ -4,8 +4,11 @@
 provides a reusable OAuth transport: Codex can use Responses, while Cline,
 Hermes, Pi and Qwen can use Chat Completions translated to Responses. Each native
 harness keeps its own tool loop. The intended model is exactly `gpt-6-luna`.
-This is a concrete preparation path, **not an approved benchmark profile or proof
-that the account can access Luna through all five clients**.
+The bounded live Linux check completed native tool loops across **all five**
+clients using ten provider requests total. Four have complete C1 identity/token
+records; Codex's original two records retain unknown metadata and separately
+labelled native totals. This is functional transport evidence, **not an admitted
+benchmark profile**. See [the final evidence](../plans/s2-evidence/codex-bridge/live-qualification/README.md).
 
 The repository's preparation command is offline. It converts an explicitly
 selected Codex CLI subscription credential file to a private bridge bundle. It
@@ -159,13 +162,14 @@ alongside the reasoning policy.
 ## Before any measured run
 
 Use the pinned upstream source plus reviewed local qualification patches. The
-preparation helper does not download, build, patch or start it. Remaining gates:
+preparation helper does not download, build, patch or start it. Before a full benchmark campaign:
 
-1. Verify actual account access to exact `gpt-6-luna` and the selected credential
-   mode; snapshots must remain valid for the bounded run without refresh.
+1. Recheck snapshot validity and account allowance for any newly budgeted campaign.
+   The bounded live qualification used existing access without refresh.
 2. The [offline native smoke](../plans/s2-evidence/codex-bridge/native-smoke/review.md)
-   passed for all five pinned Linux clients using a fake API-key backend. Qualify
-   the C1-metered OAuth route and bounded live behavior after account access is established.
+   passed for all five pinned Linux clients. The provider-metered OAuth route
+   also completed all five live tool loops; full-task and compaction qualification
+   remain outside this short probe.
 3. Verify provider model identity, every actual request attempt, input/output/cache
    counters, failure handling and the reasoning/tool condition through the bridge.
 4. Record the bridge build, configuration and transport overhead in collection
@@ -213,7 +217,7 @@ itself prove how that binary was built.
 
 ## Run the bounded qualifier
 
-**Live qualification has started; complete accounting remains unverified.** The
+**All five native loops completed; the original Codex accounting remains unknown.** The
 first Codex attempt completed its native write/read tool loop and exited with
 code 0 after two HTTP 200 provider requests for `gpt-6-luna`. Its original C1
 events recorded unknown served identity and unknown usage, so the slot remains
@@ -312,7 +316,7 @@ without private paths.
 
 Continuation does not upgrade Codex's failed slot or make unknown usage zero.
 The final summary separates functional transport across five clients from
-complete provider accounting. The remaining four live results are pending here;
+complete provider accounting. The remaining four clients passed live;
 this exception does not authorize rerunning completed attempts or admit a
 benchmark campaign.
 
@@ -320,13 +324,14 @@ The runner keeps C1 events, condition observations and private diagnostics besid
 `state.json`, removes temporary snapshot bundles during normal cleanup, and does
 not modify the original credential file. Keep the output private; publish only
 reviewed sanitized evidence. Abrupt process termination can leave private
-artifacts requiring cleanup. Successful qualification would establish this
-bounded two-request tool loop for exact `gpt-6-luna` on these five clients. It
+artifacts requiring cleanup. The retained evidence establishes this bounded native tool loop across five
+clients, with the Codex accounting limitation stated above. It
 does not run or approve a 200-attempt campaign, long-context compaction, or the
 scientific validity of benchmark tasks.
 
 Offline validation also confirmed different effective reasoning: Codex high, the
 four Chat clients medium. The bridge loses encrypted reasoning history on Chat
 routes. The controlled policy addresses these asymmetries by applying low effort
-and disabling reasoning replay for every route; qualification of the resulting
-condition is still required before collecting a model-controlled comparison.
+and disabling reasoning replay for every route. Actual request observations
+verified this short-loop condition; full-task comparison still requires its own
+benchmark admission and accounting checks.

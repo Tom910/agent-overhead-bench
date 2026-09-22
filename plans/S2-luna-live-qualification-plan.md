@@ -89,3 +89,21 @@ preventing fresh output directories from automatically resetting this budget.
 The final summary distinguishes all-five functional transport from complete
 provider accounting. Old slots remain failed/unscored if evidence cannot recover
 their missing metadata. This exception does not admit a benchmark campaign.
+
+## Completion evidence
+
+All five native tool loops completed on Linux in ten actual provider requests,
+two per harness; no completed live slot was repeated. Pi/Qwen/Hermes/Cline have
+complete exact-Luna C1 usage/identity; Codex's original accounting remains unknown
+with native totals separately preserved. The final native-loop flag is true;
+strict all-five accounting stays false and the qualifier intentionally exits 1.
+The original subscription cache/refresh token were untouched and the temporary
+Linux access snapshot was removed. See the sanitized live-qualification evidence.
+
+Hermes's relative marker was found inside its isolated HOME under the mounted
+workspace. Offline verification bound the existing file and unchanged C1/setting
+records to a field-level adjudication receipt, retaining the original failed
+checker state; only unstarted Cline resumed. Future prompts now use the absolute
+workspace marker path, with a focused regression test. Actual live source 1787f56
+is retained in Git; later source requires its own fresh mock admission receipt.
+Full benchmark profiles, task validation packages and compaction remain separate.

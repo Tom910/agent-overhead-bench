@@ -15,6 +15,10 @@ export class QualificationError extends Error { constructor(message){super(messa
 const hash=path=>createHash('sha256').update(readFileSync(path)).digest('hex');
 const json=path=>JSON.parse(readFileSync(path,'utf8'));
 const save=(path,value)=>writeFileSync(path,`${JSON.stringify(value,null,2)}\n`,{mode:0o600});
+export function qualificationPrompt(marker){
+ if(typeof marker!=='string'||!/^[A-Za-z0-9_-]{1,128}$/.test(marker))throw new QualificationError('Invalid qualification marker.');
+ return `Use exactly one shell tool call to run: printf '%s\\n' '${marker}' > /work/workspace/bridge-smoke.txt && cat /work/workspace/bridge-smoke.txt. After it returns, respond DONE only. Do not inspect other files or use other tools.\n`;
+}
 export function mayStartSlot(state,tool){return !state.halted && state.slots[tool]===undefined;}
 export function summarizeQualification({events,exit,markerMatches,observations}){
  const modelEvents=events.filter(e=>e.method==='POST');
@@ -92,7 +96,7 @@ async function main(opts){
    const service=`${id}-${tool}-meter`,bridge=`${id}-${tool}-bridge`,native=`${id}-${tool}-client`;
    const eventsPath=join(dir,'events.jsonl');const observationsPath=join(dir,'observations.json');
    save(join(dir,'service.json'),{upstream:opts.mode==='live'?'https://chatgpt.com/backend-api/codex':'http://aob-fake:9000/backend',outPath:eventsPath,observationsPath,meterKey:readFileSync(join(bundle,'meter-key'),'utf8').trim(),bridgeKey:key,marker,runId:`s2-luna-${tool}`});
-   const promptFile=join(dir,'prompt.txt');writeFileSync(promptFile,`Use exactly one shell tool call to run: printf '%s\\n' '${marker}' > bridge-smoke.txt && cat bridge-smoke.txt. After it returns, respond DONE only. Do not inspect other files or use other tools.\n`,{mode:0o600});
+   const promptFile=join(dir,'prompt.txt');writeFileSync(promptFile,qualificationPrompt(marker),{mode:0o600});
    const inv=getAdapter(tool).containerInvocation({workspaceDir:workspace,promptFile,model:LUNA_MODEL,proxyUrl:`http://${service}:3210`,condition:'pinned',timeoutS:120,env:{OPENROUTER_API_KEY:key}});
    for(const f of inv.setupFiles??[]){const rel=relative(workspace,f.path);if(rel==='..'||rel.startsWith('../')||isAbsolute(rel))throw new QualificationError('Adapter setup escaped workspace.');mkdirSync(dirname(f.path),{recursive:true,mode:0o700});writeFileSync(f.path,f.contents,{mode:0o600});}
    const local=[];let result={status:null};

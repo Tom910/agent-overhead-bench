@@ -1,5 +1,17 @@
 # Current Review and Next Work
 
+## Luna subscription transport completed — 2026-09-22
+
+All five native harnesses completed the bounded Linux tool loop with Codex
+subscription credentials: ten provider requests total, no repeated live slots.
+Four clients have complete exact-Luna C1 records; Codex's original framing gap
+remains unknown, with native totals separate. The snapshot was removed; the
+original login/refresh token were unchanged. See
+[the final evidence](s2-evidence/codex-bridge/live-qualification/README.md).
+This is transport qualification, not a new task benchmark or v1 admission.
+Benchmark validity package 1 is implemented; packages 2–6 remain planned.
+
+
 ## GitHub push-ready — 2026-09-15
 
 `main` is a single unpublished-source commit. The only remaining operator

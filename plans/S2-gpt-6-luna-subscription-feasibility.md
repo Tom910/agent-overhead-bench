@@ -1,5 +1,10 @@
 # S2 GPT-6 Luna subscription feasibility
 
+Later September 22 update: the [bounded live qualification](s2-evidence/codex-bridge/live-qualification/README.md)
+completed all five native loops using subscription credentials, with complete C1
+accounting for four and preserved unknown Codex metadata. The feasibility review
+below records the earlier offline-only finding; it is superseded on live access.
+
 Reviewed September 22, 2026. The maintainer selected **only `gpt-6-luna`**,
 using Codex account allowance across Cline, Codex, Hermes, Pi and Qwen. Each
 harness must retain its own agent loop and tool execution.

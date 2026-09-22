@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "offline-marker-location-adjudication",
+  "reason": "The relative-file prompt permits the native isolated HOME inside the mounted workspace. The checker originally checked only the workspace root. No provider request or native run was repeated.",
+  "original_state_sha256": "d73f77a980772ec12107d6400c3f849c4139c62785b4c281c59d9e4220670772",
+  "c1_sha256": "339469060ca19d65231587ed6575c43e13c4fb758bd6800a70e261f763f12ff5",
+  "observations_sha256": "32a68df10e6a26c1a047fc041e71e3029e3e2b13172cabadab38d4e894d688af",
+  "marker_relative_path": "hermes/workspace/.aob-home/bridge-smoke.txt",
+  "marker_bytes": 21,
+  "marker_sha256": "b0cc70eef5a7465a1fffca7f30a954028b2f98ee81bea43c46ec9823285f4d82",
+  "regular_file": true,
+  "symlink": false,
+  "inside_workspace": true,
+  "state_delta": {
+    "slots.hermes.marker_matches": {
+      "before": false,
+      "after": true
+    },
+    "slots.hermes.passed": {
+      "before": false,
+      "after": true
+    },
+    "slots.hermes.status": {
+      "before": "failed",
+      "after": "passed"
+    },
+    "halted": {
+      "before": true,
+      "after": false
+    }
+  }
+}

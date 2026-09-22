@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "mode": "mock",
+  "model": "gpt-6-luna",
+  "policy": "luna-low-reasoning-replay-disabled",
+  "host": "linux",
+  "started_at": "2026-09-22T21:35:32.563Z",
+  "bridge_binary_sha256": "6ac16cf587b39083b15616fea2ed3e276fa85b3ef95d8ba4084f8166408fa58e",
+  "implementation_sha256": "1a788cfaa42aa0d1d554c31d440b76e824f64cca2f810b3ed58f6aa88aca40df",
+  "max_requests_per_client": 2,
+  "max_total_requests": 10,
+  "slots": {
+    "codex": {
+      "status": "passed",
+      "image_id": "sha256:c974e2019c177d644123a467dc84ecb20dbc4d217592fc17cebb18d912ade2b9",
+      "version": "codex-cli 0.149.1",
+      "config_sha256": "f96c5aab67c21e9aff296528964371a29215d7156dfde997fb45561dcc048e38",
+      "passed": true,
+      "provider_requests": 2,
+      "meter_events": 2,
+      "tokens": {
+        "input": 200,
+        "cached_input": 80,
+        "output": 60,
+        "reasoning_output": 20
+      },
+      "usage_complete": true,
+      "subscription_cost_usd": null,
+      "exit": 0,
+      "marker_matches": true,
+      "tool_result_observed": true,
+      "statuses": [
+        200,
+        200
+      ],
+      "served_models": [
+        "gpt-6-luna",
+        "gpt-6-luna"
+      ],
+      "halt": false,
+      "c1_sha256": "6ce1e1c92729a84bc7944dcb26341e44dad5eb2cd8b6864a5c76e3ccf3ef06f3",
+      "condition_evidence_sha256": "c31b1b59239d4289219484ab99e716d18d9924731f63db23b1bbe2903ed9210e"
+    },
+    "pi": {
+      "status": "passed",
+      "image_id": "sha256:ede90cfe64edb0b33c1d24591c778f11e44a7f3e8de75571e729f53a4d77eedb",
+      "version": "0.73.1",
+      "config_sha256": "3ac737d81d03d793bfd0f760d20f30928fb29f8c810a3f3b89b79ab275673142",
+      "passed": true,
+      "provider_requests": 2,
+      "meter_events": 2,
+      "tokens": {
+        "input": 200,
+        "cached_input": 80,
+        "output": 60,
+        "reasoning_output": 20
+      },
+      "usage_complete": true,
+      "subscription_cost_usd": null,
+      "exit": 0,
+      "marker_matches": true,
+      "tool_result_observed": true,
+      "statuses": [
+        200,
+        200
+      ],
+      "served_models": [
+        "gpt-6-luna",
+        "gpt-6-luna"
+      ],
+      "halt": false,
+      "c1_sha256": "997dfd95d33216f83f669e3b77589fce0f22f61c68cc4ef29118f90656480c23",
+      "condition_evidence_sha256": "c31b1b59239d4289219484ab99e716d18d9924731f63db23b1bbe2903ed9210e"
+    },
+    "qwen": {
+      "status": "passed",
+      "image_id": "sha256:33400257b23ffb806719e590eb574def61393870ba25342f259f71507fe1c28f",
+      "version": "0.22.2",
+      "config_sha256": "7035b7bcaff1da59eac7fc9d35db616f500b14633401768fe2bb37a7e2e0bfc7",
+      "passed": true,
+      "provider_requests": 2,
+      "meter_events": 2,
+      "tokens": {
+        "input": 200,
+        "cached_input": 80,
+        "output": 60,
+        "reasoning_output": 20
+      },
+      "usage_complete": true,
+      "subscription_cost_usd": null,
+      "exit": 0,
+      "marker_matches": true,
+      "tool_result_observed": true,
+      "statuses": [
+        200,
+        200
+      ],
+      "served_models": [
+        "gpt-6-luna",
+        "gpt-6-luna"
+      ],
+      "halt": false,
+      "c1_sha256": "8d51d489ae1e2bdf3c2f416e70e08c5eba96f600112879f61e54f35274f9bc25",
+      "condition_evidence_sha256": "c31b1b59239d4289219484ab99e716d18d9924731f63db23b1bbe2903ed9210e"
+    },
+    "hermes": {
+      "status": "passed",
+      "image_id": "sha256:6eafe5b6443647ca8bca1d65bb7d833f6f271438cf257858c8165e7d4f8b92a1",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "config_sha256": "1a2da6d1fc0fb9ff5392176eebf9b2b7ea3af0f259e7bbb31a30bb75157659d5",
+      "passed": true,
+      "provider_requests": 2,
+      "meter_events": 2,
+      "tokens": {
+        "input": 200,
+        "cached_input": 80,
+        "output": 60,
+        "reasoning_output": 20
+      },
+      "usage_complete": true,
+      "subscription_cost_usd": null,
+      "exit": 0,
+      "marker_matches": true,
+      "tool_result_observed": true,
+      "statuses": [
+        200,
+        200
+      ],
+      "served_models": [
+        "gpt-6-luna",
+        "gpt-6-luna"
+      ],
+      "halt": false,
+      "c1_sha256": "781776eac3959bf4d18315f35f0e2fcdc562be24c4a556776e1a325db95cbecd",
+      "condition_evidence_sha256": "40297ef6cf65a092416649245d4824bc53db589b0fbdb59dfd8bdb304fc0ee37"
+    },
+    "cline": {
+      "status": "passed",
+      "image_id": "sha256:9a2412fa4cf07df961ccb31304cf351aae24ff9336fe7bea7591915f57b30c8e",
+      "version": "3.0.61",
+      "config_sha256": "d1480b8580002cc4fd3b37b5f421d146376384d27a9eb16c2da9d4c35aab92a7",
+      "passed": true,
+      "provider_requests": 2,
+      "meter_events": 2,
+      "tokens": {
+        "input": 200,
+        "cached_input": 80,
+        "output": 60,
+        "reasoning_output": 20
+      },
+      "usage_complete": true,
+      "subscription_cost_usd": null,
+      "exit": 0,
+      "marker_matches": true,
+      "tool_result_observed": true,
+      "statuses": [
+        200,
+        200
+      ],
+      "served_models": [
+        "gpt-6-luna",
+        "gpt-6-luna"
+      ],
+      "halt": false,
+      "c1_sha256": "d76694aff6eb03dceba3914deb96e0c89e54be4d82b365fbbf1eefdfe55c03b2",
+      "condition_evidence_sha256": "c31b1b59239d4289219484ab99e716d18d9924731f63db23b1bbe2903ed9210e"
+    }
+  },
+  "halted": false,
+  "response_encoding_requested": "identity",
+  "completed_at": "2026-09-22T21:35:54.345Z",
+  "all_five_passed": true,
+  "all_five_native_loops_completed": true
+}

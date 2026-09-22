@@ -50,7 +50,8 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
-| [S2-codex-bridge-preparation-plan.md](./S2-codex-bridge-preparation-plan.md) | Implemented offline setup and reviewed patches; all five native Linux tool loops pass with fake provider; live qualification pending |
+| [S2-codex-bridge-preparation-plan.md](./S2-codex-bridge-preparation-plan.md) | Private setup and reviewed bridge patches; see the completed bounded live transport check below |
+| [S2-luna-live-qualification-plan.md](./S2-luna-live-qualification-plan.md) | All five Linux native loops completed in ten provider calls; original Codex accounting unknown, four complete; no benchmark reruns |
 | [S5-attempt-evidence-retention-plan.md](./S5-attempt-evidence-retention-plan.md) | Implemented and independently reviewed: private retry retention and pre-verifier candidate patches; Linux focused checks pass |
 | [S3-task-validity-gate-plan.md](./S3-task-validity-gate-plan.md) | Packaged: evidence-bound validity cards, control checks and fresh verifier execution |
 | [S5-controlled-collection-policy-plan.md](./S5-controlled-collection-policy-plan.md) | Packaged: resource enforcement and reproducible randomized blocks |
@@ -58,7 +59,7 @@ The explained-only archive correction is tracked in
 | [S4-tool-timing-qualification-plan.md](./S4-tool-timing-qualification-plan.md) | Packaged: offline interval qualification with explicit native coverage limits |
 | [S6-validity-diagnostics-analysis-plan.md](./S6-validity-diagnostics-analysis-plan.md) | Packaged: reliability, sensitivity, uncertainty, collection ledger and model views |
 | [S3-diagnostic-portfolio-plan.md](./S3-diagnostic-portfolio-plan.md) | Packaged: four original workflow diagnostics with alternate and mutation controls |
-| [S2-gpt-6-luna-subscription-feasibility.md](./S2-gpt-6-luna-subscription-feasibility.md) | Reusable CLIProxyAPI route verified with five offline native clients; live OAuth/account access unverified |
+| [S2-gpt-6-luna-subscription-feasibility.md](./S2-gpt-6-luna-subscription-feasibility.md) | Reusable CLIProxyAPI route; subsequent live evidence confirms all five native loops, with four complete accounting records |
 | [S5-ci-local-base-plan.md](./S5-ci-local-base-plan.md) | Linux reproduction and full image validation pass; CI uses the default builder to resolve its locally built parent |
 | [S5-execution-condition-evidence-plan.md](./S5-execution-condition-evidence-plan.md) | Verified: post-execution Docker observations, exact C4 binding, explicit unknown cache/ancestor controls; Linux normal/timeout smoke and full package/script checks pass |
 | [S1-request-condition-evidence-plan.md](./S1-request-condition-evidence-plan.md) | Implemented: bounded forwarded-setting metadata, private C1-bound sidecar; 116 proxy tests pass |

@@ -34,5 +34,8 @@ acceptance passed, not that the entire benchmark has received scientific certifi
 Package 1 is implemented and independently reviewed (`e01132a`); Linux focused
 retention/candidate checks pass. Packages 2–6 have detailed stage plans and remain
 unimplemented. Latest maintainer steering prioritizes the reusable all-five
-Codex subscription bridge next; see
-[S2 preparation](S2-codex-bridge-preparation-plan.md). Existing results remain unchanged.
+Codex subscription bridge. The separately authorized
+[bounded S2 live qualification](S2-luna-live-qualification-plan.md) completed five
+native Linux loops in ten provider requests; four have complete accounting and
+Codex's original records remain unknown. This does not complete packages 2–6 or
+add benchmark results. Existing results remain unchanged.
