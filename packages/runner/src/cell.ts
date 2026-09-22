@@ -1,3 +1,4 @@
+import { bindCandidateToRun, captureCandidate, prepareCandidateBaseline, releaseCandidateBaseline } from "./candidate-evidence.js";
 import { PRIVATE_ATTEMPT_ARTIFACTS } from "./attempt-evidence.js";
 import { copyFileSync, cpSync, lstatSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { spawn } from "node:child_process";
@@ -258,6 +259,7 @@ export async function runHostCell(spec: CellSpec): Promise<C4Run> {
     ...(upstreamApiKey === undefined ? {} : { upstreamApiKey }),
     ...(providerRouting === undefined ? {} : { ignoredProviders: providerRouting.ignored_providers, onlyProvider: providerRouting.only_provider }),
   });
+  const candidateBaseline = prepareCandidateBaseline(staged.workspaceDir);
   let adapterResult: C3AdapterResult;
   try {
     if (adapter.capabilities.containerOnly) throw new ToolError(`${adapter.name} requires Docker execution`);
@@ -290,6 +292,9 @@ export async function runHostCell(spec: CellSpec): Promise<C4Run> {
       exitCode: adapterResult.exitCode, timedOut: adapterTimedOut, measuredEventCount: measuredEvents.length,
       statusFailure, modelMismatch, missingProxyEvidence,
     });
+    const candidateEvidence = captureCandidate({ dir: spec.dir, workspace: staged.workspaceDir, baseline: candidateBaseline,
+      runId: spec.run_id, taskId: spec.task_id, baseRevision: spec.task_base_revision ?? null, taskRevision: spec.task_revision,
+      agentImage: "host", verifierImage: staged.verifier.kind === "docker-command" ? staged.verifier.image_digest : "host" });
     const verificationLog = join(spec.dir, "verify.log");
     const verification = adapterFailure || adapterTimedOut
       ? (writeFileSync(verificationLog, ""), { exit: 1, duration_ms: 0 })
@@ -350,9 +355,12 @@ export async function runHostCell(spec: CellSpec): Promise<C4Run> {
       outcome,
     };
     validateC4Run(run);
-    writeFileSync(join(spec.dir, "run.json"), `${JSON.stringify(run, null, 2)}\n`);
+    const runBytes = Buffer.from(`${JSON.stringify(run, null, 2)}\n`);
+    writeFileSync(join(spec.dir, "run.json"), runBytes);
+    bindCandidateToRun(spec.dir, candidateEvidence, runBytes);
     return run;
   } finally {
+    releaseCandidateBaseline(candidateBaseline);
     await proxy.close();
   }
 }
@@ -378,6 +386,7 @@ export async function runDockerCell(spec: CellSpec): Promise<C4Run> {
     ...(upstreamApiKey === undefined ? {} : { upstreamApiKey }),
     ...(providerRouting === undefined ? {} : { ignoredProviders: providerRouting.ignored_providers, onlyProvider: providerRouting.only_provider }),
   });
+  const candidateBaseline = prepareCandidateBaseline(staged.workspaceDir);
   try {
     const targetProxyUrl = `http://host.docker.internal:${proxy.port}`;
     const route = describeDockerProxyRoute(targetProxyUrl, newDockerContainerName(), proxyAuthToken);
@@ -407,6 +416,9 @@ export async function runDockerCell(spec: CellSpec): Promise<C4Run> {
       exitCode: docker.exitCode, timedOut: adapterTimedOut, measuredEventCount: measuredEvents.length,
       statusFailure, modelMismatch, missingProxyEvidence,
     });
+    const candidateEvidence = captureCandidate({ dir: spec.dir, workspace: staged.workspaceDir, baseline: candidateBaseline,
+      runId: spec.run_id, taskId: spec.task_id, baseRevision: spec.task_base_revision ?? null, taskRevision: spec.task_revision,
+      agentImage: docker.imageDigest, verifierImage: staged.verifier.kind === "docker-command" ? staged.verifier.image_digest : docker.imageDigest });
     const verificationLog = join(spec.dir, "verify.log");
     const verification = adapterFailure || adapterTimedOut
       ? (writeFileSync(verificationLog, ""), { exitCode: 1, duration_ms: 0 })
@@ -492,9 +504,11 @@ export async function runDockerCell(spec: CellSpec): Promise<C4Run> {
     const conditions = bindExecutionConditions(runBytes, readObservation("agent-conditions.json"),
       adapterFailure || adapterTimedOut ? null : readObservation("verifier-conditions.json"));
     writeFileSync(join(spec.dir, "run.json"), runBytes);
+    bindCandidateToRun(spec.dir, candidateEvidence, runBytes);
     writeFileSync(join(spec.dir, "execution-conditions.json"), `${JSON.stringify(conditions, null, 2)}\n`, { mode: 0o600 });
     return run;
   } finally {
+    releaseCandidateBaseline(candidateBaseline);
     await proxy.close();
   }
 }
