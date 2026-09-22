@@ -86,3 +86,20 @@ routing coexistence, and authentication/model refusals excluded from the cap.
 No live inference or authentication was performed by this implementation task.
 These fixtures establish C1 behavior only; the pinned bridge transport patch and
 full native-client/provider topology require their separate offline review.
+
+## Live-discovered framing correction (S2 paused)
+
+The first live Codex tool loop completed successfully in two provider requests,
+including native token counters, but C1 recorded streamed:false and no metadata.
+The bridge parses SSE independently of MIME headers; C1 currently uses a
+case-sensitive event-stream header check. Raw upstream headers/bodies were not
+retained, so the precise header mismatch is not yet established.
+
+Before further live requests, support bounded SSE prefix detection when an
+upstream omits or mislabels the content type, normalize MIME case, and derive
+C1's streamed flag from the observed framing. Preserve strict terminal identity,
+bounded memory, ordinary JSON handling and unknown metadata on malformed data.
+Verify split prefixes, misleading JSON, missing/wrong/case-varied headers and
+oversized events with local fixtures. Do not rewrite the first live C1 records
+or rerun Codex; its native totals remain separately labelled corroboration.
+S2 resumes only after this S1 correction passes focused tests/review.

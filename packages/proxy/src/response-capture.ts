@@ -2,6 +2,18 @@ import type { Protocol } from "@aob/contracts";
 import { ResponseUsageAccumulator, type ResponseMetadata } from "./usage.js";
 
 const MAX_CAPTURE_BYTES = 2 * 1024 * 1024;
+const MAX_FRAMING_PREFIX_BYTES = 4 * 1024;
+
+function ssePrefix(prefix: Buffer): boolean | undefined {
+  // Wait for a split UTF-8 BOM before deciding the first field's framing.
+  if (prefix.length < 3 && prefix[0] === 0xef) return undefined;
+  const text = prefix.toString("utf8").replace(/^\uFEFF/, "").replace(/^[\r\n]*/, "");
+  if (text === "") return undefined;
+  const fields = ["data:", "event:", "id:", "retry:", ":"];
+  if (fields.some(field => text.startsWith(field))) return true;
+  if (fields.some(field => field.startsWith(text))) return undefined;
+  return false;
+}
 
 /**
  * Capture one bounded SSE event at a time, rather than a response prefix.
@@ -9,8 +21,13 @@ const MAX_CAPTURE_BYTES = 2 * 1024 * 1024;
  * after its event is consumed, and these buffers never control passthrough.
  */
 export class ResponseMetadataCapture {
-  private readonly streamed: boolean;
-  private readonly accumulator: ResponseUsageAccumulator;
+  private isStreamed: boolean;
+  private framingKnown: boolean;
+  private framingPrefix = Buffer.alloc(0);
+  private readonly protocol: Protocol;
+  private accumulator: ResponseUsageAccumulator;
+
+  get streamed(): boolean { return this.isStreamed; }
   private buffer = Buffer.alloc(0);
   private retained = 0;
   private bytes = 0;
@@ -21,11 +38,27 @@ export class ResponseMetadataCapture {
   private firstLine = true;
 
   constructor(protocol: Protocol, contentType: string | undefined) {
-    this.streamed = (contentType ?? "").includes("event-stream");
-    this.accumulator = new ResponseUsageAccumulator(protocol, this.streamed);
+    this.protocol = protocol;
+    this.isStreamed = (contentType ?? "").toLowerCase().split(";", 1)[0]?.trim() === "text/event-stream";
+    this.framingKnown = this.isStreamed;
+    this.accumulator = new ResponseUsageAccumulator(protocol, this.isStreamed);
   }
 
   push(chunk: Buffer): void {
+    if (!this.framingKnown) {
+      const take = Math.min(chunk.length, MAX_FRAMING_PREFIX_BYTES - this.framingPrefix.length);
+      this.framingPrefix = Buffer.concat([this.framingPrefix, chunk.subarray(0, take)]);
+      const detected = ssePrefix(this.framingPrefix);
+      if (detected === undefined && this.framingPrefix.length < MAX_FRAMING_PREFIX_BYTES) return;
+      this.framingKnown = true;
+      this.isStreamed = detected === true;
+      this.accumulator = new ResponseUsageAccumulator(this.protocol, this.isStreamed);
+      const prefix = this.framingPrefix;
+      this.framingPrefix = Buffer.alloc(0);
+      this.push(prefix);
+      if (take < chunk.length) this.push(chunk.subarray(take));
+      return;
+    }
     if (!this.streamed) {
       this.capture(chunk);
       return;
@@ -53,6 +86,11 @@ export class ResponseMetadataCapture {
   }
 
   finish(): ResponseMetadata {
+    if (!this.framingKnown) {
+      this.framingKnown = true;
+      this.capture(this.framingPrefix);
+      this.framingPrefix = Buffer.alloc(0);
+    }
     if (!this.streamed) {
       if (this.oversized) return { usage: null, usage_source: "unavailable", model_served: null };
       const body = this.buffer.subarray(0, this.retained);

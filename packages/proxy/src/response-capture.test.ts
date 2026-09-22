@@ -1,3 +1,10 @@
+import { createServer } from "node:http";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { gzipSync } from "node:zlib";
+import { request } from "undici";
+import { startProxy } from "./proxy.js";
 import { describe, expect, it } from "vitest";
 import { ResponseMetadataCapture } from "./response-capture.js";
 
@@ -102,5 +109,80 @@ describe("served-model evidence cannot inherit contradictory or unfinished ident
     const capture = new ResponseMetadataCapture("openai_responses", "application/json");
     capture.push(Buffer.from(JSON.stringify({ model: "gpt-6-luna", response: { model: "different-model", usage: responseUsage } })));
     expect(capture.finish()).toMatchObject({ model_served: null, usage: expectedUsage });
+  });
+});
+
+describe("response framing detection independent of transport MIME", () => {
+  it.each([undefined, "text/plain", "application/json", "Text/Event-Stream; Charset=UTF-8"])("extracts strict terminal metadata with content type %j and byte-split prefix", contentType => {
+    const capture = new ResponseMetadataCapture("openai_responses", contentType);
+    const bytes = Buffer.from('\uFEFF\r\n: keepalive\r\nevent: response.created\r\n'
+      + event({ type: "response.created", response: { model: "gpt-6-luna" } })
+      + event({ type: "response.completed", response: { model: "gpt-6-luna", usage: responseUsage } }));
+    for (const byte of bytes) capture.push(Buffer.from([byte]));
+    expect(capture.finish()).toEqual({ model_served: "gpt-6-luna", usage_source: "response_body", usage: expectedUsage });
+    expect(capture.streamed).toBe(true);
+  });
+
+  it("does not mistake SSE-looking text inside ordinary JSON for framing", () => {
+    const capture = new ResponseMetadataCapture("openai_responses", undefined);
+    const bytes = Buffer.from(JSON.stringify({ model: "gpt-6-luna", text: 'data: {"model":"wrong"}\n\n', usage: responseUsage }));
+    for (const byte of bytes) capture.push(Buffer.from([byte]));
+    expect(capture.finish()).toEqual({ model_served: "gpt-6-luna", usage_source: "response_body", usage: expectedUsage });
+    expect(capture.streamed).toBe(false);
+  });
+
+  it("keeps missing or conflicting terminal identity unknown on sniffed SSE", () => {
+    for (const model of [undefined, "wrong-model"]) {
+      const capture = new ResponseMetadataCapture("openai_responses", "application/octet-stream");
+      capture.push(Buffer.from(event({ type: "response.created", response: { model: "gpt-6-luna" } })
+        + event({ type: "response.completed", response: { model, usage: responseUsage } })));
+      expect(capture.finish()).toEqual({ model_served: null, usage_source: "response_body", usage: expectedUsage });
+    }
+  });
+
+  it("bounds unknown prefixes and oversized sniffed events without losing later valid usage", () => {
+    const unknown = new ResponseMetadataCapture("openai_responses", undefined);
+    for (let i = 0; i < 513; i++) unknown.push(Buffer.alloc(4096, 10));
+    expect(unknown.finish()).toEqual({ model_served: null, usage_source: "unavailable", usage: null });
+    expect(unknown.streamed).toBe(false);
+    const capture = new ResponseMetadataCapture("openai_responses", undefined);
+    capture.push(Buffer.from('data: '));
+    for (let i = 0; i < 513; i++) capture.push(Buffer.alloc(4096, 120));
+    capture.push(Buffer.from('\n\n' + event({ type: "response.completed", response: { model: "gpt-6-luna", usage: responseUsage } })));
+    expect(capture.finish().usage).toEqual(expectedUsage);
+    expect(capture.streamed).toBe(true);
+  });
+});
+
+
+describe("C1 records observed response framing without changing wire bytes", () => {
+  it.each([undefined, "text/plain", "Text/Event-Stream; Charset=UTF-8", "gzip"])("retains byte identity and honest metadata for %j", async contentType => {
+    const text = event({ type: "response.completed", response: { model: "gpt-6-luna", usage: responseUsage } });
+    const wire = contentType === "gzip" ? gzipSync(text) : Buffer.from(text);
+    const server = createServer((_req, res) => {
+      if (contentType !== undefined) res.setHeader("content-type", contentType === "gzip" ? "text/event-stream" : contentType);
+      if (contentType === "gzip") res.setHeader("content-encoding", "gzip");
+      res.end(wire);
+    });
+    await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error("fixture did not bind");
+    const dir = await mkdtemp(join(tmpdir(), "aob-framing-"));
+    const outPath = join(dir, "events.jsonl");
+    const proxy = await startProxy({ run_id: "framing-fixture", upstream: `http://127.0.0.1:${address.port}`, outPath });
+    try {
+      const response = await request(`${proxy.baseUrl}/responses`, { method: "POST", body: '{"model":"gpt-6-luna"}' });
+      expect(Buffer.from(await response.body.arrayBuffer())).toEqual(wire);
+      await proxy.flush();
+      const rows = (await readFile(outPath, "utf8")).trim().split("\n").map(line => JSON.parse(line));
+      expect(rows).toHaveLength(1);
+      expect(rows[0].streamed).toBe(true);
+      expect(rows[0].model_served).toBe(contentType === "gzip" ? null : "gpt-6-luna");
+      expect(rows[0].usage).toEqual(contentType === "gzip" ? null : expectedUsage);
+    } finally {
+      await proxy.close();
+      await new Promise<void>(resolve => server.close(() => resolve()));
+      await rm(dir, { recursive: true, force: true });
+    }
   });
 });

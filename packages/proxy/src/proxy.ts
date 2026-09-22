@@ -444,8 +444,8 @@ export async function startProxy(opts: ProxyOptions): Promise<ProxyHandle> {
         outHeaders[k] = Array.isArray(v) ? (v[0] ?? "") : String(v);
       }
       res.writeHead(upstreamRes.statusCode, outHeaders);
-      observedStreamed = (outHeaders["content-type"] ?? "").includes("event-stream");
       const capture = new ResponseMetadataCapture(protocol, outHeaders["content-type"]);
+      observedStreamed = capture.streamed;
       let t_first_byte: number | undefined;
       const body = upstreamRes.body;
       if (!body) {
@@ -482,6 +482,7 @@ export async function startProxy(opts: ProxyOptions): Promise<ProxyHandle> {
         if (t_first_byte === undefined) t_first_byte = now();
         observedFirstByte = t_first_byte;
         capture.push(buf);
+        observedStreamed = capture.streamed;
         evidenceCapture.push(buf);
         if (!res.destroyed) res.write(buf);
       }
@@ -499,7 +500,7 @@ export async function startProxy(opts: ProxyOptions): Promise<ProxyHandle> {
         protocol,
         model_requested,
         status: upstreamRes.statusCode,
-        streamed: (outHeaders["content-type"] ?? "").includes("event-stream"),
+        streamed: capture.streamed,
         metadata: capture.finish(),
         upstreamEvidence: evidenceCapture.snapshot(true),
         requestConditions,
