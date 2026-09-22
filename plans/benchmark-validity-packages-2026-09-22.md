@@ -22,9 +22,17 @@ instrument and future evidence; they do not retroactively certify old runs.
 - Keep one Linux host and serial measured execution. Use existing randomization, budget and resume machinery.
 - No npm dependencies. CI uses offline fixtures and mock providers only.
 - Keep pass rate, average task cost, total benchmark cost, cache and tokens first in the UI.
-- DeepSeek and exact `gpt-6-luna` are the intended model choices. Show only models with actual validated data. No subscription-to-generic-API bridge has been established; no quota-consuming probe is authorized here.
+- DeepSeek and exact `gpt-6-luna` are the intended model choices. Show only models with actual validated data. A pinned CLIProxyAPI subscription bridge has been identified; offline qualification takes priority after package 1. No quota-consuming probe is part of these engineering checks.
 - Future empirical calibration and a newly funded campaign remain separate from these engineering checks.
 
 Implementation and review evidence are recorded in the corresponding stage plans
 and a local SDD progress ledger. A completed package means its stated engineering
 acceptance passed, not that the entire benchmark has received scientific certification.
+
+## Current progress
+
+Package 1 is implemented and independently reviewed (`e01132a`); Linux focused
+retention/candidate checks pass. Packages 2–6 have detailed stage plans and remain
+unimplemented. Latest maintainer steering prioritizes the reusable all-five
+Codex subscription bridge next; see
+[S2 preparation](S2-codex-bridge-preparation-plan.md). Existing results remain unchanged.

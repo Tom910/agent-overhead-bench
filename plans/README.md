@@ -50,14 +50,15 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
-| [S5-attempt-evidence-retention-plan.md](./S5-attempt-evidence-retention-plan.md) | In progress: private retry retention implemented; independent review correction and candidate capture next |
+| [S2-codex-bridge-preparation-plan.md](./S2-codex-bridge-preparation-plan.md) | In progress: pinned open-source subscription bridge, offline private setup and qualification; no live model calls |
+| [S5-attempt-evidence-retention-plan.md](./S5-attempt-evidence-retention-plan.md) | Implemented and independently reviewed: private retry retention and pre-verifier candidate patches; Linux focused checks pass |
 | [S3-task-validity-gate-plan.md](./S3-task-validity-gate-plan.md) | Packaged: evidence-bound validity cards, control checks and fresh verifier execution |
 | [S5-controlled-collection-policy-plan.md](./S5-controlled-collection-policy-plan.md) | Packaged: resource enforcement and reproducible randomized blocks |
 | [S7-controlled-evidence-admission-plan.md](./S7-controlled-evidence-admission-plan.md) | Packaged: admission, continuation, portable conditions and private image retention |
 | [S4-tool-timing-qualification-plan.md](./S4-tool-timing-qualification-plan.md) | Packaged: offline interval qualification with explicit native coverage limits |
 | [S6-validity-diagnostics-analysis-plan.md](./S6-validity-diagnostics-analysis-plan.md) | Packaged: reliability, sensitivity, uncertainty, collection ledger and model views |
 | [S3-diagnostic-portfolio-plan.md](./S3-diagnostic-portfolio-plan.md) | Packaged: four original workflow diagnostics with alternate and mutation controls |
-| [S2-gpt-6-luna-subscription-feasibility.md](./S2-gpt-6-luna-subscription-feasibility.md) | Reviewed: exact Luna documented; no supported all-five raw-model subscription interface established |
+| [S2-gpt-6-luna-subscription-feasibility.md](./S2-gpt-6-luna-subscription-feasibility.md) | Reusable CLIProxyAPI route identified for all five; offline qualification in progress, live access unverified |
 | [S5-ci-local-base-plan.md](./S5-ci-local-base-plan.md) | Linux reproduction and full image validation pass; CI uses the default builder to resolve its locally built parent |
 | [S5-execution-condition-evidence-plan.md](./S5-execution-condition-evidence-plan.md) | Verified: post-execution Docker observations, exact C4 binding, explicit unknown cache/ancestor controls; Linux normal/timeout smoke and full package/script checks pass |
 | [S1-request-condition-evidence-plan.md](./S1-request-condition-evidence-plan.md) | Implemented: bounded forwarded-setting metadata, private C1-bound sidecar; 116 proxy tests pass |
