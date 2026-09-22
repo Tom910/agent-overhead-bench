@@ -6,6 +6,7 @@ one completed Linux campaign below.
 
 This is a descriptive snapshot, not a capabilities leaderboard or the frozen v1
 dataset. See [METHODOLOGY.md](./METHODOLOGY.md) for measurement boundaries.
+Official v1 results are unpublished until the v1 dataset ships.
 
 <!-- CURRENT-CAMPAIGN:START -->
 ## Linux results — completed campaign

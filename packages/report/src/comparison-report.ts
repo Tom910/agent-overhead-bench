@@ -17,7 +17,7 @@ export function confidenceRows(pairs: PairwiseConfidence[], baseline: string) {
   }).sort((a, b) => b.difference - a.difference || a.harness.localeCompare(b.harness));
 }
 export function confidenceTable(pairs: PairwiseConfidence[], baseline: string): string {
-  return `<table class="confidence-table"><caption>Pass-rate difference from ${escapeEvidence(baseline)}. Positive means more passes.</caption><thead><tr><th scope="col">Harness</th><th scope="col">Observed difference</th><th scope="col">Exploratory 95% interval</th></tr></thead><tbody>${confidenceRows(pairs, baseline).map(r => `<tr><th scope="row">${escapeEvidence(r.harness)}</th><td>${r.difference_text}</td><td>${r.interval_text}<small>${r.note}</small></td></tr>`).join("")}</tbody></table>`;
+  return `<table class="confidence-table"><caption>Pass-rate difference from ${escapeEvidence(baseline)}. Positive means more passes; pp means percentage points.</caption><thead><tr><th scope="col">Harness</th><th scope="col">Observed difference</th><th scope="col">Exploratory 95% interval</th></tr></thead><tbody>${confidenceRows(pairs, baseline).map(r => `<tr><th scope="row">${escapeEvidence(r.harness)}</th><td>${r.difference_text}</td><td>${r.interval_text}<small>${r.note}</small></td></tr>`).join("")}</tbody></table>`;
 }
 export function evidenceHtml(evidence: ComparisonEvidence): string {
   const c = evidence.conditions; const a = evidence.audit;
