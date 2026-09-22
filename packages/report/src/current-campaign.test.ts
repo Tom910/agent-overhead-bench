@@ -22,6 +22,11 @@ it("generates all current views from one source and detects drift without writin
   expect(() => f.run(true)).toThrow(/stale/);
   expect(readFileSync(join(f.root, "README.md"), "utf8")).toContain("stale");
   f.run(); f.run(true);
+  const site = join(f.root, "site/index.html");
+  expect(readFileSync(site, "utf8")).toContain("The numbers, side by side.");
+  writeFileSync(site, "stale site");
+  expect(() => f.run(true)).toThrow(/stale/);
+  f.run(); f.run(true);
   const readme = readFileSync(join(f.root, "README.md"), "utf8");
   expect(readme).toContain("All harnesses combined:"); expect(readme).toContain("Avg cost / task"); expect(readme).toContain("Whole benchmark");
   expect(readme).toContain("200/200"); expect(readme).toContain("62.5%");

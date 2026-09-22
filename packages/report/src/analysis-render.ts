@@ -186,7 +186,7 @@ function referenceNote(group: ComparisonGroup): string {
   const rates = group.rates;
   return rates === null ? "Costs use original recorded price books." : `Reference cost at fixed prices from ${group.reference_book}: $${rates.input * 1e6}/M uncached input + $${rates.cached_input * 1e6}/M cached input + $${rates.output * 1e6}/M output tokens. Calculated from exact request counters, averaged across repetitions per task and summed for the whole benchmark; not actual billing. Original price books remain in the evidence below.`;
 }
-function costOverview(attempts: AnalysisAttempt[], rates: PriceRates | null): OverviewRow[] {
+export function costOverview(attempts: AnalysisAttempt[], rates: PriceRates | null): OverviewRow[] {
   const costs = summarizeBenchmarkCosts(attempts, rates);
   return summarizeOverview(attempts).map(row => {
     const cost = costs.find(c => c.harness === row.harness && c.version === row.version)!;

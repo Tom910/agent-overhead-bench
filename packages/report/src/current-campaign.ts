@@ -1,5 +1,6 @@
+import { renderResultsSite } from "./results-site.js";
 import { createHash } from "node:crypto";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { summarizeBenchmarkCosts } from "./benchmark-cost.js";
@@ -120,26 +121,20 @@ ${overviewMarkdown(group.attempts, rates, true)}
 
 ${benchmarkTotalNote(group.attempts, rates)}
 
-**Average cost per task** averages each task’s five runs, then averages across the
-eight tasks. **Whole benchmark** sums all 40 selected runs per harness, including
-failures. Expand “Cost by task” in the report for each task’s five-run average
-and all-repetition total. Cache and tokens remain medians per measured attempt.
-A ≥ cost is a known lower bound: missing costs are not treated as zero.
-Pass rate is native verifier passes / all 40 attempts. Incomplete measurements are
-**unscored** and excluded from best-baseline selection, even when their known median
-looks better. Lower token usage alone does not establish better task performance.
+**Cost per task** is the average across each task’s five runs, then across the eight
+tasks. **Whole benchmark** sums all 40 runs per harness, including failures.
+Cache and tokens are medians per attempt; input includes cached tokens.
+Costs use shared token-based reference prices, not actual billing.
 
-${replacementNote}**Reference cost:** $${rates.input * 1e6}/M uncached input + $${rates.cached_input * 1e6}/M cached input +
-$${rates.output * 1e6}/M output, from \`${REFERENCE_BOOK}\`. Exact request tokens are priced
-across all selected requests, then averaged per task and summed per benchmark. These are reference estimates, not
-actual billing. Input includes cached tokens. Cache rate is the median per-attempt
-cached input percentage. K = 1,000; M = 1,000,000.
-
-[Interactive report](${path}/analysis.html) · [Detailed tables](${path}/analysis.md) ·
-[Canonical data](${path}/analysis.json) · [Provenance and reproduction](${path}/README.md)
+[**Explore the interactive website →**](https://tom910.github.io/agent-overhead-bench/) ·
+[Detailed tables](${path}/analysis.md) · [Canonical data](${path}/analysis.json)
 
 <details>
 <summary>Conditions, provenance and how to refresh</summary>
+
+${replacementNote}**Reference cost:** $${rates.input * 1e6}/M uncached input + $${rates.cached_input * 1e6}/M cached input + $${rates.output * 1e6}/M output, from \`${REFERENCE_BOOK}\`. Exact request tokens are priced across all selected requests. Lower token usage alone does not establish better task performance. K = 1,000; M = 1,000,000.
+
+[Full interactive report](${path}/analysis.html) · [Provenance and reproduction](${path}/README.md)
 
 ${collectionNote}
 Model routing is
@@ -152,7 +147,7 @@ experiment. Tool visibility is partial, so non-model time is not pure harness
 overhead. This is not the frozen v1 dataset or a capabilities leaderboard.
 
 One pointer, [current-campaign.json](evidence/current-campaign.json), selects the
-canonical export. This table and both detailed views are generated from its
+canonical export. This table, the website and both detailed views are generated from its
 validated attempt facts. The selection summary binds raw evidence hashes.
 Snapshot exported at ${new Date(summary.as_of).toISOString()}.
 
@@ -175,12 +170,14 @@ ${END}`;
   const markdown = renderAnalysisMarkdown(data); const html = renderAnalysisHtml(data);
   const updatedProvenance = { ...provenance, artifacts: { ...artifacts, "analysis.md": digest(markdown), "analysis.html": digest(html) } };
   const outputs = new Map([
+    [join(root, "site/index.html"), renderResultsSite(data, pointer.dataset, new Date(summary.as_of).toISOString(), replacementNote)],
     [readmePath, updatedReadme], [join(dir, "analysis.md"), markdown], [join(dir, "analysis.html"), html],
     [join(dir, "provenance.json"), `${JSON.stringify(updatedProvenance, null, 2)}\n`],
   ]);
   if (check) {
-    for (const [path, bytes] of outputs) requireValid(readFileSync(path, "utf8") === bytes, `stale generated view: ${path}; run npm run report:refresh`);
+    for (const [path, bytes] of outputs) requireValid(existsSync(path) && readFileSync(path, "utf8") === bytes, `stale generated view: ${path}; run npm run report:refresh`);
   } else {
+    mkdirSync(join(root, "site"), { recursive: true });
     for (const [path, bytes] of outputs) writeFileSync(path, bytes);
   }
 }

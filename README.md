@@ -1,8 +1,11 @@
 # Agent Overhead Bench
 
-An independent measurement instrument that decomposes where coding-agent CLIs spend wall-clock time and money — model, harness, and tools — on selected real-repository tasks. Each task declares an explicit measurement regime — `short` (1–5 min), `long` (6–15 min), or `extended` (16–180 min) — and results are only ever compared within one regime. The checked-in suite is currently a local validation fixture; it is not a published v1 dataset. This is not a capabilities leaderboard or a vendor harness cost claim.
+Measure where coding-agent CLIs spend time and money: model calls, harness work,
+and tools. Explore pass rates, token usage, cache rates and reference costs from
+one completed Linux campaign below.
 
-Results are unpublished until the v1 dataset ships. The snapshots below are not a frozen v1 dataset. See [METHODOLOGY.md](./METHODOLOGY.md) and [CONTRIBUTING.md](./CONTRIBUTING.md) for the correction path.
+This is a descriptive snapshot, not a capabilities leaderboard or the frozen v1
+dataset. See [METHODOLOGY.md](./METHODOLOGY.md) for measurement boundaries.
 
 <!-- CURRENT-CAMPAIGN:START -->
 ## Linux results — completed campaign
@@ -25,30 +28,24 @@ score higher; lower cost/token usage scores higher.
 
 All harnesses combined: $27.185 for 200 selected runs at the shared reference prices.
 
-**Average cost per task** averages each task’s five runs, then averages across the
-eight tasks. **Whole benchmark** sums all 40 selected runs per harness, including
-failures. Expand “Cost by task” in the report for each task’s five-run average
-and all-repetition total. Cache and tokens remain medians per measured attempt.
-A ≥ cost is a known lower bound: missing costs are not treated as zero.
-Pass rate is native verifier passes / all 40 attempts. Incomplete measurements are
-**unscored** and excluded from best-baseline selection, even when their known median
-looks better. Lower token usage alone does not establish better task performance.
+**Cost per task** is the average across each task’s five runs, then across the eight
+tasks. **Whole benchmark** sums all 40 runs per harness, including failures.
+Cache and tokens are medians per attempt; input includes cached tokens.
+Costs use shared token-based reference prices, not actual billing.
+
+[**Explore the interactive website →**](https://tom910.github.io/agent-overhead-bench/) ·
+[Detailed tables](evidence/linux-results-2026-09-19-r1/analysis.md) · [Canonical data](evidence/linux-results-2026-09-19-r1/analysis.json)
+
+<details>
+<summary>Conditions, provenance and how to refresh</summary>
 
 Four user-authorized replacements repaired incomplete accounting. The benchmark columns cover the selected 200 runs. The four superseded runs consumed **at least $0.673** in additional reference cost (codex: ≥ $0.067; hermes: ≥ $0.468; pi: ≥ $0.138), excluded from those columns. Their full costs remain unknown. [Original measurements](evidence/linux-results-2026-09-19/analysis.json) and [replacement mapping](evidence/linux-results-2026-09-19-r1/summary.json) remain available. Replacements are selected for complete accounting, regardless of pass/fail outcome.
 
 One additional Hermes recovery startup was interrupted by a model-metadata capture issue. Its extra spend is also outside the selected benchmark columns and is not included in the lower bound above; its raw evidence is retained on Linux.
 
-**Reference cost:** $0.15/M uncached input + $0.003/M cached input +
-$0.6/M output, from `deepseek-v41-low-2026-09-10`. Exact request tokens are priced
-across all selected requests, then averaged per task and summed per benchmark. These are reference estimates, not
-actual billing. Input includes cached tokens. Cache rate is the median per-attempt
-cached input percentage. K = 1,000; M = 1,000,000.
+**Reference cost:** $0.15/M uncached input + $0.003/M cached input + $0.6/M output, from `deepseek-v41-low-2026-09-10`. Exact request tokens are priced across all selected requests. Lower token usage alone does not establish better task performance. K = 1,000; M = 1,000,000.
 
-[Interactive report](evidence/linux-results-2026-09-19-r1/analysis.html) · [Detailed tables](evidence/linux-results-2026-09-19-r1/analysis.md) ·
-[Canonical data](evidence/linux-results-2026-09-19-r1/analysis.json) · [Provenance and reproduction](evidence/linux-results-2026-09-19-r1/README.md)
-
-<details>
-<summary>Conditions, provenance and how to refresh</summary>
+[Full interactive report](evidence/linux-results-2026-09-19-r1/analysis.html) · [Provenance and reproduction](evidence/linux-results-2026-09-19-r1/README.md)
 
 All 200 selected slots are from the same Linux host. The original collection reused 104 attempts and filled 96 missing slots. Four incomplete-measurement slots were subsequently rerun with explicit user authorization; all other slots are unchanged.
 Model routing is
@@ -61,7 +58,7 @@ experiment. Tool visibility is partial, so non-model time is not pure harness
 overhead. This is not the frozen v1 dataset or a capabilities leaderboard.
 
 One pointer, [current-campaign.json](evidence/current-campaign.json), selects the
-canonical export. This table and both detailed views are generated from its
+canonical export. This table, the website and both detailed views are generated from its
 validated attempt facts. The selection summary binds raw evidence hashes.
 Snapshot exported at 2026-09-19T22:14:30.347Z.
 
@@ -107,6 +104,25 @@ Check that the repository is still a safe unpublished launch scaffold:
 ```bash
 node scripts/s8-launch-check.mjs
 ```
+
+## Results website
+
+The [interactive results site](https://tom910.github.io/agent-overhead-bench/) is
+published to GitHub Pages on pushes to `main`. It uses the same validated report
+as the table above, with task filters, independent metric comparisons and a
+pass-rate/cost chart.
+
+To refresh and preview it locally (no API keys or model calls):
+
+```bash
+npm run report:refresh
+npm run site:build
+python3 -m http.server 8000 --directory _site
+```
+
+Open `http://localhost:8000`. The build uploads only the generated website and
+sanitized report artifacts. GitHub Pages must use **GitHub Actions** as its source
+in repository Settings → Pages.
 
 ## Develop
 
