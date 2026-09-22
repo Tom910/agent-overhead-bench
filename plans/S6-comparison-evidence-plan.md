@@ -48,3 +48,14 @@ small samples, deterministic permutation stability; condition drift/missing
 controls; audit hash/run binding; generated report freshness. Offline package
 tests/types and relevant script checks. Build site and inspect desktop/mobile
 screenshots and interactions. Push and verify Pages deployment/live downloads.
+
+## Verified publication
+
+2026-09-22: 314 report tests pass. All 200 condition records reconcile with
+original raw C4 bytes. Original analysis/summary bytes remain unchanged.
+Desktop/mobile screenshots and browser interactions pass, including task and
+harness filters, comparison baseline, keyboard controls and no-JavaScript task
+counts. No horizontal overflow at widths 320, 390, 768 and 1280; no JavaScript
+exceptions. Pages workflow 35697869073 deployed commit 99a7e44 successfully.
+Live index, detailed report and six JSON downloads exactly match built bytes.
+The corrected Textual audit stays separate from original headline outcomes.

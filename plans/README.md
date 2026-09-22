@@ -49,7 +49,7 @@ The explained-only archive correction is tracked in
 | [S5-execution-condition-evidence-plan.md](./S5-execution-condition-evidence-plan.md) | Verified: post-execution Docker observations, exact C4 binding, explicit unknown cache/ancestor controls; Linux normal/timeout smoke and full package/script checks pass |
 | [S1-request-condition-evidence-plan.md](./S1-request-condition-evidence-plan.md) | Implemented: bounded forwarded-setting metadata, private C1-bound sidecar; 116 proxy tests pass |
 | [S7-task-contract-revision-plan.md](./S7-task-contract-revision-plan.md) | Implemented: three amendments, 33 original-grade replays, 13 corrected Textual replays; four verified false negatives |
-| [S6-comparison-evidence-plan.md](./S6-comparison-evidence-plan.md) | Implemented: checkable conditions, task-level uncertainty and separate audit; 314 report tests pass, deployment pending |
+| [S6-comparison-evidence-plan.md](./S6-comparison-evidence-plan.md) | Published: 314 report tests pass; live desktop/mobile interactions, no-JS counts, eight artifact hashes and Pages deployment verified |
 | [S7-task-quality-audit-2026-09-21.md](./S7-task-quality-audit-2026-09-21.md) | Audit complete: three contract ambiguities and one storage failure; existing outcomes preserved |
 | [S6-interactive-pages-plan.md](./S6-interactive-pages-plan.md) | Complete: interactive results published to GitHub Pages; live desktop/mobile interactions and downloads verified |
 | [S6-task-and-benchmark-cost-plan.md](./S6-task-and-benchmark-cost-plan.md) | Implemented: task repetition averages and full selected benchmark totals; known lower bounds disclosed |
