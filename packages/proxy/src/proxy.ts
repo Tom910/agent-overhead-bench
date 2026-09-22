@@ -11,6 +11,7 @@ import {
   type UsageLookup,
 } from "@aob/contracts";
 import { detectProtocol, extractGenerationUsage, peekModel, type ResponseMetadata } from "./usage.js";
+import { captureRequestConditions, type RequestConditions } from "./request-conditions.js";
 import { ResponseMetadataCapture } from "./response-capture.js";
 import { routedRequestBody, RoutingRequestError } from "./provider-routing.js";
 import { UpstreamEvidenceCapture, upstreamEvidenceRecord, type UpstreamEvidenceSnapshot } from "./upstream-evidence.js";
@@ -277,6 +278,7 @@ export async function startProxy(opts: ProxyOptions): Promise<ProxyHandle> {
     seq += 1;
     const path = req.url ?? "/";
     let observedModel: string | null = null;
+    let requestConditions: RequestConditions = { status: "unavailable", parameters: {}, omitted: [], invalid: [] };
     let observedBodyEnd: number | undefined;
     let observedUpstreamSent: number | undefined;
     let observedFirstByte: number | undefined;
@@ -347,6 +349,7 @@ export async function startProxy(opts: ProxyOptions): Promise<ProxyHandle> {
       const bodyDone = (requestBody?.done ?? Promise.resolve(routed ?? { preview: Buffer.alloc(0), oversized: false, t_end: now() }))
         .then((capture) => {
           observedBodyEnd = capture.t_end;
+          requestConditions = captureRequestConditions(capture.preview, !capture.oversized, [opts.upstreamApiKey, opts.authToken, headerValue(req.headers, "authorization"), headerValue(req.headers, "x-api-key")].filter((s): s is string => typeof s === "string"));
           observedModel = capture.oversized ? null : peekModel(capture.preview);
           return capture;
         });
@@ -394,6 +397,7 @@ export async function startProxy(opts: ProxyOptions): Promise<ProxyHandle> {
           streamed: false,
           metadata: capture.finish(),
           upstreamEvidence: evidenceCapture.snapshot(true),
+          requestConditions,
           generationId,
           requestHeaders: req.headers,
           signal,
@@ -428,6 +432,7 @@ export async function startProxy(opts: ProxyOptions): Promise<ProxyHandle> {
         streamed: (outHeaders["content-type"] ?? "").includes("event-stream"),
         metadata: capture.finish(),
         upstreamEvidence: evidenceCapture.snapshot(true),
+        requestConditions,
         generationId,
         requestHeaders: req.headers,
         signal,
@@ -461,6 +466,7 @@ export async function startProxy(opts: ProxyOptions): Promise<ProxyHandle> {
         streamed: observedStreamed,
         metadata: { usage: null, usage_source: "unavailable", model_served: null },
         ...(evidenceCapture === undefined ? {} : { upstreamEvidence: evidenceCapture.snapshot(false) }),
+        requestConditions,
         error: {
           kind: "network",
           detail: err instanceof Error ? err.message : String(err),
@@ -485,6 +491,7 @@ export async function startProxy(opts: ProxyOptions): Promise<ProxyHandle> {
     streamed: boolean;
     metadata: ResponseMetadata;
     upstreamEvidence?: UpstreamEvidenceSnapshot;
+    requestConditions?: RequestConditions;
     generationId?: string | string[] | undefined;
     requestHeaders?: IncomingMessage["headers"];
     signal: AbortSignal;
@@ -525,7 +532,7 @@ export async function startProxy(opts: ProxyOptions): Promise<ProxyHandle> {
       error: args.error ?? null,
     };
     validateC1Event(event);
-    const write = Promise.allSettled([appendRecord(out, event), appendRecord(evidenceOut, upstreamEvidenceRecord(event, args.upstreamEvidence))]).then(results => {
+    const write = Promise.allSettled([appendRecord(out, event), appendRecord(evidenceOut, { ...upstreamEvidenceRecord(event, args.upstreamEvidence), request_conditions: args.requestConditions ?? { status: "unavailable", parameters: {}, omitted: [], invalid: [] } })]).then(results => {
       if (results.some(result => result.status === "rejected")) throw rememberPersistenceFailure();
     });
     pendingEvents.add(write);

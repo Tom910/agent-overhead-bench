@@ -46,6 +46,7 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
+| [S1-request-condition-evidence-plan.md](./S1-request-condition-evidence-plan.md) | Implemented: bounded forwarded-setting metadata, private C1-bound sidecar; 116 proxy tests pass |
 | [S7-task-contract-revision-plan.md](./S7-task-contract-revision-plan.md) | Implemented: three amendments, 33 original-grade replays, 13 corrected Textual replays; four verified false negatives |
 | [S6-comparison-evidence-plan.md](./S6-comparison-evidence-plan.md) | Next: checkable conditions, task-level uncertainty and published audit integration |
 | [S7-task-quality-audit-2026-09-21.md](./S7-task-quality-audit-2026-09-21.md) | Audit complete: three contract ambiguities and one storage failure; existing outcomes preserved |
