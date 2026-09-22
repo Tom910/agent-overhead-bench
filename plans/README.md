@@ -46,6 +46,8 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
+| [S7-task-contract-revision-plan.md](./S7-task-contract-revision-plan.md) | Implemented: three amendments, 33 original-grade replays, 13 corrected Textual replays; four verified false negatives |
+| [S6-comparison-evidence-plan.md](./S6-comparison-evidence-plan.md) | Next: checkable conditions, task-level uncertainty and published audit integration |
 | [S7-task-quality-audit-2026-09-21.md](./S7-task-quality-audit-2026-09-21.md) | Audit complete: three contract ambiguities and one storage failure; existing outcomes preserved |
 | [S6-interactive-pages-plan.md](./S6-interactive-pages-plan.md) | Complete: interactive results published to GitHub Pages; live desktop/mobile interactions and downloads verified |
 | [S6-task-and-benchmark-cost-plan.md](./S6-task-and-benchmark-cost-plan.md) | Implemented: task repetition averages and full selected benchmark totals; known lower bounds disclosed |
