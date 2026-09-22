@@ -113,3 +113,10 @@ Docker error/timeout results, retry retention and same-run-ID C4 binding.
 Focused tests/types passed, then the entire affected runner suite ran once:
 **255 passed, 20 files**. Runner typecheck, repository lint and diff checks pass.
 No inference, provider calls, paid runs or empirical benchmark qualification ran.
+
+Independent closeout review approved Task 2 at `e01132a`, including additional
+Git attribute and file/directory/link transition replay probes. Isolated Linux
+candidate/integration tests passed 20/20. Full repository verification then
+passed 859 package tests and 159 script tests; two Docker-dependent script tests
+were skipped in that run. All workspace typechecks passed. No model calls or
+new empirical attempts were performed.

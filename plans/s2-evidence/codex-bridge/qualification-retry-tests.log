@@ -1,0 +1,4 @@
+=== RUN   TestCharacterizeZeroRetryStillReplaysAfter401
+    bridge_retry_characterization_test.go:17: Confirmed: request-retry=0, max-retry-credentials=1, one credential still permits 401 refresh and model request replay
+--- PASS: TestCharacterizeZeroRetryStillReplaysAfter401 (0.00s)
+PASS

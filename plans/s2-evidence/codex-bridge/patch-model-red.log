@@ -1,0 +1,9 @@
+=== RUN   TestAOBTerminalModelIdentity
+=== RUN   TestAOBTerminalModelIdentity/response.completed
+    bridge_model_regression_test.go:17: terminal served model hidden: got "gpt-6-luna"
+=== RUN   TestAOBTerminalModelIdentity/response.incomplete
+    bridge_model_regression_test.go:17: terminal served model hidden: got "gpt-6-luna"
+--- FAIL: TestAOBTerminalModelIdentity (0.00s)
+    --- FAIL: TestAOBTerminalModelIdentity/response.completed (0.00s)
+    --- FAIL: TestAOBTerminalModelIdentity/response.incomplete (0.00s)
+FAIL

@@ -1,0 +1,659 @@
+=== RUN   TestToolCallSimple
+--- PASS: TestToolCallSimple (0.00s)
+=== RUN   TestToolCallWithContent
+--- PASS: TestToolCallWithContent (0.00s)
+=== RUN   TestToolCallOutputWithMultimodalContent
+--- PASS: TestToolCallOutputWithMultimodalContent (0.00s)
+=== RUN   TestToolCallOutputWithStringifiedImageContent
+=== RUN   TestToolCallOutputWithStringifiedImageContent/Codex_input_image
+=== RUN   TestToolCallOutputWithStringifiedImageContent/OpenAI_image_URL
+--- PASS: TestToolCallOutputWithStringifiedImageContent (0.00s)
+    --- PASS: TestToolCallOutputWithStringifiedImageContent/Codex_input_image (0.00s)
+    --- PASS: TestToolCallOutputWithStringifiedImageContent/OpenAI_image_URL (0.00s)
+=== RUN   TestToolCallOutputKeepsNonImageStrings
+=== RUN   TestToolCallOutputKeepsNonImageStrings/plain_text
+=== RUN   TestToolCallOutputKeepsNonImageStrings/JSON_object
+=== RUN   TestToolCallOutputKeepsNonImageStrings/text-only_array
+=== RUN   TestToolCallOutputKeepsNonImageStrings/invalid_image_array
+--- PASS: TestToolCallOutputKeepsNonImageStrings (0.00s)
+    --- PASS: TestToolCallOutputKeepsNonImageStrings/plain_text (0.00s)
+    --- PASS: TestToolCallOutputKeepsNonImageStrings/JSON_object (0.00s)
+    --- PASS: TestToolCallOutputKeepsNonImageStrings/text-only_array (0.00s)
+    --- PASS: TestToolCallOutputKeepsNonImageStrings/invalid_image_array (0.00s)
+=== RUN   TestToolCallOutputFallsBackForInvalidStructuredParts
+--- PASS: TestToolCallOutputFallsBackForInvalidStructuredParts (0.00s)
+=== RUN   TestToolCallOutputWithNonStringJSONContent
+=== RUN   TestToolCallOutputWithNonStringJSONContent/null
+=== RUN   TestToolCallOutputWithNonStringJSONContent/object
+--- PASS: TestToolCallOutputWithNonStringJSONContent (0.00s)
+    --- PASS: TestToolCallOutputWithNonStringJSONContent/null (0.00s)
+    --- PASS: TestToolCallOutputWithNonStringJSONContent/object (0.00s)
+=== RUN   TestConvertOpenAIRequestToCodexPreservesInputAudio
+--- PASS: TestConvertOpenAIRequestToCodexPreservesInputAudio (0.00s)
+=== RUN   TestMultipleToolCalls
+--- PASS: TestMultipleToolCalls (0.00s)
+=== RUN   TestNoSpuriousEmptyAssistantMessage
+--- PASS: TestNoSpuriousEmptyAssistantMessage (0.00s)
+=== RUN   TestMultiTurnToolCalling
+--- PASS: TestMultiTurnToolCalling (0.00s)
+=== RUN   TestToolNameShortening
+--- PASS: TestToolNameShortening (0.00s)
+=== RUN   TestCustomToolNameShortening
+--- PASS: TestCustomToolNameShortening (0.00s)
+=== RUN   TestCustomToolShortNameCollisionPreservesFunctionFamily
+--- PASS: TestCustomToolShortNameCollisionPreservesFunctionFamily (0.00s)
+=== RUN   TestSameNameCustomAndFunctionDefaultsToFunctionFamily
+--- PASS: TestSameNameCustomAndFunctionDefaultsToFunctionFamily (0.00s)
+=== RUN   TestEmptyStringContent
+--- PASS: TestEmptyStringContent (0.00s)
+=== RUN   TestCallIDsMatchBetweenCallAndOutput
+--- PASS: TestCallIDsMatchBetweenCallAndOutput (0.00s)
+=== RUN   TestCustomToolCallHistory
+--- PASS: TestCustomToolCallHistory (0.00s)
+=== RUN   TestCustomToolCallResponseFollowUpRoundTrip
+--- PASS: TestCustomToolCallResponseFollowUpRoundTrip (0.00s)
+=== RUN   TestMixedToolCallHistoryPreservesCallFamilies
+--- PASS: TestMixedToolCallHistoryPreservesCallFamilies (0.00s)
+=== RUN   TestToolCallHistoryAllowsReusedCallIDAcrossRounds
+--- PASS: TestToolCallHistoryAllowsReusedCallIDAcrossRounds (0.00s)
+=== RUN   TestCustomToolCallHistorySynthesizesMissingCallID
+--- PASS: TestCustomToolCallHistorySynthesizesMissingCallID (0.00s)
+=== RUN   TestToolCallHistoryClearsUnmatchedCallAtNewBatch
+--- PASS: TestToolCallHistoryClearsUnmatchedCallAtNewBatch (0.00s)
+=== RUN   TestToolCallOutputWithoutIDUsesPendingCall
+--- PASS: TestToolCallOutputWithoutIDUsesPendingCall (0.00s)
+=== RUN   TestAmbiguousDuplicateToolCallIDsAreDropped
+--- PASS: TestAmbiguousDuplicateToolCallIDsAreDropped (0.00s)
+=== RUN   TestOrphanAndDuplicateToolCallOutputsAreDropped
+--- PASS: TestOrphanAndDuplicateToolCallOutputsAreDropped (0.00s)
+=== RUN   TestToolsDefinitionTranslated
+--- PASS: TestToolsDefinitionTranslated (0.00s)
+=== RUN   TestFunctionToolStrictDefaultsToFalse
+--- PASS: TestFunctionToolStrictDefaultsToFalse (0.00s)
+=== RUN   TestNormalizeInvalidToolNames
+--- PASS: TestNormalizeInvalidToolNames (0.00s)
+=== RUN   TestNormalizeInvalidToolNamesCollisionAndNonASCII
+--- PASS: TestNormalizeInvalidToolNamesCollisionAndNonASCII (0.00s)
+=== RUN   TestHistoricalToolCallCollisionWithDeclaredTool
+--- PASS: TestHistoricalToolCallCollisionWithDeclaredTool (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_IncompleteTerminal
+--- PASS: TestConvertCodexResponseToOpenAI_IncompleteTerminal (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamSetsModelFromResponseCreated
+--- PASS: TestConvertCodexResponseToOpenAI_StreamSetsModelFromResponseCreated (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_FirstChunkUsesRequestModelName
+--- PASS: TestConvertCodexResponseToOpenAI_FirstChunkUsesRequestModelName (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallChunkOmitsNullContentFields
+--- PASS: TestConvertCodexResponseToOpenAI_ToolCallChunkOmitsNullContentFields (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallArgumentsDeltaOmitsNullContentFields
+--- PASS: TestConvertCodexResponseToOpenAI_ToolCallArgumentsDeltaOmitsNullContentFields (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_CustomToolCallStreamDeltas
+--- PASS: TestConvertCodexResponseToOpenAI_CustomToolCallStreamDeltas (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_EmptyCustomToolDeltaUsesDoneFallback
+--- PASS: TestConvertCodexResponseToOpenAI_EmptyCustomToolDeltaUsesDoneFallback (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_InterleavedToolCallsKeepStateByItem
+--- PASS: TestConvertCodexResponseToOpenAI_InterleavedToolCallsKeepStateByItem (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_CustomToolCallInputDoneFallback
+--- PASS: TestConvertCodexResponseToOpenAI_CustomToolCallInputDoneFallback (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks/announced_custom_call_emits_arguments_only
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks/unannounced_custom_call_emits_complete_call
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks/announced_function_call_still_falls_back
+--- PASS: TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks/announced_custom_call_emits_arguments_only (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks/unannounced_custom_call_emits_complete_call (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks/announced_function_call_still_falls_back (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallStateFallsBackFromUnknownItemID
+--- PASS: TestConvertCodexResponseToOpenAI_ToolCallStateFallsBackFromUnknownItemID (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAINonStream_CustomToolCall
+--- PASS: TestConvertCodexResponseToOpenAINonStream_CustomToolCall (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamPartialImageEmitsDeltaImages
+--- PASS: TestConvertCodexResponseToOpenAI_StreamPartialImageEmitsDeltaImages (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamImageGenerationCallDoneEmitsDeltaImages
+--- PASS: TestConvertCodexResponseToOpenAI_StreamImageGenerationCallDoneEmitsDeltaImages (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamImageGenerationCallAddsMessageImages
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamImageGenerationCallAddsMessageImages (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamForwardsCacheWriteTokens
+--- PASS: TestConvertCodexResponseToOpenAI_StreamForwardsCacheWriteTokens (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamOmitsMissingCacheWriteTokens
+--- PASS: TestConvertCodexResponseToOpenAI_StreamOmitsMissingCacheWriteTokens (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamPreservesExplicitZeroCacheWriteTokens
+--- PASS: TestConvertCodexResponseToOpenAI_StreamPreservesExplicitZeroCacheWriteTokens (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamForwardsCacheWriteTokens
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamForwardsCacheWriteTokens (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamOmitsMissingCacheWriteTokens
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamOmitsMissingCacheWriteTokens (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamPreservesExplicitZeroCacheWriteTokens
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamPreservesExplicitZeroCacheWriteTokens (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamMultiMessageEmptyTrailingKeepsContent
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamMultiMessageEmptyTrailingKeepsContent (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamReasoningTextDeltaAndDone
+--- PASS: TestConvertCodexResponseToOpenAI_StreamReasoningTextDeltaAndDone (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamReasoningTextContent
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamReasoningTextContent (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamReasoningSummaryAndContent
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamReasoningSummaryAndContent (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/non-stream_response_retains_cache_write_tokens_and_service_tier
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/streaming_terminal_chunk_retains_cache_write_tokens_and_service_tier
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/streaming_response.created_carries_over_service_tier_to_deltas
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/streaming_in_progress_updates_tier_and_completed_overrides_tier
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/large_integer_cache_write_tokens_beyond_int64_preserved_without_precision_loss
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/large_integer_cache_write_tokens_preserved_without_precision_loss
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/invalid_cache_write_tokens_formats_are_rejected
+time="2026-09-22T20:32:36Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:32:36Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:32:36Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:32:36Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:32:36Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:32:36Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:32:36Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:32:36Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/invalid_or_whitespace_service_tier_is_ignored
+--- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/non-stream_response_retains_cache_write_tokens_and_service_tier (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/streaming_terminal_chunk_retains_cache_write_tokens_and_service_tier (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/streaming_response.created_carries_over_service_tier_to_deltas (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/streaming_in_progress_updates_tier_and_completed_overrides_tier (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/large_integer_cache_write_tokens_beyond_int64_preserved_without_precision_loss (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/large_integer_cache_write_tokens_preserved_without_precision_loss (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/invalid_cache_write_tokens_formats_are_rejected (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/invalid_or_whitespace_service_tier_is_ignored (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_RestoresNormalizedToolNames
+--- PASS: TestConvertCodexResponseToOpenAI_RestoresNormalizedToolNames (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAINonStreamKeepsAssistantRole
+--- PASS: TestConvertCodexResponseToOpenAINonStreamKeepsAssistantRole (0.00s)
+PASS
+=== RUN   TestConvertSystemRoleToDeveloper_BasicConversion
+--- PASS: TestConvertSystemRoleToDeveloper_BasicConversion (0.00s)
+=== RUN   TestConvertSystemRoleToDeveloper_MultipleSystemMessages
+--- PASS: TestConvertSystemRoleToDeveloper_MultipleSystemMessages (0.00s)
+=== RUN   TestConvertSystemRoleToDeveloper_NoSystemMessages
+--- PASS: TestConvertSystemRoleToDeveloper_NoSystemMessages (0.00s)
+=== RUN   TestConvertSystemRoleToDeveloper_EmptyInput
+--- PASS: TestConvertSystemRoleToDeveloper_EmptyInput (0.00s)
+=== RUN   TestConvertSystemRoleToDeveloper_NoInputField
+--- PASS: TestConvertSystemRoleToDeveloper_NoInputField (0.00s)
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_OriginalIssue
+--- PASS: TestConvertOpenAIResponsesRequestToCodex_OriginalIssue (0.00s)
+=== RUN   TestConvertOpenAIResponsesRequestToCodexReusesNormalizedPayload
+--- PASS: TestConvertOpenAIResponsesRequestToCodexReusesNormalizedPayload (0.00s)
+=== RUN   TestConvertOpenAIResponsesRequestToCodexNormalizesRequiredFields
+--- PASS: TestConvertOpenAIResponsesRequestToCodexNormalizesRequiredFields (0.00s)
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_FiltersPromptCacheRetention
+--- PASS: TestConvertOpenAIResponsesRequestToCodex_FiltersPromptCacheRetention (0.00s)
+=== RUN   TestConvertSystemRoleToDeveloper_AssistantRole
+--- PASS: TestConvertSystemRoleToDeveloper_AssistantRole (0.00s)
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_NormalizesWebSearchPreview
+--- PASS: TestConvertOpenAIResponsesRequestToCodex_NormalizesWebSearchPreview (0.00s)
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_NormalizesTopLevelToolChoicePreviewAlias
+--- PASS: TestConvertOpenAIResponsesRequestToCodex_NormalizesTopLevelToolChoicePreviewAlias (0.00s)
+=== RUN   TestUserFieldDeletion
+--- PASS: TestUserFieldDeletion (0.00s)
+=== RUN   TestContextManagementCompactionCompatibility
+--- PASS: TestContextManagementCompactionCompatibility (0.00s)
+=== RUN   TestTruncationRemovedForCodexCompatibility
+--- PASS: TestTruncationRemovedForCodexCompatibility (0.00s)
+=== RUN   TestStripCodexResponsesCacheBreakpoints
+--- PASS: TestStripCodexResponsesCacheBreakpoints (0.00s)
+=== RUN   TestStripCodexResponsesCacheBreakpoints_FunctionCallOutputParts
+--- PASS: TestStripCodexResponsesCacheBreakpoints_FunctionCallOutputParts (0.00s)
+=== RUN   TestStripCodexResponsesCacheBreakpoints_ItemLevel
+--- PASS: TestStripCodexResponsesCacheBreakpoints_ItemLevel (0.00s)
+=== RUN   TestStripCodexResponsesCacheBreakpoints_CombinedItemAndPartLevel
+--- PASS: TestStripCodexResponsesCacheBreakpoints_CombinedItemAndPartLevel (0.00s)
+=== RUN   TestStripCodexResponsesCacheBreakpoints_WithSystemRole
+--- PASS: TestStripCodexResponsesCacheBreakpoints_WithSystemRole (0.00s)
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier/priority_preserved
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier/priority_case_insensitive_and_trimmed
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier/fast_normalized_to_priority
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier/ultrafast_preserved
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier/ultrafast_case_insensitive_and_trimmed
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier/standard_stripped
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier/default_stripped
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier/flex_stripped
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier/non-string_stripped
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier/null_stripped
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier/bool_stripped
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier/empty_string_stripped
+=== RUN   TestConvertOpenAIResponsesRequestToCodex_ServiceTier/whitespace_string_stripped
+--- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier (0.00s)
+    --- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier/priority_preserved (0.00s)
+    --- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier/priority_case_insensitive_and_trimmed (0.00s)
+    --- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier/fast_normalized_to_priority (0.00s)
+    --- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier/ultrafast_preserved (0.00s)
+    --- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier/ultrafast_case_insensitive_and_trimmed (0.00s)
+    --- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier/standard_stripped (0.00s)
+    --- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier/default_stripped (0.00s)
+    --- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier/flex_stripped (0.00s)
+    --- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier/non-string_stripped (0.00s)
+    --- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier/null_stripped (0.00s)
+    --- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier/bool_stripped (0.00s)
+    --- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier/empty_string_stripped (0.00s)
+    --- PASS: TestConvertOpenAIResponsesRequestToCodex_ServiceTier/whitespace_string_stripped (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAIResponses_CreatedIncludesOriginalRequestModel
+--- PASS: TestConvertCodexResponseToOpenAIResponses_CreatedIncludesOriginalRequestModel (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAIResponsesNonStreamIncomplete
+--- PASS: TestConvertCodexResponseToOpenAIResponsesNonStreamIncomplete (0.00s)
+PASS
+=== RUN   TestCharacterizeLunaChatUsageAndMissingUsage
+--- PASS: TestCharacterizeLunaChatUsageAndMissingUsage (0.00s)
+=== RUN   TestCharacterizeLunaChatEffectiveSettingsAndHistory
+--- PASS: TestCharacterizeLunaChatEffectiveSettingsAndHistory (0.00s)
+=== RUN   TestCharacterizeLunaTerminalModelMismatchHiddenInChat
+    bridge_qualification_test.go:59: Confirmed: Chat outward model masks terminal mismatch; raw Responses preserves it
+--- PASS: TestCharacterizeLunaTerminalModelMismatchHiddenInChat (0.00s)
+=== RUN   TestCharacterizeLunaEncryptedReasoningOutputLoss
+--- PASS: TestCharacterizeLunaEncryptedReasoningOutputLoss (0.00s)
+PASS
+=== RUN   TestNormalizeCodexParallelToolCallsForTools_DropsWhenToolsMissing
+--- PASS: TestNormalizeCodexParallelToolCallsForTools_DropsWhenToolsMissing (0.00s)
+=== RUN   TestNormalizeCodexParallelToolCallsForTools_DropsWhenToolsEmpty
+--- PASS: TestNormalizeCodexParallelToolCallsForTools_DropsWhenToolsEmpty (0.00s)
+=== RUN   TestNormalizeCodexParallelToolCallsForTools_PreservesWhenToolsPresent
+--- PASS: TestNormalizeCodexParallelToolCallsForTools_PreservesWhenToolsPresent (0.00s)
+=== RUN   TestNormalizeCodexParallelToolCalls_ResponsesLiteMetadataForcesFalse
+--- PASS: TestNormalizeCodexParallelToolCalls_ResponsesLiteMetadataForcesFalse (0.00s)
+=== RUN   TestNormalizeCodexParallelToolCalls_ResponsesLiteHeaderForcesFalse
+--- PASS: TestNormalizeCodexParallelToolCalls_ResponsesLiteHeaderForcesFalse (0.00s)
+=== RUN   TestCodexExecutorReasoningReplayCacheDoesNotInjectNativeResponsesRequest
+--- PASS: TestCodexExecutorReasoningReplayCacheDoesNotInjectNativeResponsesRequest (0.00s)
+=== RUN   TestCodexExecutorReasoningReplayCacheDoesNotStoreNativeResponsesRequest
+--- PASS: TestCodexExecutorReasoningReplayCacheDoesNotStoreNativeResponsesRequest (0.00s)
+=== RUN   TestCodexQuotaErrorCredentialScope
+=== RUN   TestCodexQuotaErrorCredentialScope/http_usage_limit
+=== RUN   TestCodexQuotaErrorCredentialScope/http_top-level_usage_limit
+=== RUN   TestCodexQuotaErrorCredentialScope/http_usage_limit_without_reset
+=== RUN   TestCodexQuotaErrorCredentialScope/sse_error
+=== RUN   TestCodexQuotaErrorCredentialScope/sse_response_failed
+=== RUN   TestCodexQuotaErrorCredentialScope/websocket_error
+=== RUN   TestCodexQuotaErrorCredentialScope/websocket_body_error
+=== RUN   TestCodexQuotaErrorCredentialScope/model_capacity
+=== RUN   TestCodexQuotaErrorCredentialScope/transient_rate_limit
+=== RUN   TestCodexQuotaErrorCredentialScope/websocket_connection_limit
+=== RUN   TestCodexQuotaErrorCredentialScope/generic_provider_error
+--- PASS: TestCodexQuotaErrorCredentialScope (0.00s)
+    --- PASS: TestCodexQuotaErrorCredentialScope/http_usage_limit (0.00s)
+    --- PASS: TestCodexQuotaErrorCredentialScope/http_top-level_usage_limit (0.00s)
+    --- PASS: TestCodexQuotaErrorCredentialScope/http_usage_limit_without_reset (0.00s)
+    --- PASS: TestCodexQuotaErrorCredentialScope/sse_error (0.00s)
+    --- PASS: TestCodexQuotaErrorCredentialScope/sse_response_failed (0.00s)
+    --- PASS: TestCodexQuotaErrorCredentialScope/websocket_error (0.00s)
+    --- PASS: TestCodexQuotaErrorCredentialScope/websocket_body_error (0.00s)
+    --- PASS: TestCodexQuotaErrorCredentialScope/model_capacity (0.00s)
+    --- PASS: TestCodexQuotaErrorCredentialScope/transient_rate_limit (0.00s)
+    --- PASS: TestCodexQuotaErrorCredentialScope/websocket_connection_limit (0.00s)
+    --- PASS: TestCodexQuotaErrorCredentialScope/generic_provider_error (0.00s)
+=== RUN   TestCodexQuotaErrorModelLevelCooling
+=== RUN   TestCodexQuotaErrorModelLevelCooling/http_usage_limit
+=== RUN   TestCodexQuotaErrorModelLevelCooling/http_top-level_usage_limit
+=== RUN   TestCodexQuotaErrorModelLevelCooling/http_usage_limit_without_reset
+=== RUN   TestCodexQuotaErrorModelLevelCooling/sse_error
+=== RUN   TestCodexQuotaErrorModelLevelCooling/sse_response_failed
+=== RUN   TestCodexQuotaErrorModelLevelCooling/websocket_error
+=== RUN   TestCodexQuotaErrorModelLevelCooling/websocket_body_error
+--- PASS: TestCodexQuotaErrorModelLevelCooling (0.00s)
+    --- PASS: TestCodexQuotaErrorModelLevelCooling/http_usage_limit (0.00s)
+    --- PASS: TestCodexQuotaErrorModelLevelCooling/http_top-level_usage_limit (0.00s)
+    --- PASS: TestCodexQuotaErrorModelLevelCooling/http_usage_limit_without_reset (0.00s)
+    --- PASS: TestCodexQuotaErrorModelLevelCooling/sse_error (0.00s)
+    --- PASS: TestCodexQuotaErrorModelLevelCooling/sse_response_failed (0.00s)
+    --- PASS: TestCodexQuotaErrorModelLevelCooling/websocket_error (0.00s)
+    --- PASS: TestCodexQuotaErrorModelLevelCooling/websocket_body_error (0.00s)
+=== RUN   TestParseCodexRetryAfterQuotaLayouts
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/nested/relative_reset
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/nested/absolute_reset_wins
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/nested/expired_absolute_reset_falls_back
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/nested/type_matching_agrees_with_quota_classification
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/nested/missing_reset
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/nested/expired_reset
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/nested/nonpositive_reset
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/nested/transient_limit
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/top-level/relative_reset
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/top-level/absolute_reset_wins
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/top-level/expired_absolute_reset_falls_back
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/top-level/type_matching_agrees_with_quota_classification
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/top-level/missing_reset
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/top-level/expired_reset
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/top-level/nonpositive_reset
+=== RUN   TestParseCodexRetryAfterQuotaLayouts/top-level/transient_limit
+--- PASS: TestParseCodexRetryAfterQuotaLayouts (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/nested/relative_reset (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/nested/absolute_reset_wins (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/nested/expired_absolute_reset_falls_back (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/nested/type_matching_agrees_with_quota_classification (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/nested/missing_reset (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/nested/expired_reset (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/nested/nonpositive_reset (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/nested/transient_limit (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/top-level/relative_reset (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/top-level/absolute_reset_wins (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/top-level/expired_absolute_reset_falls_back (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/top-level/type_matching_agrees_with_quota_classification (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/top-level/missing_reset (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/top-level/expired_reset (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/top-level/nonpositive_reset (0.00s)
+    --- PASS: TestParseCodexRetryAfterQuotaLayouts/top-level/transient_limit (0.00s)
+=== RUN   TestParseCodexRetryAfter
+=== RUN   TestParseCodexRetryAfter/resets_in_seconds
+=== RUN   TestParseCodexRetryAfter/prefers_resets_at
+=== RUN   TestParseCodexRetryAfter/fallback_when_resets_at_is_past
+=== RUN   TestParseCodexRetryAfter/non-429_status_code
+=== RUN   TestParseCodexRetryAfter/non_usage_limit_reached_error_type
+--- PASS: TestParseCodexRetryAfter (0.00s)
+    --- PASS: TestParseCodexRetryAfter/resets_in_seconds (0.00s)
+    --- PASS: TestParseCodexRetryAfter/prefers_resets_at (0.00s)
+    --- PASS: TestParseCodexRetryAfter/fallback_when_resets_at_is_past (0.00s)
+    --- PASS: TestParseCodexRetryAfter/non-429_status_code (0.00s)
+    --- PASS: TestParseCodexRetryAfter/non_usage_limit_reached_error_type (0.00s)
+=== RUN   TestNewCodexStatusErrTreatsCapacityAsRetryableRateLimit
+--- PASS: TestNewCodexStatusErrTreatsCapacityAsRetryableRateLimit (0.00s)
+=== RUN   TestNewCodexStatusErrTreatsUsageLimitAsRetryableRateLimit
+--- PASS: TestNewCodexStatusErrTreatsUsageLimitAsRetryableRateLimit (0.00s)
+=== RUN   TestIsCodexUsageLimitError
+=== RUN   TestIsCodexUsageLimitError/nested_usage_limit_reached
+=== RUN   TestIsCodexUsageLimitError/top-level_usage_limit_reached
+=== RUN   TestIsCodexUsageLimitError/transient_rate_limit_is_excluded
+=== RUN   TestIsCodexUsageLimitError/empty_body
+--- PASS: TestIsCodexUsageLimitError (0.00s)
+    --- PASS: TestIsCodexUsageLimitError/nested_usage_limit_reached (0.00s)
+    --- PASS: TestIsCodexUsageLimitError/top-level_usage_limit_reached (0.00s)
+    --- PASS: TestIsCodexUsageLimitError/transient_rate_limit_is_excluded (0.00s)
+    --- PASS: TestIsCodexUsageLimitError/empty_body (0.00s)
+=== RUN   TestNewCodexStatusErrClassifiesKnownCodexFailures
+=== RUN   TestNewCodexStatusErrClassifiesKnownCodexFailures/context_length_status
+=== RUN   TestNewCodexStatusErrClassifiesKnownCodexFailures/thinking_signature
+=== RUN   TestNewCodexStatusErrClassifiesKnownCodexFailures/previous_response_missing
+=== RUN   TestNewCodexStatusErrClassifiesKnownCodexFailures/auth_unavailable
+--- PASS: TestNewCodexStatusErrClassifiesKnownCodexFailures (0.00s)
+    --- PASS: TestNewCodexStatusErrClassifiesKnownCodexFailures/context_length_status (0.00s)
+    --- PASS: TestNewCodexStatusErrClassifiesKnownCodexFailures/thinking_signature (0.00s)
+    --- PASS: TestNewCodexStatusErrClassifiesKnownCodexFailures/previous_response_missing (0.00s)
+    --- PASS: TestNewCodexStatusErrClassifiesKnownCodexFailures/auth_unavailable (0.00s)
+=== RUN   TestNewCodexStatusErrPreservesUnclassifiedErrors
+--- PASS: TestNewCodexStatusErrPreservesUnclassifiedErrors (0.00s)
+=== RUN   TestTranslateCodexRequestPairReusesEqualPayload
+--- PASS: TestTranslateCodexRequestPairReusesEqualPayload (0.00s)
+=== RUN   TestTranslateCodexRequestPairTranslatesDifferentPayloads
+--- PASS: TestTranslateCodexRequestPairTranslatesDifferentPayloads (0.00s)
+=== RUN   TestCodexNativeStreamFidelity
+=== RUN   TestCodexNativeStreamFidelity/codex
+=== RUN   TestCodexNativeStreamFidelity/codex/http/lite=/buffering=false
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"instructions":"","tools":[{"type":"image_generation","output_format":"png"}]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/codex/http/lite=/buffering=true
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"instructions":"","tools":[{"type":"image_generation","output_format":"png"}]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/codex/http/lite=header/buffering=false
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/codex/http/lite=header/buffering=true
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/codex/http/lite=metadata/buffering=false
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"client_metadata":{"ws_request_header_x_openai_internal_codex_responses_lite":"true"}}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/codex/http/lite=metadata/buffering=true
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"client_metadata":{"ws_request_header_x_openai_internal_codex_responses_lite":"true"}}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/codex/websocket/lite=/buffering=false
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:33563/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:33563/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"instructions":"","tools":[{"type":"image_generation","output_format":"png"}],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/codex/websocket/lite=/buffering=true
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:34087/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:34087/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"instructions":"","tools":[{"type":"image_generation","output_format":"png"}],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/codex/websocket/lite=header/buffering=false
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:36421/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:36421/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: ""
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/codex/websocket/lite=header/buffering=true
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:38845/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:38845/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: ""
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/codex/websocket/lite=metadata/buffering=false
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:36477/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:36477/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: ""
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"client_metadata":{"ws_request_header_x_openai_internal_codex_responses_lite":"true"},"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/codex/websocket/lite=metadata/buffering=true
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:39849/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:39849/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: ""
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"client_metadata":{"ws_request_header_x_openai_internal_codex_responses_lite":"true"},"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai-response
+=== RUN   TestCodexNativeStreamFidelity/openai-response/http/lite=/buffering=false
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":true,"stream":true,"store":false,"include":["reasoning.encrypted_content"],"instructions":"","tools":[{"type":"image_generation","output_format":"png"}]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai-response/http/lite=/buffering=true
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":true,"stream":true,"store":false,"include":["reasoning.encrypted_content"],"instructions":"","tools":[{"type":"image_generation","output_format":"png"}]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai-response/http/lite=header/buffering=false
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"stream":true,"store":false,"include":["reasoning.encrypted_content"]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai-response/http/lite=header/buffering=true
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"stream":true,"store":false,"include":["reasoning.encrypted_content"]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai-response/http/lite=metadata/buffering=false
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"client_metadata":{"ws_request_header_x_openai_internal_codex_responses_lite":"true"},"stream":true,"store":false,"include":["reasoning.encrypted_content"]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai-response/http/lite=metadata/buffering=true
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"client_metadata":{"ws_request_header_x_openai_internal_codex_responses_lite":"true"},"stream":true,"store":false,"include":["reasoning.encrypted_content"]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai-response/websocket/lite=/buffering=false
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:42447/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:42447/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":true,"stream":true,"store":false,"include":["reasoning.encrypted_content"],"instructions":"","tools":[{"type":"image_generation","output_format":"png"}],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai-response/websocket/lite=/buffering=true
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:37793/responses session_object=ephemeral reused=false"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":true,"stream":true,"store":false,"include":["reasoning.encrypted_content"],"instructions":"","tools":[{"type":"image_generation","output_format":"png"}],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai-response/websocket/lite=header/buffering=false
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:37793/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:42523/responses session_object=ephemeral reused=false"
+    codex_native_fidelity_test.go:114: upstream session alias: ""
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"stream":true,"store":false,"include":["reasoning.encrypted_content"],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai-response/websocket/lite=header/buffering=true
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:42523/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:41361/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:41361/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: ""
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"stream":true,"store":false,"include":["reasoning.encrypted_content"],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai-response/websocket/lite=metadata/buffering=false
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:42425/responses session_object=ephemeral reused=false"
+    codex_native_fidelity_test.go:114: upstream session alias: ""
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"client_metadata":{"ws_request_header_x_openai_internal_codex_responses_lite":"true"},"stream":true,"store":false,"include":["reasoning.encrypted_content"],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:42425/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+=== RUN   TestCodexNativeStreamFidelity/openai-response/websocket/lite=metadata/buffering=true
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:41359/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:41359/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: ""
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","input":[],"parallel_tool_calls":false,"client_metadata":{"ws_request_header_x_openai_internal_codex_responses_lite":"true"},"stream":true,"store":false,"include":["reasoning.encrypted_content"],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/claude
+=== RUN   TestCodexNativeStreamFidelity/claude/http/lite=/buffering=false
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","instructions":"","input":[],"parallel_tool_calls":true,"reasoning":{"effort":"medium"},"stream":true,"store":false,"include":["reasoning.encrypted_content"],"tools":[{"type":"image_generation","output_format":"png"}]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/claude/http/lite=/buffering=true
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","instructions":"","input":[],"parallel_tool_calls":true,"reasoning":{"effort":"medium"},"stream":true,"store":false,"include":["reasoning.encrypted_content"],"tools":[{"type":"image_generation","output_format":"png"}]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/claude/http/lite=header/buffering=false
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","instructions":"","input":[],"parallel_tool_calls":false,"reasoning":{"effort":"medium"},"stream":true,"store":false,"include":["reasoning.encrypted_content"]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/claude/http/lite=header/buffering=true
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","instructions":"","input":[],"parallel_tool_calls":false,"reasoning":{"effort":"medium"},"stream":true,"store":false,"include":["reasoning.encrypted_content"]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/claude/http/lite=metadata/buffering=false
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","instructions":"","input":[],"parallel_tool_calls":true,"reasoning":{"effort":"medium"},"stream":true,"store":false,"include":["reasoning.encrypted_content"],"tools":[{"type":"image_generation","output_format":"png"}]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/claude/http/lite=metadata/buffering=true
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","instructions":"","input":[],"parallel_tool_calls":true,"reasoning":{"effort":"medium"},"stream":true,"store":false,"include":["reasoning.encrypted_content"],"tools":[{"type":"image_generation","output_format":"png"}]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/claude/websocket/lite=/buffering=false
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:41869/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:41869/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","instructions":"","input":[],"parallel_tool_calls":true,"reasoning":{"effort":"medium"},"stream":true,"store":false,"include":["reasoning.encrypted_content"],"tools":[{"type":"image_generation","output_format":"png"}],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/claude/websocket/lite=/buffering=true
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:37945/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:37945/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","instructions":"","input":[],"parallel_tool_calls":true,"reasoning":{"effort":"medium"},"stream":true,"store":false,"include":["reasoning.encrypted_content"],"tools":[{"type":"image_generation","output_format":"png"}],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/claude/websocket/lite=header/buffering=false
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:37661/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:37661/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","instructions":"","input":[],"parallel_tool_calls":false,"reasoning":{"effort":"medium"},"stream":true,"store":false,"include":["reasoning.encrypted_content"],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/claude/websocket/lite=header/buffering=true
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:34389/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:34389/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","instructions":"","input":[],"parallel_tool_calls":false,"reasoning":{"effort":"medium"},"stream":true,"store":false,"include":["reasoning.encrypted_content"],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/claude/websocket/lite=metadata/buffering=false
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:44173/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:44173/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","instructions":"","input":[],"parallel_tool_calls":true,"reasoning":{"effort":"medium"},"stream":true,"store":false,"include":["reasoning.encrypted_content"],"tools":[{"type":"image_generation","output_format":"png"}],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/claude/websocket/lite=metadata/buffering=true
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:45921/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:45921/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"model":"gpt-5.6-sol","instructions":"","input":[],"parallel_tool_calls":true,"reasoning":{"effort":"medium"},"stream":true,"store":false,"include":["reasoning.encrypted_content"],"tools":[{"type":"image_generation","output_format":"png"}],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai
+=== RUN   TestCodexNativeStreamFidelity/openai/http/lite=/buffering=false
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"instructions":"","stream":true,"reasoning":{"effort":"medium"},"parallel_tool_calls":true,"include":["reasoning.encrypted_content"],"model":"gpt-5.6-sol","input":[],"store":false,"tools":[{"type":"image_generation","output_format":"png"}]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai/http/lite=/buffering=true
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"instructions":"","stream":true,"reasoning":{"effort":"medium"},"parallel_tool_calls":true,"include":["reasoning.encrypted_content"],"model":"gpt-5.6-sol","input":[],"store":false,"tools":[{"type":"image_generation","output_format":"png"}]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai/http/lite=header/buffering=false
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"instructions":"","stream":true,"reasoning":{"effort":"medium"},"parallel_tool_calls":false,"include":["reasoning.encrypted_content"],"model":"gpt-5.6-sol","input":[],"store":false}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai/http/lite=header/buffering=true
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"instructions":"","stream":true,"reasoning":{"effort":"medium"},"parallel_tool_calls":false,"include":["reasoning.encrypted_content"],"model":"gpt-5.6-sol","input":[],"store":false}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai/http/lite=metadata/buffering=false
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"instructions":"","stream":true,"reasoning":{"effort":"medium"},"parallel_tool_calls":true,"include":["reasoning.encrypted_content"],"model":"gpt-5.6-sol","input":[],"store":false,"tools":[{"type":"image_generation","output_format":"png"}]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai/http/lite=metadata/buffering=true
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"instructions":"","stream":true,"reasoning":{"effort":"medium"},"parallel_tool_calls":true,"include":["reasoning.encrypted_content"],"model":"gpt-5.6-sol","input":[],"store":false,"tools":[{"type":"image_generation","output_format":"png"}]}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai/websocket/lite=/buffering=false
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:36933/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:36933/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"instructions":"","stream":true,"reasoning":{"effort":"medium"},"parallel_tool_calls":true,"include":["reasoning.encrypted_content"],"model":"gpt-5.6-sol","input":[],"store":false,"tools":[{"type":"image_generation","output_format":"png"}],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai/websocket/lite=/buffering=true
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:42919/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:42919/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"instructions":"","stream":true,"reasoning":{"effort":"medium"},"parallel_tool_calls":true,"include":["reasoning.encrypted_content"],"model":"gpt-5.6-sol","input":[],"store":false,"tools":[{"type":"image_generation","output_format":"png"}],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai/websocket/lite=header/buffering=false
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:37705/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:37705/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"instructions":"","stream":true,"reasoning":{"effort":"medium"},"parallel_tool_calls":false,"include":["reasoning.encrypted_content"],"model":"gpt-5.6-sol","input":[],"store":false,"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai/websocket/lite=header/buffering=true
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:34605/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:34605/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"instructions":"","stream":true,"reasoning":{"effort":"medium"},"parallel_tool_calls":false,"include":["reasoning.encrypted_content"],"model":"gpt-5.6-sol","input":[],"store":false,"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai/websocket/lite=metadata/buffering=false
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:43051/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:43051/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"instructions":"","stream":true,"reasoning":{"effort":"medium"},"parallel_tool_calls":true,"include":["reasoning.encrypted_content"],"model":"gpt-5.6-sol","input":[],"store":false,"tools":[{"type":"image_generation","output_format":"png"}],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+=== RUN   TestCodexNativeStreamFidelity/openai/websocket/lite=metadata/buffering=true
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream connected session= auth= url=ws://127.0.0.1:39219/responses session_object=ephemeral reused=false"
+time="2026-09-22T20:32:36Z" level=info msg="codex websockets: upstream disconnected session= auth= url=ws://127.0.0.1:39219/responses session_object=ephemeral reason=upstream_disconnected last_event=response.completed is_terminal=true err=websocket: close 1006 (abnormal closure): unexpected EOF"
+    codex_native_fidelity_test.go:114: upstream session alias: "session-1"
+    codex_native_fidelity_test.go:119: downstream metadata: ["{\"type\":\"codex.response.metadata\",\"headers\":{\"x-models-etag\":\"models-v1\",\"x-codex-turn-state\":\"turn-1\",\"x-codex-safety-buffering-enabled\":\"true\",\"x-codex-safety-buffering-faster-model\":\"fixture-model\"},\"future\":{\"ok\":true}}"]
+    codex_native_fidelity_test.go:123: upstream request: {"instructions":"","stream":true,"reasoning":{"effort":"medium"},"parallel_tool_calls":true,"include":["reasoning.encrypted_content"],"model":"gpt-5.6-sol","input":[],"store":false,"tools":[{"type":"image_generation","output_format":"png"}],"type":"response.create"}; downstream completion: {"type":"response.completed","response":{"id":"resp_1","status":"completed","output":[{"id":"msg_1","type":"message","role":"assistant","content":[{"type":"output_text","text":"ok"}]}],"future":{"ok":true},"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}}}
+--- PASS: TestCodexNativeStreamFidelity (0.02s)
+    --- PASS: TestCodexNativeStreamFidelity/codex (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/codex/http/lite=/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/codex/http/lite=/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/codex/http/lite=header/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/codex/http/lite=header/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/codex/http/lite=metadata/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/codex/http/lite=metadata/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/codex/websocket/lite=/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/codex/websocket/lite=/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/codex/websocket/lite=header/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/codex/websocket/lite=header/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/codex/websocket/lite=metadata/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/codex/websocket/lite=metadata/buffering=true (0.00s)
+    --- PASS: TestCodexNativeStreamFidelity/openai-response (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai-response/http/lite=/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai-response/http/lite=/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai-response/http/lite=header/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai-response/http/lite=header/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai-response/http/lite=metadata/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai-response/http/lite=metadata/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai-response/websocket/lite=/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai-response/websocket/lite=/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai-response/websocket/lite=header/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai-response/websocket/lite=header/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai-response/websocket/lite=metadata/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai-response/websocket/lite=metadata/buffering=true (0.00s)
+    --- PASS: TestCodexNativeStreamFidelity/claude (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/claude/http/lite=/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/claude/http/lite=/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/claude/http/lite=header/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/claude/http/lite=header/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/claude/http/lite=metadata/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/claude/http/lite=metadata/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/claude/websocket/lite=/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/claude/websocket/lite=/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/claude/websocket/lite=header/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/claude/websocket/lite=header/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/claude/websocket/lite=metadata/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/claude/websocket/lite=metadata/buffering=true (0.00s)
+    --- PASS: TestCodexNativeStreamFidelity/openai (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai/http/lite=/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai/http/lite=/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai/http/lite=header/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai/http/lite=header/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai/http/lite=metadata/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai/http/lite=metadata/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai/websocket/lite=/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai/websocket/lite=/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai/websocket/lite=header/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai/websocket/lite=header/buffering=true (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai/websocket/lite=metadata/buffering=false (0.00s)
+        --- PASS: TestCodexNativeStreamFidelity/openai/websocket/lite=metadata/buffering=true (0.00s)
+=== RUN   TestCodexWebsocketLiteHeaderWithoutSessionHeaders
+--- PASS: TestCodexWebsocketLiteHeaderWithoutSessionHeaders (0.00s)
+=== RUN   TestObserveCodexTokenEventRecordsResponseModel
+--- PASS: TestObserveCodexTokenEventRecordsResponseModel (0.00s)
+=== RUN   TestCodexUsageRecordsCarryResponseModelPerModel
+--- PASS: TestCodexUsageRecordsCarryResponseModelPerModel (0.00s)
+PASS

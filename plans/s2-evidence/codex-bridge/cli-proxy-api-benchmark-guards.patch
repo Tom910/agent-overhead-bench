@@ -1,0 +1,38 @@
+diff --git a/internal/translator/codex/openai/chat-completions/codex_openai_response.go b/internal/translator/codex/openai/chat-completions/codex_openai_response.go
+index a7f0022..b2c422c 100644
+--- a/internal/translator/codex/openai/chat-completions/codex_openai_response.go
++++ b/internal/translator/codex/openai/chat-completions/codex_openai_response.go
+@@ -100,7 +100,14 @@ func ConvertCodexResponseToOpenAI(_ context.Context, modelName string, originalR
+ 
+ 	// Extract and set the model version.
+ 	cachedModel := (*param).(*ConvertCliToOpenAIParams).Model
+-	if modelResult := gjson.GetBytes(rawJSON, "model"); modelResult.Exists() {
++	terminalModel := ""
++	if dataType == "response.completed" || dataType == "response.incomplete" {
++		terminalModel = rootResult.Get("response.model").String()
++	}
++	if terminalModel != "" {
++		p.Model = terminalModel
++		template, _ = sjson.SetBytes(template, "model", terminalModel)
++	} else if modelResult := gjson.GetBytes(rawJSON, "model"); modelResult.Exists() {
+ 		template, _ = sjson.SetBytes(template, "model", modelResult.String())
+ 	} else if cachedModel != "" {
+ 		template, _ = sjson.SetBytes(template, "model", cachedModel)
+diff --git a/sdk/cliproxy/auth/conductor_refresh.go b/sdk/cliproxy/auth/conductor_refresh.go
+index d41551d..c9e85aa 100644
+--- a/sdk/cliproxy/auth/conductor_refresh.go
++++ b/sdk/cliproxy/auth/conductor_refresh.go
+@@ -475,6 +475,13 @@ func (m *Manager) tryRefreshAfterUnauthorized(ctx context.Context, auth *Auth, e
+ 	if m == nil || auth == nil || alreadyTried || execErr == nil {
+ 		return auth, false
+ 	}
++	// Opt-in benchmark guard: zero retries must not hide a second model attempt.
++	// Preserve ordinary refresh recovery unless this Codex credential opts in.
++	disableReplay, _ := auth.Metadata["aob_disable_unauthorized_replay"].(bool)
++	if disableReplay && strings.EqualFold(auth.Provider, "codex") &&
++		effectiveRequestRetryLimit(auth, int(m.requestRetry.Load())) == 0 {
++		return auth, false
++	}
+ 	// Request-scoped failures describe this request, not stale credentials.
+ 	// Refreshing would turn a direct error response into an implicit retry.
+ 	if isRequestScopedError(execErr) {

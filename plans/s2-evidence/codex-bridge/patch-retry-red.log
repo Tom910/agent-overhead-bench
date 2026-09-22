@@ -1,0 +1,27 @@
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/global-zero
+    bridge_retry_regression_test.go:33: expected original 401, got success after hidden replay
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/credential-zero
+    bridge_retry_regression_test.go:33: expected original 401, got success after hidden replay
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/global-positive
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/credential-positive
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/legacy-zero-without-opt-in
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/global-zero
+    bridge_retry_regression_test.go:33: expected original 401, got success after hidden replay
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/credential-zero
+    bridge_retry_regression_test.go:33: expected original 401, got success after hidden replay
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/global-positive
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/credential-positive
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/legacy-zero-without-opt-in
+--- FAIL: TestAOBNoUnauthorizedReplayAtEffectiveZero (0.00s)
+    --- FAIL: TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/global-zero (0.00s)
+    --- FAIL: TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/credential-zero (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/global-positive (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/credential-positive (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/legacy-zero-without-opt-in (0.00s)
+    --- FAIL: TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/global-zero (0.00s)
+    --- FAIL: TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/credential-zero (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/global-positive (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/credential-positive (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/legacy-zero-without-opt-in (0.00s)
+FAIL

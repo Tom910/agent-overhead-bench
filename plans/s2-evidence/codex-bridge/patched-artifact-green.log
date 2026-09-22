@@ -1,0 +1,214 @@
+=== RUN   TestAOBTerminalModelIdentity
+=== RUN   TestAOBTerminalModelIdentity/response.completed
+=== RUN   TestAOBTerminalModelIdentity/response.incomplete
+--- PASS: TestAOBTerminalModelIdentity (0.00s)
+    --- PASS: TestAOBTerminalModelIdentity/response.completed (0.00s)
+    --- PASS: TestAOBTerminalModelIdentity/response.incomplete (0.00s)
+=== RUN   TestToolCallSimple
+--- PASS: TestToolCallSimple (0.00s)
+=== RUN   TestToolCallWithContent
+--- PASS: TestToolCallWithContent (0.00s)
+=== RUN   TestToolCallOutputWithMultimodalContent
+--- PASS: TestToolCallOutputWithMultimodalContent (0.00s)
+=== RUN   TestToolCallOutputWithStringifiedImageContent
+=== RUN   TestToolCallOutputWithStringifiedImageContent/Codex_input_image
+=== RUN   TestToolCallOutputWithStringifiedImageContent/OpenAI_image_URL
+--- PASS: TestToolCallOutputWithStringifiedImageContent (0.00s)
+    --- PASS: TestToolCallOutputWithStringifiedImageContent/Codex_input_image (0.00s)
+    --- PASS: TestToolCallOutputWithStringifiedImageContent/OpenAI_image_URL (0.00s)
+=== RUN   TestToolCallOutputKeepsNonImageStrings
+=== RUN   TestToolCallOutputKeepsNonImageStrings/plain_text
+=== RUN   TestToolCallOutputKeepsNonImageStrings/JSON_object
+=== RUN   TestToolCallOutputKeepsNonImageStrings/text-only_array
+=== RUN   TestToolCallOutputKeepsNonImageStrings/invalid_image_array
+--- PASS: TestToolCallOutputKeepsNonImageStrings (0.00s)
+    --- PASS: TestToolCallOutputKeepsNonImageStrings/plain_text (0.00s)
+    --- PASS: TestToolCallOutputKeepsNonImageStrings/JSON_object (0.00s)
+    --- PASS: TestToolCallOutputKeepsNonImageStrings/text-only_array (0.00s)
+    --- PASS: TestToolCallOutputKeepsNonImageStrings/invalid_image_array (0.00s)
+=== RUN   TestToolCallOutputFallsBackForInvalidStructuredParts
+--- PASS: TestToolCallOutputFallsBackForInvalidStructuredParts (0.00s)
+=== RUN   TestToolCallOutputWithNonStringJSONContent
+=== RUN   TestToolCallOutputWithNonStringJSONContent/null
+=== RUN   TestToolCallOutputWithNonStringJSONContent/object
+--- PASS: TestToolCallOutputWithNonStringJSONContent (0.00s)
+    --- PASS: TestToolCallOutputWithNonStringJSONContent/null (0.00s)
+    --- PASS: TestToolCallOutputWithNonStringJSONContent/object (0.00s)
+=== RUN   TestConvertOpenAIRequestToCodexPreservesInputAudio
+--- PASS: TestConvertOpenAIRequestToCodexPreservesInputAudio (0.00s)
+=== RUN   TestMultipleToolCalls
+--- PASS: TestMultipleToolCalls (0.00s)
+=== RUN   TestNoSpuriousEmptyAssistantMessage
+--- PASS: TestNoSpuriousEmptyAssistantMessage (0.00s)
+=== RUN   TestMultiTurnToolCalling
+--- PASS: TestMultiTurnToolCalling (0.00s)
+=== RUN   TestToolNameShortening
+--- PASS: TestToolNameShortening (0.00s)
+=== RUN   TestCustomToolNameShortening
+--- PASS: TestCustomToolNameShortening (0.00s)
+=== RUN   TestCustomToolShortNameCollisionPreservesFunctionFamily
+--- PASS: TestCustomToolShortNameCollisionPreservesFunctionFamily (0.00s)
+=== RUN   TestSameNameCustomAndFunctionDefaultsToFunctionFamily
+--- PASS: TestSameNameCustomAndFunctionDefaultsToFunctionFamily (0.00s)
+=== RUN   TestEmptyStringContent
+--- PASS: TestEmptyStringContent (0.00s)
+=== RUN   TestCallIDsMatchBetweenCallAndOutput
+--- PASS: TestCallIDsMatchBetweenCallAndOutput (0.00s)
+=== RUN   TestCustomToolCallHistory
+--- PASS: TestCustomToolCallHistory (0.00s)
+=== RUN   TestCustomToolCallResponseFollowUpRoundTrip
+--- PASS: TestCustomToolCallResponseFollowUpRoundTrip (0.00s)
+=== RUN   TestMixedToolCallHistoryPreservesCallFamilies
+--- PASS: TestMixedToolCallHistoryPreservesCallFamilies (0.00s)
+=== RUN   TestToolCallHistoryAllowsReusedCallIDAcrossRounds
+--- PASS: TestToolCallHistoryAllowsReusedCallIDAcrossRounds (0.00s)
+=== RUN   TestCustomToolCallHistorySynthesizesMissingCallID
+--- PASS: TestCustomToolCallHistorySynthesizesMissingCallID (0.00s)
+=== RUN   TestToolCallHistoryClearsUnmatchedCallAtNewBatch
+--- PASS: TestToolCallHistoryClearsUnmatchedCallAtNewBatch (0.00s)
+=== RUN   TestToolCallOutputWithoutIDUsesPendingCall
+--- PASS: TestToolCallOutputWithoutIDUsesPendingCall (0.00s)
+=== RUN   TestAmbiguousDuplicateToolCallIDsAreDropped
+--- PASS: TestAmbiguousDuplicateToolCallIDsAreDropped (0.00s)
+=== RUN   TestOrphanAndDuplicateToolCallOutputsAreDropped
+--- PASS: TestOrphanAndDuplicateToolCallOutputsAreDropped (0.00s)
+=== RUN   TestToolsDefinitionTranslated
+--- PASS: TestToolsDefinitionTranslated (0.00s)
+=== RUN   TestFunctionToolStrictDefaultsToFalse
+--- PASS: TestFunctionToolStrictDefaultsToFalse (0.00s)
+=== RUN   TestNormalizeInvalidToolNames
+--- PASS: TestNormalizeInvalidToolNames (0.00s)
+=== RUN   TestNormalizeInvalidToolNamesCollisionAndNonASCII
+--- PASS: TestNormalizeInvalidToolNamesCollisionAndNonASCII (0.00s)
+=== RUN   TestHistoricalToolCallCollisionWithDeclaredTool
+--- PASS: TestHistoricalToolCallCollisionWithDeclaredTool (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_IncompleteTerminal
+--- PASS: TestConvertCodexResponseToOpenAI_IncompleteTerminal (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamSetsModelFromResponseCreated
+--- PASS: TestConvertCodexResponseToOpenAI_StreamSetsModelFromResponseCreated (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_FirstChunkUsesRequestModelName
+--- PASS: TestConvertCodexResponseToOpenAI_FirstChunkUsesRequestModelName (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallChunkOmitsNullContentFields
+--- PASS: TestConvertCodexResponseToOpenAI_ToolCallChunkOmitsNullContentFields (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallArgumentsDeltaOmitsNullContentFields
+--- PASS: TestConvertCodexResponseToOpenAI_ToolCallArgumentsDeltaOmitsNullContentFields (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_CustomToolCallStreamDeltas
+--- PASS: TestConvertCodexResponseToOpenAI_CustomToolCallStreamDeltas (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_EmptyCustomToolDeltaUsesDoneFallback
+--- PASS: TestConvertCodexResponseToOpenAI_EmptyCustomToolDeltaUsesDoneFallback (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_InterleavedToolCallsKeepStateByItem
+--- PASS: TestConvertCodexResponseToOpenAI_InterleavedToolCallsKeepStateByItem (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_CustomToolCallInputDoneFallback
+--- PASS: TestConvertCodexResponseToOpenAI_CustomToolCallInputDoneFallback (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks/announced_custom_call_emits_arguments_only
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks/unannounced_custom_call_emits_complete_call
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks/announced_function_call_still_falls_back
+--- PASS: TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks/announced_custom_call_emits_arguments_only (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks/unannounced_custom_call_emits_complete_call (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_ToolCallOutputItemDoneFallbacks/announced_function_call_still_falls_back (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_ToolCallStateFallsBackFromUnknownItemID
+--- PASS: TestConvertCodexResponseToOpenAI_ToolCallStateFallsBackFromUnknownItemID (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAINonStream_CustomToolCall
+--- PASS: TestConvertCodexResponseToOpenAINonStream_CustomToolCall (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamPartialImageEmitsDeltaImages
+--- PASS: TestConvertCodexResponseToOpenAI_StreamPartialImageEmitsDeltaImages (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamImageGenerationCallDoneEmitsDeltaImages
+--- PASS: TestConvertCodexResponseToOpenAI_StreamImageGenerationCallDoneEmitsDeltaImages (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamImageGenerationCallAddsMessageImages
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamImageGenerationCallAddsMessageImages (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamForwardsCacheWriteTokens
+--- PASS: TestConvertCodexResponseToOpenAI_StreamForwardsCacheWriteTokens (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamOmitsMissingCacheWriteTokens
+--- PASS: TestConvertCodexResponseToOpenAI_StreamOmitsMissingCacheWriteTokens (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamPreservesExplicitZeroCacheWriteTokens
+--- PASS: TestConvertCodexResponseToOpenAI_StreamPreservesExplicitZeroCacheWriteTokens (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamForwardsCacheWriteTokens
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamForwardsCacheWriteTokens (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamOmitsMissingCacheWriteTokens
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamOmitsMissingCacheWriteTokens (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamPreservesExplicitZeroCacheWriteTokens
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamPreservesExplicitZeroCacheWriteTokens (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamMultiMessageEmptyTrailingKeepsContent
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamMultiMessageEmptyTrailingKeepsContent (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_StreamReasoningTextDeltaAndDone
+--- PASS: TestConvertCodexResponseToOpenAI_StreamReasoningTextDeltaAndDone (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamReasoningTextContent
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamReasoningTextContent (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_NonStreamReasoningSummaryAndContent
+--- PASS: TestConvertCodexResponseToOpenAI_NonStreamReasoningSummaryAndContent (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/non-stream_response_retains_cache_write_tokens_and_service_tier
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/streaming_terminal_chunk_retains_cache_write_tokens_and_service_tier
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/streaming_response.created_carries_over_service_tier_to_deltas
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/streaming_in_progress_updates_tier_and_completed_overrides_tier
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/large_integer_cache_write_tokens_beyond_int64_preserved_without_precision_loss
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/large_integer_cache_write_tokens_preserved_without_precision_loss
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/invalid_cache_write_tokens_formats_are_rejected
+time="2026-09-22T20:42:19Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:42:19Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:42:19Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:42:19Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:42:19Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:42:19Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:42:19Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+time="2026-09-22T20:42:19Z" level=warning msg="Ignoring invalid Codex cache write token count" field=usage.input_tokens_details.cache_write_tokens
+=== RUN   TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/invalid_or_whitespace_service_tier_is_ignored
+--- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/non-stream_response_retains_cache_write_tokens_and_service_tier (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/streaming_terminal_chunk_retains_cache_write_tokens_and_service_tier (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/streaming_response.created_carries_over_service_tier_to_deltas (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/streaming_in_progress_updates_tier_and_completed_overrides_tier (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/large_integer_cache_write_tokens_beyond_int64_preserved_without_precision_loss (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/large_integer_cache_write_tokens_preserved_without_precision_loss (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/invalid_cache_write_tokens_formats_are_rejected (0.00s)
+    --- PASS: TestConvertCodexResponseToOpenAI_Issue5543_CacheWriteTokensAndServiceTier/invalid_or_whitespace_service_tier_is_ignored (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAI_RestoresNormalizedToolNames
+--- PASS: TestConvertCodexResponseToOpenAI_RestoresNormalizedToolNames (0.00s)
+=== RUN   TestConvertCodexResponseToOpenAINonStreamKeepsAssistantRole
+--- PASS: TestConvertCodexResponseToOpenAINonStreamKeepsAssistantRole (0.00s)
+PASS
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/global-zero
+time="2026-09-22T20:42:19Z" level=warning msg="401 |            0s | upstream execution failed: provider=codex model=gpt-5.5 auth=provider=codex auth_file=aa-primary err=Your authentication token has been invalidated. Please try signing in again."
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/credential-zero
+time="2026-09-22T20:42:19Z" level=warning msg="401 |            0s | upstream execution failed: provider=codex model=gpt-5.5 auth=provider=codex auth_file=aa-primary err=Your authentication token has been invalidated. Please try signing in again."
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/global-positive
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/credential-positive
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/legacy-zero-without-opt-in
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/global-zero
+time="2026-09-22T20:42:19Z" level=warning msg="401 |            0s | upstream execution failed: provider=codex model=gpt-5.5 auth=provider=codex auth_file=aa-primary err=Your authentication token has been invalidated. Please try signing in again."
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/credential-zero
+time="2026-09-22T20:42:19Z" level=warning msg="401 |            0s | upstream execution failed: provider=codex model=gpt-5.5 auth=provider=codex auth_file=aa-primary err=Your authentication token has been invalidated. Please try signing in again."
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/global-positive
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/credential-positive
+=== RUN   TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/legacy-zero-without-opt-in
+--- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/global-zero (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/credential-zero (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/global-positive (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/credential-positive (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/nonstream/legacy-zero-without-opt-in (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/global-zero (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/credential-zero (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/global-positive (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/credential-positive (0.00s)
+    --- PASS: TestAOBNoUnauthorizedReplayAtEffectiveZero/stream/legacy-zero-without-opt-in (0.00s)
+=== RUN   TestManager_ShouldRetryAfterError_RespectsAuthRequestRetryOverride
+--- PASS: TestManager_ShouldRetryAfterError_RespectsAuthRequestRetryOverride (0.00s)
+=== RUN   TestManager_Execute_UnauthorizedRefreshesCurrentAuthBeforeFallback
+--- PASS: TestManager_Execute_UnauthorizedRefreshesCurrentAuthBeforeFallback (0.00s)
+=== RUN   TestManager_ExecuteStream_UnauthorizedRefreshesCurrentAuthBeforeFallback
+--- PASS: TestManager_ExecuteStream_UnauthorizedRefreshesCurrentAuthBeforeFallback (0.00s)
+=== RUN   TestManager_Execute_UnauthorizedRefreshFailureFallsBackToNextAuth
+time="2026-09-22T20:42:19Z" level=warning msg="credential refresh failed for codex (aa-primary): refresh token invalid; retaining active credential as access token is unexpired"
+time="2026-09-22T20:42:19Z" level=warning msg="401 |            0s | upstream execution failed: provider=codex model=gpt-5.5 auth=provider=codex auth_file=aa-primary err=Your authentication token has been invalidated. Please try signing in again."
+--- PASS: TestManager_Execute_UnauthorizedRefreshFailureFallsBackToNextAuth (0.00s)
+=== RUN   TestManager_Execute_UnauthorizedWithoutRefreshTokenDoesNotCallRefresh
+time="2026-09-22T20:42:19Z" level=warning msg="401 |            0s | upstream execution failed: provider=codex model=gpt-5.5 auth=provider=codex auth_file=aa-primary-api-key err=Your authentication token has been invalidated. Please try signing in again."
+--- PASS: TestManager_Execute_UnauthorizedWithoutRefreshTokenDoesNotCallRefresh (0.00s)
+=== RUN   TestManager_Execute_UnauthorizedRefreshThenRetryStillFailsFallsBackOnce
+time="2026-09-22T20:42:19Z" level=warning msg="401 |            0s | upstream execution failed: provider=codex model=gpt-5.5 auth=provider=codex auth_file=aa-primary err=Your authentication token has been invalidated. Please try signing in again."
+--- PASS: TestManager_Execute_UnauthorizedRefreshThenRetryStillFailsFallsBackOnce (0.00s)
+PASS
