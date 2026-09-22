@@ -27,6 +27,10 @@ export type ProxyOptions = {
   onlyProvider?: string;
   /** Ephemeral Docker relay credential. Direct host callers omit this. */
   authToken?: string;
+  /** Optional exact request-model gate before any provider traffic. */
+  expectedModel?: string;
+  /** Optional admission cap across all model POSTs; failures are not refunded. */
+  maxModelRequests?: number;
   port?: number;
   /** Bind address. Docker cells use 0.0.0.0 so host.docker.internal can reach the proxy. */
   host?: string;
@@ -67,6 +71,7 @@ const ALLOWED_PATHS = new Set([
   "POST /v1/messages",
   "POST /v1/chat/completions",
   "POST /v1/responses",
+  "POST /responses",
 ]);
 
 // Keep request buffering bounded as well. This is large enough for the
@@ -143,6 +148,45 @@ function allowedPath(method: string, requestUrl: string): boolean {
   } catch {
     return false;
   }
+}
+
+/** Reject ambiguous model keys without reserializing large numeric request values. */
+function matchesExpectedModel(body: Buffer, expected: string): boolean {
+  let text: string; let parsed: unknown;
+  try {
+    text = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(body);
+    parsed = JSON.parse(text);
+  } catch { return false; }
+  if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed) ||
+      (parsed as Record<string, unknown>).model !== expected) return false;
+  let depth = 0; let modelFields = 0;
+  for (let i = 0; i < text.length; i += 1) {
+    const ch = text[i];
+    if (ch === "{" || ch === "[") depth += 1;
+    else if (ch === "}" || ch === "]") depth -= 1;
+    else if (ch === '"') {
+      const start = i;
+      for (i += 1; i < text.length && text[i] !== '"'; i += 1) if (text[i] === "\\") i += 1;
+      let next = i + 1;
+      while (/\s/.test(text[next] ?? "")) next += 1;
+      if (depth === 1 && text[next] === ":" && JSON.parse(text.slice(start, i + 1)) === "model") modelFields += 1;
+    }
+  }
+  return modelFields === 1;
+}
+
+async function modelGuardBody(req: IncomingMessage, now: () => number): Promise<{ preview: Buffer; oversized: false; t_end: number }> {
+  if (req.headers["content-encoding"] !== undefined && req.headers["content-encoding"] !== "identity") {
+    throw new RoutingRequestError(400, "model guard requires an unencoded JSON request");
+  }
+  const chunks: Buffer[] = []; let bytes = 0;
+  for await (const chunk of req.iterator({ destroyOnReturn: false })) {
+    const buffer = Buffer.from(chunk as Uint8Array);
+    bytes += buffer.length;
+    if (bytes > MAX_REQUEST_BODY_BYTES) throw new RoutingRequestError(413, "model guard request exceeds 16 MiB");
+    chunks.push(buffer);
+  }
+  return { preview: Buffer.concat(chunks), oversized: false, t_end: now() };
 }
 
 type RequestBodyCapture = {
@@ -249,6 +293,13 @@ export async function startProxy(opts: ProxyOptions): Promise<ProxyHandle> {
   if (opts.authToken !== undefined && !/^[A-Za-z0-9_-]{32,}$/.test(opts.authToken)) {
     throw new ConfigError("proxy auth token is invalid");
   }
+  if (opts.expectedModel !== undefined && (typeof opts.expectedModel !== "string" || opts.expectedModel.length === 0 || /[\s\x00-\x1f\x7f]/.test(opts.expectedModel))) {
+    throw new ConfigError("expectedModel must be a nonempty model identity without whitespace or control characters");
+  }
+  if (opts.maxModelRequests !== undefined && (!Number.isSafeInteger(opts.maxModelRequests) || opts.maxModelRequests <= 0)) {
+    throw new ConfigError("maxModelRequests must be a positive safe integer");
+  }
+  let admittedModelRequests = 0;
   let seq = 0;
   const pendingEvents = new Set<Promise<void>>();
   const pendingRequests = new Set<Promise<void>>();
@@ -332,6 +383,25 @@ export async function startProxy(opts: ProxyOptions): Promise<ProxyHandle> {
           await refuse(error.status, error.message);
           return;
         }
+      }
+      if (opts.expectedModel !== undefined && method === "POST" && protocol !== "unknown") {
+        try {
+          routed ??= await modelGuardBody(req, now);
+          if (!matchesExpectedModel(routed.preview, opts.expectedModel)) throw new RoutingRequestError(400, "requested model does not match the exact model guard");
+        } catch (error) {
+          if (!(error instanceof RoutingRequestError)) throw error;
+          await refuse(error.status, error.message);
+          return;
+        }
+      }
+      if (method === "POST" && protocol !== "unknown" && opts.maxModelRequests !== undefined) {
+        if (admittedModelRequests >= opts.maxModelRequests) {
+          await refuse(429, "model request limit reached");
+          return;
+        }
+        // No await between admission and forwarding. Failed upstream requests
+        // retain their slot, including transport errors and provider refusals.
+        admittedModelRequests += 1;
       }
       const requestBody = routed !== undefined || method === "GET" || method === "HEAD" ? undefined : streamRequestBody(req, now);
       const headers = upstreamHeaders(req.headers, opts.upstreamApiKey);

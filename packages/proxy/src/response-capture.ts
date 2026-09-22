@@ -1,5 +1,5 @@
 import type { Protocol } from "@aob/contracts";
-import { extractUsage, peekServedModel, ResponseUsageAccumulator, type ResponseMetadata } from "./usage.js";
+import { ResponseUsageAccumulator, type ResponseMetadata } from "./usage.js";
 
 const MAX_CAPTURE_BYTES = 2 * 1024 * 1024;
 
@@ -9,8 +9,6 @@ const MAX_CAPTURE_BYTES = 2 * 1024 * 1024;
  * after its event is consumed, and these buffers never control passthrough.
  */
 export class ResponseMetadataCapture {
-  private readonly protocol: Protocol;
-  private readonly contentType: string | undefined;
   private readonly streamed: boolean;
   private readonly accumulator: ResponseUsageAccumulator;
   private buffer = Buffer.alloc(0);
@@ -23,10 +21,8 @@ export class ResponseMetadataCapture {
   private firstLine = true;
 
   constructor(protocol: Protocol, contentType: string | undefined) {
-    this.protocol = protocol;
-    this.contentType = contentType;
     this.streamed = (contentType ?? "").includes("event-stream");
-    this.accumulator = new ResponseUsageAccumulator(protocol);
+    this.accumulator = new ResponseUsageAccumulator(protocol, this.streamed);
   }
 
   push(chunk: Buffer): void {
@@ -62,7 +58,8 @@ export class ResponseMetadataCapture {
       const body = this.buffer.subarray(0, this.retained);
       this.buffer = Buffer.alloc(0);
       this.retained = 0;
-      return { ...extractUsage(this.protocol, body, this.contentType), model_served: peekServedModel(body) };
+      this.accumulator.consume(body.toString("utf8"));
+      return this.accumulator.result();
     }
     if (this.lineBytes > 0) this.endLine();
     this.endEvent();
@@ -91,6 +88,7 @@ export class ResponseMetadataCapture {
     this.retained = 0;
     this.data = [];
     this.accumulator.invalidateUsage();
+    this.accumulator.invalidateModel();
   }
 
   private endLine(): void {

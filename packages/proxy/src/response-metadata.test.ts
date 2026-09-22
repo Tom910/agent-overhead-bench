@@ -107,3 +107,12 @@ describe("bounded response metadata on the live proxy path", () => {
     expect(event.model_served).toBe("responses-served");
   });
 });
+
+describe("provider identity on real proxy HTTP streams", () => {
+  it.each([undefined, "different-model"])("does not inherit an early Responses model when terminal is %j", async model => {
+    const event = await recordResponse(sse({ type: "response.created", response: { model: "gpt-6-luna" } }) + sse({ type: "response.completed", response: { model, usage: { input_tokens: 20, output_tokens: 5 } } }), "/v1/responses");
+    expect(event.model_served).toBeNull();
+    expect(event.usage).toEqual({ input: 20, cached_input: 0, output: 5, reasoning_output: 0 });
+    expect(event.model_requested).toBe("requested-model");
+  });
+});

@@ -286,3 +286,13 @@ describe("complete request model metadata", () => {
     expect(peekModel(Buffer.from('{"model":"over-limit"}'), 8)).toBeNull();
   });
 });
+
+describe("whole-body served-model consistency", () => {
+  it("requires terminal identity in Responses SSE and rejects conflicts in JSON or SSE", () => {
+    expect(peekServedModel(Buffer.from('{"model":"first","response":{"model":"second"}}'))).toBeNull();
+    expect(peekServedModel(sseFromPayloads([{ type: "response.created", response: { model: "first" } }, { type: "response.completed", response: { model: "second" } }]))).toBeNull();
+    expect(peekServedModel(sseFromPayloads([{ type: "response.created", response: { model: "first" } }, { type: "response.completed", response: {} }]))).toBeNull();
+    expect(peekServedModel(sseFromPayloads([{ type: "response.created", response: { model: "first" } }, "[DONE]"]))).toBeNull();
+    expect(peekServedModel(sseFromPayloads([{ type: "response.created", response: { model: "first" } }, { type: "response.completed", response: { model: "first" } }]))).toBe("first");
+  });
+});

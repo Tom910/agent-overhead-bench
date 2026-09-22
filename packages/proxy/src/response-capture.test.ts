@@ -54,3 +54,53 @@ describe("incremental SSE response capture", () => {
     expect(capture.finish().usage).toEqual({ input: 20, cached_input: 0, output: 5, reasoning_output: 0 });
   });
 });
+
+const responseUsage = { input_tokens: 20, output_tokens: 5, input_tokens_details: { cached_tokens: 8 }, output_tokens_details: { reasoning_tokens: 2 } };
+const expectedUsage = { input: 20, cached_input: 8, output: 5, reasoning_output: 2 };
+const event = (value: unknown) => `data: ${JSON.stringify(value)}\n\n`;
+
+describe("served-model evidence cannot inherit contradictory or unfinished identity", () => {
+  it.each(["response.completed", "response.incomplete"])("keeps matching %s identity and independent token counters", type => {
+    const capture = new ResponseMetadataCapture("openai_responses", "text/event-stream");
+    capture.push(Buffer.from(event({ type: "response.created", response: { model: "gpt-6-luna" } }) + event({ type, response: { model: "gpt-6-luna", usage: responseUsage } })));
+    expect(capture.finish()).toMatchObject({ model_served: "gpt-6-luna", usage: expectedUsage });
+  });
+
+  it.each([undefined, null, "", "   ", 123, {}, "different-model"])("rejects terminal Responses model %j without losing token counts", model => {
+    const capture = new ResponseMetadataCapture("openai_responses", "text/event-stream");
+    capture.push(Buffer.from(event({ type: "response.created", response: { model: "gpt-6-luna" } }) + event({ type: "response.completed", model: "gpt-6-luna", response: { model, usage: responseUsage } })));
+    expect(capture.finish()).toMatchObject({ model_served: null, usage: expectedUsage });
+  });
+
+  it("does not infer Responses completion from creation, usage or DONE", () => {
+    const capture = new ResponseMetadataCapture("openai_responses", "text/event-stream");
+    capture.push(Buffer.from(event({ type: "response.created", response: { model: "gpt-6-luna", usage: responseUsage } }) + "data: [DONE]\n\n"));
+    expect(capture.finish()).toMatchObject({ model_served: null, usage: expectedUsage });
+  });
+
+  it("keeps a contradiction unknown even after a later matching terminal", () => {
+    const capture = new ResponseMetadataCapture("openai_responses", "text/event-stream");
+    capture.push(Buffer.from(event({ type: "response.created", response: { model: "gpt-6-luna" } }) + event({ type: "response.in_progress", response: { model: "different-model" } }) + event({ type: "response.completed", response: { model: "gpt-6-luna", usage: responseUsage } })));
+    expect(capture.finish()).toMatchObject({ model_served: null, usage: expectedUsage });
+  });
+
+  it("preserves Chat model across usage-only final chunks but rejects contradictions", () => {
+    for (const conflict of [false, true]) {
+      const capture = new ResponseMetadataCapture("openai_chat", "text/event-stream");
+      capture.push(Buffer.from(event({ model: "gpt-6-luna", choices: [] }) + (conflict ? event({ model: "different-model", choices: [] }) : "") + event({ usage: { prompt_tokens: 20, completion_tokens: 5 } }) + "data: [DONE]\n\n"));
+      expect(capture.finish()).toMatchObject({ model_served: conflict ? null : "gpt-6-luna", usage: { input: 20, output: 5 } });
+    }
+  });
+
+  it("preserves Messages model across usage-only deltas and message_stop", () => {
+    const capture = new ResponseMetadataCapture("anthropic_messages", "text/event-stream");
+    capture.push(Buffer.from(event({ type: "message_start", message: { model: "served-messages", usage: { input_tokens: 20, output_tokens: 0 } } }) + event({ type: "message_delta", usage: { output_tokens: 5 } }) + event({ type: "message_stop" })));
+    expect(capture.finish()).toMatchObject({ model_served: "served-messages", usage: { input: 20, output: 5 } });
+  });
+
+  it("rejects contradictory whole-body identity while retaining usage", () => {
+    const capture = new ResponseMetadataCapture("openai_responses", "application/json");
+    capture.push(Buffer.from(JSON.stringify({ model: "gpt-6-luna", response: { model: "different-model", usage: responseUsage } })));
+    expect(capture.finish()).toMatchObject({ model_served: null, usage: expectedUsage });
+  });
+});
