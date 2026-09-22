@@ -46,6 +46,7 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
+| [S7-task-quality-audit-2026-09-21.md](./S7-task-quality-audit-2026-09-21.md) | Audit complete: three contract ambiguities and one storage failure; existing outcomes preserved |
 | [S6-interactive-pages-plan.md](./S6-interactive-pages-plan.md) | Complete: interactive results published to GitHub Pages; live desktop/mobile interactions and downloads verified |
 | [S6-task-and-benchmark-cost-plan.md](./S6-task-and-benchmark-cost-plan.md) | Implemented: task repetition averages and full selected benchmark totals; known lower bounds disclosed |
 | [S7-four-usage-replacements-plan.md](./S7-four-usage-replacements-plan.md) | Complete: four validated replacements published; originals retained and all 200 selected measurements complete |
