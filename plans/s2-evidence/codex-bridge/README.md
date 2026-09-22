@@ -35,7 +35,7 @@ separate questions. See [feasibility](../../S2-gpt-6-luna-subscription-feasibili
 | Tool inventory | Default executor can inject an image tool; setup must disable injection and effective body must be checked |
 | Credential isolation | Offline private setup uses synthetic fixtures; real account onboarding remains unperformed |
 | Exact model restriction | OAuth config has exclusion lists, not a positive allowlist. Existing C1 body guard and upstream identity checks are mandatory before collection |
-| Native five-client execution | Pending actual pinned Linux images, two tool turns and captured final upstream request per harness |
+| Native five-client execution | All five pinned Linux clients passed a real tool call/result roundtrip with two synthetic requests; direct bridge route, no C1 or OAuth |
 | Account Luna access / allowance | Unverified; offline tests cannot establish either |
 
 ## Measurement boundary
@@ -65,3 +65,10 @@ Codex credential opt-in suppresses hidden 401 replay at effective retry zero.
 Missing model identity and the other gates above remain unresolved.
 
 The upstream MIT license is retained in [UPSTREAM-LICENSE](UPSTREAM-LICENSE).
+
+[Native smoke evidence](native-smoke/review.md) records all five verified client
+versions and exact image/binary identities. These are fake-provider engineering
+checks, not model results. The checked-in fake backend is the exact tested
+fixture; run it only inside an isolated private scratch mount (`/fixture`).
+It writes raw request bodies to that mount and must not write to the checkout.
+Host-specific orchestration and full native prompts remain private.

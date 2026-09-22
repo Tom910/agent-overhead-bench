@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "evidence_type": "offline-native-client-protocol-smoke",
+  "host": "linux",
+  "date": "2026-09-22",
+  "model": "gpt-6-luna",
+  "upstream": "local-scripted-responses",
+  "auth_mode": "synthetic-codex-api-key",
+  "oauth_verified": false,
+  "account_access_verified": false,
+  "allowance_consumed": false,
+  "campaign_measurement": false,
+  "c1_meter_in_route": false,
+  "bridge_source_commit": "2430354330af80b645f9ffb1a51e1e7c72c4cc8e",
+  "required_patch_sha256": "6a17e7ad40cff90e5b26722c13fdaea3255346d73a3d7966ec4af0014c54dc88",
+  "bridge_binary_sha256": "2ee81414cdf11e7c5b473c5d36c31a4e0f09671c90fa8e70efe900b9848bdab0",
+  "network_internal": true,
+  "ports_published": false,
+  "host_credentials_mounted": false,
+  "fixture_sha256": "ecb6609566ff4603c392add67e57527f71b16232931ee4e49150b92cc6f9ba6a",
+  "initial_correction": {
+    "harness": "cline",
+    "cause": "fake upstream did not recognize native run_commands tool",
+    "status": "fixture-corrected",
+    "initial_fake_requests": 1,
+    "initial_native_exit": 1,
+    "original_retained": true
+  },
+  "clients": [
+    {
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "image_id": "sha256:c974e2019c177d644123a467dc84ecb20dbc4d217592fc17cebb18d912ade2b9",
+      "exit": 0,
+      "timeout": false,
+      "marker": "aob-native-codex-ok",
+      "tool_result_observed": true,
+      "request_count": 2,
+      "requested_model": "gpt-6-luna",
+      "effective_reasoning": {
+        "effort": "high",
+        "summary": "auto"
+      },
+      "effective_parallel_tool_calls": true,
+      "tool_name": "exec_command",
+      "required_argument_fields": [
+        "cmd"
+      ],
+      "provided_argument_shapes": {
+        "cmd": "string",
+        "workdir": "string",
+        "yield_time_ms": "number"
+      },
+      "call_id": "call_fixture_codex",
+      "native_usage": {
+        "input_tokens": 200,
+        "cached_input_tokens": 80,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 60,
+        "reasoning_output_tokens": 20
+      },
+      "supplied_usage_total": {
+        "input": 200,
+        "cached_input": 80,
+        "output": 60,
+        "reasoning_output": 20
+      },
+      "request_evidence_sha256": [
+        "df183af4d546c437bbfceaf8ca114ebb814330b988594f92bb8f89a0aff421a8",
+        "d6bffc453a29ee0ac1985b6d9e74aa8b2ce6dd92e66e3fddfbb6e8d902f39721"
+      ]
+    },
+    {
+      "harness": "pi",
+      "version": "0.73.1",
+      "image_id": "sha256:ede90cfe64edb0b33c1d24591c778f11e44a7f3e8de75571e729f53a4d77eedb",
+      "exit": 0,
+      "timeout": false,
+      "marker": "aob-native-pi-ok",
+      "tool_result_observed": true,
+      "request_count": 2,
+      "requested_model": "gpt-6-luna",
+      "effective_reasoning": {
+        "effort": "medium"
+      },
+      "effective_parallel_tool_calls": true,
+      "tool_name": "bash",
+      "required_argument_fields": [
+        "command"
+      ],
+      "provided_argument_shapes": {
+        "command": "string"
+      },
+      "call_id": "call_fixture_pi",
+      "native_usage": {
+        "per_response": [
+          {
+            "input": 60,
+            "output": 30,
+            "cacheRead": 40,
+            "cacheWrite": 0,
+            "totalTokens": 130
+          },
+          {
+            "input": 60,
+            "output": 30,
+            "cacheRead": 40,
+            "cacheWrite": 0,
+            "totalTokens": 130
+          }
+        ],
+        "input_counter_semantics": "input excludes cacheRead; add those for total input"
+      },
+      "supplied_usage_total": {
+        "input": 200,
+        "cached_input": 80,
+        "output": 60,
+        "reasoning_output": 20
+      },
+      "request_evidence_sha256": [
+        "babfbd3a6ff6518a8975dc3e13ac053eace590fe0c02b9158470da160a549bfe",
+        "f8e8b6493ed16ee9186875f755314e772c6caa807777ad6980ad39e2489e76dd"
+      ]
+    },
+    {
+      "harness": "qwen",
+      "version": "0.22.2",
+      "image_id": "sha256:33400257b23ffb806719e590eb574def61393870ba25342f259f71507fe1c28f",
+      "exit": 0,
+      "timeout": false,
+      "marker": "aob-native-qwen-ok",
+      "tool_result_observed": true,
+      "request_count": 2,
+      "requested_model": "gpt-6-luna",
+      "effective_reasoning": {
+        "effort": "medium"
+      },
+      "effective_parallel_tool_calls": true,
+      "tool_name": "run_shell_command",
+      "required_argument_fields": [
+        "command"
+      ],
+      "provided_argument_shapes": {
+        "command": "string",
+        "is_background": "boolean",
+        "description": "string"
+      },
+      "call_id": "call_fixture_qwen",
+      "native_usage": {
+        "usage": {
+          "input_tokens": 200,
+          "output_tokens": 60,
+          "cache_read_input_tokens": 80,
+          "total_tokens": 260
+        },
+        "model_tokens": {
+          "prompt": 200,
+          "candidates": 60,
+          "total": 260,
+          "cached": 80,
+          "thoughts": 20
+        }
+      },
+      "supplied_usage_total": {
+        "input": 200,
+        "cached_input": 80,
+        "output": 60,
+        "reasoning_output": 20
+      },
+      "request_evidence_sha256": [
+        "6791f0e981fa580c767ab67e93066633b7b507481b7d9218b98a2be7178b49df",
+        "b9dd41c78bc8e67859de1342a4ff97dadfb7ff5c0f3ccda677d6b89262231905"
+      ]
+    },
+    {
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "image_id": "sha256:6eafe5b6443647ca8bca1d65bb7d833f6f271438cf257858c8165e7d4f8b92a1",
+      "exit": 0,
+      "timeout": false,
+      "marker": "aob-native-hermes-ok",
+      "tool_result_observed": true,
+      "request_count": 2,
+      "requested_model": "gpt-6-luna",
+      "effective_reasoning": {
+        "effort": "medium"
+      },
+      "effective_parallel_tool_calls": true,
+      "tool_name": "terminal",
+      "required_argument_fields": [
+        "command"
+      ],
+      "provided_argument_shapes": {
+        "command": "string",
+        "workdir": "string"
+      },
+      "call_id": "call_fixture_hermes",
+      "native_usage": null,
+      "supplied_usage_total": {
+        "input": 200,
+        "cached_input": 80,
+        "output": 60,
+        "reasoning_output": 20
+      },
+      "request_evidence_sha256": [
+        "d44ec5a6954243a3d85f4639c2d9c2aa2dedd42426f29d9eb1d4e7a6baa80180",
+        "c82693d2e34a039334bc497189779529bf825288aa993408dc8a1281d2007bed"
+      ]
+    },
+    {
+      "harness": "cline",
+      "version": "3.0.61",
+      "image_id": "sha256:9a2412fa4cf07df961ccb31304cf351aae24ff9336fe7bea7591915f57b30c8e",
+      "exit": 0,
+      "timeout": false,
+      "marker": "aob-native-cline-ok",
+      "tool_result_observed": true,
+      "request_count": 2,
+      "requested_model": "gpt-6-luna",
+      "effective_reasoning": {
+        "effort": "medium"
+      },
+      "effective_parallel_tool_calls": true,
+      "tool_name": "run_commands",
+      "required_argument_fields": [
+        "commands"
+      ],
+      "provided_argument_shapes": {
+        "commands": "array"
+      },
+      "call_id": "call_fixture_cline",
+      "native_usage": {
+        "inputTokens": 200,
+        "outputTokens": 60,
+        "cacheReadTokens": 80,
+        "cacheWriteTokens": 0
+      },
+      "supplied_usage_total": {
+        "input": 200,
+        "cached_input": 80,
+        "output": 60,
+        "reasoning_output": 20
+      },
+      "request_evidence_sha256": [
+        "3b36fb7ddc9770474751c56d1163452c421f37202c933404752264931780c942",
+        "f5a1ef73f769b162031def9b16e9fcce58a505efd64828f1f8d3a3677ebc3144"
+      ]
+    }
+  ]
+}

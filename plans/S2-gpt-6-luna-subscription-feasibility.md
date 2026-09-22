@@ -17,8 +17,8 @@ The earlier official-documentation-only review was insufficient: lack of a
 publicly documented subscription API does not establish technical infeasibility.
 This finding supersedes that conclusion. Open-source implementation support,
 OpenAI's documented product support, account entitlement and tested benchmark
-compatibility remain separate evidence. No live account access or all-five
-runtime success is claimed.
+compatibility remain separate evidence. All five pinned clients subsequently passed a basic Linux tool-call smoke
+through a local fake API-key backend. No live OAuth/account access is claimed.
 
 Sources: [routes](https://github.com/router-for-me/CLIProxyAPI/blob/2430354330af80b645f9ffb1a51e1e7c72c4cc8e/internal/api/server_routes.go),
 [executor](https://github.com/router-for-me/CLIProxyAPI/blob/2430354330af80b645f9ffb1a51e1e7c72c4cc8e/internal/runtime/executor/codex_executor_execute.go),
@@ -78,5 +78,6 @@ error; that configuration was left unchanged. Stale local model caches do not
 prove entitlement or denial. No inference, credential copying or quota
 consumption has occurred during this review.
 
-Status: **concrete open-source route identified; offline qualification in
-progress; live account and all-five execution remain unverified.**
+Status: **private setup implemented; all-five native tool loops passed offline.
+Live OAuth/account access, C1 route accounting and matched reasoning remain
+unqualified.** See [native evidence](s2-evidence/codex-bridge/native-smoke/review.md).

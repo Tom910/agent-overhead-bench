@@ -118,8 +118,9 @@ Use the pinned upstream source plus reviewed local qualification patches. The
 preparation helper does not download, build, patch or start it. Remaining gates:
 
 1. Verify actual account access to exact `gpt-6-luna` and refresh ownership.
-2. Run minimal actual native tool-call smokes for all five harnesses through the
-   same Linux route; mocked translators alone do not establish client support.
+2. The [offline native smoke](../plans/s2-evidence/codex-bridge/native-smoke/review.md)
+   passed for all five pinned Linux clients using a fake API-key backend. Qualify
+   the C1-metered OAuth route and bounded live behavior after account access is established.
 3. Verify provider model identity, every actual request attempt, input/output/cache
    counters, failure handling and the reasoning/tool condition through the bridge.
 4. Record the bridge build, configuration and transport overhead in collection
@@ -133,3 +134,8 @@ DeepSeek results and completed Linux attempts are unchanged.
 See [the S2 preparation plan](../plans/S2-codex-bridge-preparation-plan.md) for the
 stage boundary and qualification work. No existing benchmark profile is enabled
 by this helper.
+
+Offline validation also confirmed different effective reasoning: Codex high, the
+four Chat clients medium. The current bridge loses encrypted reasoning history
+on Chat routes. Resolve or explicitly define these conditions before collecting
+a model-controlled comparison.
