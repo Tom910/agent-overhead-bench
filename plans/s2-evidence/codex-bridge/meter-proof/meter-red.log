@@ -1,0 +1,92 @@
+--- FAIL: TestAOBMeterNoNetworkRoutesOAuthThroughLoopback (0.00s)
+    --- FAIL: TestAOBMeterNoNetworkRoutesOAuthThroughLoopback/false (0.00s)
+        aob_meter_test.go:33: meter not selected; calls=1
+    --- FAIL: TestAOBMeterNoNetworkRoutesOAuthThroughLoopback/true (0.00s)
+        aob_meter_test.go:33: meter not selected; calls=1
+--- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending (0.00s)
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/0/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/0/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/1/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/1/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/2/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/2/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/3/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/3/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/4/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/4/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/5/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/5/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/6/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/6/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/7/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/7/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/8/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/8/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/9/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/9/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/10/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/10/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/11/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/11/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/12/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/12/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/13/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/13/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/14/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/14/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/15/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/15/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/16/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/16/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/17/false (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsInvalidBeforeSending/17/true (0.00s)
+        aob_meter_test.go:39: invalid metering configuration must reject before any request: err=<nil> requests=1
+--- FAIL: TestAOBMeterNoNetworkRejectsMissingCapabilityAndAPIKey (0.00s)
+    --- FAIL: TestAOBMeterNoNetworkRejectsMissingCapabilityAndAPIKey/header/false (0.00s)
+        aob_meter_test.go:41: expected fail-closed rejection; err=<nil> calls=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsMissingCapabilityAndAPIKey/header/true (0.00s)
+        aob_meter_test.go:41: expected fail-closed rejection; err=<nil> calls=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsMissingCapabilityAndAPIKey/api-key/false (0.00s)
+        aob_meter_test.go:41: expected fail-closed rejection; err=<nil> calls=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsMissingCapabilityAndAPIKey/api-key/true (0.00s)
+        aob_meter_test.go:41: expected fail-closed rejection; err=<nil> calls=1
+    --- FAIL: TestAOBMeterNoNetworkRejectsMissingCapabilityAndAPIKey/compact/false (0.00s)
+        aob_meter_test.go:41: expected fail-closed rejection; err=<nil> calls=1
+FAIL
+FAIL	github.com/router-for-me/CLIProxyAPI/v7/internal/runtime/executor	0.018s
+FAIL

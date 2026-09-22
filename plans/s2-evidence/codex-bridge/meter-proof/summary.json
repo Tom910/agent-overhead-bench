@@ -1,0 +1,639 @@
+{
+  "kind": "offline-synthetic-oauth-bridge-c1-backend",
+  "real_account_verified": false,
+  "network": "Docker --network none; all service endpoints loopback",
+  "outcomes": [
+    {
+      "case": "normal-chat",
+      "client_status": 200,
+      "actual_backend_attempts": 1
+    },
+    {
+      "case": "normal-chat-nonstream",
+      "client_status": 200,
+      "actual_backend_attempts": 1
+    },
+    {
+      "case": "normal-responses",
+      "client_status": 200,
+      "actual_backend_attempts": 1
+    },
+    {
+      "case": "normal-responses-nonstream",
+      "client_status": 200,
+      "actual_backend_attempts": 1
+    },
+    {
+      "case": "terminal-mismatch",
+      "client_status": 200,
+      "actual_backend_attempts": 1
+    },
+    {
+      "case": "terminal-missing",
+      "client_status": 200,
+      "actual_backend_attempts": 1
+    },
+    {
+      "case": "requested-wrong",
+      "client_status": 400,
+      "actual_backend_attempts": 0
+    },
+    {
+      "case": "unauthorized",
+      "client_status": 401,
+      "actual_backend_attempts": 1
+    }
+  ],
+  "backend": [
+    {
+      "case": "normal-chat",
+      "path": "/responses",
+      "authorization_matches": true,
+      "account_matches": true,
+      "capability_stripped": true,
+      "model": "gpt-6-luna",
+      "reasoning": {
+        "effort": "low",
+        "summary": "auto"
+      },
+      "parallel": true,
+      "store": false,
+      "input_types": [
+        "message",
+        "function_call",
+        "function_call_output",
+        "message"
+      ],
+      "tool_calls": [
+        {
+          "name": "probe",
+          "call_id": "call_fixture",
+          "arguments": "{}"
+        }
+      ],
+      "tool_results": [
+        {
+          "call_id": "call_fixture",
+          "output": "synthetic-result"
+        }
+      ],
+      "has_previous_response_id": false,
+      "has_conversation": false
+    },
+    {
+      "case": "normal-chat-nonstream",
+      "path": "/responses",
+      "authorization_matches": true,
+      "account_matches": true,
+      "capability_stripped": true,
+      "model": "gpt-6-luna",
+      "reasoning": {
+        "effort": "low",
+        "summary": "auto"
+      },
+      "parallel": true,
+      "store": false,
+      "input_types": [
+        "message",
+        "function_call",
+        "function_call_output",
+        "message"
+      ],
+      "tool_calls": [
+        {
+          "name": "probe",
+          "call_id": "call_fixture",
+          "arguments": "{}"
+        }
+      ],
+      "tool_results": [
+        {
+          "call_id": "call_fixture",
+          "output": "synthetic-result"
+        }
+      ],
+      "has_previous_response_id": false,
+      "has_conversation": false
+    },
+    {
+      "case": "normal-responses",
+      "path": "/responses",
+      "authorization_matches": true,
+      "account_matches": true,
+      "capability_stripped": true,
+      "model": "gpt-6-luna",
+      "reasoning": {
+        "effort": "low"
+      },
+      "parallel": true,
+      "store": false,
+      "input_types": [
+        "message",
+        "function_call",
+        "function_call_output",
+        "message"
+      ],
+      "tool_calls": [
+        {
+          "name": "probe",
+          "call_id": "call_fixture",
+          "arguments": "{}"
+        }
+      ],
+      "tool_results": [
+        {
+          "call_id": "call_fixture",
+          "output": "synthetic-result"
+        }
+      ],
+      "has_previous_response_id": false,
+      "has_conversation": false
+    },
+    {
+      "case": "normal-responses-nonstream",
+      "path": "/responses",
+      "authorization_matches": true,
+      "account_matches": true,
+      "capability_stripped": true,
+      "model": "gpt-6-luna",
+      "reasoning": {
+        "effort": "low"
+      },
+      "parallel": true,
+      "store": false,
+      "input_types": [
+        "message",
+        "function_call",
+        "function_call_output",
+        "message"
+      ],
+      "tool_calls": [
+        {
+          "name": "probe",
+          "call_id": "call_fixture",
+          "arguments": "{}"
+        }
+      ],
+      "tool_results": [
+        {
+          "call_id": "call_fixture",
+          "output": "synthetic-result"
+        }
+      ],
+      "has_previous_response_id": false,
+      "has_conversation": false
+    },
+    {
+      "case": "terminal-mismatch",
+      "path": "/responses",
+      "authorization_matches": true,
+      "account_matches": true,
+      "capability_stripped": true,
+      "model": "gpt-6-luna",
+      "reasoning": {
+        "effort": "low",
+        "summary": "auto"
+      },
+      "parallel": true,
+      "store": false,
+      "input_types": [
+        "message",
+        "function_call",
+        "function_call_output",
+        "message"
+      ],
+      "tool_calls": [
+        {
+          "name": "probe",
+          "call_id": "call_fixture",
+          "arguments": "{}"
+        }
+      ],
+      "tool_results": [
+        {
+          "call_id": "call_fixture",
+          "output": "synthetic-result"
+        }
+      ],
+      "has_previous_response_id": false,
+      "has_conversation": false
+    },
+    {
+      "case": "terminal-missing",
+      "path": "/responses",
+      "authorization_matches": true,
+      "account_matches": true,
+      "capability_stripped": true,
+      "model": "gpt-6-luna",
+      "reasoning": {
+        "effort": "low"
+      },
+      "parallel": true,
+      "store": false,
+      "input_types": [
+        "message",
+        "function_call",
+        "function_call_output",
+        "message"
+      ],
+      "tool_calls": [
+        {
+          "name": "probe",
+          "call_id": "call_fixture",
+          "arguments": "{}"
+        }
+      ],
+      "tool_results": [
+        {
+          "call_id": "call_fixture",
+          "output": "synthetic-result"
+        }
+      ],
+      "has_previous_response_id": false,
+      "has_conversation": false
+    },
+    {
+      "case": "unauthorized",
+      "path": "/responses",
+      "authorization_matches": true,
+      "account_matches": true,
+      "capability_stripped": true,
+      "model": "gpt-6-luna",
+      "reasoning": {
+        "effort": "low"
+      },
+      "parallel": true,
+      "store": false,
+      "input_types": [
+        "message",
+        "function_call",
+        "function_call_output",
+        "message"
+      ],
+      "tool_calls": [
+        {
+          "name": "probe",
+          "call_id": "call_fixture",
+          "arguments": "{}"
+        }
+      ],
+      "tool_results": [
+        {
+          "call_id": "call_fixture",
+          "output": "synthetic-result"
+        }
+      ],
+      "has_previous_response_id": false,
+      "has_conversation": false
+    }
+  ],
+  "c1": [
+    {
+      "seq": 0,
+      "path": "/responses",
+      "status": 200,
+      "model_requested": "gpt-6-luna",
+      "model_served": "gpt-6-luna",
+      "usage": {
+        "input": 100,
+        "cached_input": 40,
+        "output": 30,
+        "reasoning_output": 10
+      },
+      "error": null
+    },
+    {
+      "seq": 1,
+      "path": "/responses",
+      "status": 200,
+      "model_requested": "gpt-6-luna",
+      "model_served": "gpt-6-luna",
+      "usage": {
+        "input": 100,
+        "cached_input": 40,
+        "output": 30,
+        "reasoning_output": 10
+      },
+      "error": null
+    },
+    {
+      "seq": 2,
+      "path": "/responses",
+      "status": 200,
+      "model_requested": "gpt-6-luna",
+      "model_served": "gpt-6-luna",
+      "usage": {
+        "input": 100,
+        "cached_input": 40,
+        "output": 30,
+        "reasoning_output": 10
+      },
+      "error": null
+    },
+    {
+      "seq": 3,
+      "path": "/responses",
+      "status": 200,
+      "model_requested": "gpt-6-luna",
+      "model_served": "gpt-6-luna",
+      "usage": {
+        "input": 100,
+        "cached_input": 40,
+        "output": 30,
+        "reasoning_output": 10
+      },
+      "error": null
+    },
+    {
+      "seq": 4,
+      "path": "/responses",
+      "status": 200,
+      "model_requested": "gpt-6-luna",
+      "model_served": null,
+      "usage": {
+        "input": 100,
+        "cached_input": 40,
+        "output": 30,
+        "reasoning_output": 10
+      },
+      "error": null
+    },
+    {
+      "seq": 5,
+      "path": "/responses",
+      "status": 200,
+      "model_requested": "gpt-6-luna",
+      "model_served": null,
+      "usage": {
+        "input": 100,
+        "cached_input": 40,
+        "output": 30,
+        "reasoning_output": 10
+      },
+      "error": null
+    },
+    {
+      "seq": 6,
+      "path": "/responses",
+      "status": 400,
+      "model_requested": null,
+      "model_served": null,
+      "usage": null,
+      "error": {
+        "kind": "proxy_refused",
+        "detail": "requested model does not match the exact model guard"
+      }
+    },
+    {
+      "seq": 7,
+      "path": "/responses",
+      "status": 401,
+      "model_requested": "gpt-6-luna",
+      "model_served": null,
+      "usage": null,
+      "error": {
+        "kind": "upstream_http",
+        "detail": "status 401"
+      }
+    }
+  ],
+  "conditions": [
+    {
+      "status": "captured",
+      "parameters": {
+        "reasoning.effort": "low"
+      },
+      "omitted": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "seed",
+        "max_tokens",
+        "max_completion_tokens",
+        "max_output_tokens",
+        "frequency_penalty",
+        "presence_penalty",
+        "reasoning.max_tokens",
+        "thinking.budget_tokens",
+        "reasoning_effort",
+        "thinking.type",
+        "output_config.effort",
+        "cache_control.type",
+        "cache_control.ttl",
+        "prompt_cache_retention",
+        "reasoning.enabled",
+        "reasoning.exclude",
+        "provider.allow_fallbacks",
+        "provider.require_parameters",
+        "provider.only",
+        "provider.ignore",
+        "provider.order"
+      ],
+      "invalid": []
+    },
+    {
+      "status": "captured",
+      "parameters": {
+        "reasoning.effort": "low"
+      },
+      "omitted": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "seed",
+        "max_tokens",
+        "max_completion_tokens",
+        "max_output_tokens",
+        "frequency_penalty",
+        "presence_penalty",
+        "reasoning.max_tokens",
+        "thinking.budget_tokens",
+        "reasoning_effort",
+        "thinking.type",
+        "output_config.effort",
+        "cache_control.type",
+        "cache_control.ttl",
+        "prompt_cache_retention",
+        "reasoning.enabled",
+        "reasoning.exclude",
+        "provider.allow_fallbacks",
+        "provider.require_parameters",
+        "provider.only",
+        "provider.ignore",
+        "provider.order"
+      ],
+      "invalid": []
+    },
+    {
+      "status": "captured",
+      "parameters": {
+        "reasoning.effort": "low"
+      },
+      "omitted": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "seed",
+        "max_tokens",
+        "max_completion_tokens",
+        "max_output_tokens",
+        "frequency_penalty",
+        "presence_penalty",
+        "reasoning.max_tokens",
+        "thinking.budget_tokens",
+        "reasoning_effort",
+        "thinking.type",
+        "output_config.effort",
+        "cache_control.type",
+        "cache_control.ttl",
+        "prompt_cache_retention",
+        "reasoning.enabled",
+        "reasoning.exclude",
+        "provider.allow_fallbacks",
+        "provider.require_parameters",
+        "provider.only",
+        "provider.ignore",
+        "provider.order"
+      ],
+      "invalid": []
+    },
+    {
+      "status": "captured",
+      "parameters": {
+        "reasoning.effort": "low"
+      },
+      "omitted": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "seed",
+        "max_tokens",
+        "max_completion_tokens",
+        "max_output_tokens",
+        "frequency_penalty",
+        "presence_penalty",
+        "reasoning.max_tokens",
+        "thinking.budget_tokens",
+        "reasoning_effort",
+        "thinking.type",
+        "output_config.effort",
+        "cache_control.type",
+        "cache_control.ttl",
+        "prompt_cache_retention",
+        "reasoning.enabled",
+        "reasoning.exclude",
+        "provider.allow_fallbacks",
+        "provider.require_parameters",
+        "provider.only",
+        "provider.ignore",
+        "provider.order"
+      ],
+      "invalid": []
+    },
+    {
+      "status": "captured",
+      "parameters": {
+        "reasoning.effort": "low"
+      },
+      "omitted": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "seed",
+        "max_tokens",
+        "max_completion_tokens",
+        "max_output_tokens",
+        "frequency_penalty",
+        "presence_penalty",
+        "reasoning.max_tokens",
+        "thinking.budget_tokens",
+        "reasoning_effort",
+        "thinking.type",
+        "output_config.effort",
+        "cache_control.type",
+        "cache_control.ttl",
+        "prompt_cache_retention",
+        "reasoning.enabled",
+        "reasoning.exclude",
+        "provider.allow_fallbacks",
+        "provider.require_parameters",
+        "provider.only",
+        "provider.ignore",
+        "provider.order"
+      ],
+      "invalid": []
+    },
+    {
+      "status": "captured",
+      "parameters": {
+        "reasoning.effort": "low"
+      },
+      "omitted": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "seed",
+        "max_tokens",
+        "max_completion_tokens",
+        "max_output_tokens",
+        "frequency_penalty",
+        "presence_penalty",
+        "reasoning.max_tokens",
+        "thinking.budget_tokens",
+        "reasoning_effort",
+        "thinking.type",
+        "output_config.effort",
+        "cache_control.type",
+        "cache_control.ttl",
+        "prompt_cache_retention",
+        "reasoning.enabled",
+        "reasoning.exclude",
+        "provider.allow_fallbacks",
+        "provider.require_parameters",
+        "provider.only",
+        "provider.ignore",
+        "provider.order"
+      ],
+      "invalid": []
+    },
+    {
+      "status": "unavailable",
+      "parameters": {},
+      "omitted": [],
+      "invalid": []
+    },
+    {
+      "status": "captured",
+      "parameters": {
+        "reasoning.effort": "low"
+      },
+      "omitted": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "seed",
+        "max_tokens",
+        "max_completion_tokens",
+        "max_output_tokens",
+        "frequency_penalty",
+        "presence_penalty",
+        "reasoning.max_tokens",
+        "thinking.budget_tokens",
+        "reasoning_effort",
+        "thinking.type",
+        "output_config.effort",
+        "cache_control.type",
+        "cache_control.ttl",
+        "prompt_cache_retention",
+        "reasoning.enabled",
+        "reasoning.exclude",
+        "provider.allow_fallbacks",
+        "provider.require_parameters",
+        "provider.only",
+        "provider.ignore",
+        "provider.order"
+      ],
+      "invalid": []
+    }
+  ]
+}
