@@ -150,6 +150,12 @@ provider boundary, not inferred from the native client's configuration. The
 generated policy must be verified on actual requests from all five clients;
 configuration alone does not establish tool continuity or model neutrality.
 
+The current qualifier also requests `Accept-Encoding: identity` at the provider
+gate. It records only allowlisted response content-type and content-encoding
+classifications, with `absent` or `other` for unmatched values; raw headers are
+not retained in this diagnostic evidence. This transport condition is recorded
+alongside the reasoning policy.
+
 ## Before any measured run
 
 Use the pinned upstream source plus reviewed local qualification patches. The
@@ -207,7 +213,23 @@ itself prove how that binary was built.
 
 ## Run the bounded qualifier
 
-**Live qualification is pending.** The reusable
+**Live qualification has started; complete accounting remains unverified.** The
+first Codex attempt completed its native write/read tool loop and exited with
+code 0 after two HTTP 200 provider requests for `gpt-6-luna`. Its original C1
+events recorded unknown served identity and unknown usage, so the slot remains
+failed for qualification. The immutable
+[initial evidence](../plans/s2-evidence/codex-bridge/live-qualification/initial-codex/state.json)
+preserves that distinction.
+
+Codex separately reported 15,620 input tokens, 6,656 cached input tokens, 65 output
+tokens and 0 reasoning output tokens. These are
+[native counters](../plans/s2-evidence/codex-bridge/live-qualification/initial-codex/native-usage-corroboration.json),
+not verified provider accounting, and never replace the missing C1 quantities.
+The S1 parser now detects streamed response framing when MIME headers are missing
+or varied. Offline tests verify that correction; the exact cause of the original
+live accounting gap remains unconfirmed. Codex will not be rerun to repair it.
+
+The reusable
 [qualifier](../scripts/s2-codex-bridge-qualify.mjs) first supports a zero-spend
 mock run through the actual native clients, bridge, controlled policy and C1
 meter. Run it on the designated Linux collection host with repository dependencies
@@ -254,6 +276,45 @@ run without an automatic replacement or fallback. Reusing the same output resume
 only slots that have never started; completed or interrupted slots are not rerun,
 and a halted run stays halted. Investigate retained locks or failures before any
 new allowance-bearing action.
+
+### Continue the stopped Codex-only attempt
+
+The narrowly scoped `--continue-evidence` option reserves the original two Codex
+requests and permits only Pi, Qwen, Hermes and Cline, with at most two requests
+each. It requires the stopped live Codex-only state, no active source lock, the
+exact pinned image and bridge binary, matching original C1 and observation hashes,
+two successful Responses requests with unknown served identity and usage, and
+the successful native side effect and returned tool output. Contradictions,
+provider denials, extra attempts or missing evidence reject admission.
+
+First obtain a fresh all-five mock pass for the current implementation and exact
+binary. Then point to the original private live state, using a new private output:
+
+```sh
+node scripts/s2-codex-bridge-qualify.mjs \
+  --mode live \
+  --bridge "$aob_bridge_build/cli-proxy-api" \
+  --output /absolute/private/path/to/luna-continuation \
+  --auth-file /absolute/private/path/to/codex/auth.json \
+  --mock-evidence /absolute/private/path/to/current-luna-mock/state.json \
+  --continue-evidence /absolute/private/path/to/first-live/state.json
+```
+
+Before launching a client, admission creates an exclusive `continuation-claim.json`
+beside the original state and copies the unchanged state, C1 events and observations
+into `carried-codex/` under the destination. Directories remain 0700 and copied
+files 0600. The private claim binds the source and destination to the evidence,
+binary, implementation and mock-proof hashes. A different destination cannot
+reuse it; a copy failure retains the claim. Resume uses only the already persisted
+destination state and never reruns Codex or resets its two-request reservation.
+The public receipt contains hashes and the two-reserved/eight-remaining budget,
+without private paths.
+
+Continuation does not upgrade Codex's failed slot or make unknown usage zero.
+The final summary separates functional transport across five clients from
+complete provider accounting. The remaining four live results are pending here;
+this exception does not authorize rerunning completed attempts or admit a
+benchmark campaign.
 
 The runner keeps C1 events, condition observations and private diagnostics beside
 `state.json`, removes temporary snapshot bundles during normal cleanup, and does
