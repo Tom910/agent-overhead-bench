@@ -8,6 +8,10 @@ import { ConfigError } from "@aob/contracts";
 import { replayAnalysis } from "./analysis-replay.js";
 import { benchmarkTotalNote, overviewMarkdown, renderAnalysisHtml, renderAnalysisMarkdown } from "./analysis-render.js";
 import { comparisonGroups, referenceCost, REFERENCE_BOOK } from "./comparison-overview.js";
+import { assessComparisonConditions } from "./comparison-conditions.js";
+import { validateTaskAudit } from "./task-audit.js";
+import { CONFIDENCE_METHOD, pairwiseConfidence } from "./comparison-confidence.js";
+import { comparisonMarkdown, confidenceTable, evidenceHtml, type ComparisonEvidence } from "./comparison-report.js";
 
 const DATASET = /^linux-results-\d{4}-\d{2}-\d{2}(?:-r[1-9]\d*)?$/;
 const START = "<!-- CURRENT-CAMPAIGN:START -->";
@@ -65,6 +69,39 @@ export function publishCurrentCampaign(root: string, check = false): void {
   const groups = comparisonGroups(data);
   requireValid(groups.length === 1 && groups[0]!.rates !== null, "one reference-price comparison group required");
   const group = groups[0]!;
+  const evidence: ComparisonEvidence = { conditions: null, audit: null, conditions_dataset: null, audit_dataset: null };
+  const evidenceHashes: Record<string, string> = {};
+  for (const [key, filename, pattern] of [
+    ["conditions_dataset", "conditions.json", /^linux-conditions-\d{4}-\d{2}-\d{2}$/],
+    ["audit_dataset", "audit.json", /^task-verification-\d{4}-\d{2}-\d{2}$/],
+  ] as const) {
+    const dataset = pointer[key];
+    if (dataset === undefined) continue;
+    requireValid(typeof dataset === "string" && pattern.test(dataset), `invalid ${key}`);
+    const bytes = readFileSync(join(root, "evidence", dataset, filename));
+    const binding = json(join(root, "evidence", dataset, "provenance.json"));
+    requireValid((binding.artifacts as Record<string, unknown>)?.[filename] === digest(bytes), `${filename} hash mismatch`);
+    const document = json(join(root, "evidence", dataset, filename));
+    requireValid(document.dataset === pointer.dataset && document.analysis_sha256 === digest(source), `${filename} source binding mismatch`);
+    evidence[key] = dataset; evidenceHashes[filename] = digest(bytes);
+    if (key === "conditions_dataset") evidence.conditions = assessComparisonConditions(data.attempts, document);
+    else {
+      requireValid(typeof document.amendment_files === "object" && document.amendment_files !== null, "audit amendment bindings missing");
+      for (const [name, hash] of Object.entries(document.amendment_files)) {
+        requireValid(/^[A-Za-z0-9._-]+$/.test(name) && !name.startsWith("."), "unsafe amendment filename");
+        requireValid(digest(readFileSync(join(root, "task-revisions", dataset.slice("task-verification-".length), name))) === hash, "audit amendment hash mismatch");
+      }
+      const amendment = json(join(root, "task-revisions", dataset.slice("task-verification-".length), "manifest.json"));
+      requireValid(Array.isArray(amendment.tasks), "amendment task bindings missing");
+      const hashes: Record<string, string> = {};
+      for (const task of amendment.tasks) {
+        requireValid(typeof task === "object" && task !== null && typeof task.task === "string" && typeof task.amended_test_patch_sha256 === "string", "invalid amended verifier hash");
+        hashes[task.task] = task.amended_test_patch_sha256;
+      }
+      evidence.audit = validateTaskAudit(data.attempts, document, hashes);
+    }
+  }
+  const pairwise = pairwiseConfidence(data.attempts);
   let replacementNote = "";
   let collectionNote = "All 200 unique slots are from the same Linux host: 104 retained attempts and 96 previously missing slots. Completed attempts were not rerun.";
   if (summary.replacements !== undefined) {
@@ -126,6 +163,10 @@ tasks. **Whole benchmark** sums all 40 runs per harness, including failures.
 Cache and tokens are medians per attempt; input includes cached tokens.
 Costs use shared token-based reference prices, not actual billing.
 
+**Comparison confidence:** eight task clusters; repeated runs are not 40 independent tasks.
+“Best = 100%” describes the observed result, not statistical certainty.
+${evidence.conditions ? "Recorded model/provider facts match, but request settings, enforced resource/network controls and cache policy are incomplete; verifier images differ.\n" : ""}${evidence.audit ? `The [separate verification audit](evidence/${evidence.audit_dataset}/README.md) finds ${evidence.audit.changes.length} Textual false negatives. Original outcomes above remain unchanged.\n` : ""}
+
 [**Explore the interactive website →**](https://tom910.github.io/agent-overhead-bench/) ·
 [Detailed tables](${path}/analysis.md) · [Canonical data](${path}/analysis.json)
 
@@ -167,12 +208,16 @@ ${END}`;
   const readmePath = join(root, "README.md"); const readme = readFileSync(readmePath, "utf8");
   requireValid(readme.split(START).length === 2 && readme.split(END).length === 2 && readme.indexOf(START) < readme.indexOf(END), "exactly one ordered pair of README markers required");
   const updatedReadme = readme.slice(0, readme.indexOf(START)) + block + readme.slice(readme.indexOf(END) + END.length);
-  const markdown = renderAnalysisMarkdown(data); const html = renderAnalysisHtml(data);
-  const updatedProvenance = { ...provenance, artifacts: { ...artifacts, "analysis.md": digest(markdown), "analysis.html": digest(html) } };
+  const markdown = renderAnalysisMarkdown(data) + comparisonMarkdown(data.attempts, evidence);
+  const baseline = [...new Set(data.attempts.map(a => a.harness))].sort().at(-1)!;
+  const html = renderAnalysisHtml(data).replace("</main>", `<section><h2>How convincing are the differences?</h2>${confidenceTable(pairwise, baseline)}<p>${CONFIDENCE_METHOD}</p></section>${evidenceHtml(evidence)}</main>`);
+  const comparison = `${JSON.stringify({ schema_version: 1, dataset: pointer.dataset, analysis_sha256: digest(source), evidence_hashes: evidenceHashes, method: CONFIDENCE_METHOD, pairwise, ...evidence }, null, 2)}\n`;
+  const updatedProvenance = { ...provenance, artifacts: { ...artifacts, "analysis.md": digest(markdown), "analysis.html": digest(html), "comparison.json": digest(comparison) } };
   const outputs = new Map([
-    [join(root, "site/index.html"), renderResultsSite(data, pointer.dataset, new Date(summary.as_of).toISOString(), replacementNote)],
+    [join(root, "site/index.html"), renderResultsSite(data, pointer.dataset, new Date(summary.as_of).toISOString(), replacementNote, evidence)],
     [readmePath, updatedReadme], [join(dir, "analysis.md"), markdown], [join(dir, "analysis.html"), html],
     [join(dir, "provenance.json"), `${JSON.stringify(updatedProvenance, null, 2)}\n`],
+    [join(dir, "comparison.json"), comparison],
   ]);
   if (check) {
     for (const [path, bytes] of outputs) requireValid(existsSync(path) && readFileSync(path, "utf8") === bytes, `stale generated view: ${path}; run npm run report:refresh`);

@@ -1,0 +1,4415 @@
+{
+  "schema_version": 1,
+  "dataset": "linux-results-2026-09-19-r1",
+  "analysis_sha256": "sha256:c13a8cf19cd07da3c4de9b88f79b849d316fac5722cf867ac783c7f0f292ef36",
+  "origin": "Allowlisted extraction from each selected original C4 run.json; each raw hash matched the canonical export. Unknown controls were not reconstructed from current source code.",
+  "notes": [
+    "Exact sampling, reasoning and output settings were not retained per request. The model ID alone does not prove equivalent requests.",
+    "C4 records declare disabled task network access; actual Docker egress enforcement was not attested per historical run.",
+    "CPU, memory, storage and process limits were not recorded as enforced limits. Host RAM is not a per-container memory limit.",
+    "Provider-side cache state and reset policy were not controlled or recorded. Observed cache tokens remain valid usage measurements.",
+    "Harness-specific tools, system prompts and context management remain native harness behavior. They are not normalized away."
+  ],
+  "attempts": [
+    {
+      "run_id": "pinned:cline:cattrs-partial-structuring-recovery:0:linux-only-20260918",
+      "run_sha256": "sha256:90410ef2a29915631570b8940828c89a443d5d35291d298ae85305fec6212eb3",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:47d0e86cf5a5df29a798a5eb0614017f52e470bd6c2b6f7bc2ceff2dbcbdd441",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:cattrs-partial-structuring-recovery:1:infra-recovery-20260914",
+      "run_sha256": "sha256:9cf4389b704b1cb3f45b8a9b368cd5a1ea5dc810d6aa75eed1a9113b41b96b23",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:053018054fd52c0789db580c081ba7dc072bfceed9a4bebcd588281133f10d92",
+      "verifier_image": "sha256:a8c03de04a7b0d8162d83465a98ab9ef392dfe986a460d5c7e463ce1f0937aa3",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:cattrs-partial-structuring-recovery:2:independent-linux-20260913",
+      "run_sha256": "sha256:c02d962105d1ebb6f76fbeaa7939c70fa6de18e29395d3687bb22891d54dc719",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:053018054fd52c0789db580c081ba7dc072bfceed9a4bebcd588281133f10d92",
+      "verifier_image": "sha256:a8c03de04a7b0d8162d83465a98ab9ef392dfe986a460d5c7e463ce1f0937aa3",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:cattrs-partial-structuring-recovery:3:independent-linux-20260913",
+      "run_sha256": "sha256:e7a063ee0e7745faf3629474fb8f59f6e291fdf55b7c2a2b30af60f046625f55",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:053018054fd52c0789db580c081ba7dc072bfceed9a4bebcd588281133f10d92",
+      "verifier_image": "sha256:a8c03de04a7b0d8162d83465a98ab9ef392dfe986a460d5c7e463ce1f0937aa3",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:cattrs-partial-structuring-recovery:4:independent-linux-variable-20260913",
+      "run_sha256": "sha256:c35579f2a5d3fe1327cb7cc4684d9a8d5700a4f994ac304da75d95d95f508911",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:053018054fd52c0789db580c081ba7dc072bfceed9a4bebcd588281133f10d92",
+      "verifier_image": "sha256:a8c03de04a7b0d8162d83465a98ab9ef392dfe986a460d5c7e463ce1f0937aa3",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:happy-dom-deterministic-intersectionobserver:0:infra-recovery-20260914",
+      "run_sha256": "sha256:757fb7257005a2fae974391dbadf67103ce73c399eb7a43790dcf959f5154047",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:7418720d4fcfc6691cf10fe5b7df65ff26d92cc9cde453ccc2ec1899f28724af",
+      "verifier_image": "sha256:fa6e7f7d727d5fa5ec3367c5a2043259662d5a6877f49f3c46fd2f1edb181160",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:happy-dom-deterministic-intersectionobserver:1:independent-linux-20260913",
+      "run_sha256": "sha256:d264384942ee9150fdb4e0003b2468e7da3b30e31163eeae2c81d47f13da9422",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:7418720d4fcfc6691cf10fe5b7df65ff26d92cc9cde453ccc2ec1899f28724af",
+      "verifier_image": "sha256:fa6e7f7d727d5fa5ec3367c5a2043259662d5a6877f49f3c46fd2f1edb181160",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:happy-dom-deterministic-intersectionobserver:2:independent-linux-20260913",
+      "run_sha256": "sha256:2e8be0550fc1bb4be099122b9102d4604802ff6b1592b60d1f7676e5ac634645",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:7418720d4fcfc6691cf10fe5b7df65ff26d92cc9cde453ccc2ec1899f28724af",
+      "verifier_image": "sha256:fa6e7f7d727d5fa5ec3367c5a2043259662d5a6877f49f3c46fd2f1edb181160",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:happy-dom-deterministic-intersectionobserver:3:independent-linux-variable-20260913",
+      "run_sha256": "sha256:15517454c0f00e20f87ab82324a20f0b25bcd0c98aebdf0d50e1b861830d3a36",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:7418720d4fcfc6691cf10fe5b7df65ff26d92cc9cde453ccc2ec1899f28724af",
+      "verifier_image": "sha256:fa6e7f7d727d5fa5ec3367c5a2043259662d5a6877f49f3c46fd2f1edb181160",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:happy-dom-deterministic-intersectionobserver:4:independent-linux-variable-20260913",
+      "run_sha256": "sha256:c81f4bf1bee8d5e2949f88b79dc888fc90bb26cbfe86d90bde1db3e4e423d8bc",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:7418720d4fcfc6691cf10fe5b7df65ff26d92cc9cde453ccc2ec1899f28724af",
+      "verifier_image": "sha256:fa6e7f7d727d5fa5ec3367c5a2043259662d5a6877f49f3c46fd2f1edb181160",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:ink-grid-box-layout:0:infra-recovery-20260914",
+      "run_sha256": "sha256:3177003c8e4540684bea55145a9e43aff8a17ff1fb75eed9b56bd026554a2b1d",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:39429e00b4e9072a99d934a178ee92606c92d9219e2fdfbee194989686dce30d",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:ink-grid-box-layout:1:independent-linux-20260913",
+      "run_sha256": "sha256:d98a5fcebb7547616afa4e640d8f6649d21218b8b46dde056a861102e505ece2",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:39429e00b4e9072a99d934a178ee92606c92d9219e2fdfbee194989686dce30d",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:ink-grid-box-layout:2:independent-linux-20260913",
+      "run_sha256": "sha256:9afb89f3eb04378a0538bb6c5234839c6995a1c062613d62969e17b93fbeaeda",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:39429e00b4e9072a99d934a178ee92606c92d9219e2fdfbee194989686dce30d",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:ink-grid-box-layout:3:independent-linux-20260913",
+      "run_sha256": "sha256:af1e6e6cd3fe3f13ac3a77c2b92dc84217259845d5882d5924e66cff69ddb426",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:39429e00b4e9072a99d934a178ee92606c92d9219e2fdfbee194989686dce30d",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:ink-grid-box-layout:4:independent-linux-variable-20260913",
+      "run_sha256": "sha256:968ef176a7e028c77651ec029d2fddae7f21a36e712fd05670eeaf249ee8c0c6",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:39429e00b4e9072a99d934a178ee92606c92d9219e2fdfbee194989686dce30d",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:psd-tools-blend-range-api:0:linux-only-20260918",
+      "run_sha256": "sha256:13adb761aa7502b847bd00d4d7cf73bc0d4503c2c3668ec6f284f3c638da6da5",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:81411f0a9b97402e91fe9087d1792236ce39a4744fc9bc80339db8a5ae4b52a9",
+      "verifier_image": "sha256:0a4bac520618fd86c8a29b2fb482def495827fb8a951f497b4e2a6166e4e3fd9",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:psd-tools-blend-range-api:1:infra-recovery-20260914",
+      "run_sha256": "sha256:880dcf6523d16883eb587a3d8cd7fa0ce336c1c2e08a4a39326a66933996325c",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:5d50c7265ef7ac707664810b419b05845b3d67020802c2ad0b26c58e2a39bb05",
+      "verifier_image": "sha256:529c5d6b0b6781fc7767d390c82bd94edc9935cb30d04a304f292dfaf4780a32",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:psd-tools-blend-range-api:2:independent-linux-20260913",
+      "run_sha256": "sha256:00ebb3d872fd08678be6675316edec33ef009c2fbf19a50b62e5d8905910523f",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:5d50c7265ef7ac707664810b419b05845b3d67020802c2ad0b26c58e2a39bb05",
+      "verifier_image": "sha256:529c5d6b0b6781fc7767d390c82bd94edc9935cb30d04a304f292dfaf4780a32",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:psd-tools-blend-range-api:3:independent-linux-20260913",
+      "run_sha256": "sha256:2a30ca955a00e650b7294b5771d94e5bb6bb9b3947d421f5d5cb4e817294bdd7",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:5d50c7265ef7ac707664810b419b05845b3d67020802c2ad0b26c58e2a39bb05",
+      "verifier_image": "sha256:529c5d6b0b6781fc7767d390c82bd94edc9935cb30d04a304f292dfaf4780a32",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:psd-tools-blend-range-api:4:infra-recovery-20260914",
+      "run_sha256": "sha256:f35705a9691d8819052c9186b9be80f84fcd69f2c0d04079ec035fbecdbf40db",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:5d50c7265ef7ac707664810b419b05845b3d67020802c2ad0b26c58e2a39bb05",
+      "verifier_image": "sha256:529c5d6b0b6781fc7767d390c82bd94edc9935cb30d04a304f292dfaf4780a32",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:superjson-error-stack-serialization:0:final-recovery-20260914",
+      "run_sha256": "sha256:064131de401dd7c78b12e54c03ccc235efabf20a9449c68cbc07bcf5462fe97a",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:2cd104b82d0370c3d0143e9cdb9b0c6c17e7375fe1f8491e2af9ddf73bcdc71f",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:superjson-error-stack-serialization:1:independent-linux-20260913",
+      "run_sha256": "sha256:2ac99b27b19027574aecf2493e4a2b87145050a0ebfc123620151046fbc08ca3",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:2cd104b82d0370c3d0143e9cdb9b0c6c17e7375fe1f8491e2af9ddf73bcdc71f",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:superjson-error-stack-serialization:2:independent-linux-20260913",
+      "run_sha256": "sha256:c1e98692c2d3634a2441601b042d82dd2865db2966966a9ef4b1fbd82a24af10",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:2cd104b82d0370c3d0143e9cdb9b0c6c17e7375fe1f8491e2af9ddf73bcdc71f",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:superjson-error-stack-serialization:3:independent-linux-variable-20260913",
+      "run_sha256": "sha256:a6fe6526b1b10ab7a885d97e49af3eedd84a2e5908a6f741697962c6f99e10ee",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:2cd104b82d0370c3d0143e9cdb9b0c6c17e7375fe1f8491e2af9ddf73bcdc71f",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:superjson-error-stack-serialization:4:independent-linux-variable-20260913",
+      "run_sha256": "sha256:309665e3775d1b74336e41ce63c63652e5b2858b9ceb94f2e6a05dc4ac938619",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:2cd104b82d0370c3d0143e9cdb9b0c6c17e7375fe1f8491e2af9ddf73bcdc71f",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:textual-richlog-follow-state:0:infra-recovery-20260914",
+      "run_sha256": "sha256:348ef7385711670fd2799c531db5eeefe7dfae0a8d0baf39b365da9377deab13",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:44a4a301f50c107b4fee7c4bc6319b5c44b0a85687da637e37873e523d892ce7",
+      "verifier_image": "sha256:5b0166c0ee50a230850e78d5550fe32442834eb63599802d0a99faff0ba9af87",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:textual-richlog-follow-state:1:funded-recovery-20260914",
+      "run_sha256": "sha256:cc7bc915c115b72ecbd284253338c359b73e3223ecb2c3f2b08e43ee32ca0c45",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:44a4a301f50c107b4fee7c4bc6319b5c44b0a85687da637e37873e523d892ce7",
+      "verifier_image": "sha256:5b0166c0ee50a230850e78d5550fe32442834eb63599802d0a99faff0ba9af87",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:textual-richlog-follow-state:2:independent-linux-20260913",
+      "run_sha256": "sha256:178210cc3966ac6636626fdc5a9b6b882172d99be0936d530c136a84cab5123e",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:44a4a301f50c107b4fee7c4bc6319b5c44b0a85687da637e37873e523d892ce7",
+      "verifier_image": "sha256:5b0166c0ee50a230850e78d5550fe32442834eb63599802d0a99faff0ba9af87",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:textual-richlog-follow-state:3:independent-linux-20260913",
+      "run_sha256": "sha256:e128d28b31700ee3a1872bcab44a4aca7ea63a5b65ed708dc451586a4ab4e884",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:44a4a301f50c107b4fee7c4bc6319b5c44b0a85687da637e37873e523d892ce7",
+      "verifier_image": "sha256:5b0166c0ee50a230850e78d5550fe32442834eb63599802d0a99faff0ba9af87",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:textual-richlog-follow-state:4:independent-linux-variable-20260913",
+      "run_sha256": "sha256:60b8bddb8e6c7e85fc56c341dc5eacdf90081a29de23b295a53dfd72deac73ba",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:44a4a301f50c107b4fee7c4bc6319b5c44b0a85687da637e37873e523d892ce7",
+      "verifier_image": "sha256:5b0166c0ee50a230850e78d5550fe32442834eb63599802d0a99faff0ba9af87",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:tomlkit-toml-table-converters:0:four-dollar-20260914",
+      "run_sha256": "sha256:d754c058a56471c177ee691f22d8da7d60265d76a35f7c66815fda05960a9789",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:5f0ee313ce42017d4c0bf5e8b96c193b0559d0673a755b75d8d390978cec6e63",
+      "verifier_image": "sha256:86a7f7545adc060de810c3aceb9356f3048262a6e0f046d863cc114bdd98dcd3",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:tomlkit-toml-table-converters:1:independent-linux-20260913",
+      "run_sha256": "sha256:af74b6125cf77a612226e96647465255bb59d8e3244a24ecf4bd737abe87d80c",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:5f0ee313ce42017d4c0bf5e8b96c193b0559d0673a755b75d8d390978cec6e63",
+      "verifier_image": "sha256:86a7f7545adc060de810c3aceb9356f3048262a6e0f046d863cc114bdd98dcd3",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:tomlkit-toml-table-converters:2:independent-linux-20260913",
+      "run_sha256": "sha256:b8edac5c9407ebc47d35bfdf3de65b8b64dc4e41f39a4e4c920b219b0cf5a00c",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:5f0ee313ce42017d4c0bf5e8b96c193b0559d0673a755b75d8d390978cec6e63",
+      "verifier_image": "sha256:86a7f7545adc060de810c3aceb9356f3048262a6e0f046d863cc114bdd98dcd3",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:tomlkit-toml-table-converters:3:independent-linux-20260913",
+      "run_sha256": "sha256:fe41863b8348b9718320b35b908a282286cba1924e1d7a3579088d20c7977691",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:5f0ee313ce42017d4c0bf5e8b96c193b0559d0673a755b75d8d390978cec6e63",
+      "verifier_image": "sha256:86a7f7545adc060de810c3aceb9356f3048262a6e0f046d863cc114bdd98dcd3",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:tomlkit-toml-table-converters:4:independent-linux-variable-20260913",
+      "run_sha256": "sha256:38733c3da00d274b389e84c8cf61ba57c47477876f5691f8fe9dc712eb7d221e",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:5f0ee313ce42017d4c0bf5e8b96c193b0559d0673a755b75d8d390978cec6e63",
+      "verifier_image": "sha256:86a7f7545adc060de810c3aceb9356f3048262a6e0f046d863cc114bdd98dcd3",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:true-myth-iterable-collection-combinators:0:infra-recovery-20260914",
+      "run_sha256": "sha256:c3fcf2d098b7ec29a8f35c4d7ef9ea76c39b5983a503c79dbaacd0649273a3e0",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:9b3240f66b026157d464703265feab96196ed488f963120552344425d28ffac1",
+      "verifier_image": "sha256:2d5b99141677ea769219ab882b11fa652f51f525c5960ce80e49cb7dee26a79d",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:true-myth-iterable-collection-combinators:1:independent-linux-20260913",
+      "run_sha256": "sha256:56e07273bbba412cdf23b2185205e1f43393c91db5d740014e79b6276dec48af",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:9b3240f66b026157d464703265feab96196ed488f963120552344425d28ffac1",
+      "verifier_image": "sha256:2d5b99141677ea769219ab882b11fa652f51f525c5960ce80e49cb7dee26a79d",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:true-myth-iterable-collection-combinators:2:independent-linux-20260913",
+      "run_sha256": "sha256:f28f3fe6cbec1e02c6e6f9ec2d2cc1f766606ca4a20d2668eb98cbbf857a6eb2",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:9b3240f66b026157d464703265feab96196ed488f963120552344425d28ffac1",
+      "verifier_image": "sha256:2d5b99141677ea769219ab882b11fa652f51f525c5960ce80e49cb7dee26a79d",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:true-myth-iterable-collection-combinators:3:independent-linux-variable-20260913",
+      "run_sha256": "sha256:39ff5967755249c5d07a095b45e45ab93a7f38890db78b95d71641c06fe87f50",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:9b3240f66b026157d464703265feab96196ed488f963120552344425d28ffac1",
+      "verifier_image": "sha256:2d5b99141677ea769219ab882b11fa652f51f525c5960ce80e49cb7dee26a79d",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:cline:true-myth-iterable-collection-combinators:4:independent-linux-variable-20260913",
+      "run_sha256": "sha256:ea39238a7504923864308d3250b9eaf0892414e1835f3260194d40603eee03e7",
+      "harness": "cline",
+      "version": "3.0.61",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:9b3240f66b026157d464703265feab96196ed488f963120552344425d28ffac1",
+      "verifier_image": "sha256:2d5b99141677ea769219ab882b11fa652f51f525c5960ce80e49cb7dee26a79d",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:cattrs-partial-structuring-recovery:0:linux-only-20260918",
+      "run_sha256": "sha256:7698641fbf7d46e35865c8d59f09c086c7672ce3fbd83cefa589769e416ab17b",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:8855a196cd0850f8797b1eedc90ffb91877385e89e30318843c5146b57beff17",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:cattrs-partial-structuring-recovery:1:linux-only-20260918",
+      "run_sha256": "sha256:fb965e4f4fcf511acb6440a71a3426bfab5e814c8d79529edab228bd4bf50dcd",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:8855a196cd0850f8797b1eedc90ffb91877385e89e30318843c5146b57beff17",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:cattrs-partial-structuring-recovery:2:linux-only-20260918",
+      "run_sha256": "sha256:d7169b07127453b8b5658dbb793209e3295c660780bc9b918bc2e250e642bd11",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:8855a196cd0850f8797b1eedc90ffb91877385e89e30318843c5146b57beff17",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:cattrs-partial-structuring-recovery:3:linux-only-20260918",
+      "run_sha256": "sha256:f2282d44f15c9767bc2de68d5f35d48f619ff1d4fc54e8935b72ca5df665fe08",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:8855a196cd0850f8797b1eedc90ffb91877385e89e30318843c5146b57beff17",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:cattrs-partial-structuring-recovery:4:linux-only-20260918",
+      "run_sha256": "sha256:1e03e3d22bf5af6a0dc0b7e8a98b913bed15ad89a03bca1af62777eb918b5ee0",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:8855a196cd0850f8797b1eedc90ffb91877385e89e30318843c5146b57beff17",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:happy-dom-deterministic-intersectionobserver:0:linux-only-20260918",
+      "run_sha256": "sha256:b81f0e517d20537735c8143db1b50c352f99cde3fa913ec349f42da045b4abb2",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a2329c4ba3fcc9f845fc0ba56568b54d9699e5c81c5857dbf0cee11cdb3f1013",
+      "verifier_image": "sha256:3d414d710d8e31ae0fcf9d23c863bbc395835fc8ea49acd0c0567e10838564c5",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:happy-dom-deterministic-intersectionobserver:1:linux-only-20260918",
+      "run_sha256": "sha256:fa64d3f4c30b54b9244e2ec1f7a823eb994a6f71b4de50a74dbf0d8306484421",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a2329c4ba3fcc9f845fc0ba56568b54d9699e5c81c5857dbf0cee11cdb3f1013",
+      "verifier_image": "sha256:3d414d710d8e31ae0fcf9d23c863bbc395835fc8ea49acd0c0567e10838564c5",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:happy-dom-deterministic-intersectionobserver:2:linux-only-20260918",
+      "run_sha256": "sha256:c40fd3a580c53d32eb0cb35a7070637e42f7c0d63f7146c09e329bbaf411448c",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a2329c4ba3fcc9f845fc0ba56568b54d9699e5c81c5857dbf0cee11cdb3f1013",
+      "verifier_image": "sha256:3d414d710d8e31ae0fcf9d23c863bbc395835fc8ea49acd0c0567e10838564c5",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:happy-dom-deterministic-intersectionobserver:3:linux-only-20260918",
+      "run_sha256": "sha256:f6bcde6be488d80fea1841acad703790cf9132976aaedfdd66044b7dd0fac2b2",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a2329c4ba3fcc9f845fc0ba56568b54d9699e5c81c5857dbf0cee11cdb3f1013",
+      "verifier_image": "sha256:3d414d710d8e31ae0fcf9d23c863bbc395835fc8ea49acd0c0567e10838564c5",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:happy-dom-deterministic-intersectionobserver:4:linux-only-20260918",
+      "run_sha256": "sha256:0259b6e34ba35d328f5defbff0fcdc2d8c847abad87290eece1d7c3ab840d754",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a2329c4ba3fcc9f845fc0ba56568b54d9699e5c81c5857dbf0cee11cdb3f1013",
+      "verifier_image": "sha256:3d414d710d8e31ae0fcf9d23c863bbc395835fc8ea49acd0c0567e10838564c5",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:ink-grid-box-layout:0:linux-only-20260918",
+      "run_sha256": "sha256:c8f7722f3053dd914a9a5c045a898510385c7f84b3613c19927a21bc523b2c7d",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a5dbaa77f9ee8d72deb242703097b7ade3f802f05ac60294a1ac1333a5d5a704",
+      "verifier_image": "sha256:fbbb3a767c310003a279e0900aa0847e0bb78db90d726621d3be8286c16a9db1",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:ink-grid-box-layout:1:linux-only-20260918",
+      "run_sha256": "sha256:7dadeb34f2890f98a276ab41a71c781113a5c1d077f199180f8fdc5fc5e98903",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a5dbaa77f9ee8d72deb242703097b7ade3f802f05ac60294a1ac1333a5d5a704",
+      "verifier_image": "sha256:fbbb3a767c310003a279e0900aa0847e0bb78db90d726621d3be8286c16a9db1",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:ink-grid-box-layout:2:linux-only-20260918",
+      "run_sha256": "sha256:88882829a2a570fdd3759c19ed59fdfdf50a2722c29c17b8d6064727d9ef46d9",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a5dbaa77f9ee8d72deb242703097b7ade3f802f05ac60294a1ac1333a5d5a704",
+      "verifier_image": "sha256:fbbb3a767c310003a279e0900aa0847e0bb78db90d726621d3be8286c16a9db1",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:ink-grid-box-layout:3:linux-only-20260918",
+      "run_sha256": "sha256:73a4f89fbdc637bd3484c7512b3108de77ce12fcbc7875350b7b190e6946b62f",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a5dbaa77f9ee8d72deb242703097b7ade3f802f05ac60294a1ac1333a5d5a704",
+      "verifier_image": "sha256:fbbb3a767c310003a279e0900aa0847e0bb78db90d726621d3be8286c16a9db1",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:ink-grid-box-layout:4:linux-only-20260918",
+      "run_sha256": "sha256:d24f35ab4f87f9b4972d42354f364be696e3137aea820e42decf4036c9422782",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a5dbaa77f9ee8d72deb242703097b7ade3f802f05ac60294a1ac1333a5d5a704",
+      "verifier_image": "sha256:fbbb3a767c310003a279e0900aa0847e0bb78db90d726621d3be8286c16a9db1",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:psd-tools-blend-range-api:0:linux-only-20260918",
+      "run_sha256": "sha256:ed2204ef3342919f01eb424970766e8161c8110b7ac3ec95d41e1b123ce9003d",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:98a4da2a33592ef2a797a0a7afd5cc346e9dd8ffc88b038bdb7e143dc7adf0c1",
+      "verifier_image": "sha256:0a4bac520618fd86c8a29b2fb482def495827fb8a951f497b4e2a6166e4e3fd9",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:psd-tools-blend-range-api:1:linux-only-20260918",
+      "run_sha256": "sha256:f5744ca8f59752b1748b579388c905553f867ba427d355cb572070dbeae64f30",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:98a4da2a33592ef2a797a0a7afd5cc346e9dd8ffc88b038bdb7e143dc7adf0c1",
+      "verifier_image": "sha256:0a4bac520618fd86c8a29b2fb482def495827fb8a951f497b4e2a6166e4e3fd9",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:psd-tools-blend-range-api:2:linux-only-20260918",
+      "run_sha256": "sha256:7a5b1d16f895da2634e2157d95618d3d64cc54216f9020ee09b9f26d2d1fa97e",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:98a4da2a33592ef2a797a0a7afd5cc346e9dd8ffc88b038bdb7e143dc7adf0c1",
+      "verifier_image": "sha256:0a4bac520618fd86c8a29b2fb482def495827fb8a951f497b4e2a6166e4e3fd9",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:psd-tools-blend-range-api:3:final-recovery-20260914",
+      "run_sha256": "sha256:05a21ff8e7211f6fe08c038cb340048d1dc98d2c543b215f78c96499f9556f99",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:3b046b997bcf67fb0327ca68c675bdb300fadac42b6c842f49d1671bb17f9375",
+      "verifier_image": "sha256:529c5d6b0b6781fc7767d390c82bd94edc9935cb30d04a304f292dfaf4780a32",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:psd-tools-blend-range-api:4:linux-only-20260918",
+      "run_sha256": "sha256:2f22f1a9cecf8eb993e4b0ad477ce0faf64e0d292d12a2fd720615ba8d2fdfd4",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:98a4da2a33592ef2a797a0a7afd5cc346e9dd8ffc88b038bdb7e143dc7adf0c1",
+      "verifier_image": "sha256:0a4bac520618fd86c8a29b2fb482def495827fb8a951f497b4e2a6166e4e3fd9",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:superjson-error-stack-serialization:0:linux-only-20260918",
+      "run_sha256": "sha256:74ca7b21730982da64ebf94b4c0ad7879a0632c9edf31bd93fcb9672c8e2b5e0",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:c974e2019c177d644123a467dc84ecb20dbc4d217592fc17cebb18d912ade2b9",
+      "verifier_image": "sha256:35885e6968c593c18f1b761ffd32486001e6774b7d5f2847aadff2e994086cd8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:superjson-error-stack-serialization:1:usage-replacements-20260919",
+      "run_sha256": "sha256:4dd287fc59578b0ca56f10761601ab7a9c6ebdbad6c5297dc90a77fb96bb5c61",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:c974e2019c177d644123a467dc84ecb20dbc4d217592fc17cebb18d912ade2b9",
+      "verifier_image": "sha256:35885e6968c593c18f1b761ffd32486001e6774b7d5f2847aadff2e994086cd8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:superjson-error-stack-serialization:2:infra-recovery-20260914",
+      "run_sha256": "sha256:ffd18aef48eb3e2f1f8dd3a710a7717965d0a8a4491d7ffa25a89da454759702",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:d9b90ede414e53432197383205f088ced4a7faa187e69f67bc5783e641e4880a",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:superjson-error-stack-serialization:3:linux-only-20260918",
+      "run_sha256": "sha256:705476161b5d9bfdf1cca402806b6197e798789216d3cd1ffff162580b3dd7c8",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:c974e2019c177d644123a467dc84ecb20dbc4d217592fc17cebb18d912ade2b9",
+      "verifier_image": "sha256:35885e6968c593c18f1b761ffd32486001e6774b7d5f2847aadff2e994086cd8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:superjson-error-stack-serialization:4:linux-only-20260918",
+      "run_sha256": "sha256:7c650a1eaa6e8eb7e500b4fbcc2a9455f5c91ac151f5a47d24801d388104f06f",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:c974e2019c177d644123a467dc84ecb20dbc4d217592fc17cebb18d912ade2b9",
+      "verifier_image": "sha256:35885e6968c593c18f1b761ffd32486001e6774b7d5f2847aadff2e994086cd8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:textual-richlog-follow-state:0:linux-only-20260918",
+      "run_sha256": "sha256:ea20104d278c2cf2721fdfe7cf4fd0ba18a821822d32ca6df3e244b8547b18d9",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:db4a9ea76e827fbb87d8c40fdc7a08d3f4350804eef1420df61103c5910293c0",
+      "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:textual-richlog-follow-state:1:linux-only-20260918",
+      "run_sha256": "sha256:52dd8e9cec78e0cf8f22dd602c687bdc7e0bd7cec8ab10487873e74b13a5c040",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:db4a9ea76e827fbb87d8c40fdc7a08d3f4350804eef1420df61103c5910293c0",
+      "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:textual-richlog-follow-state:2:linux-only-20260918",
+      "run_sha256": "sha256:25ff3c8d3fc39d3acd0b20b1e47c7607e7368142608d1f311ef5d3275fa37a7e",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:db4a9ea76e827fbb87d8c40fdc7a08d3f4350804eef1420df61103c5910293c0",
+      "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:textual-richlog-follow-state:3:linux-only-20260918",
+      "run_sha256": "sha256:efd104add17cb5fe36d098f8ac4fe4a133b84c978dbf71a43cbe81c040c69db7",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:db4a9ea76e827fbb87d8c40fdc7a08d3f4350804eef1420df61103c5910293c0",
+      "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:textual-richlog-follow-state:4:final-recovery-20260914",
+      "run_sha256": "sha256:429cf97a0192c7c853a4acae2f3af38629c3f41b26e846134c894f96d55eb376",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:126ac6d8490cd2f68eb5ff452465561809fc1d8195481e50657a1a8eafadc0f0",
+      "verifier_image": "sha256:5b0166c0ee50a230850e78d5550fe32442834eb63599802d0a99faff0ba9af87",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:tomlkit-toml-table-converters:0:linux-only-20260918",
+      "run_sha256": "sha256:49d144cd765d31779ffb520470423bd483ecf33a3bf7e7140fbcb1eaae15445b",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:4ba79b3b1259fe21c0429c640c87113c982a612f32c7eeb6040012b14f911341",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:tomlkit-toml-table-converters:1:linux-only-20260918",
+      "run_sha256": "sha256:4656d26e8a5fce02a8f812717938811deb9203b94f2c1a6fc091d122d1d5548f",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:4ba79b3b1259fe21c0429c640c87113c982a612f32c7eeb6040012b14f911341",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:tomlkit-toml-table-converters:2:linux-only-20260918",
+      "run_sha256": "sha256:87175685f2aff8ccbee80ab37733a7529e3949c039457abecbea2851292ee515",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:4ba79b3b1259fe21c0429c640c87113c982a612f32c7eeb6040012b14f911341",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:tomlkit-toml-table-converters:3:linux-only-20260918",
+      "run_sha256": "sha256:bec07c0f01f4e918eff44a9f90af742f60d02bc2dbcb3f045f8758237fd0bb96",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:4ba79b3b1259fe21c0429c640c87113c982a612f32c7eeb6040012b14f911341",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:tomlkit-toml-table-converters:4:linux-only-20260918",
+      "run_sha256": "sha256:dde5c55bbc4ce5fe29851e6f51033381f447649185af86ebe299f6b9731787a9",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:4ba79b3b1259fe21c0429c640c87113c982a612f32c7eeb6040012b14f911341",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:true-myth-iterable-collection-combinators:0:linux-only-20260918",
+      "run_sha256": "sha256:244233eaa9c9bdb5d964ad4ddc85a1ef121dfe3d94490a436945710017d5e38c",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:3baad66359f639597ad1ce2179bccac23f3358567b91c07413b25f85bfc70203",
+      "verifier_image": "sha256:f92488780ccbb58b036e59481045a7b179906646b26f81c26373e46be9217afa",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:true-myth-iterable-collection-combinators:1:linux-only-20260918",
+      "run_sha256": "sha256:811e1df9592173b0ca14b260e227a90f700b31a9128db15bed6bdf3973b908fb",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:3baad66359f639597ad1ce2179bccac23f3358567b91c07413b25f85bfc70203",
+      "verifier_image": "sha256:f92488780ccbb58b036e59481045a7b179906646b26f81c26373e46be9217afa",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:true-myth-iterable-collection-combinators:2:linux-only-20260918",
+      "run_sha256": "sha256:a141b85e1c3b61b269243f7e1956095a497ad304347f20fa6ebed332f74a0f0f",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:3baad66359f639597ad1ce2179bccac23f3358567b91c07413b25f85bfc70203",
+      "verifier_image": "sha256:f92488780ccbb58b036e59481045a7b179906646b26f81c26373e46be9217afa",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:true-myth-iterable-collection-combinators:3:linux-only-20260918",
+      "run_sha256": "sha256:39384cc06258ed06e0f9dd46e2907444738c9e0ddd0fd333b5ec590915eac964",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:3baad66359f639597ad1ce2179bccac23f3358567b91c07413b25f85bfc70203",
+      "verifier_image": "sha256:f92488780ccbb58b036e59481045a7b179906646b26f81c26373e46be9217afa",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:codex:true-myth-iterable-collection-combinators:4:linux-only-20260918",
+      "run_sha256": "sha256:be6eec549ecf5f2e1f2f4a2a0dab9bac646c5fa7b1b870134ddb434fd8f69abe",
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:3baad66359f639597ad1ce2179bccac23f3358567b91c07413b25f85bfc70203",
+      "verifier_image": "sha256:f92488780ccbb58b036e59481045a7b179906646b26f81c26373e46be9217afa",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:cattrs-partial-structuring-recovery:0:hermes-linux-20260915",
+      "run_sha256": "sha256:41a4c28408700b9aebd2f9bbb46bec8b170af9dd7a61a2f2c676a46b2bd50f8a",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:48c703acc757bb29074842b895872ec81d9613042aa65ad5937cf3c6b9df0e40",
+      "verifier_image": "sha256:a8c03de04a7b0d8162d83465a98ab9ef392dfe986a460d5c7e463ce1f0937aa3",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:cattrs-partial-structuring-recovery:1:hermes-linux-20260915",
+      "run_sha256": "sha256:d8f5bd6c0bffeb02c6b61675cd83a6d8a8a827e8c7fe9831e879410c3422ef76",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:48c703acc757bb29074842b895872ec81d9613042aa65ad5937cf3c6b9df0e40",
+      "verifier_image": "sha256:a8c03de04a7b0d8162d83465a98ab9ef392dfe986a460d5c7e463ce1f0937aa3",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:cattrs-partial-structuring-recovery:2:hermes-linux-20260915",
+      "run_sha256": "sha256:351db0ebde9f3a022969986088f38fb064835c975ff52433e7799312d5f04932",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:48c703acc757bb29074842b895872ec81d9613042aa65ad5937cf3c6b9df0e40",
+      "verifier_image": "sha256:a8c03de04a7b0d8162d83465a98ab9ef392dfe986a460d5c7e463ce1f0937aa3",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:cattrs-partial-structuring-recovery:3:hermes-linux-20260915",
+      "run_sha256": "sha256:837c71776372b09c22e7d2bdd9eb2e48ad16b81c839c4db668a5e0c0824eab0d",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:48c703acc757bb29074842b895872ec81d9613042aa65ad5937cf3c6b9df0e40",
+      "verifier_image": "sha256:a8c03de04a7b0d8162d83465a98ab9ef392dfe986a460d5c7e463ce1f0937aa3",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:cattrs-partial-structuring-recovery:4:hermes-linux-20260915",
+      "run_sha256": "sha256:42122e391329414ff7d5df23a462b06ec4965f1bc20e018301e9b8c349e74235",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:48c703acc757bb29074842b895872ec81d9613042aa65ad5937cf3c6b9df0e40",
+      "verifier_image": "sha256:a8c03de04a7b0d8162d83465a98ab9ef392dfe986a460d5c7e463ce1f0937aa3",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:happy-dom-deterministic-intersectionobserver:0:hermes-linux-20260915",
+      "run_sha256": "sha256:0859852f68a5e973c5454e01cedf2d32efafd977859994ea0218afbdf291adf6",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:25671c15c555f09bc5ad3ef8e309e6ba96d2f36795afd7e89192a8a74489b168",
+      "verifier_image": "sha256:fa6e7f7d727d5fa5ec3367c5a2043259662d5a6877f49f3c46fd2f1edb181160",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:happy-dom-deterministic-intersectionobserver:1:hermes-linux-20260915",
+      "run_sha256": "sha256:b98c87497fc8ed936b0f87b894a9ba10af2f5039fc4101a8a5b761fda374d0fd",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:25671c15c555f09bc5ad3ef8e309e6ba96d2f36795afd7e89192a8a74489b168",
+      "verifier_image": "sha256:fa6e7f7d727d5fa5ec3367c5a2043259662d5a6877f49f3c46fd2f1edb181160",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:happy-dom-deterministic-intersectionobserver:2:hermes-linux-20260915",
+      "run_sha256": "sha256:26715b4311c09dfc530965432113cc8727c3b609e67370a5b45de1a7f7d93a46",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:25671c15c555f09bc5ad3ef8e309e6ba96d2f36795afd7e89192a8a74489b168",
+      "verifier_image": "sha256:fa6e7f7d727d5fa5ec3367c5a2043259662d5a6877f49f3c46fd2f1edb181160",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:happy-dom-deterministic-intersectionobserver:3:hermes-linux-20260915",
+      "run_sha256": "sha256:4fdba87189ce4edf62b2c30ee20776382a85e1df066b7e96a97b098ecd8e4a26",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:25671c15c555f09bc5ad3ef8e309e6ba96d2f36795afd7e89192a8a74489b168",
+      "verifier_image": "sha256:fa6e7f7d727d5fa5ec3367c5a2043259662d5a6877f49f3c46fd2f1edb181160",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:happy-dom-deterministic-intersectionobserver:4:hermes-linux-20260915",
+      "run_sha256": "sha256:c64c9616c0a903faa2d716964ed19e4d9fb083f6656a85063ba523e58a31a70d",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:25671c15c555f09bc5ad3ef8e309e6ba96d2f36795afd7e89192a8a74489b168",
+      "verifier_image": "sha256:fa6e7f7d727d5fa5ec3367c5a2043259662d5a6877f49f3c46fd2f1edb181160",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:ink-grid-box-layout:0:hermes-linux-20260915",
+      "run_sha256": "sha256:f2a90fbdfc03d657091c9675c724f5ac2ef023c278f9af84fea61d9d41d33006",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:fc787bfa22c89b64cb95387d524738edc6a8966540cf1be280a9814a354a5ce6",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:ink-grid-box-layout:1:hermes-linux-20260915",
+      "run_sha256": "sha256:55e74f5afff0d93e1e7484d665b5614fd3d6c9aefdab9da50a6f73ce0c76e6aa",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:fc787bfa22c89b64cb95387d524738edc6a8966540cf1be280a9814a354a5ce6",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:ink-grid-box-layout:2:hermes-linux-20260915",
+      "run_sha256": "sha256:0261c4dba6d1e56badd0d2c0bfb733381868c1b866a0fd28878117a10821e47f",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:fc787bfa22c89b64cb95387d524738edc6a8966540cf1be280a9814a354a5ce6",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:ink-grid-box-layout:3:hermes-linux-20260915",
+      "run_sha256": "sha256:331c56d381ff1982ce9d9758038408d45c1ac0b1001de95164577944b1b04794",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:fc787bfa22c89b64cb95387d524738edc6a8966540cf1be280a9814a354a5ce6",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:ink-grid-box-layout:4:hermes-linux-20260915",
+      "run_sha256": "sha256:f5d03884ac67f9e375afad44956a20ac08e063eb4eae0cfbc636a6fc8ff2b101",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:fc787bfa22c89b64cb95387d524738edc6a8966540cf1be280a9814a354a5ce6",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:psd-tools-blend-range-api:0:hermes-linux-20260915",
+      "run_sha256": "sha256:8772013f48b67a7e3c6400f2ccd16140930b651845479d4cb4f74450c6b576aa",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a7882d0eb5d0d948d26e17fc9ddf34f5b31345ccf36935717fc1f332d721e8f8",
+      "verifier_image": "sha256:529c5d6b0b6781fc7767d390c82bd94edc9935cb30d04a304f292dfaf4780a32",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:psd-tools-blend-range-api:1:hermes-linux-20260915",
+      "run_sha256": "sha256:9f102f54f903c7b72c453feb30856904f5c85c3f975ea49c301145fd9d0e3353",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a7882d0eb5d0d948d26e17fc9ddf34f5b31345ccf36935717fc1f332d721e8f8",
+      "verifier_image": "sha256:529c5d6b0b6781fc7767d390c82bd94edc9935cb30d04a304f292dfaf4780a32",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:psd-tools-blend-range-api:2:hermes-linux-20260915",
+      "run_sha256": "sha256:9b95d8ebced7ce3e0313da41d137ede7cab63eda88272b45c95f88136505eba7",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a7882d0eb5d0d948d26e17fc9ddf34f5b31345ccf36935717fc1f332d721e8f8",
+      "verifier_image": "sha256:529c5d6b0b6781fc7767d390c82bd94edc9935cb30d04a304f292dfaf4780a32",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:psd-tools-blend-range-api:3:hermes-linux-20260915",
+      "run_sha256": "sha256:647e3ef84bf9e26c3fe185e0741a837a20aed11979bf18cb9cde3cb560f8b0aa",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a7882d0eb5d0d948d26e17fc9ddf34f5b31345ccf36935717fc1f332d721e8f8",
+      "verifier_image": "sha256:529c5d6b0b6781fc7767d390c82bd94edc9935cb30d04a304f292dfaf4780a32",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:psd-tools-blend-range-api:4:hermes-linux-20260915",
+      "run_sha256": "sha256:76c71d814f24aaa6cc32a8491f25895ece4de6b519cf69f194502f2d8d6edca7",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a7882d0eb5d0d948d26e17fc9ddf34f5b31345ccf36935717fc1f332d721e8f8",
+      "verifier_image": "sha256:529c5d6b0b6781fc7767d390c82bd94edc9935cb30d04a304f292dfaf4780a32",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:superjson-error-stack-serialization:0:hermes-linux-20260915",
+      "run_sha256": "sha256:878895678232274de718b91e6d7d9dad25520852c2ee21849fe5d048cfc9ea04",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:f3f508f9e555033bd1683d26640adc965dc1a3a92366e92b42cc561a56673268",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:superjson-error-stack-serialization:1:hermes-linux-20260915",
+      "run_sha256": "sha256:b893cb26a24317452a9d8d5fe2c4c5a6b25ea47740aa1b5c416946d9cccf6cf4",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:f3f508f9e555033bd1683d26640adc965dc1a3a92366e92b42cc561a56673268",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:superjson-error-stack-serialization:2:hermes-linux-20260915",
+      "run_sha256": "sha256:0a304c5a2c949345fbc4e9cbbed0511df0c78b4f0a7ca133aa4d91d365145663",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:f3f508f9e555033bd1683d26640adc965dc1a3a92366e92b42cc561a56673268",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:superjson-error-stack-serialization:3:hermes-linux-20260915",
+      "run_sha256": "sha256:3e9519626278fa2ef1a69b36c0e028f2c48a0dbef61bf15a828ffe19fafd6696",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:f3f508f9e555033bd1683d26640adc965dc1a3a92366e92b42cc561a56673268",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:superjson-error-stack-serialization:4:hermes-linux-20260915",
+      "run_sha256": "sha256:d11553ff926a91f1f181e3aad94e714075a573c5872dfc4eb2230b48b8fa0267",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:f3f508f9e555033bd1683d26640adc965dc1a3a92366e92b42cc561a56673268",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:textual-richlog-follow-state:0:hermes-linux-20260915",
+      "run_sha256": "sha256:ee784edd4263c7f772952b3de18cdda0170beb0e4dd106ec3d6020bb6ac2548f",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:30cf3a9c8204c42e3a1146ac0fd0ae76a9ba9a3ff83ad17b50336417e4f385ac",
+      "verifier_image": "sha256:5b0166c0ee50a230850e78d5550fe32442834eb63599802d0a99faff0ba9af87",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:textual-richlog-follow-state:1:hermes-linux-20260915",
+      "run_sha256": "sha256:2feb4898e0cd1c47d190fae2a9587ab0f3323907230586f8ff9e423f8d4e8ee5",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:30cf3a9c8204c42e3a1146ac0fd0ae76a9ba9a3ff83ad17b50336417e4f385ac",
+      "verifier_image": "sha256:5b0166c0ee50a230850e78d5550fe32442834eb63599802d0a99faff0ba9af87",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:textual-richlog-follow-state:2:hermes-linux-20260915",
+      "run_sha256": "sha256:0ab6c8786e6cedb32adc7451168e228be0ab0269966f8b4032c8b3f8812e5be2",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:30cf3a9c8204c42e3a1146ac0fd0ae76a9ba9a3ff83ad17b50336417e4f385ac",
+      "verifier_image": "sha256:5b0166c0ee50a230850e78d5550fe32442834eb63599802d0a99faff0ba9af87",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:textual-richlog-follow-state:3:hermes-linux-20260915",
+      "run_sha256": "sha256:3861273c4a2e9244edbc552fe8d93d1b783825ebd7aebb7514a279d9f58b555f",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:30cf3a9c8204c42e3a1146ac0fd0ae76a9ba9a3ff83ad17b50336417e4f385ac",
+      "verifier_image": "sha256:5b0166c0ee50a230850e78d5550fe32442834eb63599802d0a99faff0ba9af87",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:textual-richlog-follow-state:4:usage-replacements-20260919-metadata-fix",
+      "run_sha256": "sha256:e5d1127b9d73620973c63e062913fc6d3bfa8482f0c18bb4f8702ab8bd155b64",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:1cfac7adbcbcd980c24410f91fc4f079f0e1f1f52b10f92ddeecffcc0bfbbb4f",
+      "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:tomlkit-toml-table-converters:0:hermes-linux-20260915",
+      "run_sha256": "sha256:6217a0ee008ae7a1d71c805a69449cbceaebd536676fbe452c68e2a7c8ddc422",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:46616661e9fa79fdb248bd0c664320d00b351ed0fa432590b12b956047d19b5d",
+      "verifier_image": "sha256:86a7f7545adc060de810c3aceb9356f3048262a6e0f046d863cc114bdd98dcd3",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:tomlkit-toml-table-converters:1:hermes-linux-20260915",
+      "run_sha256": "sha256:92bb69b4cac7b22e15e1afac40074591ee3464333a2de1b0551206dd85c7bbf0",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:46616661e9fa79fdb248bd0c664320d00b351ed0fa432590b12b956047d19b5d",
+      "verifier_image": "sha256:86a7f7545adc060de810c3aceb9356f3048262a6e0f046d863cc114bdd98dcd3",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:tomlkit-toml-table-converters:2:hermes-linux-20260915",
+      "run_sha256": "sha256:554ed9b009a37154955a3fb19f6381518ba3652c13e87985375125c619490782",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:46616661e9fa79fdb248bd0c664320d00b351ed0fa432590b12b956047d19b5d",
+      "verifier_image": "sha256:86a7f7545adc060de810c3aceb9356f3048262a6e0f046d863cc114bdd98dcd3",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:tomlkit-toml-table-converters:3:hermes-linux-20260915",
+      "run_sha256": "sha256:db5ecd26d7a88670418b49e8de91b1622c89890bfa19fc8564ee5e782009caa4",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:46616661e9fa79fdb248bd0c664320d00b351ed0fa432590b12b956047d19b5d",
+      "verifier_image": "sha256:86a7f7545adc060de810c3aceb9356f3048262a6e0f046d863cc114bdd98dcd3",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:tomlkit-toml-table-converters:4:usage-replacements-20260919",
+      "run_sha256": "sha256:4fec62ed5500fcee0b9eb6800e1487835407161e39584496988aca57cf8992f2",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:b8a23489dee5d6dc9cfabf3baea29823801447f852e9f49d30381598b4f09c24",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:true-myth-iterable-collection-combinators:0:hermes-linux-20260915",
+      "run_sha256": "sha256:b7b5f25aecbdc742e4ebc4471ac5712c6db18491fc6c2255cf018c97913541da",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:460803895bc58bf9e6d9f28157edf05e48d03927735e675b6413306566031718",
+      "verifier_image": "sha256:2d5b99141677ea769219ab882b11fa652f51f525c5960ce80e49cb7dee26a79d",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:true-myth-iterable-collection-combinators:1:hermes-linux-20260915",
+      "run_sha256": "sha256:da6be3b3a3f2620fca31813ac1e24a3804da570cce9cfbfc56f05cab86a45290",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:460803895bc58bf9e6d9f28157edf05e48d03927735e675b6413306566031718",
+      "verifier_image": "sha256:2d5b99141677ea769219ab882b11fa652f51f525c5960ce80e49cb7dee26a79d",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:true-myth-iterable-collection-combinators:2:hermes-linux-20260915",
+      "run_sha256": "sha256:c95181e3a03ee6937c73f0c0c2247f51dd9cdf80b88487f7e8ae77d5a6d0fedd",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:460803895bc58bf9e6d9f28157edf05e48d03927735e675b6413306566031718",
+      "verifier_image": "sha256:2d5b99141677ea769219ab882b11fa652f51f525c5960ce80e49cb7dee26a79d",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:true-myth-iterable-collection-combinators:3:hermes-linux-20260915",
+      "run_sha256": "sha256:e44d9d2ea1da06c10d34858f46cb2bc0d1b6d5d97d3b2a3bc0e9232e674a5a82",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:460803895bc58bf9e6d9f28157edf05e48d03927735e675b6413306566031718",
+      "verifier_image": "sha256:2d5b99141677ea769219ab882b11fa652f51f525c5960ce80e49cb7dee26a79d",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:hermes:true-myth-iterable-collection-combinators:4:hermes-linux-20260915",
+      "run_sha256": "sha256:bd40fa0acfdbf8bd19be88ca191e31224722eb1327ddec43f5e72f6d76bc57ea",
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:460803895bc58bf9e6d9f28157edf05e48d03927735e675b6413306566031718",
+      "verifier_image": "sha256:2d5b99141677ea769219ab882b11fa652f51f525c5960ce80e49cb7dee26a79d",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:cattrs-partial-structuring-recovery:0:linux-only-20260918",
+      "run_sha256": "sha256:3caeafb40e17dac5b10cf5ee43e1fe3162a0205a35e9c6e2819d37dd24542dbb",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:f7972da831b2e3688846aa60d677fe8505512c5b99c268f1490fed6ad9e6ec24",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:cattrs-partial-structuring-recovery:1:linux-only-20260918",
+      "run_sha256": "sha256:625497a8a18d7f681dd45f07109784dbe57ffc9613de0c92228c7b12c0aa1d74",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:f7972da831b2e3688846aa60d677fe8505512c5b99c268f1490fed6ad9e6ec24",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:cattrs-partial-structuring-recovery:2:linux-only-20260918",
+      "run_sha256": "sha256:a626f37896a609fde1e249a788bfd9eccfe6baefb67203b7a1d99aa5f15762fa",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:f7972da831b2e3688846aa60d677fe8505512c5b99c268f1490fed6ad9e6ec24",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:cattrs-partial-structuring-recovery:3:linux-only-20260918",
+      "run_sha256": "sha256:dfcedde90321325cd29c9f2d712e8e47e164625368c348071164c19be3785163",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:f7972da831b2e3688846aa60d677fe8505512c5b99c268f1490fed6ad9e6ec24",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:cattrs-partial-structuring-recovery:4:linux-only-20260918",
+      "run_sha256": "sha256:9fdad40ce7c8e93a5b9c56fcdb244edcfb28e18b1fa1c4eb7311f3073835ec9c",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:f7972da831b2e3688846aa60d677fe8505512c5b99c268f1490fed6ad9e6ec24",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:happy-dom-deterministic-intersectionobserver:0:linux-only-20260918",
+      "run_sha256": "sha256:c6e0fe5a657a2f8468e4313f9d12c2d90eefe91166d2daee5c37889d7f010d38",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:9cc8925a140f3871b77486844a95339e8fc6b1d7255e26144a4e237065fde151",
+      "verifier_image": "sha256:3d414d710d8e31ae0fcf9d23c863bbc395835fc8ea49acd0c0567e10838564c5",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:happy-dom-deterministic-intersectionobserver:1:linux-only-20260918",
+      "run_sha256": "sha256:245df12ee26fa70266480acdf0bda2d50c02fe5e099aa19fb3e0ae96ab594f68",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:9cc8925a140f3871b77486844a95339e8fc6b1d7255e26144a4e237065fde151",
+      "verifier_image": "sha256:3d414d710d8e31ae0fcf9d23c863bbc395835fc8ea49acd0c0567e10838564c5",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:happy-dom-deterministic-intersectionobserver:2:linux-only-20260918",
+      "run_sha256": "sha256:4d12528b210b2ad00e689c1eff3179125c745778c609784b67a4457dc374dbdc",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:9cc8925a140f3871b77486844a95339e8fc6b1d7255e26144a4e237065fde151",
+      "verifier_image": "sha256:3d414d710d8e31ae0fcf9d23c863bbc395835fc8ea49acd0c0567e10838564c5",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:happy-dom-deterministic-intersectionobserver:3:linux-only-20260918",
+      "run_sha256": "sha256:82fc844eee6fc4e6ab20e89e96dcbd84465893394755d65cb3513d61f06c82b0",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:9cc8925a140f3871b77486844a95339e8fc6b1d7255e26144a4e237065fde151",
+      "verifier_image": "sha256:3d414d710d8e31ae0fcf9d23c863bbc395835fc8ea49acd0c0567e10838564c5",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:happy-dom-deterministic-intersectionobserver:4:linux-only-20260918",
+      "run_sha256": "sha256:60e6047a5f3b40215cc4a20633869e59c59a1dc013130b606cd8e7364c8bf868",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:9cc8925a140f3871b77486844a95339e8fc6b1d7255e26144a4e237065fde151",
+      "verifier_image": "sha256:3d414d710d8e31ae0fcf9d23c863bbc395835fc8ea49acd0c0567e10838564c5",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:ink-grid-box-layout:0:infra-recovery-20260914",
+      "run_sha256": "sha256:64ca453f9881f8ede66c7ad6a04a24cdf9c3141f5bf52f77e96ee887d692b4f6",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:a8fc53df52ce4fdc422a305fd9e677026fbd9d992e4baef9c3ca1d9f8793212b",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:ink-grid-box-layout:1:linux-only-20260918",
+      "run_sha256": "sha256:7d6935ab0aac421c5c42694ff6f7fe016df6034bd3002b6742322b92089ed966",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:6998dc0cb341d0e863570c4c7a60e238452be38a38d5841215b9cb4ff97b9a81",
+      "verifier_image": "sha256:fbbb3a767c310003a279e0900aa0847e0bb78db90d726621d3be8286c16a9db1",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:ink-grid-box-layout:2:linux-only-20260918",
+      "run_sha256": "sha256:d4f60e15df327af3ad111905549d4d2dedf54b00966aa4b59c8bf5200e2e97dd",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:6998dc0cb341d0e863570c4c7a60e238452be38a38d5841215b9cb4ff97b9a81",
+      "verifier_image": "sha256:fbbb3a767c310003a279e0900aa0847e0bb78db90d726621d3be8286c16a9db1",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:ink-grid-box-layout:3:linux-only-20260918",
+      "run_sha256": "sha256:0bc53fb7cf097be9fb9b16e40b8ece2af07dafa134b526a0a738fdc11e0de735",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:6998dc0cb341d0e863570c4c7a60e238452be38a38d5841215b9cb4ff97b9a81",
+      "verifier_image": "sha256:fbbb3a767c310003a279e0900aa0847e0bb78db90d726621d3be8286c16a9db1",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:ink-grid-box-layout:4:linux-only-20260918",
+      "run_sha256": "sha256:b710edcef569b39276bfd18fc14675de95357f3d9458eb0b6f6fee0707caf0eb",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:6998dc0cb341d0e863570c4c7a60e238452be38a38d5841215b9cb4ff97b9a81",
+      "verifier_image": "sha256:fbbb3a767c310003a279e0900aa0847e0bb78db90d726621d3be8286c16a9db1",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:psd-tools-blend-range-api:0:linux-only-20260918",
+      "run_sha256": "sha256:2c8ab7fd8d90093514683ff7dff3ba5baa36fa827a2e3c87022071354d2a2446",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:89ec67d41b96e9e6f672288eeb6cf32be368afbf5192bb22f06e4e923cd57bde",
+      "verifier_image": "sha256:0a4bac520618fd86c8a29b2fb482def495827fb8a951f497b4e2a6166e4e3fd9",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:psd-tools-blend-range-api:1:linux-only-20260918",
+      "run_sha256": "sha256:d8431653a6c59d3cc2e90cd5f8d21e8c186b397698d9d0f152623a8b8fa3af01",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:89ec67d41b96e9e6f672288eeb6cf32be368afbf5192bb22f06e4e923cd57bde",
+      "verifier_image": "sha256:0a4bac520618fd86c8a29b2fb482def495827fb8a951f497b4e2a6166e4e3fd9",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:psd-tools-blend-range-api:2:linux-only-20260918",
+      "run_sha256": "sha256:c5235045ec9b95765e12434c9bb76c63697bf62ac742be6551d7bea378a93547",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:89ec67d41b96e9e6f672288eeb6cf32be368afbf5192bb22f06e4e923cd57bde",
+      "verifier_image": "sha256:0a4bac520618fd86c8a29b2fb482def495827fb8a951f497b4e2a6166e4e3fd9",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:psd-tools-blend-range-api:3:linux-only-20260918",
+      "run_sha256": "sha256:04a98fe800b8e49c9a670db306260deac2d5288a2043a9ce03f0e0111413badf",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:89ec67d41b96e9e6f672288eeb6cf32be368afbf5192bb22f06e4e923cd57bde",
+      "verifier_image": "sha256:0a4bac520618fd86c8a29b2fb482def495827fb8a951f497b4e2a6166e4e3fd9",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:psd-tools-blend-range-api:4:linux-only-20260918",
+      "run_sha256": "sha256:1cf79aa49029c7d0a2bfa9e3fa2b4920dccddbfd1875aa175e835d1fafba88bd",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:89ec67d41b96e9e6f672288eeb6cf32be368afbf5192bb22f06e4e923cd57bde",
+      "verifier_image": "sha256:0a4bac520618fd86c8a29b2fb482def495827fb8a951f497b4e2a6166e4e3fd9",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:superjson-error-stack-serialization:0:linux-only-20260918",
+      "run_sha256": "sha256:6136dfed23e4b85e400ec6b990c19c6fb67e9e84976e0b7677db460cf6560364",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:ede90cfe64edb0b33c1d24591c778f11e44a7f3e8de75571e729f53a4d77eedb",
+      "verifier_image": "sha256:35885e6968c593c18f1b761ffd32486001e6774b7d5f2847aadff2e994086cd8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:superjson-error-stack-serialization:1:linux-only-20260918",
+      "run_sha256": "sha256:444bfcfdb0930a75f03dad47f09055c4816e6dd5488063983ef8b5c3c5e07d80",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:ede90cfe64edb0b33c1d24591c778f11e44a7f3e8de75571e729f53a4d77eedb",
+      "verifier_image": "sha256:35885e6968c593c18f1b761ffd32486001e6774b7d5f2847aadff2e994086cd8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:superjson-error-stack-serialization:2:linux-only-20260918",
+      "run_sha256": "sha256:94299d8dafb7eb87c88b01f80239d446e86c8c474a978d882ae8d5efcdc8ce41",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:ede90cfe64edb0b33c1d24591c778f11e44a7f3e8de75571e729f53a4d77eedb",
+      "verifier_image": "sha256:35885e6968c593c18f1b761ffd32486001e6774b7d5f2847aadff2e994086cd8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:superjson-error-stack-serialization:3:linux-only-20260918",
+      "run_sha256": "sha256:0bb2b6a214a4f826170893f8f02d1a7e1b130ce280ee1abb41c1ddd4e753e70a",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:ede90cfe64edb0b33c1d24591c778f11e44a7f3e8de75571e729f53a4d77eedb",
+      "verifier_image": "sha256:35885e6968c593c18f1b761ffd32486001e6774b7d5f2847aadff2e994086cd8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:superjson-error-stack-serialization:4:linux-only-20260918",
+      "run_sha256": "sha256:e014f8a177ec78905f0abbaa96bb1f0d95938d0644861e03f1221c36ad4d4379",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:ede90cfe64edb0b33c1d24591c778f11e44a7f3e8de75571e729f53a4d77eedb",
+      "verifier_image": "sha256:35885e6968c593c18f1b761ffd32486001e6774b7d5f2847aadff2e994086cd8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:textual-richlog-follow-state:0:usage-replacements-20260919",
+      "run_sha256": "sha256:f5eda1101a408ef580720c589f7812eda68c93491e38916c3b64a5961f3c984c",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:4473f5aa03b6eb3dcaa1e1d6e6d42262cd171c0a673c551f24b180a4afe5ba85",
+      "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:textual-richlog-follow-state:1:linux-only-20260918",
+      "run_sha256": "sha256:100e5a78a13c17cba21e20da0997f43a44bdfb500b38dd13507549d6ad65a45d",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:4473f5aa03b6eb3dcaa1e1d6e6d42262cd171c0a673c551f24b180a4afe5ba85",
+      "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:textual-richlog-follow-state:2:linux-only-20260918",
+      "run_sha256": "sha256:1853eee4cb0389444039a2b3d1143df77a659ee19867bef9e4d4fd0d05801eff",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:4473f5aa03b6eb3dcaa1e1d6e6d42262cd171c0a673c551f24b180a4afe5ba85",
+      "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:textual-richlog-follow-state:3:linux-only-20260918",
+      "run_sha256": "sha256:000458a6e02a58fdb63de31cda4046e2a6b853553e6702634f1e26fa674ad771",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:4473f5aa03b6eb3dcaa1e1d6e6d42262cd171c0a673c551f24b180a4afe5ba85",
+      "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:textual-richlog-follow-state:4:linux-only-20260918",
+      "run_sha256": "sha256:bcf14b795c7ef27dcb0c422da58b798f20e71c12a6aa90a12a93679026d6de9c",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:4473f5aa03b6eb3dcaa1e1d6e6d42262cd171c0a673c551f24b180a4afe5ba85",
+      "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:tomlkit-toml-table-converters:0:linux-only-20260918",
+      "run_sha256": "sha256:80b5350d4d834111e785ed5068056de30edf206399ae51e0bcc6d5bf588b80ef",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:3864b041498a4aa6b945e071ca58d495f1f2134b00558d86e699a124426e1904",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:tomlkit-toml-table-converters:1:linux-only-20260918",
+      "run_sha256": "sha256:785d0ff65237a04e9fc4e4570ce827a5d94f894390047b3f4b3ae7d0d1d8c883",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:3864b041498a4aa6b945e071ca58d495f1f2134b00558d86e699a124426e1904",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:tomlkit-toml-table-converters:2:linux-only-20260918",
+      "run_sha256": "sha256:2be1597ac9a03cacf00cbce3d09685498fc596d88b5ec131ee5bc6c164952cda",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:3864b041498a4aa6b945e071ca58d495f1f2134b00558d86e699a124426e1904",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:tomlkit-toml-table-converters:3:linux-only-20260918",
+      "run_sha256": "sha256:2c70929a3443ba63257b3456fbb792eb40c7fed116317189845a21030e8327c3",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:3864b041498a4aa6b945e071ca58d495f1f2134b00558d86e699a124426e1904",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:tomlkit-toml-table-converters:4:linux-only-20260918",
+      "run_sha256": "sha256:b5bc8d292d16590efa3ff11a0710a1df1d545d46bea75138e165876f0b5de890",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:3864b041498a4aa6b945e071ca58d495f1f2134b00558d86e699a124426e1904",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:true-myth-iterable-collection-combinators:0:linux-only-20260918",
+      "run_sha256": "sha256:43493b44e246c5f10c0619e0db945b3470adb7b91d1dbfa2b48007a0465c277d",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:bda2ca2950562d3ee7d25c326e4a8fbb0a8ac933c52582c88b390ca3eb97b798",
+      "verifier_image": "sha256:f92488780ccbb58b036e59481045a7b179906646b26f81c26373e46be9217afa",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:true-myth-iterable-collection-combinators:1:linux-only-20260918",
+      "run_sha256": "sha256:52766fbd70863c356b2ad428be2c995e138a35ffe14feca1438b8a2816da2f8f",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:bda2ca2950562d3ee7d25c326e4a8fbb0a8ac933c52582c88b390ca3eb97b798",
+      "verifier_image": "sha256:f92488780ccbb58b036e59481045a7b179906646b26f81c26373e46be9217afa",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:true-myth-iterable-collection-combinators:2:linux-only-20260918",
+      "run_sha256": "sha256:0453908e1503db4a7443d4ed356beb2cd9d555ea0d5120dd1816c0f5e9eb1e2e",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:bda2ca2950562d3ee7d25c326e4a8fbb0a8ac933c52582c88b390ca3eb97b798",
+      "verifier_image": "sha256:f92488780ccbb58b036e59481045a7b179906646b26f81c26373e46be9217afa",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:true-myth-iterable-collection-combinators:3:linux-only-20260918",
+      "run_sha256": "sha256:364911ec79eba0338cfff6ab1000cf490e3fc3b764724f206c6f524abd7166dd",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:bda2ca2950562d3ee7d25c326e4a8fbb0a8ac933c52582c88b390ca3eb97b798",
+      "verifier_image": "sha256:f92488780ccbb58b036e59481045a7b179906646b26f81c26373e46be9217afa",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:pi:true-myth-iterable-collection-combinators:4:linux-only-20260918",
+      "run_sha256": "sha256:c9ea74c9739d2a0b8cfcc7783cc36c8ff77c3d93b86c1b2fae64f93e91b93a15",
+      "harness": "pi",
+      "version": "0.73.1",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:bda2ca2950562d3ee7d25c326e4a8fbb0a8ac933c52582c88b390ca3eb97b798",
+      "verifier_image": "sha256:f92488780ccbb58b036e59481045a7b179906646b26f81c26373e46be9217afa",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:cattrs-partial-structuring-recovery:0:linux-only-20260918",
+      "run_sha256": "sha256:348ed791e00646b19d8d064365a32bd1a96e8336f1c5269227164fd5bac16c9e",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:cf57e366268e80a6455157a76a6107dc6c8ec0c628c6bcfde6ae0364d82248a5",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:cattrs-partial-structuring-recovery:1:linux-only-20260918",
+      "run_sha256": "sha256:00799b1cc66e41786f95d72cca94c3df61259c01ee8dbc4ec69572c42722dcb4",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:cf57e366268e80a6455157a76a6107dc6c8ec0c628c6bcfde6ae0364d82248a5",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:cattrs-partial-structuring-recovery:2:linux-only-20260918",
+      "run_sha256": "sha256:190165c45de2e55eaadcebdf599ae9cbbe457e1980b40e5979864ab9eef8f05d",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:cf57e366268e80a6455157a76a6107dc6c8ec0c628c6bcfde6ae0364d82248a5",
+      "verifier_image": "sha256:417f2ac9b8fbeec1a36dacd9ae2ca9e8c565b73e8ec7b2aa84da01428aa030e8",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:cattrs-partial-structuring-recovery:3:independent-linux-20260913",
+      "run_sha256": "sha256:73fc9aa7c90e7e475bae250553123c279635f7e6f2adb01049a64b3f062adbfe",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:f61787384bdd04071dd60e90b58081c30163a09a196c4e431713b74f48977d9e",
+      "verifier_image": "sha256:a8c03de04a7b0d8162d83465a98ab9ef392dfe986a460d5c7e463ce1f0937aa3",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:cattrs-partial-structuring-recovery:4:independent-linux-20260913",
+      "run_sha256": "sha256:c607fc98b8801bd822b2ebd520f4cd9e94b92f5e77f62e9b3023b232a2ec543c",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:f61787384bdd04071dd60e90b58081c30163a09a196c4e431713b74f48977d9e",
+      "verifier_image": "sha256:a8c03de04a7b0d8162d83465a98ab9ef392dfe986a460d5c7e463ce1f0937aa3",
+      "task_base_revision": "91df27b2a20f26c35777a92f4555438b62c06345",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:happy-dom-deterministic-intersectionobserver:0:linux-only-20260918",
+      "run_sha256": "sha256:ce26eb1e9f7b19a4a23a509434df7de72af603633c287698685738ba0fa75320",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:e429c29140f1d8e9cd1fd24105aa8d895e842e88f44103b2303afe1e76ea3720",
+      "verifier_image": "sha256:3d414d710d8e31ae0fcf9d23c863bbc395835fc8ea49acd0c0567e10838564c5",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:happy-dom-deterministic-intersectionobserver:1:linux-only-20260918",
+      "run_sha256": "sha256:720535ea4e2c63ea1ad295086fbfe5c98124a17713445df8d0264f487a845340",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:e429c29140f1d8e9cd1fd24105aa8d895e842e88f44103b2303afe1e76ea3720",
+      "verifier_image": "sha256:3d414d710d8e31ae0fcf9d23c863bbc395835fc8ea49acd0c0567e10838564c5",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:happy-dom-deterministic-intersectionobserver:2:infra-recovery-20260914",
+      "run_sha256": "sha256:ae41e5e061249dd0ba0afb69870780f4b4dde4c69f374b49f25db493e8dec0c2",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:c8e1749597763f187bdcc6ef0f98c3778b5fe9b5716a2189ab2934e92bffd35b",
+      "verifier_image": "sha256:fa6e7f7d727d5fa5ec3367c5a2043259662d5a6877f49f3c46fd2f1edb181160",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:happy-dom-deterministic-intersectionobserver:3:infra-recovery-20260914",
+      "run_sha256": "sha256:5687ad791327092408e786c35abccd9e781ef6aa1cdb0a106811b3c2625599b4",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:c8e1749597763f187bdcc6ef0f98c3778b5fe9b5716a2189ab2934e92bffd35b",
+      "verifier_image": "sha256:fa6e7f7d727d5fa5ec3367c5a2043259662d5a6877f49f3c46fd2f1edb181160",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:happy-dom-deterministic-intersectionobserver:4:independent-linux-20260913",
+      "run_sha256": "sha256:3c9c6413000ffc1a5dd3ee98dce7f8ea59104c3a1b7656465f4b4b4443c21452",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:c8e1749597763f187bdcc6ef0f98c3778b5fe9b5716a2189ab2934e92bffd35b",
+      "verifier_image": "sha256:fa6e7f7d727d5fa5ec3367c5a2043259662d5a6877f49f3c46fd2f1edb181160",
+      "task_base_revision": "32b2a8e60eab482c023af377160bf294d6da0318",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:ink-grid-box-layout:0:infra-recovery-20260914",
+      "run_sha256": "sha256:17568e6a607e205b3634ed84b92171a17c03cc8118aaa5c2f26904140cc6add1",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:7ea0eb4b274fa7b6b6af99f7741709c8c1a715d903c34d89ea723578b94440e5",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:ink-grid-box-layout:1:final-recovery-20260914",
+      "run_sha256": "sha256:6899c1004bd90fa2d3afe2f155f5c34b54400a84f21c6eb45041d1239fc26e82",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:7ea0eb4b274fa7b6b6af99f7741709c8c1a715d903c34d89ea723578b94440e5",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:ink-grid-box-layout:2:final-recovery-20260914",
+      "run_sha256": "sha256:fbaf42383f76d23eb5ee979d024c266a81ef4d7894205cfc97ef122b91b59ab3",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:7ea0eb4b274fa7b6b6af99f7741709c8c1a715d903c34d89ea723578b94440e5",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:ink-grid-box-layout:3:independent-linux-20260913",
+      "run_sha256": "sha256:0bbb6599878619f099ac867ab487622dcc6afa797ca29cd11212170b0a6f890d",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:7ea0eb4b274fa7b6b6af99f7741709c8c1a715d903c34d89ea723578b94440e5",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:ink-grid-box-layout:4:independent-linux-20260913",
+      "run_sha256": "sha256:12fdaf4b3f74c7a679ca1983f709efeb4d3b85c3627e24610ae56d3f08c287af",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:7ea0eb4b274fa7b6b6af99f7741709c8c1a715d903c34d89ea723578b94440e5",
+      "verifier_image": "sha256:b093eab15a3872c9a84f54190d76d138296cf44430826a649b15936370013c91",
+      "task_base_revision": "477fda7df7781406d2ba046eb48dd5391e964b72",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:psd-tools-blend-range-api:0:linux-only-20260918",
+      "run_sha256": "sha256:3e0b7a47fd80f0bb6cce36d31294e7c8d6956b63286431d91f0b5789c739ab6b",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:62464bc9e76d6a2e45076c3e0d60a7a76f5c663a3c4a04109e4c2b21864698c0",
+      "verifier_image": "sha256:0a4bac520618fd86c8a29b2fb482def495827fb8a951f497b4e2a6166e4e3fd9",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:psd-tools-blend-range-api:1:linux-only-20260918",
+      "run_sha256": "sha256:e04545fc799d1f82d025b01656f5465221448193c97039d638ab364bc2cf4411",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:62464bc9e76d6a2e45076c3e0d60a7a76f5c663a3c4a04109e4c2b21864698c0",
+      "verifier_image": "sha256:0a4bac520618fd86c8a29b2fb482def495827fb8a951f497b4e2a6166e4e3fd9",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:psd-tools-blend-range-api:2:linux-only-20260918",
+      "run_sha256": "sha256:24e51957a0ae9daa56c694bff1e697df5cbf67d77d21bc7f85968c0095ef2616",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:62464bc9e76d6a2e45076c3e0d60a7a76f5c663a3c4a04109e4c2b21864698c0",
+      "verifier_image": "sha256:0a4bac520618fd86c8a29b2fb482def495827fb8a951f497b4e2a6166e4e3fd9",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:psd-tools-blend-range-api:3:independent-linux-20260913",
+      "run_sha256": "sha256:45c0b9948bcb152a7a00d56167386ae3a9b9c52ceac175050ed4b562ca8b94a4",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:59ee96b79e3348135d7b383673498b5c9ac6c8f83ae40e066c39090be72698b8",
+      "verifier_image": "sha256:529c5d6b0b6781fc7767d390c82bd94edc9935cb30d04a304f292dfaf4780a32",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:psd-tools-blend-range-api:4:independent-linux-20260913",
+      "run_sha256": "sha256:daff0e1216814fb741a94574b9ce81ecf556354e9e925bb822f8894f5dad53a4",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:59ee96b79e3348135d7b383673498b5c9ac6c8f83ae40e066c39090be72698b8",
+      "verifier_image": "sha256:529c5d6b0b6781fc7767d390c82bd94edc9935cb30d04a304f292dfaf4780a32",
+      "task_base_revision": "01595992c5f4d4695251fdf58b3edb5302d3ba46",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:superjson-error-stack-serialization:0:linux-only-20260918",
+      "run_sha256": "sha256:c09a37cca4eb70f11a2092c7fa4bb1a5782ab8d1f50ade46f9620e95ad8ef9d4",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:33400257b23ffb806719e590eb574def61393870ba25342f259f71507fe1c28f",
+      "verifier_image": "sha256:35885e6968c593c18f1b761ffd32486001e6774b7d5f2847aadff2e994086cd8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:superjson-error-stack-serialization:1:linux-only-20260918",
+      "run_sha256": "sha256:93eb8fd1d84e39dee5b8c1fb2282bcf1bb15732cb53a60d5f11b3241bf3129b1",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:33400257b23ffb806719e590eb574def61393870ba25342f259f71507fe1c28f",
+      "verifier_image": "sha256:35885e6968c593c18f1b761ffd32486001e6774b7d5f2847aadff2e994086cd8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:superjson-error-stack-serialization:2:independent-linux-20260913",
+      "run_sha256": "sha256:646c4842a25c64f06095874f9e0f80debdc018ea9b55d54bea83c8281ee36a7f",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:c71447425ca51dabb4d1542e5ef93c0377d0ce4e5fc9e01e9aeebcb64e971d01",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:superjson-error-stack-serialization:3:independent-linux-20260913",
+      "run_sha256": "sha256:b256c89fb25e58eded17dc650c0c816189590bcea6c773f60f1c2fefd4fb3a6f",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:c71447425ca51dabb4d1542e5ef93c0377d0ce4e5fc9e01e9aeebcb64e971d01",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:superjson-error-stack-serialization:4:independent-linux-20260913",
+      "run_sha256": "sha256:05ca653e412219cd16f14a594c0ca7be691d8ce7363148f9cd5d86294a023d1f",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:c71447425ca51dabb4d1542e5ef93c0377d0ce4e5fc9e01e9aeebcb64e971d01",
+      "verifier_image": "sha256:9cc29a9cf9c9e48c818f56a810cf3a9a287bd7c1991b08c6610113f7ac15c3e8",
+      "task_base_revision": "f143004734ea2dd4090e45013a07f091f5bbaee7",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:textual-richlog-follow-state:0:linux-only-20260918",
+      "run_sha256": "sha256:01a800fd16f68bbaa47e42f44c1403a05442af7a01089a6bfbc06f4f955129f3",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:20eac3acb31b993374453cee55c8f6db7ef16733e464ad7748c6c758bb4e8dce",
+      "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:textual-richlog-follow-state:1:linux-only-20260918",
+      "run_sha256": "sha256:911576494e9285d4a5670011680b2210acc02505d56d74736eb89b21a24686e2",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:20eac3acb31b993374453cee55c8f6db7ef16733e464ad7748c6c758bb4e8dce",
+      "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:textual-richlog-follow-state:2:linux-only-20260918",
+      "run_sha256": "sha256:7d068674a607fe1d5f7560839378a9caf77038ad48a1ac6d669e6aa5f799b1a8",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:20eac3acb31b993374453cee55c8f6db7ef16733e464ad7748c6c758bb4e8dce",
+      "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:textual-richlog-follow-state:3:independent-linux-20260913",
+      "run_sha256": "sha256:f0fbd394e4bc7d95f0e71ada4fba774b4e97f6699a6c304b2711e0274499aa6d",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:1b455e4867ace73dea31611cf773c004a35ceccfd9b927c2f3a527b35d06b8b8",
+      "verifier_image": "sha256:5b0166c0ee50a230850e78d5550fe32442834eb63599802d0a99faff0ba9af87",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:textual-richlog-follow-state:4:independent-linux-20260913",
+      "run_sha256": "sha256:be8bbf21b551a00c9219f4c67734a255a27909d0b781f31bddb70dd5231651bd",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:1b455e4867ace73dea31611cf773c004a35ceccfd9b927c2f3a527b35d06b8b8",
+      "verifier_image": "sha256:5b0166c0ee50a230850e78d5550fe32442834eb63599802d0a99faff0ba9af87",
+      "task_base_revision": "a12215b791587a6d94227bd30a0e9291de932106",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:tomlkit-toml-table-converters:0:linux-only-20260918",
+      "run_sha256": "sha256:44e9c02cf734060342aafd6985b54e6e671269ac2be31fc93a454837dd2e6b73",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:20ac2dff610174760fb2b017f8ccab9a8ea7aa4f73a4b0f4e61157a8a45c83c3",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:tomlkit-toml-table-converters:1:linux-only-20260918",
+      "run_sha256": "sha256:ed529a53ee7164b29ed6b71724c7105ca8bd4abc5d41517ddceafb380ff2d161",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:20ac2dff610174760fb2b017f8ccab9a8ea7aa4f73a4b0f4e61157a8a45c83c3",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:tomlkit-toml-table-converters:2:linux-only-20260918",
+      "run_sha256": "sha256:3efa5bc57c6503c75c1e15145047894c47a44e7e3666427e198bb1002fc6f6c1",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:20ac2dff610174760fb2b017f8ccab9a8ea7aa4f73a4b0f4e61157a8a45c83c3",
+      "verifier_image": "sha256:e7cc1016b833bde77abc2597d451c5fab0d3bf7d6e886201db050ed0368560ec",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:tomlkit-toml-table-converters:3:independent-linux-20260913",
+      "run_sha256": "sha256:1dec6309185c767124b911802ff7529714f1ff491afef5f5d8cdbf5e2399fdf2",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:d315dee291dcbcbe38d965afe4a754648f2585375b0816fce5f78943e96f6f59",
+      "verifier_image": "sha256:86a7f7545adc060de810c3aceb9356f3048262a6e0f046d863cc114bdd98dcd3",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:tomlkit-toml-table-converters:4:independent-linux-20260913",
+      "run_sha256": "sha256:3f9f4fe45506bbb2beddd89f35ae6fa238dbe26d2903f7433ddc2dd69467dfbd",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:d315dee291dcbcbe38d965afe4a754648f2585375b0816fce5f78943e96f6f59",
+      "verifier_image": "sha256:86a7f7545adc060de810c3aceb9356f3048262a6e0f046d863cc114bdd98dcd3",
+      "task_base_revision": "962de91aaf103135f400e5108a798a59a10dc17e",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:true-myth-iterable-collection-combinators:0:linux-only-20260918",
+      "run_sha256": "sha256:794a970bf03c84023eb792b1417c4cb89353f5cd0aa877dc1a8b11dd9820eaf4",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:06bad9b214a81bfc05ee9d383c3f8bd4c88f48c9fa30f75da069b1854c0f944e",
+      "verifier_image": "sha256:f92488780ccbb58b036e59481045a7b179906646b26f81c26373e46be9217afa",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:true-myth-iterable-collection-combinators:1:linux-only-20260918",
+      "run_sha256": "sha256:bc46a47eae9e906df811f247cba89919ee730c3bff41daa091514efe37a49de9",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:06bad9b214a81bfc05ee9d383c3f8bd4c88f48c9fa30f75da069b1854c0f944e",
+      "verifier_image": "sha256:f92488780ccbb58b036e59481045a7b179906646b26f81c26373e46be9217afa",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:true-myth-iterable-collection-combinators:2:infra-recovery-20260914",
+      "run_sha256": "sha256:b7398258c44f46580fedd7b88397da318c56841ce64f58515c23a20e8dce91d8",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:022ba62e7d5035834e14f2acdd0186f5cfbde23bc7bf088970420377fffe73b8",
+      "verifier_image": "sha256:2d5b99141677ea769219ab882b11fa652f51f525c5960ce80e49cb7dee26a79d",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:true-myth-iterable-collection-combinators:3:independent-linux-20260913",
+      "run_sha256": "sha256:43b4931044155cac96ecfc7106d6b11105a8b338ab545001cc5d43c32befc418",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:022ba62e7d5035834e14f2acdd0186f5cfbde23bc7bf088970420377fffe73b8",
+      "verifier_image": "sha256:2d5b99141677ea769219ab882b11fa652f51f525c5960ce80e49cb7dee26a79d",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    },
+    {
+      "run_id": "pinned:qwen:true-myth-iterable-collection-combinators:4:independent-linux-20260913",
+      "run_sha256": "sha256:42215a82b41f48af08f11d55e531a68ccd455d773d92db119ebe14f61a5445ff",
+      "harness": "qwen",
+      "version": "0.22.2",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "agent_image": "sha256:022ba62e7d5035834e14f2acdd0186f5cfbde23bc7bf088970420377fffe73b8",
+      "verifier_image": "sha256:2d5b99141677ea769219ab882b11fa652f51f525c5960ce80e49cb7dee26a79d",
+      "task_base_revision": "5945ad1b96e228ff716275d8a273282101152508",
+      "provider_routing": {
+        "ignored_providers": [
+          "relace"
+        ],
+        "only_provider": "deepseek",
+        "allow_fallbacks": false
+      },
+      "declared_task_network": "disabled",
+      "effective_request_settings": null,
+      "enforced_resources": null,
+      "enforced_network_policy": null,
+      "cache_policy": null
+    }
+  ]
+}

@@ -68,6 +68,8 @@ export function materializeTaskRevision(source: string, revisionDir: string, tas
     const addendum = readFileSync(join(revisionDir, entry.addendum), "utf8");
     const output = applyTaskRevision(readFileSync(join(source, "instruction.md"), "utf8"), readFileSync(join(source, "tests/test.patch"), "utf8"), entry as TaskRevision, addendum);
     const hash = (s: string | Buffer) => `sha256:${createHash("sha256").update(s).digest("hex")}`;
+    if (entry.addendum_sha256 !== undefined && entry.addendum_sha256 !== hash(addendum)) throw new ConfigError("task revision: addendum hash mismatch");
+    if (entry.amended_test_patch_sha256 !== undefined && entry.amended_test_patch_sha256 !== hash(output.testPatch)) throw new ConfigError("task revision: amended verifier hash mismatch");
     mkdirSync(destination);
     writeFileSync(join(destination, "instruction.md"), output.instruction);
     writeFileSync(join(destination, "test.patch"), output.testPatch);

@@ -11,21 +11,27 @@
       "instruction_sha256": "sha256:cb5e04f0f6c01180a47f1205b6d86126a8a7f9e7d5662e4f9477daa862826e30",
       "test_patch_sha256": "sha256:1107931e0442dc35b9bf9d2c647b35ac93d44c52607eb5733511faae99f78398",
       "addendum": "superjson-error-stack-serialization.md",
-      "verifier_change": "none-prompt-clarification-only"
+      "verifier_change": "none-prompt-clarification-only",
+      "amended_test_patch_sha256": "sha256:1107931e0442dc35b9bf9d2c647b35ac93d44c52607eb5733511faae99f78398",
+      "addendum_sha256": "sha256:3cf0a9a8b73d4e60bc98f03e3479ccea9209d4c55250fc7eff7b0d77a59ad7a5"
     },
     {
       "task": "ink-grid-box-layout",
       "instruction_sha256": "sha256:8913c555865b03f915888ad262db805a5d6b004b01b034c6502fe64a5938a34b",
       "test_patch_sha256": "sha256:49243aec9574c640065b6ad959e71d2d328768483695750a31bde3d087eba264",
       "addendum": "ink-grid-box-layout.md",
-      "verifier_change": "none-prompt-clarification-only"
+      "verifier_change": "none-prompt-clarification-only",
+      "amended_test_patch_sha256": "sha256:49243aec9574c640065b6ad959e71d2d328768483695750a31bde3d087eba264",
+      "addendum_sha256": "sha256:46bb8de042e7e32c184ba109171a8114881ebde35970a0aa22b73faa451cc948"
     },
     {
       "task": "textual-richlog-follow-state",
       "instruction_sha256": "sha256:bdfdf82ddd71a833695c99e1320b1ad564f8678711a9d5744c5f4666c80e5565",
       "test_patch_sha256": "sha256:9d04aa13fca9e60c306f5127e911da237d2e153b0afc88da12e6004c35d404e8",
       "addendum": "textual-richlog-follow-state.md",
-      "verifier_change": "class-based-event-subscriptions"
+      "verifier_change": "class-based-event-subscriptions",
+      "amended_test_patch_sha256": "sha256:26d29959b1522a2862205782cefc12b56117c6fe52cadde04cab2781b03f3867",
+      "addendum_sha256": "sha256:54fdc4bb8e397d2beeb621c912f9e4887ba1de8fdc3e6db3dd6a3a3043264fb8"
     }
   ]
 }

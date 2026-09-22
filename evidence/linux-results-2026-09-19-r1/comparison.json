@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "dataset": "linux-results-2026-09-19-r1",
+  "analysis_sha256": "sha256:c13a8cf19cd07da3c4de9b88f79b849d316fac5722cf867ac783c7f0f292ef36",
+  "evidence_hashes": {
+    "conditions.json": "sha256:2e612923a18274be045fadf57bb6d464bb272e63a467bae614c94fe86fdd724a",
+    "audit.json": "sha256:c19233f781aa6e9b3dc02a512736af15f1fd2ba1ead7ef5c1fcea0cec1b2f34d"
+  },
+  "method": "Exploratory 95% percentile task-cluster bootstrap, 10,000 deterministic resamples. Each task and all its repetitions move together; harnesses are paired by task, not by random seed. Marginal intervals are not corrected for multiple comparisons or winner selection. Eight task clusters provide limited evidence about other coding tasks. These intervals do not remove configuration, environment or verifier confounding.",
+  "pairwise": [
+    {
+      "left": "cline",
+      "right": "codex",
+      "difference_pp": -5,
+      "tasks": 8,
+      "attempts_per_harness": 40,
+      "interval": [
+        -20,
+        10
+      ],
+      "interpretation": "inconclusive"
+    },
+    {
+      "left": "cline",
+      "right": "hermes",
+      "difference_pp": -2.5000000000000013,
+      "tasks": 8,
+      "attempts_per_harness": 40,
+      "interval": [
+        -17.5,
+        14.999999999999998
+      ],
+      "interpretation": "inconclusive"
+    },
+    {
+      "left": "cline",
+      "right": "pi",
+      "difference_pp": -12.5,
+      "tasks": 8,
+      "attempts_per_harness": 40,
+      "interval": [
+        -25,
+        0
+      ],
+      "interpretation": "inconclusive"
+    },
+    {
+      "left": "cline",
+      "right": "qwen",
+      "difference_pp": -17.5,
+      "tasks": 8,
+      "attempts_per_harness": 40,
+      "interval": [
+        -27.5,
+        -7.5
+      ],
+      "interpretation": "directional"
+    },
+    {
+      "left": "codex",
+      "right": "hermes",
+      "difference_pp": 2.4999999999999996,
+      "tasks": 8,
+      "attempts_per_harness": 40,
+      "interval": [
+        -12.5,
+        17.5
+      ],
+      "interpretation": "inconclusive"
+    },
+    {
+      "left": "codex",
+      "right": "pi",
+      "difference_pp": -7.5,
+      "tasks": 8,
+      "attempts_per_harness": 40,
+      "interval": [
+        -25,
+        4.999999999999999
+      ],
+      "interpretation": "inconclusive"
+    },
+    {
+      "left": "codex",
+      "right": "qwen",
+      "difference_pp": -12.5,
+      "tasks": 8,
+      "attempts_per_harness": 40,
+      "interval": [
+        -17.5,
+        -5
+      ],
+      "interpretation": "directional"
+    },
+    {
+      "left": "hermes",
+      "right": "pi",
+      "difference_pp": -10,
+      "tasks": 8,
+      "attempts_per_harness": 40,
+      "interval": [
+        -25,
+        5
+      ],
+      "interpretation": "inconclusive"
+    },
+    {
+      "left": "hermes",
+      "right": "qwen",
+      "difference_pp": -15,
+      "tasks": 8,
+      "attempts_per_harness": 40,
+      "interval": [
+        -30,
+        -2.5
+      ],
+      "interpretation": "directional"
+    },
+    {
+      "left": "pi",
+      "right": "qwen",
+      "difference_pp": -5,
+      "tasks": 8,
+      "attempts_per_harness": 40,
+      "interval": [
+        -17.5,
+        10
+      ],
+      "interpretation": "inconclusive"
+    }
+  ],
+  "conditions": {
+    "controlled_comparison": false,
+    "attempts_validated": 200,
+    "checks": [
+      {
+        "id": "model-routing",
+        "label": "Model and provider route",
+        "status": "matched",
+        "detail": "Recorded model IDs, provider allowlist and fallback policy. A model ID does not establish immutable provider weights or honored request settings."
+      },
+      {
+        "id": "harness-versions",
+        "label": "Harness versions",
+        "status": "matched",
+        "detail": "cline: 3.0.61; codex: codex-cli 0.149.1; hermes: Hermes Agent v0.20.5 (2026.8.19); pi: 0.73.1; qwen: 0.22.2"
+      },
+      {
+        "id": "agent-images",
+        "label": "Agent image identities",
+        "status": "recorded",
+        "detail": "Agent image hashes were extracted from original C4 files. The historical analysis lacks this field; use the raw-C4 extraction checker to reconcile it. Different harness images are expected; native tools and context management remain the treatment."
+      },
+      {
+        "id": "task-bases",
+        "label": "Task source and base revisions",
+        "status": "matched",
+        "detail": "Exact source lineage and base revision are compared within each task."
+      },
+      {
+        "id": "verifier-images",
+        "label": "Verifier images",
+        "status": "different",
+        "detail": "Retained and rebuilt image hashes differ within some tasks. The overall comparison is not image-matched."
+      },
+      {
+        "id": "request-settings",
+        "label": "Effective request settings",
+        "status": "unknown",
+        "detail": "Historical sampling, reasoning and output caps were not captured per request. Omitted provider defaults are not known settings."
+      },
+      {
+        "id": "resources",
+        "label": "Enforced resource limits",
+        "status": "unknown",
+        "detail": "CPU, memory, disk, process and time limits need per-run evidence. Host RAM is not a container limit."
+      },
+      {
+        "id": "network",
+        "label": "Enforced network policy",
+        "status": "unknown",
+        "detail": "C4 declares disabled task network access; per-run enforcement was not attested."
+      },
+      {
+        "id": "cache",
+        "label": "Cache policy",
+        "status": "unknown",
+        "detail": "Provider cache reset/warmness was not controlled. Observed cache tokens remain valid usage measurements."
+      }
+    ]
+  },
+  "audit": {
+    "revision": "task-verification-2026-09-21",
+    "audited": 75,
+    "reproduced": 33,
+    "corrected": 13,
+    "unavailable": 42,
+    "changes": [
+      {
+        "run_id": "pinned:codex:textual-richlog-follow-state:0:linux-only-20260918",
+        "task": "textual-richlog-follow-state",
+        "harness": "codex",
+        "rep": 0,
+        "original": 0,
+        "corrected": 1
+      },
+      {
+        "run_id": "pinned:codex:textual-richlog-follow-state:1:linux-only-20260918",
+        "task": "textual-richlog-follow-state",
+        "harness": "codex",
+        "rep": 1,
+        "original": 0,
+        "corrected": 1
+      },
+      {
+        "run_id": "pinned:pi:textual-richlog-follow-state:0:usage-replacements-20260919",
+        "task": "textual-richlog-follow-state",
+        "harness": "pi",
+        "rep": 0,
+        "original": 0,
+        "corrected": 1
+      },
+      {
+        "run_id": "pinned:qwen:textual-richlog-follow-state:0:linux-only-20260918",
+        "task": "textual-richlog-follow-state",
+        "harness": "qwen",
+        "rep": 0,
+        "original": 0,
+        "corrected": 1
+      }
+    ],
+    "storage_failures": 1
+  },
+  "conditions_dataset": "linux-conditions-2026-09-21",
+  "audit_dataset": "task-verification-2026-09-21"
+}

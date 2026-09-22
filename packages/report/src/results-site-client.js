@@ -8,6 +8,7 @@
   const colors = Object.fromEntries(harnesses.map((h,i) => [h,palette[i % palette.length]]));
   const visible = new Set(harnesses);
   let viewIndex = 0, sort = "harness", ascending = true, chartMetric = "cost", selected = null;
+  const initialBaseline = $("confidence-baseline").value;
   const scoreText = score => score === null ? "Not scored" : `${(score === 100 ? 100 : Math.min(99.9, score)).toFixed(1)}% of best`;
   const current = () => data.views[viewIndex];
   const value = (r,key) => key === "harness" ? r.harness : key === "pass" ? r.pass_rate : r[key].value;
@@ -64,6 +65,14 @@
     else { selected = null; $("chart-detail").innerHTML = '<span class="eyebrow">EXPLORE THE PLOT</span><h3>Cost meets outcome.</h3><p>Select a point to inspect its measurements.</p><p class="muted">Up = more passes<br>Left = lower cost</p>'; }
     if (!eligible.length) $("chart-detail").innerHTML = '<h3>Cost unavailable</h3><p>No complete cost measurements in this selection. See the table for known lower bounds.</p>';
   }
+  function renderConfidence() {
+    const view = current(), baseline = $("confidence-baseline").value;
+    const rows = view.confidenceByBaseline[baseline].filter(r => visible.has(r.harness));
+    const extent = Math.max(10, ...rows.flatMap(r => r.interval ? r.interval.map(Math.abs) : [Math.abs(r.difference)]));
+    const x = value => 150 + value / extent * 135;
+    $("confidence-scope").textContent = view.task ? "One task · raw differences only; uncertainty needs more distinct tasks" : "Eight task clusters · original verification · exploratory intervals";
+    $("confidence-results").innerHTML = rows.length ? `<table class="confidence-table"><caption>Pass-rate difference from ${esc(baseline)}. Positive means more passes. The reference stays fixed when hidden.</caption><thead><tr><th scope="col">Harness</th><th scope="col">Observed difference</th><th scope="col">Exploratory 95% interval</th></tr></thead><tbody>${rows.map(r => `<tr><th scope="row">${dot(r.harness)} ${esc(r.harness)}</th><td><strong>${esc(r.difference_text)}</strong>${r.interval ? `<svg class="interval-plot" viewBox="0 0 300 30" role="img" aria-label="${esc(r.interval_text)}"><line x1="150" y1="0" x2="150" y2="30" stroke="#bbc9c5" stroke-dasharray="3 3"/><line x1="${x(r.interval[0])}" x2="${x(r.interval[1])}" y1="15" y2="15" stroke="${colors[r.harness]}" stroke-width="3"/><line x1="${x(r.interval[0])}" x2="${x(r.interval[0])}" y1="10" y2="20" stroke="${colors[r.harness]}"/><line x1="${x(r.interval[1])}" x2="${x(r.interval[1])}" y1="10" y2="20" stroke="${colors[r.harness]}"/><circle cx="${x(r.difference)}" cy="15" r="5" fill="${colors[r.harness]}"/></svg>` : ""}</td><td>${esc(r.interval_text)}<small>${esc(r.note)}</small></td></tr>`).join("")}</tbody></table>` : "<p>Show another harness to compare it with the selected reference.</p>";
+  }
   function render() {
     const view = current(); const rows = filtered();
     rows.sort((a,b) => { const av = value(a,sort), bv = value(b,sort); if (av === null) return bv === null ? 0 : 1; if (bv === null) return -1; const result = typeof av === "string" ? av.localeCompare(bv) : av-bv; return (ascending ? 1 : -1)*result; });
@@ -73,6 +82,7 @@
     $("total-note").textContent = view.total + (visible.size < harnesses.length ? " Total includes hidden harnesses." : "");
     document.querySelectorAll("[data-sort]").forEach(button => { button.parentElement.setAttribute("aria-sort",button.dataset.sort === sort ? ascending ? "ascending" : "descending" : "none"); button.querySelector("span").textContent = button.dataset.sort === sort ? ascending ? "↑" : "↓" : "↕"; });
     renderChart(rows);
+    renderConfidence();
     document.querySelectorAll(".harness-toggle").forEach(button => { const active = visible.has(button.dataset.harness); button.setAttribute("aria-pressed",String(active)); button.disabled = active && visible.size === 1; });
     const params = new URLSearchParams(); if (viewIndex) params.set("task",view.task); if (visible.size<harnesses.length) params.set("h",[...visible].join(",")); if(chartMetric!=="cost")params.set("cost",chartMetric);
     history.replaceState(null,"",location.pathname+(params.size?"?"+params:"")+location.hash);
@@ -83,7 +93,8 @@
   $("mobile-sort").addEventListener("change", event => { sort = event.target.value; ascending = sort !== "pass" && sort !== "cache"; render(); });
   $("task-select").addEventListener("change",event => { viewIndex = Number(event.target.value); render(); });
   $("chart-metric").addEventListener("change",event => { chartMetric = event.target.value; render(); });
-  $("reset").addEventListener("click",() => { viewIndex=0; chartMetric="cost"; sort="harness"; ascending=true; selected=null; harnesses.forEach(h=>visible.add(h)); $("task-select").value="0"; $("chart-metric").value="cost"; render(); });
+  $("confidence-baseline").addEventListener("change", renderConfidence);
+  $("reset").addEventListener("click",() => { viewIndex=0; chartMetric="cost"; sort="harness"; ascending=true; selected=null; harnesses.forEach(h=>visible.add(h)); $("task-select").value="0"; $("chart-metric").value="cost"; $("confidence-baseline").value=initialBaseline; render(); });
   $("task-matrix").innerHTML = `<table><caption class="sr-only">Passes per task out of five repetitions, all harnesses.</caption><thead><tr><th scope="col">Task</th>${harnesses.map(h => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead><tbody>${data.views.slice(1).map((v,i) => `<tr><th scope="row"><button class="task-button" data-task-index="${i+1}">${esc(v.task)}</button></th>${v.rows.map(r => `<td><span class="heat" style="background:rgba(0,125,104,${.04+r.pass_rate/100*.24})">${r.passes} / ${r.selected}</span></td>`).join("")}</tr>`).join("")}</tbody></table>`;
   document.querySelectorAll(".task-button").forEach(button => button.addEventListener("click",() => { viewIndex=Number(button.dataset.taskIndex); $("task-select").value=String(viewIndex); render(); $("comparison").scrollIntoView(); $("task-select").focus({preventScroll:true}); }));
   const params = new URLSearchParams(location.search);

@@ -2653,3 +2653,48 @@ Host fields describe recorded hardware, not unique machine identity. Same-host p
 Quartiles describe observed runs, not confidence intervals. Singleton spread is unavailable. Non-model time includes unobserved tool and harness work.
 
 Request series are sanitized C1 model attempts: duration, wait, transfer, gaps and per-call tokens/cost. Paths, bodies and logs are not exported. Relationships are within a run or matched task, not ratios of unrelated headline medians.
+
+## How convincing are the differences?
+
+Original campaign verification; observed differences, not a general harness ranking.
+
+| Comparison (left − right) | Pass-rate difference | Exploratory 95% interval | Task clusters |
+|---|---:|---|---:|
+| cline − codex | -5.0 pp | -20.0 pp to +10.0 pp | 8 |
+| cline − hermes | -2.5 pp | -17.5 pp to +15.0 pp | 8 |
+| cline − pi | -12.5 pp | -25.0 pp to 0.0 pp | 8 |
+| cline − qwen | -17.5 pp | -27.5 pp to -7.5 pp | 8 |
+| codex − hermes | +2.5 pp | -12.5 pp to +17.5 pp | 8 |
+| codex − pi | -7.5 pp | -25.0 pp to +5.0 pp | 8 |
+| codex − qwen | -12.5 pp | -17.5 pp to -5.0 pp | 8 |
+| hermes − pi | -10.0 pp | -25.0 pp to +5.0 pp | 8 |
+| hermes − qwen | -15.0 pp | -30.0 pp to -2.5 pp | 8 |
+| pi − qwen | -5.0 pp | -17.5 pp to +10.0 pp | 8 |
+
+Exploratory 95% percentile task-cluster bootstrap, 10,000 deterministic resamples. Each task and all its repetitions move together; harnesses are paired by task, not by random seed. Marginal intervals are not corrected for multiple comparisons or winner selection. Eight task clusters provide limited evidence about other coding tasks. These intervals do not remove configuration, environment or verifier confounding.
+
+“Best = 100%” is an observed relative index, not statistical certainty.
+
+## Comparison conditions
+
+Not a fully controlled comparison: missing controls and image differences remain.
+
+| Condition | Evidence |
+|---|---|
+| Model and provider route | matched |
+| Harness versions | matched |
+| Agent image identities | recorded |
+| Task source and base revisions | matched |
+| Verifier images | different |
+| Effective request settings | unknown |
+| Enforced resource limits | unknown |
+| Enforced network policy | unknown |
+| Cache policy | unknown |
+
+[Condition manifest](../linux-conditions-2026-09-21/conditions.json)
+
+## Separate verification revision
+
+4 Textual attempts change from fail to pass under the corrected verifier; original headline results remain unchanged. 33/75 original-image replays reproduce historical grades; 13/25 Textual attempts have corrected replays. Original temporary patches were unavailable; effective patches were recovered from retained post-verification workspaces.
+
+[Audit, limitations and reproduction](../task-verification-2026-09-21/README.md)

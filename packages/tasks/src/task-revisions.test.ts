@@ -16,7 +16,7 @@ describe("reviewed task amendments", () => {
       writeFileSync(join(root, "source/instruction.md"), "original\n");
       writeFileSync(join(root, "source/tests/test.patch"), "patch\n");
       writeFileSync(join(root, "revision/note.md"), "clarification\n");
-      writeFileSync(join(root, "revision/manifest.json"), JSON.stringify({ version: 1, revision: "r1", upstream_repository: "reviewed", upstream_revision: "a".repeat(40), tasks: [{ task: "fixture", instruction_sha256: digest("original\n"), test_patch_sha256: digest("patch\n"), addendum: "note.md", verifier_change: "none-prompt-clarification-only" }] }));
+      writeFileSync(join(root, "revision/manifest.json"), JSON.stringify({ version: 1, revision: "r1", upstream_repository: "reviewed", upstream_revision: "a".repeat(40), tasks: [{ task: "fixture", instruction_sha256: digest("original\n"), test_patch_sha256: digest("patch\n"), addendum: "note.md", addendum_sha256: digest("clarification\n"), amended_test_patch_sha256: digest("patch\n"), verifier_change: "none-prompt-clarification-only" }] }));
       const args = [join(root, "source"), join(root, "revision"), "fixture", join(root, "output")] as const;
       materializeTaskRevision(...args);
       expect(readFileSync(join(root, "source/instruction.md"), "utf8")).toBe("original\n");
@@ -24,6 +24,8 @@ describe("reviewed task amendments", () => {
       const record = JSON.parse(readFileSync(join(root, "output/revision.json"), "utf8"));
       expect(record.artifacts["instruction.md"]).toBe(digest("original\n\nclarification\n"));
       expect(() => materializeTaskRevision(...args)).toThrow(/exists/);
+      writeFileSync(join(root, "revision/note.md"), "unreviewed clarification");
+      expect(() => materializeTaskRevision(args[0], args[1], args[2], join(root, "another"))).toThrow(/hash/);
     } finally { rmSync(root, { recursive: true, force: true }); }
   });
   it("rejects changed source bytes and duplicate application", () => {

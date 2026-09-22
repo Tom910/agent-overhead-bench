@@ -24,17 +24,20 @@ def run(image,patch,dest,amended_patch=None):
  logs=dest/'logs';logs.mkdir(); workspace=dest/'workspace';workspace.mkdir()
  # Clone destination must not exist: mount its parent, not the leaf.
  args=['docker','run','--name',name,'--rm','--pull=never','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--cpus','2','--memory','4g','--pids-limit','512','--tmpfs','/tmp:rw,noexec,nosuid,nodev,size=256m','--user',f'{os.getuid()}:{os.getgid()}', '-v',f'{workspace}:/work','-v',f'{logs}:/output','-v',f'{dest}/model.patch:/input/model.patch:ro']
- if amended_patch:args+=['-v',f'{pathlib.Path(amended_patch).resolve()}:/tests/test.patch:ro']
+ amended_bytes=pathlib.Path(amended_patch).read_bytes() if amended_patch else None
+ if amended_bytes is not None:
+  (dest/'test.patch').write_bytes(amended_bytes)
+  args+=['-v',f'{dest}/test.patch:/tests/test.patch:ro']
  args+=['--entrypoint','sh',image,'-c',SHELL]
  started=time.monotonic()
  try:
   r=subprocess.run(args,capture_output=True,timeout=240)
   (dest/'stdout.log').write_bytes(r.stdout);(dest/'stderr.log').write_bytes(r.stderr)
   grade=json.loads((logs/'reward.json').read_text()) if (logs/'reward.json').exists() else None
-  result={'image':image,'amended_test_patch_sha256':sha(pathlib.Path(amended_patch).read_bytes()) if amended_patch else None,'exit_code':r.returncode,'seconds':time.monotonic()-started,'patch_sha256':sha(patch),'stdout_sha256':sha(r.stdout),'stderr_sha256':sha(r.stderr),'grade':grade}
+  result={'image':image,'amended_test_patch_sha256':sha(amended_bytes) if amended_bytes is not None else None,'exit_code':r.returncode,'seconds':time.monotonic()-started,'patch_sha256':sha(patch),'stdout_sha256':sha(r.stdout),'stderr_sha256':sha(r.stderr),'grade':grade}
  except subprocess.TimeoutExpired:
   subprocess.run(['docker','rm','-f',name],capture_output=True,timeout=15)
-  result={'image':image,'amended_test_patch_sha256':sha(pathlib.Path(amended_patch).read_bytes()) if amended_patch else None,'error':'timeout'}
+  result={'image':image,'amended_test_patch_sha256':sha(amended_bytes) if amended_bytes is not None else None,'error':'timeout'}
  (dest/'result.json').write_text(json.dumps(result,indent=2));print(json.dumps(result),flush=True)
  return result
 if __name__=='__main__':

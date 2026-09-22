@@ -1,9 +1,50 @@
 # METHODOLOGY
 
-This document records **what was actually done** for the 2026-09-14 DeepSeek
-public-repository campaign and the 2026-09-04 local fixture pilot. The
-official v1 results archive remains unpublished until `scripts/s7-freeze.sh`
-and source sign-off complete.
+The current published snapshot is selected by
+[evidence/current-campaign.json](evidence/current-campaign.json): 200 attempts
+from one Linux host, five harnesses, eight tasks and five repetitions, using
+`deepseek/deepseek-v4.1-flash`. Historical campaign and pilot sections below
+remain provenance. The official v1 archive is still unpublished pending the
+existing freeze and source-review gates.
+
+## Current comparison and verification revision
+
+Pass rate uses original native-verifier outcomes across all selected attempts.
+Average cost per task averages its five repetitions, then weights tasks equally;
+whole-benchmark cost sums all 40 selected attempts per harness, including
+failures. Shared token-based reference rates make prices comparable without
+changing recorded tokens or original accounting books.
+
+The [condition manifest](evidence/linux-conditions-2026-09-21/README.md) records
+what can be established from original C4 evidence. Historical sampling/reasoning
+and output settings, enforced resource/network controls and cache policy are
+unknown. Verifier images differ within some tasks. The website therefore
+presents an observed comparison, not a fully controlled experiment or universal
+harness ranking. Native prompts, tools and context management remain harness
+behavior. Future request-setting capture records forwarded allowlisted values
+in private, C1-hash-bound sidecars; omitted provider defaults remain unknown,
+and capture does not prove that a provider honored the settings.
+
+Pairwise pass-rate differences weight tasks equally. Exploratory 95% percentile
+intervals use 10,000 deterministic task-cluster bootstrap resamples: an entire
+task's repetitions move together, and harnesses are paired by task. Repetition
+indices are not paired random seeds. Eight task clusters provide limited evidence
+about broader task populations. Intervals are marginal, with no multiple-testing
+or winner-selection correction; they do not repair configuration or task-contract
+confounding. Single-task views show raw differences without an interval. A range
+including zero is reported as no clear separation. A narrow interval does not
+prove equal performance. “Best = 100%” is an observed relative index.
+
+The [separate verification revision](evidence/task-verification-2026-09-21/README.md)
+preserves all original outcomes. Thirty-three retained-image replays reproduced
+historical grades; thirteen Textual attempts were also checked with corrected
+class-based event listeners, producing four additional full passes. Recovered
+post-verification workspaces were used because original temporary patches were
+not retained. Forty-two audited attempts lacked their exact original image.
+Prompt clarifications for SuperJSON and Ink apply to future tasks, not
+retroactively to old attempts. Reference/pristine and event-suppression controls,
+amended-verifier hashes and replay coverage are validated before publication.
+No model calls were used for this audit.
 
 ## What this measures
 

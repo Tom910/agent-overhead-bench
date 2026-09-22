@@ -17,6 +17,24 @@ function fixture() {
   writeFileSync(join(root, "README.md"), "Intro\n<!-- CURRENT-CAMPAIGN:START -->\nstale\n<!-- CURRENT-CAMPAIGN:END -->\nFooter\n");
   return { root, dir, run: (check = false) => publishCurrentCampaign(root, check) };
 }
+it("binds separate audit and condition evidence and publishes consistent comparison artifacts", () => {
+  const f = fixture();
+  for (const dataset of ["linux-results-2026-09-19-r1", "linux-conditions-2026-09-21", "task-verification-2026-09-21"]) {
+    cpSync(new URL(`../../../evidence/${dataset}`, import.meta.url), join(f.root, "evidence", dataset), { recursive: true });
+  }
+  cpSync(new URL("../../../task-revisions", import.meta.url), join(f.root, "task-revisions"), { recursive: true });
+  writeFileSync(join(f.root, "evidence/current-campaign.json"), JSON.stringify({ dataset: "linux-results-2026-09-19-r1", conditions_dataset: "linux-conditions-2026-09-21", audit_dataset: "task-verification-2026-09-21" }));
+  f.run();
+  const comparison = JSON.parse(readFileSync(join(f.root, "evidence/linux-results-2026-09-19-r1/comparison.json"), "utf8"));
+  expect(comparison.conditions.controlled_comparison).toBe(false);
+  expect(comparison.audit.changes).toHaveLength(4);
+  expect(comparison.pairwise).toHaveLength(10);
+  expect(readFileSync(join(f.root, "site/index.html"), "utf8")).toContain("What changed in verification?");
+  f.run(true);
+  const path = join(f.root, "evidence/task-verification-2026-09-21/audit.json");
+  writeFileSync(path, readFileSync(path, "utf8") + "\n");
+  expect(f.run).toThrow(/audit.*hash|hash.*audit/);
+});
 it("generates all current views from one source and detects drift without writing", () => {
   const f = fixture();
   expect(() => f.run(true)).toThrow(/stale/);

@@ -33,6 +33,12 @@ tasks. **Whole benchmark** sums all 40 runs per harness, including failures.
 Cache and tokens are medians per attempt; input includes cached tokens.
 Costs use shared token-based reference prices, not actual billing.
 
+**Comparison confidence:** eight task clusters; repeated runs are not 40 independent tasks.
+“Best = 100%” describes the observed result, not statistical certainty.
+Recorded model/provider facts match, but request settings, enforced resource/network controls and cache policy are incomplete; verifier images differ.
+The [separate verification audit](evidence/task-verification-2026-09-21/README.md) finds 4 Textual false negatives. Original outcomes above remain unchanged.
+
+
 [**Explore the interactive website →**](https://tom910.github.io/agent-overhead-bench/) ·
 [Detailed tables](evidence/linux-results-2026-09-19-r1/analysis.md) · [Canonical data](evidence/linux-results-2026-09-19-r1/analysis.json)
 
