@@ -8,6 +8,7 @@ import { startProxy } from "@aob/proxy";
 import { validateVerifierSpec, type TaskEnvironment, type VerifierSpec } from "@aob/tasks";
 import { estimateRunSpendUsd, type BudgetRates } from "./budget.js";
 import { describeDockerProxyRoute, newDockerContainerName, newDockerProxyAuthToken, runDockerCommand, runDockerVerification, type DockerResourceIdentity } from "./docker.js";
+import { bindExecutionConditions, type ExecutionObservation } from "./execution-conditions.js";
 import type { MeasurementRegime } from "@aob/tasks";
 import { validateProviderRouting, type ProviderRouting, type ToolConfiguration } from "@aob/contracts";
 
@@ -101,7 +102,7 @@ export function stageTask(spec: CellSpec): { workspaceDir: string; promptFile: s
   rmSync(promptFile, { force: true });
   rmSync(verifyFile, { force: true });
   rmSync(verifierDescriptorFile, { force: true });
-  for (const artifact of ["events.jsonl", "stdout.log", "stderr.log", "tool-events.jsonl", "verify.log", "run.json"]) {
+  for (const artifact of ["events.jsonl", "stdout.log", "stderr.log", "tool-events.jsonl", "verify.log", "run.json", "agent-conditions.json", "verifier-conditions.json", "execution-conditions.json"]) {
     rmSync(join(spec.dir, artifact), { force: true });
   }
   cpSync(join(spec.taskDir, "prompt.md"), promptFile);
@@ -483,7 +484,15 @@ export async function runDockerCell(spec: CellSpec): Promise<C4Run> {
       outcome,
     };
     validateC4Run(run);
-    writeFileSync(join(spec.dir, "run.json"), `${JSON.stringify(run, null, 2)}\n`);
+    const runBytes = Buffer.from(`${JSON.stringify(run, null, 2)}\n`);
+    const readObservation = (name: string): ExecutionObservation => {
+      try { return JSON.parse(readFileSync(join(spec.dir, name), "utf8")) as ExecutionObservation; }
+      catch { throw new ToolError("cannot read execution-condition evidence"); }
+    };
+    const conditions = bindExecutionConditions(runBytes, readObservation("agent-conditions.json"),
+      adapterFailure || adapterTimedOut ? null : readObservation("verifier-conditions.json"));
+    writeFileSync(join(spec.dir, "run.json"), runBytes);
+    writeFileSync(join(spec.dir, "execution-conditions.json"), `${JSON.stringify(conditions, null, 2)}\n`, { mode: 0o600 });
     return run;
   } finally {
     await proxy.close();

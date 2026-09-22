@@ -25,6 +25,15 @@ if (args[0] === 'image') {
   const id = ids[args.at(-1)];
   if (!id || args[2] !== '--format' || args[3] !== '{{.Id}}') process.exit(1);
   process.stdout.write(id + '\\n');
+} else if (args[0] === 'container' && args[1] === 'inspect') {
+  const launches = fs.readFileSync(${JSON.stringify(commands)}, 'utf8').trim().split('\\n').map(JSON.parse);
+  const launch = launches.findLast(a => a[0] === 'run' && a[a.indexOf('--name') + 1] === args.at(-1));
+  if (!launch || launch.includes('--rm')) process.exit(1);
+  process.stdout.write(JSON.stringify([{ Image: launch.find(a => /^sha256:/.test(a)), HostConfig: {
+    NanoCpus: 0, CpuQuota: 0, CpuPeriod: 0, CpusetCpus: '', Memory: 0, MemoryReservation: 0, MemorySwap: 0, PidsLimit: null, StorageOpt: null, ReadonlyRootfs: true, NetworkMode: launch[launch.indexOf('--network') + 1]
+  }, NetworkSettings: { Networks: { [launch[launch.indexOf('--network') + 1]]: {} } }, State: { OOMKilled: false }, Config: { Env: ['SECRET=private'] } }]));
+} else if (args[0] === 'network' && args[1] === 'inspect') {
+  process.stdout.write(JSON.stringify([{Internal: true}]));
 } else if (args[0] === 'run') {
   if (args.some(arg => arg.includes('@sha256:'))) {
     process.stderr.write('No such image: a local image ID is not a repository digest\\n');
@@ -35,6 +44,7 @@ if (args[0] === 'image') {
     : entrypoint === '/opt/aob/runner-entrypoint.sh' || entrypoint === 'fixture-version' ? ids['aob-agent:local']
     : ids['aob-verifier:local'];
   if (!args.includes('--pull=never') || !args.includes(expected)) process.exit(125);
+  if (args.includes('fixture-agent-timeout')) setInterval(() => {}, 1000);
   if (entrypoint === 'fixture-version') process.stdout.write('fixture 1.0.0\\n');
   else if (args.some(arg => arg.includes('__AOB_VERIFY_META__'))) process.stdout.write('\\n__AOB_VERIFY_META__{"exit":0,"duration_ms":1}\\n');
 }
@@ -177,5 +187,42 @@ it.each([undefined, -1, 1.5, NaN])("rejects invalid Linux host UID %s before Doc
       workspaceDir: f.workspace, command: ["fixture-verifier"], logPath: join(f.root, "verify.log"), timeoutS: 5,
     })).rejects.toThrow(/Linux host uid:gid/);
     await expect(f.commands()).rejects.toThrow(/ENOENT/);
+  } finally { await f.close(); }
+});
+
+
+it("retains observed agent and verifier conditions before removing their containers", async () => {
+  const f = await fixture();
+  try {
+    const route = describeDockerProxyRoute("http://host.docker.internal:1234", "aob-123-456");
+    await runDockerCommand({ image: "aob-agent:local", workdir: f.workspace, argv: ["fixture-agent", route.clientUrl], env: {} }, route, join(f.root, "out"));
+    const agent = JSON.parse(await readFile(join(f.root, "out", "agent-conditions.json"), "utf8"));
+    expect(agent).toMatchObject({ status: "observed", image_digest: agentId, network: { mode: "internal", internal: true } });
+    expect(JSON.stringify(agent)).not.toContain("private");
+    await runDockerVerification({ image: "aob-verifier:local", imageDigest: verifierId, workspaceDir: f.workspace, command: ["fixture-verifier"], logPath: join(f.root, "verify.log"), timeoutS: 5 });
+    const verifier = JSON.parse(await readFile(join(f.root, "verifier-conditions.json"), "utf8"));
+    expect(verifier).toMatchObject({ status: "observed", image_digest: verifierId, network: { mode: "none", internal: null } });
+    const commands = await f.commands();
+    for (const inspection of commands.filter(a => a[0] === "container")) {
+      expect(commands.findIndex(a => a[0] === "rm" && a.at(-1) === inspection.at(-1))).toBeGreaterThan(commands.indexOf(inspection));
+    }
+  } finally { await f.close(); }
+});
+
+
+it("keeps timeout evidence available until inspection, then removes the killed container", async () => {
+  const f = await fixture();
+  try {
+    const route = describeDockerProxyRoute("http://host.docker.internal:1234", "aob-123-456");
+    const result = await runDockerCommand({ image: "aob-agent:local", workdir: f.workspace, argv: ["fixture-agent-timeout", route.clientUrl], env: {} }, route, join(f.root, "out"), 0.5);
+    expect(result.exitCode).toBe(124);
+    expect(JSON.parse(await readFile(join(f.root, "out", "agent-conditions.json"), "utf8"))).toMatchObject({status: "observed", wall_timeout_s: 0.5});
+    const commands = await f.commands();
+    const killed = commands.findIndex(a => a[0] === "kill" && a.at(-1) === route.containerName);
+    const inspected = commands.findIndex(a => a[0] === "container" && a.at(-1) === route.containerName);
+    const removed = commands.findIndex(a => a[0] === "rm" && a.at(-1) === route.containerName);
+    expect(killed).toBeGreaterThan(-1);
+    expect(inspected).toBeGreaterThan(killed);
+    expect(removed).toBeGreaterThan(inspected);
   } finally { await f.close(); }
 });

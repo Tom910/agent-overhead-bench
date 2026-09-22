@@ -6,6 +6,8 @@ import { StringDecoder } from "node:string_decoder";
 import { ConfigError, ToolError, type C3AdapterResult, type C3ToolEvent, type ClockAnchor } from "@aob/contracts";
 import { createCodexToolEventParser, createOpenCodeToolEventParser, createRunLogWriter, redact, type ContainerInvocation, type ToolEventParser } from "@aob/adapters";
 
+import { normalizeExecutionConditions, type ExecutionObservation } from "./execution-conditions.js";
+
 const CONTAINER_WORKSPACE = "/work/workspace";
 const DEFAULT_TIMEOUT_S = 30;
 const CONTAINER_NAME = /^aob-(?:verify-)?[0-9]+-[0-9]+$/;
@@ -197,6 +199,7 @@ function runDocker(
   observeStdout?: StdoutObserver,
   sinks?: DockerOutputSinks,
   captureLimitBytes = MAX_CONTROL_OUTPUT_BYTES,
+  retainContainer = false,
 ): Promise<DockerProcessResult> {
   return new Promise((resolveResult, rejectResult) => {
     const stdout: Buffer[] = [];
@@ -232,7 +235,7 @@ function runDocker(
       stopping = true;
       child.kill("SIGTERM");
       if (cleanupContainer) {
-        const cleanup = spawn("docker", ["rm", "-f", cleanupContainer], {
+        const cleanup = spawn("docker", retainContainer ? ["kill", cleanupContainer] : ["rm", "-f", cleanupContainer], {
           env: { PATH: process.env.PATH ?? "/usr/local/bin:/usr/bin:/bin" },
           stdio: "ignore",
         });
@@ -285,6 +288,26 @@ function runDocker(
       void finish(timedOut ? 124 : code ?? 1);
     });
   });
+}
+
+/** Observe only after the measured interval; never persist Docker environment or argv. */
+async function recordContainerConditions(name: string, image: string, network: string, timeoutS: number, path: string): Promise<void> {
+  let observation: ExecutionObservation = { status: "unavailable", reason: "inspection-failed" };
+  try {
+    const result = await runDocker(["container", "inspect", name], 5);
+    const net = network === "none" ? null : await runDocker(["network", "inspect", network], 5);
+    if (result.exitCode === 0 && (net === null || net.exitCode === 0)) {
+      const containers: unknown = JSON.parse(result.stdout.toString("utf8"));
+      const networks: unknown = net === null ? null : JSON.parse(net.stdout.toString("utf8"));
+      if (Array.isArray(containers) && containers.length === 1 && (networks === null || Array.isArray(networks) && networks.length === 1)) {
+        observation = normalizeExecutionConditions(containers[0], networks === null ? null : networks[0], image, network, timeoutS);
+      }
+    }
+  } catch { /* Incomplete attestation must never turn into a claim of matching conditions. */ }
+  try {
+    try { writeFileSync(path, `${JSON.stringify(observation, null, 2)}\n`, { mode: 0o600 }); }
+    catch { throw new ToolError("cannot retain execution-condition evidence"); }
+  } finally { await cleanupDockerContainer(name); }
 }
 
 /**
@@ -462,6 +485,8 @@ export async function runDockerCommand(
   const outputDir = prepareOutputDirectory(outDir);
   writeSetupFiles(invocation, workspaceDir);
   onContainerStart?.(route.containerName, { relayName: route.relayName, networkName: route.networkName });
+  let measuredImage: string | undefined;
+  let executionAttempted = false;
   try {
     await startDockerProxyRoute(route);
     const imageDigest = await inspectImage(invocation.image);
@@ -470,6 +495,7 @@ export async function runDockerCommand(
     }
     // inspectImage returns Docker's local .Id, not a registry manifest digest.
     const immutableImage = imageDigest;
+    measuredImage = imageDigest;
     let toolVersion = invocation.toolVersion;
     if (invocation.versionArgv !== undefined) {
       if (invocation.versionArgv.length === 0 || invocation.versionArgv.some((value) => value.includes("\0"))) {
@@ -493,7 +519,7 @@ export async function runDockerCommand(
     }
 
     const args = [
-      "run", "--pull=never", "--rm", "--init", "--read-only", "--cap-drop=ALL", "--security-opt", "no-new-privileges",
+      "run", "--pull=never", "--init", "--read-only", "--cap-drop=ALL", "--security-opt", "no-new-privileges",
       ...WRITABLE_TMPFS, "--network", route.networkName, "--entrypoint", "/opt/aob/runner-entrypoint.sh", "--name", route.containerName,
       "--workdir", CONTAINER_WORKSPACE,
       ...userArgs,
@@ -527,6 +553,7 @@ export async function runDockerCommand(
       stderrLog = createRunLogWriter(stderrPath, extras);
       const errorLog = stderrLog;
       onExecutionStart?.();
+      executionAttempted = true;
       tStart = performance.now();
       anchor = { wall_clock_iso: new Date().toISOString(), monotonic_zero: tStart };
       parser = invocation.toolEventFormat === "codex-json"
@@ -552,6 +579,7 @@ export async function runDockerCommand(
           }
         },
         { stdout: (chunk) => stdoutLog.write(chunk), stderr: (chunk) => errorLog.write(chunk) },
+        MAX_CONTROL_OUTPUT_BYTES, true,
       );
       tEnd = performance.now();
     } finally {
@@ -589,14 +617,16 @@ export async function runDockerCommand(
       ...(toolVersion === undefined ? {} : { toolVersion }),
     };
   } finally {
-    await stopDockerProxyRoute(route);
+    try {
+      if (executionAttempted && measuredImage !== undefined) await recordContainerConditions(route.containerName, measuredImage, route.networkName, timeoutS, join(outputDir, "agent-conditions.json"));
+    } finally { await stopDockerProxyRoute(route); }
   }
 }
 
 /** Removes a runner-owned container left behind by a killed runner process. */
 export async function cleanupDockerContainer(name: string): Promise<void> {
   if (!CONTAINER_NAME.test(name)) throw new ConfigError(`invalid persisted Docker container name: ${name}`);
-  const result = await runDocker(["rm", "-f", name]);
+  const result = await runDocker(["rm", "-f", name], 5);
   if (result.unavailable) throw new ConfigError("Docker executable is not available on PATH");
   const stderr = result.stderr.toString("utf8");
   if (result.exitCode !== 0 && !/no such container/i.test(stderr)) {
@@ -690,6 +720,7 @@ export async function runDockerVerification(opts: {
   mkdirSync(dirname(logPath), { recursive: true });
   const containerName = `aob-verify-${process.pid}-${Math.floor(performance.now())}`;
   const immutableImage = localImageDigest;
+  let executionAttempted = false;
   let stdoutLog: ReturnType<typeof createRunLogWriter> | undefined;
   let stdoutDecoder: StringDecoder | undefined;
   let stderrFd: number | undefined;
@@ -714,6 +745,7 @@ export async function runDockerVerification(opts: {
     opts.onVerificationStart?.();
     opts.onContainerStart?.(containerName);
     const tStart = performance.now();
+    executionAttempted = true;
     const mounts = verificationFile === undefined
       ? ["--mount", `type=bind,src=${workspaceDir},dst=/work/workspace,readonly=false`]
       : [
@@ -726,7 +758,7 @@ export async function runDockerVerification(opts: {
     if (verificationFile === undefined) {
       const command = opts.command!;
       const result = await runDocker([
-        "run", "--pull=never", "--rm", "--init", "--read-only", "--cap-drop=ALL", "--security-opt", "no-new-privileges", ...VERIFIER_WRITABLE_TMPFS, "--network", "none", "--name", containerName,
+        "run", "--pull=never", "--init", "--read-only", "--cap-drop=ALL", "--security-opt", "no-new-privileges", ...VERIFIER_WRITABLE_TMPFS, "--network", "none", "--name", containerName,
         "--workdir", verifierWorkdir, ...userArgs, ...mounts,
         "--entrypoint", command[0]!, immutableImage, ...command.slice(1),
       ], opts.timeoutS, containerName, {}, undefined, {
@@ -736,7 +768,7 @@ export async function runDockerVerification(opts: {
           }
         },
         stderr: (chunk) => spoolVerifierError(stderrFd!, chunk),
-      });
+      }, MAX_CONTROL_OUTPUT_BYTES, true);
       const hostDuration = performance.now() - tStart;
       // Decode each byte stream separately, then redact their concatenated
       // text with one state machine, matching the original verifier logs.
@@ -751,10 +783,10 @@ export async function runDockerVerification(opts: {
     // 1 MiB. Allow its small stdout metadata suffix without tightening that
     // existing boundary to the generic Docker control-output limit.
     const result = await runDocker([
-      "run", "--pull=never", "--rm", "--init", "--read-only", "--cap-drop=ALL", "--security-opt", "no-new-privileges", ...VERIFIER_WRITABLE_TMPFS, "--network", "none", "--name", containerName,
+      "run", "--pull=never", "--init", "--read-only", "--cap-drop=ALL", "--security-opt", "no-new-privileges", ...VERIFIER_WRITABLE_TMPFS, "--network", "none", "--name", containerName,
       "--workdir", verifierWorkdir, ...userArgs, ...mounts,
       "--entrypoint", "node", immutableImage, "-e", verifierCode,
-    ], opts.timeoutS, containerName, {}, undefined, undefined, 2 * 1024 * 1024);
+    ], opts.timeoutS, containerName, {}, undefined, undefined, 2 * 1024 * 1024, true);
     const hostDuration = performance.now() - tStart;
     if (result.unavailable) throw new ConfigError("Docker executable is not available on PATH");
     const stdout = result.stdout.toString("utf8");
@@ -789,9 +821,13 @@ export async function runDockerVerification(opts: {
         }
       }
       finally {
-        if (stderrDirectory !== undefined) {
-          try { rmSync(stderrDirectory, { recursive: true, force: true }); }
-          catch { throw new ToolError("Cannot remove private verifier error log directory"); }
+        try {
+          if (stderrDirectory !== undefined) {
+            try { rmSync(stderrDirectory, { recursive: true, force: true }); }
+            catch { throw new ToolError("Cannot remove private verifier error log directory"); }
+          }
+        } finally {
+          if (executionAttempted) await recordContainerConditions(containerName, immutableImage, "none", opts.timeoutS, join(dirname(logPath), "verifier-conditions.json"));
         }
       }
     }

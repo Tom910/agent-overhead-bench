@@ -33,3 +33,4 @@ export {
   type RunWindowWriterOptions,
 } from "./window-ledger.js";
 export { runDockerCell, runHostCell, stageTask } from "./cell.js";
+export { bindExecutionConditions, validateExecutionConditions, type ExecutionConditions, type ExecutionObservation } from "./execution-conditions.js";

@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { startMockUpstream } from "@aob/mock-upstream";
 import { validateC1Event, validateC4Run } from "@aob/contracts";
+import { validateExecutionConditions } from "./execution-conditions.js";
 import { runDockerCell, runHostCell } from "./cell.js";
 
 const fixtureDir = join(dirname(fileURLToPath(import.meta.url)), "test-fixtures");
@@ -100,6 +101,10 @@ describe("zero-spend adapter integration", () => {
         });
         expect(run.outcome, tool).toBe("completed");
         expect(run.tool_configuration).toBe(tool === "claude-code" ? "claude-code-no-web-search" : undefined);
+        const evidence = validateExecutionConditions(await readFile(join(out, "run.json")), JSON.parse(await readFile(join(out, "execution-conditions.json"), "utf8")));
+        expect(evidence.run_id).toBe(run.run_id);
+        expect(evidence.agent.status).toBe("unavailable"); // this Docker fixture cannot attest runtime controls
+        expect(evidence.verifier?.status).toBe("unavailable");
         expect(containers).toHaveLength(2);
         expect(containers[1]).toMatch(/^aob-verify-[0-9]+-[0-9]+$/);
         await assertArtifacts(out, tool);

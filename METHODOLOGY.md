@@ -4,7 +4,7 @@ The current published snapshot is selected by
 [evidence/current-campaign.json](evidence/current-campaign.json): 200 attempts
 from one Linux host, five harnesses, eight tasks and five repetitions, using
 `deepseek/deepseek-v4.1-flash`. Historical campaign and pilot sections below
-remain provenance. The official v1 archive is still unpublished pending the
+remain provenance. The official v1 results archive remains unpublished pending the
 existing freeze and source-review gates.
 
 ## Current comparison and verification revision
@@ -24,6 +24,19 @@ harness ranking. Native prompts, tools and context management remain harness
 behavior. Future request-setting capture records forwarded allowlisted values
 in private, C1-hash-bound sidecars; omitted provider defaults remain unknown,
 and capture does not prove that a provider honored the settings.
+
+Future Docker runs also retain `execution-conditions.json`, bound to the exact
+`run.json` bytes. Agent and verifier containers are inspected after measured
+execution, before bounded cleanup. The allowlisted evidence records Docker CPU,
+memory, PID and storage settings, network mode/internal status, image identity,
+OOM state and the runner timeout. Zero/unset Docker limits do not mean unlimited
+host resources: ancestor limits and bind-mounted workspace quotas remain unknown.
+Provider cache state remains uncontrolled; a fresh container does not reset it.
+Inspection failure is explicit and does not manufacture comparable conditions.
+These are post-execution observations, not continuous monitoring or proof that
+an external administrator never changed controls during a run. Validate a local
+sidecar with `node scripts/s5-check-execution-conditions.mjs RUN_DIRECTORY`.
+The sidecars are private by default and do not change the C1–C4 contracts.
 
 Pairwise pass-rate differences weight tasks equally. Exploratory 95% percentile
 intervals use 10,000 deterministic task-cluster bootstrap resamples: an entire

@@ -19,7 +19,7 @@ const fs = require('node:fs');
 const args = process.argv.slice(2);
 fs.appendFileSync(${JSON.stringify(join(root, "commands"))}, args.join(' ') + '\\n');
 if (args[0] === 'image') { process.stdout.write('sha256:' + 'a'.repeat(64) + '\\n'); }
-else if (args[0] === 'rm' && args.includes('aob-123-456')) { ${cleanupBody} }
+else if ((args[0] === 'rm' || args[0] === 'kill') && args.includes('aob-123-456')) { ${cleanupBody} }
 else if (args[0] === 'run' && args.includes('version-fixture')) { ${versionBody} }
 else if (args[0] === 'run' && args.includes('/opt/aob/runner-entrypoint.sh')) {
   const root = ${JSON.stringify(root)};

@@ -204,6 +204,8 @@ describe("matrix", () => {
       kind: "docker-command", image: "aob-native-verifier:s2", image_digest: fakeDigest,
       command: ["npm", "test"], workdir: ".", network: "none",
     }));
+    await mkdir(join(dir, "cell"));
+    for (const name of ["agent-conditions.json", "verifier-conditions.json", "execution-conditions.json"]) await writeFile(join(dir, "cell", name), "stale");
     const staged = stageTask({
       dir: join(dir, "cell"), taskDir, upstream: "http://127.0.0.1:1", run_id: "native-stage",
       tool: "mock-agent", task_id: "native-stage", model: "mock", price_book: "mock",
@@ -213,6 +215,7 @@ describe("matrix", () => {
       command: ["npm", "test"], workdir: ".", network: "none",
     });
     expect(staged.verifyFile).toBeUndefined();
+    for (const name of ["agent-conditions.json", "verifier-conditions.json", "execution-conditions.json"]) await expect(access(join(dir, "cell", name))).rejects.toBeDefined();
     await expect(access(join(staged.workspaceDir, "verifier.json"))).rejects.toBeDefined();
     await expect(access(join(dir, "cell", "verifier.json"))).resolves.toBeUndefined();
   });
@@ -1322,6 +1325,8 @@ exit 0
     const docker = join(binDir, "docker");
     await writeFile(docker, `#!/bin/sh
 if [ "$1" = image ]; then printf '${fakeDigest}\\n'; exit 0; fi
+if [ "$1" = rm ]; then exit 0; fi
+if [ "$1" = container ]; then exit 1; fi
 printf '\\n__AOB_VERIFY_META__{"exit":0,"duration_ms":2}\\n'
 exit 7
 `);
@@ -1437,6 +1442,9 @@ if [ "$1" = network ] && [ "$2" = rm ]; then exit 0; fi
 if [ "$1" = exec ]; then exit 0; fi
 if [ "$1" = run ] && printf '%s' "$*" | grep -q -- ' -d '; then printf 'relay-id\\n'; exit 0; fi
 if [ "$1" = rm ]; then printf 'cleaned\\n' > "${marker}"; exit 0; fi
+if [ "$1" = kill ]; then exit 0; fi
+if [ "$1" = container ]; then exit 1; fi
+if [ "$1" = network ] && [ "$2" = inspect ]; then exit 1; fi
 trap 'exit 124' TERM
 while :; do :; done
 `);
@@ -1753,3 +1761,16 @@ exit 1
     }
   });
 });
+
+it("bounds cleanup when the Docker daemon does not answer", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "aob-cleanup-hung-"));
+  const docker = join(dir, "docker");
+  await writeFile(docker, '#!/bin/sh\nexec /bin/sleep 30\n', { mode: 0o755 });
+  const oldPath = process.env.PATH;
+  process.env.PATH = dir;
+  try {
+    const start = performance.now();
+    await expect(cleanupDockerContainer("aob-123-456")).rejects.toThrow(/cannot clean up/);
+    expect(performance.now() - start).toBeLessThan(8000);
+  } finally { process.env.PATH = oldPath; }
+}, 10000);

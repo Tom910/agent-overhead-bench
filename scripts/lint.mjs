@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readdirSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -22,11 +22,12 @@ for (const dir of roots) {
 
 for (const path of files.sort()) {
   const javascript = path.endsWith(".mjs");
-  const command = javascript ? process.execPath : "sh";
+  const shell = /^#![^\n]*\bbash\b/.test(readFileSync(path, "utf8")) ? "bash" : "sh";
+  const command = javascript ? process.execPath : shell;
   const args = javascript ? ["--check", path] : ["-n", path];
   const result = spawnSync(command, args, { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
   if (result.status !== 0) {
-    process.stderr.write(relative(root, path) + " failed " + (javascript ? "node --check" : "sh -n") + "\n");
+    process.stderr.write(relative(root, path) + " failed " + (javascript ? "node --check" : `${shell} -n`) + "\n");
     process.stderr.write(result.stderr);
     process.exit(1);
   }
