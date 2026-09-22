@@ -1,4 +1,5 @@
-import { closeSync, copyFileSync, existsSync, lstatSync, mkdirSync, openSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from "node:fs";
+import { preserveAttempt } from "./attempt-evidence.js";
+import { closeSync, existsSync, lstatSync, mkdirSync, openSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import { isCompletedNativeTaskFailure, BudgetExceeded, ConfigError, ContractViolation, validateC1Event, validateC4Run, validateProviderRouting, type ProviderRouting, type ToolConfiguration, type C1Event, type C4Run } from "@aob/contracts";
 import type { TaskEnvironment, VerifierSpec } from "@aob/tasks";
@@ -135,27 +136,6 @@ function cellDir(opts: MatrixOptions, cell: Cell): string {
   return `${opts.resultsDir}/${cell.condition}/${cell.tool}/${cell.task_id}/rep-${cell.rep}`;
 }
 
-function preserveAttempt(dir: string, attempt: number): void {
-  const destination = join(dir, ".attempts", `attempt-${attempt}`);
-  const artifacts = ["run.json", "events.jsonl", "stdout.log", "stderr.log", "tool-events.jsonl", "verify.log", "prompt.md", "verifier.json"];
-  let copied = false;
-  for (const name of artifacts) {
-    const source = join(dir, name);
-    try {
-      const info = lstatSync(source);
-      if (info.isSymbolicLink() || !info.isFile()) throw new ConfigError(`cannot preserve retry artifact: ${source}`);
-      mkdirSync(destination, { recursive: true });
-      copyFileSync(source, join(destination, name));
-      copied = true;
-    } catch (error) {
-      if (error instanceof ConfigError) throw error;
-      if (!(error instanceof Error && "code" in error && error.code === "ENOENT")) {
-        throw new ConfigError(`cannot preserve retry artifact ${source}: ${error instanceof Error ? error.message : String(error)}`);
-      }
-    }
-  }
-  if (!copied) return;
-}
 
 function definitionKey(opts: MatrixOptions): string {
   return JSON.stringify({

@@ -205,7 +205,7 @@ describe("matrix", () => {
       command: ["npm", "test"], workdir: ".", network: "none",
     }));
     await mkdir(join(dir, "cell"));
-    for (const name of ["agent-conditions.json", "verifier-conditions.json", "execution-conditions.json"]) await writeFile(join(dir, "cell", name), "stale");
+    for (const name of ["agent-conditions.json", "verifier-conditions.json", "execution-conditions.json", "events.jsonl.upstream.jsonl", "candidate.patch", "candidate-evidence.json"]) await writeFile(join(dir, "cell", name), "stale");
     const staged = stageTask({
       dir: join(dir, "cell"), taskDir, upstream: "http://127.0.0.1:1", run_id: "native-stage",
       tool: "mock-agent", task_id: "native-stage", model: "mock", price_book: "mock",
@@ -215,7 +215,7 @@ describe("matrix", () => {
       command: ["npm", "test"], workdir: ".", network: "none",
     });
     expect(staged.verifyFile).toBeUndefined();
-    for (const name of ["agent-conditions.json", "verifier-conditions.json", "execution-conditions.json"]) await expect(access(join(dir, "cell", name))).rejects.toBeDefined();
+    for (const name of ["agent-conditions.json", "verifier-conditions.json", "execution-conditions.json", "events.jsonl.upstream.jsonl", "candidate.patch", "candidate-evidence.json"]) await expect(access(join(dir, "cell", name))).rejects.toBeDefined();
     await expect(access(join(staged.workspaceDir, "verifier.json"))).rejects.toBeDefined();
     await expect(access(join(dir, "cell", "verifier.json"))).resolves.toBeUndefined();
   });
@@ -466,6 +466,7 @@ describe("matrix", () => {
         await mkdir(cellDir, { recursive: true });
         await writeFile(join(cellDir, "run.json"), JSON.stringify({ attempt: attempts }));
         await writeFile(join(cellDir, "events.jsonl"), `attempt-${attempts}\n`);
+        for (const name of ["verify.sh", "agent-conditions.json", "verifier-conditions.json", "execution-conditions.json", "events.jsonl.upstream.jsonl", "candidate.patch", "candidate-evidence.json"]) await writeFile(join(cellDir, name), `private-${name}-${attempts}\n`);
         return {
           v: 1 as const, run_id: cell.id, tool: "mock", tool_version: "mock", task_id: "t",
           task_source: "local-development", task_revision: "working-tree", task_regime: "short" as const,
@@ -480,6 +481,7 @@ describe("matrix", () => {
     expect(result.cells[0]?.status).toBe("quarantined");
     expect(result.cells[0]?.retries).toBe(1);
     expect(JSON.parse(await readFile(join(dir, "results", "pinned", "mock", "t", "rep-0", ".attempts", "attempt-0", "run.json"), "utf8"))).toEqual({ attempt: 1 });
+    for (const name of ["verify.sh", "agent-conditions.json", "verifier-conditions.json", "execution-conditions.json", "events.jsonl.upstream.jsonl", "candidate.patch", "candidate-evidence.json"]) expect(await readFile(join(dir, "results", "pinned", "mock", "t", "rep-0", ".attempts", "attempt-0", name), "utf8")).toBe(`private-${name}-1\n`);
   });
 
   it("does not silently quarantine a thrown execution error", async () => {

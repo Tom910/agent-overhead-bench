@@ -1,3 +1,4 @@
+import { PRIVATE_ATTEMPT_ARTIFACTS } from "./attempt-evidence.js";
 import { copyFileSync, cpSync, lstatSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { arch, platform, totalmem } from "node:os";
@@ -90,6 +91,11 @@ function reportedTaskEnvironment(environment: TaskEnvironment | undefined, tool:
 
 export function stageTask(spec: CellSpec): { workspaceDir: string; promptFile: string; verifier: VerifierSpec; verifyFile?: string } {
   mkdirSync(spec.dir, { recursive: true });
+  const cellInfo = lstatSync(spec.dir);
+  if (cellInfo.isSymbolicLink() || !cellInfo.isDirectory()) throw new ConfigError("invalid cell evidence directory");
+  for (const artifact of PRIVATE_ATTEMPT_ARTIFACTS) {
+    rmSync(join(spec.dir, artifact), { force: true });
+  }
   const workspaceDir = join(spec.dir, "workspace");
   rmSync(workspaceDir, { recursive: true, force: true });
   cpSync(join(spec.taskDir, "workspace"), workspaceDir, { recursive: true });
@@ -99,12 +105,6 @@ export function stageTask(spec: CellSpec): { workspaceDir: string; promptFile: s
   const promptFile = join(spec.dir, "prompt.md");
   const verifyFile = join(spec.dir, "verify.sh");
   const verifierDescriptorFile = join(spec.dir, "verifier.json");
-  rmSync(promptFile, { force: true });
-  rmSync(verifyFile, { force: true });
-  rmSync(verifierDescriptorFile, { force: true });
-  for (const artifact of ["events.jsonl", "stdout.log", "stderr.log", "tool-events.jsonl", "verify.log", "run.json", "agent-conditions.json", "verifier-conditions.json", "execution-conditions.json"]) {
-    rmSync(join(spec.dir, artifact), { force: true });
-  }
   cpSync(join(spec.taskDir, "prompt.md"), promptFile);
   let verifier = spec.verifier;
   if (verifier === undefined) {
