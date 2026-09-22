@@ -43,3 +43,26 @@ Crash/resume idempotence; first-attempt evidence surviving a second staging/prox
 ## Validation record
 
 Pending implementation. Exact image-byte archival and public sanitized condition projections belong to their own freeze stage; this stage preserves private source evidence and records image identities without claiming image availability.
+
+## Task 1 review follow-up: empty setup attempt export
+
+The new explicit all-missing private manifest exposes a pre-existing release
+assumption that every retry directory contains C4. Extend only generic sanitized
+provenance copying: a strictly validated version-1 manifest declaring every known
+artifact missing, with no other directory entries, becomes public unmeasured
+retry metadata with unknown spend and no fabricated C4. Keep this outside the
+measured retry tree. Partial evidence without C4 remains rejected. Official
+ledger/completeness gates remain unchanged. Add an actual setup-throw → explicit
+resume-success → export regression and adversarial manifest/partial-evidence
+checks. No public copying of private manifests/provider/candidate bytes.
+The private inventory/schema writer and the strict versioned export reader must
+be updated together when adding artifacts; the actual matrix preservation →
+export regression detects drift. Do not accept arbitrary manifest artifact keys.
+
+Task 1 validation: 239 runner tests and runner typecheck passed. The review
+regression first failed at missing retry `run.json`, then passed with eight
+malformed-manifest variants and nonempty provider-without-C4 evidence rejected.
+After the export fix: 314 report tests, report typecheck, five lifecycle/freeze
+script tests, repository lint and diff checks passed. An independent root probe
+also observed two attempts, zero provider requests, final `done`, and all four
+original private sidecars retained. Task 2 remains pending.

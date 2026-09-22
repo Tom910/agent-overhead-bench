@@ -2,6 +2,7 @@
  * Release boundary: copy only validated raw results and declared logs into a
  * portable archive tree, excluding workspaces, prompts, and private solutions.
  */
+import { createHash } from "node:crypto";
 import { constants, lstatSync, mkdirSync, openSync, readFileSync, readdirSync, realpathSync, closeSync, fstatSync, writeFileSync, type Stats } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { c4MeasurementIdentity, ConfigError, validateC1Event, validateC4Run, type C1Event, type C4Run } from "@aob/contracts";
@@ -203,6 +204,49 @@ function portableRetryRun(run: C4Run): C4Run {
   };
 }
 
+// Versioned schema allowlist, deliberately separate from the runner's private
+// copy inventory. Adding a private artifact must not silently widen this gate.
+const EMPTY_RETRY_FILES_V1 = [
+  "run.json", "events.jsonl", "stdout.log", "stderr.log", "tool-events.jsonl", "verify.log",
+  "prompt.md", "verifier.json", "verify.sh", "agent-conditions.json", "verifier-conditions.json",
+  "execution-conditions.json", "events.jsonl.upstream.jsonl", "candidate.patch", "candidate-evidence.json",
+] as const;
+function emptyRetryMetadata(attemptPath: string, attemptName: string, entries: string[]): string {
+  const fail = (): never => { throw new ConfigError(`retry without C4 requires a strictly all-missing manifest: ${attemptPath}`); };
+  if (entries.length !== 1 || entries[0] !== "manifest.json") fail();
+  const path = join(attemptPath, "manifest.json");
+  let fd: number | undefined;
+  try {
+    fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
+    const info = fstatSync(fd);
+    if (!info.isFile() || info.size > 16 * 1024) fail();
+    const bytes = readFileSync(fd);
+    const value: unknown = JSON.parse(bytes.toString("utf8"));
+    const object = (v: unknown): v is Record<string, unknown> => v !== null && typeof v === "object" && !Array.isArray(v);
+    if (!object(value) || Object.keys(value).length !== 3 || value.schema_version !== 1
+      || !Number.isSafeInteger(value.attempt) || (value.attempt as number) < 0
+      || `attempt-${value.attempt}` !== attemptName || !object(value.files)) fail();
+    const record = value as { attempt: number; files: Record<string, unknown> };
+    if (Object.keys(record.files).length !== EMPTY_RETRY_FILES_V1.length) fail();
+    for (const name of EMPTY_RETRY_FILES_V1) {
+      const item = record.files[name];
+      if (!object(item) || Object.keys(item).length !== 1 || item.status !== "missing") fail();
+    }
+    // Missing observations are not proof that setup used no model or money.
+    // Keep this separate from retries/ so C4-based measured populations cannot
+    // acquire a fabricated run, outcome, token count or zero-cost observation.
+    return `${JSON.stringify({
+      schema_version: 1, attempt: record.attempt, status: "unmeasured",
+      reason: "all-retained-attempt-artifacts-missing", spend_usd: null,
+      included_in_measured_counts: false,
+      private_manifest_sha256: `sha256:${createHash("sha256").update(bytes).digest("hex")}`,
+    }, null, 2)}\n`;
+  } catch (error) {
+    if (error instanceof ConfigError) throw error;
+    throw new ConfigError(`invalid empty retry manifest: ${attemptPath}`);
+  } finally { closeEvidenceDescriptor(fd); }
+}
+
 function copyRetryEvidence(resultsRoot: string, destinationRoot: string, currentRuns: Map<string, C4Run>): void {
   const visit = (directory: string): void => {
     for (const name of readdirSync(directory)) {
@@ -230,6 +274,11 @@ function copyRetryEvidence(resultsRoot: string, destinationRoot: string, current
           const entryInfo = lstatSync(entryPath);
           if (entryInfo.isSymbolicLink()) throw new ConfigError(`retry evidence is a symlink: ${entryPath}`);
           if (entryInfo.isDirectory()) throw new ConfigError(`retry evidence contains an unpublished directory: ${entryPath}`);
+        }
+        if (!entries.includes("run.json")) {
+          const metadata = emptyRetryMetadata(attemptPath, attemptName, entries);
+          writeReleaseFile(join(destinationRoot, "unmeasured-retries", relativeCell, `${attemptName}.json`), metadata);
+          continue;
         }
         const run = readRetryRun(join(attemptPath, "run.json"), currentRuns);
         const eventPath = join(attemptPath, "events.jsonl");
