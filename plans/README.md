@@ -46,7 +46,7 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
-| [S6-interactive-pages-plan.md](./S6-interactive-pages-plan.md) | Implemented and verified: generated interactive results; Pages deployment awaiting repository setting |
+| [S6-interactive-pages-plan.md](./S6-interactive-pages-plan.md) | Implemented and verified: generated interactive results; Pages enabled; deployment verification in progress |
 | [S6-task-and-benchmark-cost-plan.md](./S6-task-and-benchmark-cost-plan.md) | Implemented: task repetition averages and full selected benchmark totals; known lower bounds disclosed |
 | [S7-four-usage-replacements-plan.md](./S7-four-usage-replacements-plan.md) | Complete: four validated replacements published; originals retained and all 200 selected measurements complete |
 | [S1-full-request-model-metadata-plan.md](./S1-full-request-model-metadata-plan.md) | Fixed: complete bounded JSON model extraction; guard stays enabled |

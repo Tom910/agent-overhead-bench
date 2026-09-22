@@ -28,3 +28,5 @@ User explicitly approved README cleanup, interactive website and GitHub hosting;
 Report suite: 290 tests pass. All workspace typechecks pass; lint passes (187 scripts), client JS syntax and git diff checks pass. Freshness and allowlisted artifact build pass. Chrome checks at 1440px and 390px confirm no page overflow, task/filter/sort/chart/reset interactions, keyboard chart selection, final-harness protection, matrix navigation, downloadable artifacts and readable no-JavaScript results. No browser runtime errors. Independent reviewer found missing partial-measurement labels; regression was observed failing, fixed and passed. Current data unchanged.
 
 Deployment requires repository Pages Source = GitHub Actions. SSH push is available; no authenticated API session is available to change that setting. User was asked to enable it while implementation continued.
+
+The maintainer confirmed Pages is enabled. A documentation-only push retriggers the deployment; public URL verification follows the workflow.
