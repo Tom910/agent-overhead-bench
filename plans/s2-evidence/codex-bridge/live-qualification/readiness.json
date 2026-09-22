@@ -1,0 +1,20 @@
+{
+  "host": "linux",
+  "model": "gpt-6-luna",
+  "catalog_compatibility_version": "0.155.1",
+  "catalog_exact_model_listed": true,
+  "catalog_minimum_client_version": "0.155.0",
+  "catalog_reasoning_levels": [
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "actual_native_codex_version": "0.149.1",
+  "read_only_account_requests": 3,
+  "refresh_attempts": 0,
+  "original_cli_auth_modified": false,
+  "refresh_token_transferred": false,
+  "interpretation": "Catalog visibility is version-filtered. Live native tool-loop evidence is recorded separately; the compatibility query does not relabel the installed client."
+}

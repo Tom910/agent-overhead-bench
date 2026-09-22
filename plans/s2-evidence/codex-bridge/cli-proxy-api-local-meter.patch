@@ -1,0 +1,356 @@
+diff --git a/internal/runtime/executor/aob_meter.go b/internal/runtime/executor/aob_meter.go
+new file mode 100644
+index 0000000..db936d3
+--- /dev/null
++++ b/internal/runtime/executor/aob_meter.go
+@@ -0,0 +1,68 @@
++package executor
++
++import (
++	"net/http"
++	"net/url"
++	"strconv"
++	"strings"
++
++	cliproxyauth "github.com/router-for-me/CLIProxyAPI/v7/sdk/cliproxy/auth"
++)
++
++// aobMeterEndpoint is a private, explicit OAuth instrumentation opt-in.
++// It does not reinterpret a provider URL or change OAuth credential ownership.
++func aobMeterEndpoint(auth *cliproxyauth.Auth) (string, bool, error) {
++	if auth == nil || auth.Metadata == nil {
++		return "", false, nil
++	}
++	raw, present := auth.Metadata["aob_meter_base_url"]
++	if !present {
++		return "", false, nil
++	}
++	invalid := func() (string, bool, error) {
++		return "", true, statusErr{code: http.StatusBadRequest, msg: "invalid local Codex metering configuration"}
++	}
++	value, ok := raw.(string)
++	if !ok || value == "" || strings.TrimSpace(value) != value || strings.ContainsAny(value, "?#") {
++		return invalid()
++	}
++	endpoint, err := url.Parse(value)
++	if err != nil || endpoint.Scheme != "http" || endpoint.Opaque != "" || endpoint.User != nil || endpoint.Path != "" || endpoint.RawPath != "" || endpoint.RawQuery != "" || endpoint.Fragment != "" || endpoint.ForceQuery {
++		return invalid()
++	}
++	if endpoint.Hostname() != "127.0.0.1" && endpoint.Hostname() != "localhost" {
++		return invalid()
++	}
++	port := endpoint.Port()
++	number, err := strconv.Atoi(port)
++	if err != nil || number < 1 || number > 65535 || strconv.Itoa(number) != port {
++		return invalid()
++	}
++	if auth.Provider != "codex" || codexAuthUsesAPIKey(auth) {
++		return invalid()
++	}
++	capability := ""
++	for key, value := range auth.Attributes {
++		if strings.EqualFold(key, "header:x-aob-proxy-token") {
++			if capability != "" {
++				return invalid()
++			}
++			capability = value
++		}
++	}
++	if len(capability) < 32 || len(capability) > 256 {
++		return invalid()
++	}
++	for _, c := range capability {
++		if !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' || c == '-') {
++			return invalid()
++		}
++	}
++	return endpoint.String(), true, nil
++}
++func aobMeterUnsupportedTransport() error {
++	return statusErr{code: http.StatusBadRequest, msg: "Codex metering supports HTTP Responses only"}
++}
++func aobMeterDisableRedirects(client *http.Client) {
++	client.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
++}
+diff --git a/internal/runtime/executor/aob_meter_test.go b/internal/runtime/executor/aob_meter_test.go
+new file mode 100644
+index 0000000..c60577f
+--- /dev/null
++++ b/internal/runtime/executor/aob_meter_test.go
+@@ -0,0 +1,164 @@
++package executor
++
++import (
++	"context"
++	"fmt"
++	"io"
++	"net/http"
++	"strings"
++	"testing"
++
++	"github.com/router-for-me/CLIProxyAPI/v7/internal/config"
++	cliproxyauth "github.com/router-for-me/CLIProxyAPI/v7/sdk/cliproxy/auth"
++	cliproxyexecutor "github.com/router-for-me/CLIProxyAPI/v7/sdk/cliproxy/executor"
++	sdktranslator "github.com/router-for-me/CLIProxyAPI/v7/sdk/translator"
++)
++
++type aobMeterRoundTripper func(*http.Request) (*http.Response, error)
++
++func (f aobMeterRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
++func aobMeterAuth(endpoint any) *cliproxyauth.Auth {
++	return &cliproxyauth.Auth{Provider: "codex", Metadata: map[string]any{"type": "codex", "access_token": "synthetic-access-token", "account_id": "synthetic-account", "aob_meter_base_url": endpoint}, Attributes: map[string]string{"header:x-aob-proxy-token": strings.Repeat("k", 32)}}
++}
++func aobMeterCall(t *testing.T, stream bool, auth *cliproxyauth.Auth, opts cliproxyexecutor.Options) (error, []*http.Request) {
++	t.Helper()
++	var seen []*http.Request
++	rt := aobMeterRoundTripper(func(r *http.Request) (*http.Response, error) {
++		seen = append(seen, r)
++		return &http.Response{StatusCode: 200, Header: http.Header{"Content-Type": []string{"text/event-stream"}}, Body: io.NopCloser(strings.NewReader("data: {\"type\":\"response.completed\",\"response\":{\"id\":\"r1\",\"model\":\"gpt-6-luna\",\"status\":\"completed\",\"output\":[],\"usage\":{\"input_tokens\":100,\"output_tokens\":30,\"total_tokens\":130}}}\n\n")), Request: r}, nil
++	})
++	ctx := context.WithValue(context.Background(), "cliproxy.roundtripper", rt)
++	e := NewCodexExecutor(&config.Config{SDKConfig: config.SDKConfig{DisableImageGeneration: config.DisableImageGenerationPassthrough}})
++	req := cliproxyexecutor.Request{Model: "gpt-6-luna", Payload: []byte(`{"model":"gpt-6-luna","input":[{"role":"user","content":"fixture"}]}`)}
++	opts.SourceFormat = sdktranslator.FromString("openai-response")
++	opts.Stream = stream
++	if stream {
++		result, err := e.ExecuteStream(ctx, auth, req, opts)
++		if err == nil {
++			for c := range result.Chunks {
++				if c.Err != nil {
++					err = c.Err
++				}
++			}
++		}
++		return err, seen
++	}
++	_, err := e.Execute(ctx, auth, req, opts)
++	return err, seen
++}
++func TestAOBMeterNoNetworkRoutesOAuthThroughLoopback(t *testing.T) {
++	for _, stream := range []bool{false, true} {
++		t.Run(fmt.Sprint(stream), func(t *testing.T) {
++			auth := aobMeterAuth("http://127.0.0.1:33117")
++			err, seen := aobMeterCall(t, stream, auth, cliproxyexecutor.Options{})
++			if err != nil {
++				t.Fatal(err)
++			}
++			if len(seen) != 1 || seen[0].URL.String() != "http://127.0.0.1:33117/responses" {
++				t.Fatalf("meter not selected; calls=%d", len(seen))
++			}
++			for header, want := range map[string]string{"Authorization": "Bearer synthetic-access-token", "Chatgpt-Account-Id": "synthetic-account", "X-Aob-Proxy-Token": strings.Repeat("k", 32)} {
++				if seen[0].Header.Get(header) != want {
++					t.Fatalf("missing synthetic header %s", header)
++				}
++			}
++			if codexAuthUsesAPIKey(auth) {
++				t.Fatal("OAuth classification changed")
++			}
++		})
++	}
++}
++func TestAOBMeterNoNetworkRejectsInvalidBeforeSending(t *testing.T) {
++	values := []any{nil, 1, true, "", "http://example.com:123", "https://127.0.0.1:123", "http://127.0.0.1", "http://127.0.0.1:0", "http://127.0.0.1:65536", "http://127.0.0.1:123/", "http://127.0.0.1:123/path", "http://a:b@127.0.0.1:123", "http://127.0.0.1:123?x=y", "http://127.0.0.1:123?", "http://127.0.0.1:123#x", "http://127.0.0.1:123#", "http://localhost.evil:123", " http://127.0.0.1:123"}
++	for i, v := range values {
++		for _, stream := range []bool{false, true} {
++			t.Run(fmt.Sprintf("%d/%t", i, stream), func(t *testing.T) {
++				err, seen := aobMeterCall(t, stream, aobMeterAuth(v), cliproxyexecutor.Options{})
++				if err == nil || len(seen) != 0 {
++					t.Fatalf("invalid metering configuration must reject before any request: err=%v requests=%d", err, len(seen))
++				}
++				if strings.Contains(err.Error(), "synthetic") || strings.Contains(err.Error(), "example.com") {
++					t.Fatal("error discloses input")
++				}
++			})
++		}
++	}
++}
++func TestAOBMeterNoNetworkRejectsMissingCapabilityAndAPIKey(t *testing.T) {
++	for _, kind := range []string{"header", "api-key", "compact"} {
++		for _, stream := range []bool{false, true} {
++			t.Run(fmt.Sprintf("%s/%t", kind, stream), func(t *testing.T) {
++				auth := aobMeterAuth("http://localhost:33117")
++				opts := cliproxyexecutor.Options{}
++				switch kind {
++				case "header":
++					delete(auth.Attributes, "header:x-aob-proxy-token")
++				case "api-key":
++					auth.Attributes["api_key"] = "synthetic-key"
++				case "compact":
++					opts.Alt = "responses/compact"
++				}
++				err, seen := aobMeterCall(t, stream, auth, opts)
++				if err == nil || len(seen) != 0 {
++					t.Fatalf("expected fail-closed rejection; err=%v calls=%d", err, len(seen))
++				}
++			})
++		}
++	}
++}
++func TestAOBMeterNoNetworkUnconfiguredRemainsNative(t *testing.T) {
++	for _, stream := range []bool{false, true} {
++		auth := aobMeterAuth(nil)
++		delete(auth.Metadata, "aob_meter_base_url")
++		err, seen := aobMeterCall(t, stream, auth, cliproxyexecutor.Options{})
++		if err != nil || len(seen) != 1 || seen[0].URL.String() != "https://chatgpt.com/backend-api/codex/responses" {
++			t.Fatalf("unconfigured behavior changed; err=%v calls=%d", err, len(seen))
++		}
++	}
++}
++
++func TestAOBMeterNoNetworkLocalhostAndMixedCaseHeader(t *testing.T) {
++	auth := aobMeterAuth("http://localhost:33117")
++	delete(auth.Attributes, "header:x-aob-proxy-token")
++	auth.Attributes["header:X-Aob-Proxy-Token"] = strings.Repeat("z", 32)
++	err, seen := aobMeterCall(t, true, auth, cliproxyexecutor.Options{})
++	if err != nil || len(seen) != 1 || seen[0].URL.Host != "localhost:33117" {
++		t.Fatalf("local route failed: err=%v calls=%d", err, len(seen))
++	}
++}
++func TestAOBMeterNoNetworkWebsocketRefused(t *testing.T) {
++	executor := NewCodexWebsocketsExecutor(&config.Config{})
++	req := cliproxyexecutor.Request{Model: "gpt-6-luna", Payload: []byte(`{"model":"gpt-6-luna","input":[]}`)}
++	auth := aobMeterAuth("http://127.0.0.1:33117")
++	if _, err := executor.Execute(context.Background(), auth, req, cliproxyexecutor.Options{}); err == nil {
++		t.Fatal("websocket Execute must reject metered mode")
++	}
++	if _, err := executor.ExecuteStream(context.Background(), auth, req, cliproxyexecutor.Options{}); err == nil {
++		t.Fatal("websocket ExecuteStream must reject metered mode")
++	}
++}
++func TestAOBMeterNoNetworkRedirectCannotEscape(t *testing.T) {
++	for _, stream := range []bool{false, true} {
++		t.Run(fmt.Sprint(stream), func(t *testing.T) {
++			calls := 0
++			rt := aobMeterRoundTripper(func(r *http.Request) (*http.Response, error) {
++				calls++
++				return &http.Response{StatusCode: 302, Header: http.Header{"Location": []string{"http://127.0.0.1:33118/unmetered"}}, Body: io.NopCloser(strings.NewReader("")), Request: r}, nil
++			})
++			ctx := context.WithValue(context.Background(), "cliproxy.roundtripper", rt)
++			executor := NewCodexExecutor(&config.Config{SDKConfig: config.SDKConfig{DisableImageGeneration: config.DisableImageGenerationPassthrough}})
++			auth := aobMeterAuth("http://127.0.0.1:33117")
++			req := cliproxyexecutor.Request{Model: "gpt-6-luna", Payload: []byte(`{"model":"gpt-6-luna","input":[]}`)}
++			opts := cliproxyexecutor.Options{SourceFormat: sdktranslator.FromString("openai-response"), Stream: stream}
++			var err error
++			if stream {
++				_, err = executor.ExecuteStream(ctx, auth, req, opts)
++			} else {
++				_, err = executor.Execute(ctx, auth, req, opts)
++			}
++			if err == nil || calls != 1 {
++				t.Fatalf("redirect followed or accepted: err=%v calls=%d", err, calls)
++			}
++		})
++	}
++}
+diff --git a/internal/runtime/executor/codex_executor_execute.go b/internal/runtime/executor/codex_executor_execute.go
+index fa988c1..45b19ed 100644
+--- a/internal/runtime/executor/codex_executor_execute.go
++++ b/internal/runtime/executor/codex_executor_execute.go
+@@ -19,6 +19,13 @@ import (
+ )
+ 
+ func (e *CodexExecutor) Execute(ctx context.Context, auth *cliproxyauth.Auth, req cliproxyexecutor.Request, opts cliproxyexecutor.Options) (resp cliproxyexecutor.Response, err error) {
++	meterURL, metered, meterErr := aobMeterEndpoint(auth)
++	if meterErr != nil {
++		return resp, meterErr
++	}
++	if metered && (opts.Alt != "" || isCodexOpenAIImageRequest(opts)) {
++		return resp, aobMeterUnsupportedTransport()
++	}
+ 	ctx = helps.EnsureSessionContext(ctx, opts, req.Payload)
+ 	if opts.Alt == "responses/compact" {
+ 		return e.executeCompact(ctx, auth, req, opts)
+@@ -29,6 +36,9 @@ func (e *CodexExecutor) Execute(ctx context.Context, auth *cliproxyauth.Auth, re
+ 	baseModel := thinking.ParseSuffix(req.Model).ModelName
+ 
+ 	apiKey, baseURL := codexCreds(auth)
++	if metered {
++		baseURL = meterURL
++	}
+ 	if baseURL == "" {
+ 		baseURL = "https://chatgpt.com/backend-api/codex"
+ 	}
+@@ -103,6 +113,9 @@ func (e *CodexExecutor) Execute(ctx context.Context, auth *cliproxyauth.Auth, re
+ 		AuthValue: authValue,
+ 	})
+ 	httpClient := helps.NewUtlsHTTPClient(ctx, e.cfg, auth, 0)
++	if metered {
++		aobMeterDisableRedirects(httpClient)
++	}
+ 	httpClient = reporter.TrackHTTPClient(httpClient)
+ 	httpResp, err := httpClient.Do(httpReq)
+ 	if err != nil {
+diff --git a/internal/runtime/executor/codex_executor_stream.go b/internal/runtime/executor/codex_executor_stream.go
+index e70e88e..e8ee97f 100644
+--- a/internal/runtime/executor/codex_executor_stream.go
++++ b/internal/runtime/executor/codex_executor_stream.go
+@@ -22,6 +22,13 @@ import (
+ )
+ 
+ func (e *CodexExecutor) ExecuteStream(ctx context.Context, auth *cliproxyauth.Auth, req cliproxyexecutor.Request, opts cliproxyexecutor.Options) (_ *cliproxyexecutor.StreamResult, err error) {
++	meterURL, metered, meterErr := aobMeterEndpoint(auth)
++	if meterErr != nil {
++		return nil, meterErr
++	}
++	if metered && (opts.Alt != "" || isCodexOpenAIImageRequest(opts)) {
++		return nil, aobMeterUnsupportedTransport()
++	}
+ 	ctx = helps.EnsureSessionContext(ctx, opts, req.Payload)
+ 	if opts.Alt == "responses/compact" {
+ 		return nil, statusErr{code: http.StatusBadRequest, msg: "streaming not supported for /responses/compact"}
+@@ -32,6 +39,9 @@ func (e *CodexExecutor) ExecuteStream(ctx context.Context, auth *cliproxyauth.Au
+ 	baseModel := thinking.ParseSuffix(req.Model).ModelName
+ 
+ 	apiKey, baseURL := codexCreds(auth)
++	if metered {
++		baseURL = meterURL
++	}
+ 	if baseURL == "" {
+ 		baseURL = "https://chatgpt.com/backend-api/codex"
+ 	}
+@@ -112,6 +122,9 @@ func (e *CodexExecutor) ExecuteStream(ctx context.Context, auth *cliproxyauth.Au
+ 	})
+ 
+ 	httpClient := helps.NewUtlsHTTPClient(ctx, e.cfg, auth, 0)
++	if metered {
++		aobMeterDisableRedirects(httpClient)
++	}
+ 	httpClient = reporter.TrackHTTPClientRoundTripOnly(httpClient)
+ 	httpResp, err := httpClient.Do(httpReq)
+ 	if err != nil {
+diff --git a/internal/runtime/executor/codex_websockets_execute.go b/internal/runtime/executor/codex_websockets_execute.go
+index 94829bd..080f3cc 100644
+--- a/internal/runtime/executor/codex_websockets_execute.go
++++ b/internal/runtime/executor/codex_websockets_execute.go
+@@ -19,6 +19,13 @@ import (
+ )
+ 
+ func (e *CodexWebsocketsExecutor) Execute(ctx context.Context, auth *cliproxyauth.Auth, req cliproxyexecutor.Request, opts cliproxyexecutor.Options) (resp cliproxyexecutor.Response, err error) {
++	_, metered, meterErr := aobMeterEndpoint(auth)
++	if meterErr != nil {
++		return resp, meterErr
++	}
++	if metered {
++		return resp, aobMeterUnsupportedTransport()
++	}
+ 	if ctx == nil {
+ 		ctx = context.Background()
+ 	}
+diff --git a/internal/runtime/executor/codex_websockets_stream.go b/internal/runtime/executor/codex_websockets_stream.go
+index e42cfe1..30c1089 100644
+--- a/internal/runtime/executor/codex_websockets_stream.go
++++ b/internal/runtime/executor/codex_websockets_stream.go
+@@ -20,6 +20,13 @@ import (
+ )
+ 
+ func (e *CodexWebsocketsExecutor) ExecuteStream(ctx context.Context, auth *cliproxyauth.Auth, req cliproxyexecutor.Request, opts cliproxyexecutor.Options) (_ *cliproxyexecutor.StreamResult, err error) {
++	_, metered, meterErr := aobMeterEndpoint(auth)
++	if meterErr != nil {
++		return nil, meterErr
++	}
++	if metered {
++		return nil, aobMeterUnsupportedTransport()
++	}
+ 	log.Debugf("Executing Codex Websockets stream request with auth ID: %s, model: %s", auth.ID, req.Model)
+ 	if ctx == nil {
+ 		ctx = context.Background()

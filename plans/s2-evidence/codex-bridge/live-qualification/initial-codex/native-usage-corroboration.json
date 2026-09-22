@@ -1,0 +1,12 @@
+{
+  "source": "native Codex stdout turn.completed.usage",
+  "provider_boundary_verified": false,
+  "input_tokens": 15620,
+  "cached_input_tokens": 6656,
+  "output_tokens": 65,
+  "reasoning_output_tokens": 0,
+  "interpretation": "Native corroboration only. Original C1 metadata stays unknown; these totals do not overwrite it.",
+  "native_exit": 0,
+  "marker_verified": true,
+  "tool_output_returned": true
+}

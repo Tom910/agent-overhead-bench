@@ -52,12 +52,18 @@ async function bodyBytes(req) {
   }
   return Buffer.concat(parts);
 }
-function relay(req, res, target, body, active) {
+export function responseTransport(headers) {
+  const classify = (value, allowed) => value === undefined ? 'absent' : typeof value === 'string' && allowed.includes(value.toLowerCase().split(';', 1)[0].trim()) ? value.toLowerCase().split(';', 1)[0].trim() : 'other';
+  return { response_content_type: classify(headers['content-type'], ['text/event-stream','application/json','text/plain','application/octet-stream']), response_content_encoding: classify(headers['content-encoding'], ['identity','gzip','br','deflate']) };
+}
+function relay(req, res, target, body, active, options = {}) {
   return new Promise(resolve => {
     // Node HTTP does not follow redirects or retry failed requests.
     const headers = { ...req.headers, host: new URL(target).host, 'content-length': String(body.length) };
     delete headers['transfer-encoding'];
+    if (options.identityEncoding) headers['accept-encoding'] = 'identity';
     const forwarded = httpRequest(target, { method: req.method, headers }, upstream => {
+      options.onResponse?.(upstream.headers);
       res.writeHead(upstream.statusCode ?? 502, upstream.headers);
       upstream.pipe(res);
       upstream.on('error', () => { res.destroy(); });
@@ -143,7 +149,7 @@ export async function startBridgeService(spec, options = {}) {
       if (observations.requests.length >= MAX_OBSERVATIONS) { observations.gate_refused++; reject(res, 429); return; }
       const observation = observeRequest(parsed, spec.marker); observations.requests.push(observation);
       if (!observation.accepted) { observations.gate_refused++; reject(res, 400); return; }
-      await relay(req, res, `${meter.baseUrl}/responses`, body, active);
+      await relay(req, res, `${meter.baseUrl}/responses`, body, active, { identityEncoding: true, onResponse: headers => Object.assign(observation, responseTransport(headers)) });
     }));
     const gateUrl = await listen(gate, options.gatePort ?? 3211, '127.0.0.1');
     front = createServer(dispatch(async (req, res) => {

@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
 register('./ts-source-loader.mjs', import.meta.url);
-const { startBridgeService, observeRequest } = await import('./s2-codex-bridge-service.mjs');
+const { startBridgeService, observeRequest, responseTransport } = await import('./s2-codex-bridge-service.mjs');
 const payload = () => ({model:'gpt-6-luna',reasoning:{effort:'low',summary:'auto'},store:false,input:[{type:'function_call_output',call_id:'fake-call',output:'harmless-marker'}]});
 
 test('effective-condition guard refuses drift and only observes actual tool output', () => {
@@ -46,9 +46,9 @@ test('gate preserves request bytes and OAuth through C1, strips capability, caps
  const body=JSON.stringify(payload(),null,2);
  for(let i=0;i<2;i++)assert.equal((await post(`${service.gateUrl}/responses`,body,{'x-aob-proxy-token':spec.meterKey,authorization:'Bearer synthetic-oauth','chatgpt-account-id':'synthetic-account'})).status,200);
  assert.equal((await post(`${service.gateUrl}/responses`,body,{'x-aob-proxy-token':spec.meterKey})).status,429);
- assert.equal(seen.length,2);assert.equal(seen[0].body,body);assert.equal(seen[0].headers.authorization,'Bearer synthetic-oauth');assert.equal(seen[0].headers['chatgpt-account-id'],'synthetic-account');assert.equal(seen[0].headers['x-aob-proxy-token'],undefined);assert.equal(seen[0].path,'/backend/responses');
+ assert.equal(seen.length,2);assert.equal(seen[0].body,body);assert.equal(seen[0].headers.authorization,'Bearer synthetic-oauth');assert.equal(seen[0].headers['chatgpt-account-id'],'synthetic-account');assert.equal(seen[0].headers['x-aob-proxy-token'],undefined);assert.equal(seen[0].headers['accept-encoding'],'identity');assert.equal(seen[0].path,'/backend/responses');
  await service.close();
- const obs=JSON.parse(await readFile(spec.observationsPath,'utf8'));assert.equal(obs.requests.length,3);assert.equal(obs.requests[0].tool_result_observed,true);
+ const obs=JSON.parse(await readFile(spec.observationsPath,'utf8'));assert.equal(obs.requests.length,3);assert.equal(obs.requests[0].tool_result_observed,true);assert.equal(obs.requests[0].response_content_type,'application/json');assert.equal(obs.requests[0].response_content_encoding,'absent');
  const events=(await readFile(spec.outPath,'utf8')).trim().split('\n').map(JSON.parse);assert.equal(events.length,3);assert.equal(events[0].model_served,'gpt-6-luna');
  for(const path of [spec.outPath,spec.observationsPath])assert.equal((await stat(path)).mode&0o777,0o600);
  const saved=JSON.stringify(obs);assert.ok(!saved.includes(spec.meterKey));assert.ok(!saved.includes('synthetic-oauth'));assert.ok(!saved.includes('harmless-marker'));
@@ -118,4 +118,9 @@ test('native tool content-array text proves marker output without accepting IDs 
  p.input[0].output=[{type:'input_text',text:'ordinary output',id:'harmless-marker'}];assert.equal(observeRequest(p,'harmless-marker').tool_result_observed,false);
  p.input[0].output=[{type:'image',text:'harmless-marker'}];assert.equal(observeRequest(p,'harmless-marker').tool_result_observed,false);
  p.input[0].output={text:'harmless-marker'};assert.equal(observeRequest(p,'harmless-marker').tool_result_observed,false);
+});
+
+test('transport observations retain only known MIME and encoding classes',()=>{
+ assert.deepEqual(responseTransport({'content-type':'Text/Event-Stream; charset=utf-8','content-encoding':'gzip'}),{response_content_type:'text/event-stream',response_content_encoding:'gzip'});
+ assert.deepEqual(responseTransport({'content-type':'secret-value','content-encoding':'private-value'}),{response_content_type:'other',response_content_encoding:'other'});
 });

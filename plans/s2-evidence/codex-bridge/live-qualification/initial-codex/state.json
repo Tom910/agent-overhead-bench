@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "mode": "live",
+  "model": "gpt-6-luna",
+  "policy": "luna-low-reasoning-replay-disabled",
+  "host": "linux",
+  "started_at": "2026-09-22T21:24:04.099Z",
+  "bridge_binary_sha256": "6ac16cf587b39083b15616fea2ed3e276fa85b3ef95d8ba4084f8166408fa58e",
+  "implementation_sha256": "e45eba620cc2aa70db05960a2afbd267c08ec1ac9ed2f09e32e5deacd9b10f37",
+  "max_requests_per_client": 2,
+  "max_total_requests": 10,
+  "slots": {
+    "codex": {
+      "status": "failed",
+      "image_id": "sha256:c974e2019c177d644123a467dc84ecb20dbc4d217592fc17cebb18d912ade2b9",
+      "version": "codex-cli 0.149.1",
+      "config_sha256": "59d755367e2f77f9b94a1bd13fe83746b1297d428d1f01e126de1d88bd9caa8c",
+      "passed": false,
+      "provider_requests": 2,
+      "meter_events": 2,
+      "tokens": null,
+      "usage_complete": false,
+      "subscription_cost_usd": null,
+      "exit": 0,
+      "marker_matches": true,
+      "tool_result_observed": true,
+      "statuses": [
+        200,
+        200
+      ],
+      "served_models": [
+        null,
+        null
+      ],
+      "halt": false,
+      "c1_sha256": "87ebdd92648fa3d11f7ef07a939daacf3dfaa2a31629c38e9c39dc3443d81d7f",
+      "condition_evidence_sha256": "b4deabd740c9b1342d407883e0795acdc1981da1b920d64fbd94a2c1642e5af2"
+    }
+  },
+  "halted": true,
+  "completed_at": "2026-09-22T21:24:14.606Z",
+  "all_five_passed": false
+}
