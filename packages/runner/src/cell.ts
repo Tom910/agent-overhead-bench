@@ -4,7 +4,7 @@ import { copyFileSync, cpSync, lstatSync, mkdirSync, readFileSync, rmSync, write
 import { spawn } from "node:child_process";
 import { arch, platform, totalmem } from "node:os";
 import { join, relative, sep } from "node:path";
-import { ConfigError, ContractViolation, isModelRequestAttempt, isSuccessfulModelEvent, ToolError, validateC1Event, validateC4Run, type C1Event, type C3AdapterResult, type C4Run } from "@aob/contracts";
+import { ConfigError, ContractViolation, isModelRequestAttempt, isSuccessfulModelEvent, ToolError, validateC1Event, validateC4Run, type C1Event, type C3AdapterResult, type C4Run, type ClockAnchor } from "@aob/contracts";
 import { getAdapter, type ContainerInvocation } from "@aob/adapters";
 import { startProxy } from "@aob/proxy";
 import { validateVerifierSpec, type TaskEnvironment, type VerifierSpec } from "@aob/tasks";
@@ -13,6 +13,19 @@ import { describeDockerProxyRoute, newDockerContainerName, newDockerProxyAuthTok
 import { bindExecutionConditions, type ExecutionObservation } from "./execution-conditions.js";
 import type { MeasurementRegime } from "@aob/tasks";
 import { validateProviderRouting, type ProviderRouting, type ToolConfiguration } from "@aob/contracts";
+
+/** Authenticated native ingress plus the single provider-side C1 lifecycle. */
+export type CellTransport = {
+  port: number;
+  anchor: ClockAnchor;
+  flush: () => Promise<void>;
+  close: () => Promise<void>;
+};
+export type CellTransportFactory = (options: {
+  runId: string;
+  eventsPath: string;
+  authToken: string;
+}) => Promise<CellTransport>;
 
 export type CellSpec = {
   dir: string;
@@ -35,6 +48,8 @@ export type CellSpec = {
   rep?: number;
   timeoutS?: number;
   env?: Record<string, string>;
+  /** Docker-only custom route; its C1 writes the canonical events file. */
+  transportFactory?: CellTransportFactory;
   environment?: TaskEnvironment;
   verifier?: VerifierSpec;
   /** Recheck admission after setup, immediately before measured execution. */
@@ -245,6 +260,7 @@ export function shouldSkipVerification(input: {
 }
 
 export async function runHostCell(spec: CellSpec): Promise<C4Run> {
+  if (spec.transportFactory !== undefined) throw new ConfigError("custom cell transport requires Docker execution");
   validateToolConfiguration(spec.toolConfiguration, [spec.tool]);
   const providerRouting = spec.providerRouting === undefined ? undefined : validateProviderRouting(spec.providerRouting);
   requireTaskProvenance(spec);
@@ -365,7 +381,29 @@ export async function runHostCell(spec: CellSpec): Promise<C4Run> {
   }
 }
 
+function validateCellTransport(transport: CellTransport): void {
+  const anchor = transport?.anchor;
+  if (!transport || !Number.isSafeInteger(transport.port) || transport.port < 1 || transport.port > 65535 ||
+      typeof transport.flush !== "function" || typeof transport.close !== "function" ||
+      !anchor || typeof anchor.wall_clock_iso !== "string" || !Number.isFinite(Date.parse(anchor.wall_clock_iso)) ||
+      typeof anchor.monotonic_zero !== "number" || !Number.isFinite(anchor.monotonic_zero) || anchor.monotonic_zero < 0 ||
+      Object.keys(anchor).some(key => !["wall_clock_iso", "monotonic_zero"].includes(key))) {
+    throw new ConfigError("custom cell transport has invalid ingress, clock anchor or lifecycle");
+  }
+}
+
+function customTransportEvidenceInvalid(events: C1Event[], spec: CellSpec): boolean {
+  if (spec.transportFactory === undefined) return false;
+  const attempts = modelAttempts(events);
+  return attempts.length === 0 || events.some(event => event.run_id !== spec.run_id) || attempts.some(event =>
+    !isSuccessfulModelEvent(event) || event.model_requested !== spec.model || event.model_served !== spec.model ||
+    event.usage === null || event.usage_source === "unavailable");
+}
+
 export async function runDockerCell(spec: CellSpec): Promise<C4Run> {
+  if (spec.transportFactory !== undefined && spec.providerRouting !== undefined) {
+    throw new ConfigError("custom transport cannot apply provider routing");
+  }
   validateToolConfiguration(spec.toolConfiguration, [spec.tool]);
   const providerRouting = spec.providerRouting === undefined ? undefined : validateProviderRouting(spec.providerRouting);
   requireTaskProvenance(spec);
@@ -375,9 +413,11 @@ export async function runDockerCell(spec: CellSpec): Promise<C4Run> {
   }
   const staged = stageTask(spec);
   const eventsPath = join(spec.dir, "events.jsonl");
-  const upstreamApiKey = providerApiKey(spec);
+  const upstreamApiKey = spec.transportFactory === undefined ? providerApiKey(spec) : undefined;
   const proxyAuthToken = newDockerProxyAuthToken();
-  const proxy = await startProxy({
+  const proxy: CellTransport = spec.transportFactory !== undefined
+    ? await spec.transportFactory({ runId: spec.run_id, eventsPath, authToken: proxyAuthToken })
+    : await startProxy({
     run_id: spec.run_id,
     upstream: spec.upstream,
     outPath: eventsPath,
@@ -386,8 +426,10 @@ export async function runDockerCell(spec: CellSpec): Promise<C4Run> {
     ...(upstreamApiKey === undefined ? {} : { upstreamApiKey }),
     ...(providerRouting === undefined ? {} : { ignoredProviders: providerRouting.ignored_providers, onlyProvider: providerRouting.only_provider }),
   });
-  const candidateBaseline = prepareCandidateBaseline(staged.workspaceDir);
+  let candidateBaseline: ReturnType<typeof prepareCandidateBaseline> | undefined;
   try {
+    if (spec.transportFactory !== undefined) validateCellTransport(proxy);
+    candidateBaseline = prepareCandidateBaseline(staged.workspaceDir);
     const targetProxyUrl = `http://host.docker.internal:${proxy.port}`;
     const route = describeDockerProxyRoute(targetProxyUrl, newDockerContainerName(), proxyAuthToken);
     const invocation = applyTaskEnvironmentImage(brokerDockerInvocation(adapter.containerInvocation({
@@ -398,7 +440,7 @@ export async function runDockerCell(spec: CellSpec): Promise<C4Run> {
       proxyUrl: route.clientUrl,
       condition: spec.condition ?? "pinned",
       timeoutS: spec.timeoutS ?? 30,
-      env: spec.env ?? { OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY ?? "" },
+      env: spec.env ?? { OPENROUTER_API_KEY: spec.transportFactory === undefined ? process.env.OPENROUTER_API_KEY ?? "" : PROXY_CREDENTIAL_SENTINEL },
     })), spec.environment, spec.tool);
     if (invocation.env.HOME?.startsWith(`${staged.workspaceDir}${sep}`) || invocation.env.HOME === staged.workspaceDir) {
       invocation.env.HOME = `/work/workspace${relative(staged.workspaceDir, invocation.env.HOME).split(sep).join("/") === "" ? "" : `/${relative(staged.workspaceDir, invocation.env.HOME).split(sep).join("/")}`}`;
@@ -410,7 +452,8 @@ export async function runDockerCell(spec: CellSpec): Promise<C4Run> {
     const measuredEvents = modelEvents(events);
     const statusFailure = modelAttempts(events).some((event) => event.status === 0 || event.status >= 400 || event.error !== null);
     const modelMismatch = pinnedModelMismatch(events, spec);
-    const missingProxyEvidence = (spec.condition ?? "pinned") === "pinned" && spec.model !== "mock" && measuredEvents.length === 0;
+    const missingProxyEvidence = ((spec.condition ?? "pinned") === "pinned" && spec.model !== "mock" && measuredEvents.length === 0)
+      || customTransportEvidenceInvalid(events, spec);
     const adapterTimedOut = docker.exitCode === 124;
     const adapterFailure = shouldSkipVerification({
       exitCode: docker.exitCode, timedOut: adapterTimedOut, measuredEventCount: measuredEvents.length,
@@ -508,8 +551,8 @@ export async function runDockerCell(spec: CellSpec): Promise<C4Run> {
     writeFileSync(join(spec.dir, "execution-conditions.json"), `${JSON.stringify(conditions, null, 2)}\n`, { mode: 0o600 });
     return run;
   } finally {
-    releaseCandidateBaseline(candidateBaseline);
-    await proxy.close();
+    if (candidateBaseline !== undefined) releaseCandidateBaseline(candidateBaseline);
+    if (typeof proxy?.close === "function") await proxy.close();
   }
 }
 
