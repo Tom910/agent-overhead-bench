@@ -217,3 +217,44 @@ test('front rejection retention is bounded while exact refusal and truncation co
  assert(obs.front_rejections.every(item=>item.reason==='auth'&&item.status===401&&item.route==='other'&&item.query_present));
  assert.equal(raw.includes('private-'),false);assert.equal(seen.length,0);
 });
+
+test('exact metadata counters cover repeated harmless probes beyond the retained sample',async t=>{
+ const {spec,service,seen,frontSeen}=await fixture(t);
+ const probes=[['/api/v1/models','GET'],['/v1/models/gpt-6-luna','GET'],['/api/tags','GET'],['/v1/props','GET'],['/props','GET'],['/version','GET'],['/api/show','POST']];
+ for(let round=0;round<20;round++)for(const[path,method]of probes){const response=await fetch(service.frontUrl+path,{method,headers:{authorization:`Bearer ${spec.bridgeKey}`}});await response.text();assert.equal(response.status,404);}
+ await service.close();const obs=JSON.parse(await readFile(spec.observationsPath,'utf8'));
+ assert.deepEqual(obs.front_metadata_counts,{'api-models':20,'model-detail':20,'backend-tags':20,'backend-properties':40,'backend-version':20,'backend-show':20});
+ assert.equal(obs.front_unclassified_refused,0);assert.equal(obs.front_refused,140);assert.equal(obs.front_rejections.length,128);assert.equal(obs.front_rejections_truncated,12);
+ assert.equal(seen.length,0);assert.equal(frontSeen.length,0);assert.equal(await readFile(spec.outPath,'utf8'),'');
+});
+
+test('unsafe refusals stay exact and unclassified after metadata samples fill',async t=>{
+ const {spec,service,seen,frontSeen}=await fixture(t);
+ const auth={authorization:`Bearer ${spec.bridgeKey}`};
+ for(let i=0;i<128;i++){const r=await fetch(`${service.frontUrl}/api/tags`,{headers:auth});await r.text();assert.equal(r.status,404);}
+ const cases=[
+  ['/api/tags','GET',{},401],
+  ['/api/tags?secret=private-query-secret','GET',auth,404],
+  ['/api/tags','POST',auth,404],
+  ['/api/show','GET',auth,404],
+  ['/v1/models/private-model-secret','GET',auth,404],
+  ['/models/gpt-6-luna','GET',auth,404],
+  ['/v1/responses','GET',auth,404],
+  ['/v1/responses/compact','POST',auth,404],
+ ];
+ for(const[path,method,headers,status]of cases){const r=await fetch(service.frontUrl+path,{method,headers});await r.text();assert.equal(r.status,status);}
+ const oversized=await post(`${service.frontUrl}/v1/responses`,'x'.repeat(16*1024*1024+1),auth);await oversized.text();assert.equal(oversized.status,413);
+ await service.close();const raw=await readFile(spec.observationsPath,'utf8'),obs=JSON.parse(raw);
+ assert.deepEqual(obs.front_metadata_counts,{'api-models':0,'model-detail':0,'backend-tags':128,'backend-properties':0,'backend-version':0,'backend-show':0});
+ assert.equal(obs.front_unclassified_refused,9);assert.equal(obs.front_refused,137);assert.equal(obs.front_rejections.length,128);assert.equal(obs.front_rejections_truncated,9);
+ assert.equal(Object.values(obs.front_metadata_counts).reduce((sum,n)=>sum+n,0)+obs.front_unclassified_refused,obs.front_refused);
+ assert.equal(raw.includes('private-query-secret'),false);assert.equal(raw.includes('private-model-secret'),false);assert.equal(seen.length,0);assert.equal(frontSeen.length,0);
+});
+
+test('empty rejection accounting initializes all fixed metadata keys without affecting allowed traffic',async t=>{
+ const {spec,service,frontSeen}=await fixture(t);
+ const response=await fetch(`${service.frontUrl}/v1/models`,{headers:{authorization:`Bearer ${spec.bridgeKey}`}});await response.text();assert.equal(response.status,200);
+ await service.close();const obs=JSON.parse(await readFile(spec.observationsPath,'utf8'));
+ assert.deepEqual(obs.front_metadata_counts,{'api-models':0,'model-detail':0,'backend-tags':0,'backend-properties':0,'backend-version':0,'backend-show':0});
+ assert.equal(obs.front_unclassified_refused,0);assert.equal(obs.front_refused,0);assert.deepEqual(obs.front_rejections,[]);assert.equal(frontSeen.length,1);
+});

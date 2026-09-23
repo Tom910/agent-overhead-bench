@@ -94,3 +94,34 @@ inference. Keep raw historical evidence and all 404 response behavior unchanged.
 Only future fully classified metadata-probe refusals can receive the narrow S7
 exception; authentication, body limits, model endpoints and unknown requests
 must still stop admission. Diagnostic tests and independent review passed.
+
+## Follow-up: exact metadata counters beyond the diagnostic sample
+
+Hermes can repeat its harmless metadata discovery during a long task. Keep the
+first 128 rejection samples and explicit truncation count, and additionally
+record fixed-size `front_metadata_counts` with exactly six initialized keys:
+`api-models`, `model-detail`, `backend-tags`, `backend-properties`,
+`backend-version`, and `backend-show`. These exact counters continue after the
+sample fills. A rejection counts as known metadata only for reason `path`,
+status 404, no query, and GET on the first five categories or POST on
+`backend-show`. The existing classifier recognizes only the pinned Luna model
+for `model-detail`; neither arbitrary model names nor aliases qualify.
+
+Every frontend refusal increments exactly one metadata counter or the exact
+`front_unclassified_refused` remainder. Authentication failures, wrong methods,
+query-bearing requests, model-generation routes, unknown paths and body-limit
+failures remain unclassified, including when they occur after sample truncation.
+The sum of all metadata counters and the remainder must equal `front_refused`.
+Do not change response handling, forwarding, inference, C1/C4, historical
+sidecars or the original bounded sample. The S7 consumer separately validates
+this accounting before applying its metadata-only exception. Tests first must
+exercise repeated probes past 128, mixed late unsafe refusals, exact method and
+query boundaries, empty initialized counters and unchanged provider traffic.
+
+Implemented with three observed failing regression tests before the service
+change. All 22 focused service tests now pass, including 140 repeated metadata
+probes and nine late unclassified refusals after sample truncation. Independent
+review reran those 22 tests and approved the fixed-size accounting and unchanged
+404/no-forward behavior. Root also verified the combined service/transport suite
+(27 tests). No credentials, provider calls, historical rewrites or inference
+changes were involved. The changes remain uncommitted for integrated review.

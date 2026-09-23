@@ -142,10 +142,20 @@ export async function startBridgeService(spec, options = {}) {
   let meter; let gate; let front; let observationsFile; let closePromise;
   const active = new Set(); const pending = new Set();
   const observations = { schema_version: 1, requests: [], front_refused: 0, gate_refused: 0,
-    front_rejections: [], front_rejections_truncated: 0 };
+    front_rejections: [], front_rejections_truncated: 0,
+    front_metadata_counts: { 'api-models': 0, 'model-detail': 0, 'backend-tags': 0,
+      'backend-properties': 0, 'backend-version': 0, 'backend-show': 0 },
+    front_unclassified_refused: 0 };
   function rejectFront(req, res, reason, status) {
     observations.front_refused++;
-    if (observations.front_rejections.length < MAX_FRONT_REJECTIONS) observations.front_rejections.push(rejectionCategory(req, reason, status));
+    const rejection = rejectionCategory(req, reason, status);
+    // Exact fixed-size accounting survives truncation of the diagnostic sample.
+    const metadata = rejection.reason === 'path' && rejection.status === 404 && !rejection.query_present
+      && Object.hasOwn(observations.front_metadata_counts, rejection.route)
+      && rejection.method === (rejection.route === 'backend-show' ? 'POST' : 'GET');
+    if (metadata) observations.front_metadata_counts[rejection.route]++;
+    else observations.front_unclassified_refused++;
+    if (observations.front_rejections.length < MAX_FRONT_REJECTIONS) observations.front_rejections.push(rejection);
     else observations.front_rejections_truncated++;
     reject(res, status);
   }
