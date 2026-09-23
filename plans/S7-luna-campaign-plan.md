@@ -79,3 +79,38 @@ base HEAD/cleanliness checks and host binding passed. A synthetic script file
 served as the binary-hash input; the auth path was absent. There were zero real
 credential reads, task staging operations or inference requests. This tests loader
 and resume integration, not funded benchmark outcomes.
+
+## Audited Hermes metadata continuation
+
+The first funded Hermes attempt stopped campaign admission after seven front-relay
+404 responses, despite 47 successful canonical provider requests, native exit 0
+and a genuine verifier reward-zero result. The pinned native metadata probe proof
+in S5 reproduces seven non-inference metadata requests and unchanged context-window
+fallback. Historical observations contain counts only: their classification stays
+explicitly inferred, never rewritten as observed path evidence.
+
+Future admission permits only Hermes metadata rejections classified as path/404,
+without query or truncation: one GET each for api-models, backend-tags,
+backend-version and model-detail, at most two GET backend-properties, and one POST
+backend-show. Any other rejection, duplicate beyond that bound, provider failure
+or incomplete accounting still halts admission. The relay continues returning 404.
+
+A single-purpose exported `repairLunaMetadataStop(options)` has no CLI reset flag.
+It pins the known old state, implementation, Hermes C1/C4/observations, native image
+and offline proof hashes; validates every unchanged campaign binding; and verifies
+the two consumed results. Under the campaign lock, it exclusively preserves the old
+state and an inferred-adjudication receipt, then atomically updates scheduling
+metadata and the implementation binding. Raw attempts remain unchanged. Both past
+cells retain their original implementation provenance. Resume validates the receipt,
+backup and exact legacy artifacts before accepting the one historical exception.
+The 198 pending slots retain their identities; neither consumed task is staged again.
+Synthetic tests cover allowed metadata, strict refusals, preservation, tampering,
+definition drift and failed-provider refusal. This transition does not create a
+reusable reset or automatically adjudicate other historical refusals.
+
+Continuation acceptance: 13/13 focused tests passed after the new cases failed
+before implementation. Syntax and diff checks passed. Tests use synthetic files,
+including the repair pin dependency seam; the production export retains fixed
+historical hashes and exposes no reset option. No credentials or inference were
+used for this change. The historical attribution remains an inference even after
+successful repair; future records contain observed rejection categories.

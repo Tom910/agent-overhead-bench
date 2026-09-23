@@ -14,6 +14,17 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PRICE_BOOK = 'codex-subscription-unpriced-2026-09-22';
 const SOURCE_SHA = 'sha256:fb2f323c9e667f0433b5143269c7366c383fd1a3ce1ea37d9ce041e1848b297e';
 const SUITE_SHA = '43ded7fd725fc9a10b820033339285bfb5f5863d2bbf10364c8547b4ef79fdbd';
+const LEGACY_PINS = Object.freeze({
+  state: '68a1905630de2908f354ac7ca5a59acdb4338b850b8c9afdf9f7f487a3d96feb',
+  implementation: '5b9561bc48a5dbe53c2e2ea22c98412d4b7b9ab4dbf0dee9beb5a87258a28b41', session: '586921d27c1250c7',
+  run: '176b3c70ebf4aa589e2282a1b0b286c951cd54cb232380640ae73ab942144056',
+  events: 'da6e824c4e95f6877dc0e81132ac19bf50c6594b75bf6f277a90a91289dd331f',
+  observations: '2d823abebb7e45d7269f65a48a5729378c831d5b270e36de0f985a6becd34e73',
+  proof: 'c74c4efe03ab5e3845abfd38ad8b574ffc64ae7230171b1e097ffe2e8e1312a8',
+  image: 'sha256:76f02c972b829dc60e4be7aea921bb98ffc847254121f5cc318125a2fb4631a5',
+});
+const LEGACY_BACKUP = 'legacy-metadata-state.json';
+const LEGACY_RECEIPT = 'legacy-metadata-adjudication.json';
 const BOUND_FILES = ['run.json', 'events.jsonl', 'verify.log', 'execution-conditions.json', 'candidate-evidence.json', 'transport.json', 'bridge-conditions.json'];
 export class CampaignError extends Error {
   constructor(message = 'Luna campaign refused; inspect private campaign state.') { super(message); this.name = 'CampaignError'; }
@@ -121,7 +132,13 @@ function genuineFailure(log) {
   } catch { return false; }
 }
 function cellDirectory(output, cell) { return join(output, 'results', cell.harness, cell.task, String(cell.rep)); }
-function inspectAttempt(dir, cell, task, definition, api) {
+function allowedMetadata(observed, harness) {
+  if (observed.front_refused === 0) return (observed.front_rejections === undefined || (Array.isArray(observed.front_rejections) && observed.front_rejections.length === 0)) && (observed.front_rejections_truncated === undefined || observed.front_rejections_truncated === 0);
+  if (harness !== 'hermes' || observed.front_rejections_truncated !== 0 || !Array.isArray(observed.front_rejections) || observed.front_rejections.length !== observed.front_refused) return false;
+  const remaining = { 'api-models': 1, 'backend-tags': 1, 'backend-properties': 2, 'backend-version': 1, 'model-detail': 1, 'backend-show': 1 };
+  return observed.front_rejections.every(r => r && r.reason === 'path' && r.status === 404 && r.query_present === false && r.method === (r.route === 'backend-show' ? 'POST' : 'GET') && Object.hasOwn(remaining, r.route) && remaining[r.route]-- > 0);
+}
+function inspectAttempt(dir, cell, task, definition, api, legacy = false) {
   const hashes = Object.fromEntries(BOUND_FILES.map(name => [name, hashFile(join(dir, name))]));
   for (const name of ['candidate.patch', 'events.jsonl.upstream.jsonl', 'stdout.log', 'stderr.log']) if (exists(join(dir, name))) hashes[name] = hashFile(join(dir, name));
   const run = api.validateC4Run(json(join(dir, 'run.json')));
@@ -141,12 +158,85 @@ function inspectAttempt(dir, cell, task, definition, api) {
   check(transport.model === LUNA_MODEL && transport.policy === CONTROLLED_POLICY && transport.bridge_binary_sha256 === definition.bridge_binary_sha256
     && transport.refresh_token_imported === false && transport.subscription_usd === null && transport.timeout_s === 10800
     && transport.max_model_requests === 512 && transport.max_input_tokens === 100000000 && transport.max_output_tokens === 1000000);
-  check(observed.front_refused === 0 && observed.gate_refused === 0 && Array.isArray(observed.requests) && observed.requests.length === attempts.length
+  check((allowedMetadata(observed, cell.harness) || (legacy && observed.front_refused === 7 && observed.front_rejections === undefined && observed.front_rejections_truncated === undefined && attempts.length === 47)) && observed.gate_refused === 0 && Array.isArray(observed.requests) && observed.requests.length === attempts.length
     && observed.requests.every(r => ['accepted', 'model_matches', 'effort_low', 'summary_auto', 'store_false', 'reasoning_replay_absent', 'continuation_absent'].every(k => r[k] === true)));
   check(run.adapter_result.exitCode === 0);
   if (run.outcome === 'completed' && run.verification.exit === 0) return { status: 'completed', hashes };
   if (run.outcome === 'verify_error' && run.verification.exit === 1 && genuineFailure(regularBytes(join(dir, 'verify.log')).toString('utf8'))) return { status: 'task_failed', hashes };
   throw new CampaignError();
+}
+
+async function campaignDefinition(options, deps) {
+    const api = await contracts();
+    const loaded = await (deps.loadTasks ?? loadTasks)({ taskRoot: realpathSync(options.taskRoot) });
+    check(loaded.tasks.length === 8 && new Set(loaded.tasks.map(t => t.id)).size === 8 && TASK_IDS.every(id => loaded.tasks.some(t => t.id === id)));
+    const tasks = new Map(loaded.tasks.map(t => [t.id, t]));
+    const implementation = await (deps.implementationHash ?? implementationHash)(); check(validHash(implementation));
+    const host = await (deps.hostFingerprint ?? hostFingerprint)(); check(validHash(host));
+    const definition = { host_sha256: host, model: LUNA_MODEL, policy: CONTROLLED_POLICY, price_book: PRICE_BOOK, suite_sha256: loaded.suiteSha256, source_sha256: loaded.sourceSha256,
+      bridge_binary_sha256: hashFile(options.bridgeBinary), implementation_sha256: implementation,
+      tasks: TASK_IDS.map(id => { const t = tasks.get(id); return { id, source: t.source, baseRevision: t.baseRevision, regime: t.regime, timeoutS: t.timeoutS, environment: t.environment, verifier: t.verifier }; }),
+      harnesses: HARNESS_ORDER, repetitions: 5, phases: [HARNESS_ORDER.slice(0, 2), HARNESS_ORDER.slice(2)], max_provider_requests_per_attempt: 512, max_input_tokens_per_attempt: 100000000, max_output_tokens_per_attempt: 1000000 };
+    return { api, tasks, definition };
+}
+
+function legacyEvidence(output, oldBytes, context, deps) {
+  const pins = deps.legacyPins ?? LEGACY_PINS; const old = JSON.parse(oldBytes); const { api, tasks, definition } = context;
+  check(sha(oldBytes) === pins.state && old.schema_version === 1 && old.official_release === false && old.collection === 'diagnostic'
+    && old.halted === true && old.halt_reason === 'attempt-or-accounting-failed' && old.session === pins.session
+    && old.definition.implementation_sha256 === pins.implementation && definition.implementation_sha256 !== pins.implementation
+    && isDeepStrictEqual({ ...old.definition, implementation_sha256: definition.implementation_sha256 }, definition));
+  check(Array.isArray(old.cells) && old.cells.length === 200 && !old.legacy_metadata_adjudication);
+  const expected = schedule(old.session);
+  for (let i = 0; i < expected.length; i++) check(['harness', 'task', 'rep', 'run_id'].every(k => old.cells[i][k] === expected[i][k])
+    && old.cells[i].status === (i === 0 ? 'task_failed' : i === 1 ? 'blocked' : 'pending'));
+  check(tasks.get(TASK_IDS[0]).environment.agent_images.hermes.image_digest === pins.image);
+  const proofPath = deps.legacyProofPath ?? join(ROOT, 'plans/s5-evidence/luna-task-transport/hermes-metadata-probes.json');
+  check(hashFile(proofPath) === pins.proof);
+  const dir = cellDirectory(output, old.cells[1]);
+  check(hashFile(join(dir, 'run.json')) === pins.run && hashFile(join(dir, 'events.jsonl')) === pins.events && hashFile(join(dir, 'bridge-conditions.json')) === pins.observations);
+  const checked = old.cells.slice(0, 2).map((cell, i) => inspectAttempt(cellDirectory(output, cell), cell, tasks.get(cell.task), definition, api, i === 1));
+  check(checked.every(c => c.status === 'task_failed') && isDeepStrictEqual(checked[0].hashes, old.cells[0].hashes));
+  const receipt = { schema_version: 1, classification: 'legacy_classification_inferred', reason: 'pinned-native-metadata-probe-proof',
+    old_state_sha256: pins.state, old_implementation_sha256: pins.implementation, new_implementation_sha256: definition.implementation_sha256,
+    proof_sha256: pins.proof, session: old.session, preserved_cells: old.cells.slice(0, 2).map((c, i) => ({ run_id: c.run_id, hashes: checked[i].hashes })) };
+  const preserved = old.cells.slice(0, 2).map((c, i) => ({ ...c, ...checked[i], original_implementation_sha256: pins.implementation,
+    ...(i === 1 ? { legacy_metadata_classification: 'inferred', admission: 'funded-first-repetition' } : {}) }));
+  return { old, receipt, preserved };
+}
+function validateAdjudication(output, state, context, deps) {
+  if (!state.legacy_metadata_adjudication) {
+    check(state.cells.every(c => c.legacy_metadata_classification === undefined && c.original_implementation_sha256 === undefined)); return false;
+  }
+  const bytes = regularBytes(join(output, LEGACY_RECEIPT)); check(sha(bytes) === state.legacy_metadata_adjudication);
+  const expected = legacyEvidence(output, regularBytes(join(output, LEGACY_BACKUP)), context, deps);
+  check(isDeepStrictEqual(JSON.parse(bytes), expected.receipt) && state.session === expected.old.session
+    && isDeepStrictEqual(state.cells.slice(0, 2), expected.preserved)
+    && state.cells.slice(2).every(c => c.legacy_metadata_classification === undefined && c.original_implementation_sha256 === undefined));
+  return true;
+}
+function exclusiveEvidence(path, bytes) {
+  const fd = openSync(path, 'wx', 0o400);
+  try { writeFileSync(fd, bytes); fsyncSync(fd); } finally { closeSync(fd); }
+}
+/** Single known historical transition. Test dependency seams are never exposed by CLI. */
+export async function repairLunaMetadataStop(options, deps = {}) {
+  let lockFd; let lockPath;
+  try {
+    check(options && ['taskRoot', 'output', 'privateRoot', 'authFile', 'bridgeBinary'].every(k => typeof options[k] === 'string' && isAbsolute(options[k])));
+    check((deps.platform ?? process.platform) === 'linux'); const output = privateDirectory(options.output); const privateRoot = privateDirectory(options.privateRoot);
+    check(!within(output, privateRoot) && !within(privateRoot, output));
+    lockPath = join(output, 'campaign.lock'); lockFd = openSync(lockPath, 'wx', 0o600);
+    const context = await campaignDefinition(options, deps); const path = join(output, 'state.json'); const oldBytes = regularBytes(path);
+    const { old, receipt, preserved } = legacyEvidence(output, oldBytes, context, deps);
+    check(!exists(join(output, LEGACY_BACKUP)) && !exists(join(output, LEGACY_RECEIPT)));
+    // Both audit files are exclusive and durable before the scheduling transition.
+    exclusiveEvidence(join(output, LEGACY_BACKUP), oldBytes);
+    const receiptBytes = Buffer.from(`${JSON.stringify(receipt, null, 2)}\n`); exclusiveEvidence(join(output, LEGACY_RECEIPT), receiptBytes);
+    const next = { ...old, definition: context.definition, halted: false, cells: [...preserved, ...old.cells.slice(2)], legacy_metadata_adjudication: sha(receiptBytes) };
+    delete next.halt_reason; saveState(path, next); return next;
+  } catch (error) { throw error instanceof CampaignError ? error : new CampaignError(); }
+  finally { if (lockFd !== undefined) { closeSync(lockFd); rmSync(lockPath); } }
 }
 
 /** Injected dependencies are for zero-spend tests; no runtime override is exposed by the CLI. */
@@ -158,26 +248,18 @@ export async function runCampaign(options, deps = {}) {
     const output = privateDirectory(options.output); const privateRoot = privateDirectory(options.privateRoot);
     check(!within(output, privateRoot) && !within(privateRoot, output));
     lockPath = join(output, 'campaign.lock'); lockFd = openSync(lockPath, 'wx', 0o600);
-    const api = await contracts();
-    const loaded = await (deps.loadTasks ?? loadTasks)({ taskRoot: realpathSync(options.taskRoot) });
-    check(loaded.tasks.length === 8 && new Set(loaded.tasks.map(t => t.id)).size === 8 && TASK_IDS.every(id => loaded.tasks.some(t => t.id === id)));
-    const tasks = new Map(loaded.tasks.map(t => [t.id, t]));
-    const implementation = await (deps.implementationHash ?? implementationHash)(); check(validHash(implementation));
-    const host = await (deps.hostFingerprint ?? hostFingerprint)(); check(validHash(host));
-    const definition = { host_sha256: host, model: LUNA_MODEL, policy: CONTROLLED_POLICY, price_book: PRICE_BOOK, suite_sha256: loaded.suiteSha256, source_sha256: loaded.sourceSha256,
-      bridge_binary_sha256: hashFile(options.bridgeBinary), implementation_sha256: implementation,
-      tasks: TASK_IDS.map(id => { const t = tasks.get(id); return { id, source: t.source, baseRevision: t.baseRevision, regime: t.regime, timeoutS: t.timeoutS, environment: t.environment, verifier: t.verifier }; }),
-      harnesses: HARNESS_ORDER, repetitions: 5, phases: [HARNESS_ORDER.slice(0, 2), HARNESS_ORDER.slice(2)], max_provider_requests_per_attempt: 512, max_input_tokens_per_attempt: 100000000, max_output_tokens_per_attempt: 1000000 };
+    const { api, tasks, definition } = await campaignDefinition(options, deps);
     const path = join(output, 'state.json'); let state;
     if (exists(path)) {
       state = json(path); check(state.schema_version === 1 && state.official_release === false && isDeepStrictEqual(state.definition, definition)
         && typeof state.session === 'string' && /^[a-f0-9]{16}$/.test(state.session) && Array.isArray(state.cells) && state.cells.length === 200 && typeof state.halted === 'boolean');
+      const adjudicated = validateAdjudication(output, state, { api, tasks, definition }, deps);
       const expected = schedule(state.session);
       for (let i = 0; i < expected.length; i++) {
         const cell = state.cells[i]; const e = expected[i]; check(cell && ['pending', 'started', 'completed', 'task_failed', 'blocked'].includes(cell.status)
           && ['harness', 'task', 'rep', 'run_id'].every(k => cell[k] === e[k]));
         if (['completed', 'task_failed'].includes(cell.status)) {
-          const checked = inspectAttempt(cellDirectory(output, cell), cell, tasks.get(cell.task), definition, api);
+          const checked = inspectAttempt(cellDirectory(output, cell), cell, tasks.get(cell.task), definition, api, adjudicated && i === 1);
           check(checked.status === cell.status && isDeepStrictEqual(checked.hashes, cell.hashes));
         }
         if (cell.status === 'started' || cell.status === 'blocked') { state.halted = true; state.halt_reason = 'consumed-attempt-requires-investigation'; }
