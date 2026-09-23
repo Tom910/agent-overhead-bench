@@ -1,0 +1,226 @@
+#!/usr/bin/env node
+import { createHash, randomBytes } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { constants, closeSync, fstatSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, readSync, readdirSync, realpathSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { register } from 'node:module';
+import { isDeepStrictEqual } from 'node:util';
+import { LUNA_MODEL, CONTROLLED_POLICY } from './s2-codex-bridge-prepare.mjs';
+
+export const HARNESS_ORDER = ['codex', 'hermes', 'cline', 'pi', 'qwen'];
+export const TASK_IDS = ['psd-tools-blend-range-api', 'cattrs-partial-structuring-recovery', 'textual-richlog-follow-state', 'tomlkit-toml-table-converters', 'ink-grid-box-layout', 'true-myth-iterable-collection-combinators', 'happy-dom-deterministic-intersectionobserver', 'superjson-error-stack-serialization'];
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const PRICE_BOOK = 'codex-subscription-unpriced-2026-09-22';
+const SOURCE_SHA = 'sha256:fb2f323c9e667f0433b5143269c7366c383fd1a3ce1ea37d9ce041e1848b297e';
+const SUITE_SHA = '43ded7fd725fc9a10b820033339285bfb5f5863d2bbf10364c8547b4ef79fdbd';
+const BOUND_FILES = ['run.json', 'events.jsonl', 'verify.log', 'execution-conditions.json', 'candidate-evidence.json', 'transport.json', 'bridge-conditions.json'];
+export class CampaignError extends Error {
+  constructor(message = 'Luna campaign refused; inspect private campaign state.') { super(message); this.name = 'CampaignError'; }
+}
+const check = value => { if (!value) throw new CampaignError(); };
+const sha = bytes => createHash('sha256').update(bytes).digest('hex');
+const validHash = value => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
+function exists(path) { try { lstatSync(path); return true; } catch (e) { if (e.code === 'ENOENT') return false; throw e; } }
+function within(parent, child) { const rel = relative(parent, child); return rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel); }
+function regularBytes(path, maxBytes = 32 * 1024 * 1024) {
+  const before = lstatSync(path); check(before.isFile() && !before.isSymbolicLink() && before.size <= maxBytes);
+  const fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
+  try {
+    const start = fstatSync(fd); check(start.ino === before.ino && start.dev === before.dev && start.size === before.size);
+    const bytes = Buffer.alloc(start.size + 1); let length = 0;
+    while (length < bytes.length) { const n = readSync(fd, bytes, length, bytes.length - length, null); if (!n) break; length += n; }
+    const after = fstatSync(fd); check(length === start.size && after.size === start.size && after.mtimeMs === start.mtimeMs && after.ctimeMs === start.ctimeMs);
+    return bytes.subarray(0, length);
+  } finally { closeSync(fd); }
+}
+function hashFile(path) {
+  const info = lstatSync(path); check(info.isFile() && !info.isSymbolicLink());
+  const fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW); const h = createHash('sha256'); const buf = Buffer.alloc(65536);
+  try { const before = fstatSync(fd); let total = 0; for (;;) { const n = readSync(fd, buf); if (!n) break; h.update(buf.subarray(0, n)); total += n; }
+    const after = fstatSync(fd); check(total === before.size && before.size === after.size && before.mtimeMs === after.mtimeMs && before.ctimeMs === after.ctimeMs); return h.digest('hex');
+  } finally { closeSync(fd); }
+}
+const json = path => JSON.parse(regularBytes(path).toString('utf8'));
+function privateDirectory(path) {
+  const requested = resolve(path); const destination = join(realpathSync(dirname(requested)), basename(requested));
+  check(!within(ROOT, destination));
+  if (!exists(destination)) mkdirSync(destination, { mode: 0o700 });
+  const info = lstatSync(destination); check(info.isDirectory() && !info.isSymbolicLink() && (info.mode & 0o077) === 0);
+  return destination;
+}
+function saveState(path, state) {
+  const temporary = join(dirname(path), `.state-${randomBytes(10).toString('hex')}.tmp`);
+  const fd = openSync(temporary, 'wx', 0o600);
+  try { writeFileSync(fd, `${JSON.stringify(state, null, 2)}\n`); fsyncSync(fd); } finally { closeSync(fd); }
+  try { renameSync(temporary, path); const directory = openSync(dirname(path), constants.O_RDONLY); try { fsyncSync(directory); } finally { closeSync(directory); } }
+  finally { if (exists(temporary)) rmSync(temporary); }
+}
+function harnesses(value = HARNESS_ORDER) {
+  check(Array.isArray(value) && value.length > 0 && new Set(value).size === value.length && value.every(h => HARNESS_ORDER.includes(h)));
+  return HARNESS_ORDER.filter(h => value.includes(h));
+}
+function schedule(session) {
+  return [HARNESS_ORDER.slice(0, 2), HARNESS_ORDER.slice(2)].flatMap(phase => Array.from({ length: 5 }, (_, rep) =>
+    TASK_IDS.flatMap(task => phase.map(harness => ({ harness, task, rep, run_id: `luna-${harness}-${task}-${rep}-${session}`, status: 'pending' })))).flat());
+}
+async function contracts() {
+  register('./ts-source-loader.mjs', import.meta.url);
+  return import('@aob/contracts');
+}
+async function implementationHash() {
+  const scripts = ['s7-luna-campaign.mjs', 's5-luna-task-transport.mjs', 's2-codex-bridge-service.mjs', 's2-codex-bridge-prepare.mjs', 'ts-source-loader.mjs'].map(f => `scripts/${f}`);
+  const files = [...scripts, 'package-lock.json', ...['runner', 'proxy', 'adapters', 'contracts', 'tasks'].flatMap(p =>
+    readdirSync(join(ROOT, 'packages', p, 'src'), { recursive: true }).filter(f => f.endsWith('.ts')).map(f => `packages/${p}/src/${f}`))].sort();
+  return sha(files.map(f => `${f}:${hashFile(join(ROOT, f))}`).join('\n'));
+}
+async function hostFingerprint() {
+  const machineId = regularBytes('/etc/machine-id', 128).toString('utf8').trim();
+  check(/^[a-f0-9]{32}$/.test(machineId)); return sha(machineId);
+}
+function verifyWorkspace(taskDir, revision) {
+  const workspace = join(taskDir, 'workspace');
+  for (const path of [taskDir, workspace, join(workspace, '.git')]) { const info = lstatSync(path); check(info.isDirectory() && !info.isSymbolicLink()); }
+  const git = args => execFileSync('git', ['-c', 'core.fsmonitor=false', '-c', 'core.untrackedCache=false', '-C', workspace, ...args],
+    { encoding: 'utf8', env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' }, stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+  check(git(['rev-parse', 'HEAD']) === revision && git(['status', '--porcelain=v1', '--untracked-files=all']) === '');
+}
+async function loadTasks({ taskRoot }) {
+  const { validateLocalTaskManifest, validateSelectedLocalTaskManifest, validateDeepSWEReferencePolarity, sourceManifestSha256, loadTaskYaml, validateVerifierSpec } = await import('@aob/tasks');
+  const { regimeForExpectedMinutes } = await import('../packages/tasks/src/regime.ts');
+  const suiteBytes = regularBytes(join(taskRoot, 'suite-manifest.json')); const suite = JSON.parse(suiteBytes);
+  const source = json(join(taskRoot, 'deepswe-source-manifest.json'));
+  check(sha(suiteBytes) === SUITE_SHA && sourceManifestSha256(source) === SOURCE_SHA);
+  validateLocalTaskManifest(taskRoot, suite); validateSelectedLocalTaskManifest(taskRoot, suite, TASK_IDS, source);
+  check(suite.tasks.length === 8 && TASK_IDS.every(id => suite.tasks.some(t => t.id === id)));
+  for (const task of source.tasks) {
+    const bytes = regularBytes(join(taskRoot, 'reference-polarity', `${task.id}.json`));
+    check(`sha256:${sha(bytes)}` === task.reference_polarity_sha256); validateDeepSWEReferencePolarity(JSON.parse(bytes), task);
+  }
+  const tasks = [];
+  for (const id of TASK_IDS) {
+    // This source is already prepared and hash-validated above. The existing
+    // cell lifecycle makes its one disposable copy at the funded attempt boundary.
+    const taskDir = join(taskRoot, id); const yaml = loadTaskYaml(join(taskDir, 'task.yaml'));
+    const task = { id, source: yaml.source, baseRevision: yaml.source.base_revision, timeoutS: yaml.timeout_s, regime: regimeForExpectedMinutes(yaml.expected_minutes),
+      environment: { kind: 'prepared-local', network: 'disabled', agent_images: json(join(taskDir, 'environment.json')).agent_images },
+      verifier: validateVerifierSpec(json(join(taskDir, 'verifier.json'))) };
+    check(task.timeoutS === 10800 && task.regime === 'extended'); verifyWorkspace(taskDir, task.baseRevision); tasks.push({ ...task, taskDir });
+  }
+  return { tasks, suiteSha256: sha(suiteBytes), sourceSha256: SOURCE_SHA.slice(7) };
+}
+function genuineFailure(log) {
+  const lines = log.split('\n').map(l => l.trim()).filter(Boolean); const markers = lines.filter(l => l.startsWith('[verifier] reward.json='));
+  if (markers.length !== 1 || lines.at(-1) !== markers[0]) return false;
+  try {
+    const r = JSON.parse(markers[0].slice('[verifier] reward.json='.length));
+    const values = [r.f2p_total, r.f2p_passed, r.p2p_total, r.p2p_passed];
+    if (r.reward !== 0 || !values.every(n => Number.isSafeInteger(n) && n >= 0) || r.f2p_total <= 0 || r.p2p_total <= 0 || r.f2p_passed > r.f2p_total || r.p2p_passed > r.p2p_total || r.f2p_passed + r.p2p_passed >= r.f2p_total + r.p2p_total) return false;
+    const close = (a, b) => typeof a === 'number' && Number.isFinite(a) && Math.abs(a - b) <= 1e-6;
+    return close(r.f2p, r.f2p_passed / r.f2p_total) && close(r.p2p, r.p2p_passed / r.p2p_total) && close(r.partial, (r.f2p_passed + r.p2p_passed) / (r.f2p_total + r.p2p_total));
+  } catch { return false; }
+}
+function cellDirectory(output, cell) { return join(output, 'results', cell.harness, cell.task, String(cell.rep)); }
+function inspectAttempt(dir, cell, task, definition, api) {
+  const hashes = Object.fromEntries(BOUND_FILES.map(name => [name, hashFile(join(dir, name))]));
+  for (const name of ['candidate.patch', 'events.jsonl.upstream.jsonl', 'stdout.log', 'stderr.log']) if (exists(join(dir, name))) hashes[name] = hashFile(join(dir, name));
+  const run = api.validateC4Run(json(join(dir, 'run.json')));
+  const events = regularBytes(join(dir, 'events.jsonl')).toString('utf8').trim().split('\n').filter(Boolean).map(line => api.validateC1Event(JSON.parse(line)));
+  const agent = task.environment.agent_images[cell.harness];
+  check(run.run_id === cell.run_id && run.tool === cell.harness && run.task_id === cell.task && run.rep === cell.rep && run.model === LUNA_MODEL
+    && run.condition === 'pinned' && run.task_source === task.source.kind && run.task_revision === task.source.revision && run.task_repository === task.source.repository
+    && run.task_base_revision === task.baseRevision && run.task_regime === task.regime && run.container.image_digest === agent.image_digest
+    && run.container.verifier_image_digest === task.verifier.image_digest && run.task_environment.agent_image_digest === agent.image_digest
+    && run.host.os === 'linux' && run.price_book === PRICE_BOOK && run.spend_usd_estimate === null);
+  let sequence = -1;
+  for (const e of events) { check(e.run_id === cell.run_id && e.seq > sequence); sequence = e.seq; }
+  const attempts = events.filter(api.isModelRequestAttempt);
+  check(attempts.length > 0 && events.every(e => api.isModelRequestAttempt(e) || (e.method === 'GET' && e.model_requested === null && e.model_served === null)));
+  check(attempts.every(e => api.isSuccessfulModelEvent(e) && e.protocol === 'openai_responses' && e.model_requested === LUNA_MODEL && e.model_served === LUNA_MODEL && e.usage !== null && e.usage_source !== 'unavailable'));
+  const transport = json(join(dir, 'transport.json')); const observed = json(join(dir, 'bridge-conditions.json'));
+  check(transport.model === LUNA_MODEL && transport.policy === CONTROLLED_POLICY && transport.bridge_binary_sha256 === definition.bridge_binary_sha256
+    && transport.refresh_token_imported === false && transport.subscription_usd === null && transport.timeout_s === 10800
+    && transport.max_model_requests === 512 && transport.max_input_tokens === 100000000 && transport.max_output_tokens === 1000000);
+  check(observed.front_refused === 0 && observed.gate_refused === 0 && Array.isArray(observed.requests) && observed.requests.length === attempts.length
+    && observed.requests.every(r => ['accepted', 'model_matches', 'effort_low', 'summary_auto', 'store_false', 'reasoning_replay_absent', 'continuation_absent'].every(k => r[k] === true)));
+  check(run.adapter_result.exitCode === 0);
+  if (run.outcome === 'completed' && run.verification.exit === 0) return { status: 'completed', hashes };
+  if (run.outcome === 'verify_error' && run.verification.exit === 1 && genuineFailure(regularBytes(join(dir, 'verify.log')).toString('utf8'))) return { status: 'task_failed', hashes };
+  throw new CampaignError();
+}
+
+/** Injected dependencies are for zero-spend tests; no runtime override is exposed by the CLI. */
+export async function runCampaign(options, deps = {}) {
+  let lockFd; let lockPath;
+  try {
+    check(options && ['taskRoot', 'output', 'privateRoot', 'authFile', 'bridgeBinary'].every(k => typeof options[k] === 'string' && isAbsolute(options[k])));
+    check((deps.platform ?? process.platform) === 'linux'); const selected = harnesses(options.harnesses);
+    const output = privateDirectory(options.output); const privateRoot = privateDirectory(options.privateRoot);
+    check(!within(output, privateRoot) && !within(privateRoot, output));
+    lockPath = join(output, 'campaign.lock'); lockFd = openSync(lockPath, 'wx', 0o600);
+    const api = await contracts();
+    const loaded = await (deps.loadTasks ?? loadTasks)({ taskRoot: realpathSync(options.taskRoot) });
+    check(loaded.tasks.length === 8 && new Set(loaded.tasks.map(t => t.id)).size === 8 && TASK_IDS.every(id => loaded.tasks.some(t => t.id === id)));
+    const tasks = new Map(loaded.tasks.map(t => [t.id, t]));
+    const implementation = await (deps.implementationHash ?? implementationHash)(); check(validHash(implementation));
+    const host = await (deps.hostFingerprint ?? hostFingerprint)(); check(validHash(host));
+    const definition = { host_sha256: host, model: LUNA_MODEL, policy: CONTROLLED_POLICY, price_book: PRICE_BOOK, suite_sha256: loaded.suiteSha256, source_sha256: loaded.sourceSha256,
+      bridge_binary_sha256: hashFile(options.bridgeBinary), implementation_sha256: implementation,
+      tasks: TASK_IDS.map(id => { const t = tasks.get(id); return { id, source: t.source, baseRevision: t.baseRevision, regime: t.regime, timeoutS: t.timeoutS, environment: t.environment, verifier: t.verifier }; }),
+      harnesses: HARNESS_ORDER, repetitions: 5, phases: [HARNESS_ORDER.slice(0, 2), HARNESS_ORDER.slice(2)], max_provider_requests_per_attempt: 512, max_input_tokens_per_attempt: 100000000, max_output_tokens_per_attempt: 1000000 };
+    const path = join(output, 'state.json'); let state;
+    if (exists(path)) {
+      state = json(path); check(state.schema_version === 1 && state.official_release === false && isDeepStrictEqual(state.definition, definition)
+        && typeof state.session === 'string' && /^[a-f0-9]{16}$/.test(state.session) && Array.isArray(state.cells) && state.cells.length === 200 && typeof state.halted === 'boolean');
+      const expected = schedule(state.session);
+      for (let i = 0; i < expected.length; i++) {
+        const cell = state.cells[i]; const e = expected[i]; check(cell && ['pending', 'started', 'completed', 'task_failed', 'blocked'].includes(cell.status)
+          && ['harness', 'task', 'rep', 'run_id'].every(k => cell[k] === e[k]));
+        if (['completed', 'task_failed'].includes(cell.status)) {
+          const checked = inspectAttempt(cellDirectory(output, cell), cell, tasks.get(cell.task), definition, api);
+          check(checked.status === cell.status && isDeepStrictEqual(checked.hashes, cell.hashes));
+        }
+        if (cell.status === 'started' || cell.status === 'blocked') { state.halted = true; state.halt_reason = 'consumed-attempt-requires-investigation'; }
+      }
+    } else {
+      const session = randomBytes(8).toString('hex'); state = { schema_version: 1, official_release: false, collection: 'diagnostic', session, definition,
+        created_at: new Date().toISOString(), halted: false, cells: schedule(session) };
+    }
+    saveState(path, state); if (state.halted) return state;
+    const execute = deps.runCell ?? (await import('@aob/runner')).runDockerCell;
+    const factory = deps.createTransportFactory ?? (await import('./s5-luna-task-transport.mjs')).createLunaTaskTransportFactory;
+    for (const cell of state.cells) {
+      if (cell.status !== 'pending' || !selected.includes(cell.harness)) continue;
+      const task = tasks.get(cell.task); const dir = cellDirectory(output, cell);
+      if (exists(dir)) { cell.status = 'blocked'; state.halted = true; state.halt_reason = 'existing-attempt-directory'; saveState(path, state); break; }
+      cell.status = 'started'; cell.started_at = new Date().toISOString(); saveState(path, state);
+      try {
+        mkdirSync(dir, { recursive: true, mode: 0o700 });
+        const transportFactory = await factory({ authFile: options.authFile, bridgeBinary: options.bridgeBinary, privateRoot, timeoutS: task.timeoutS });
+        await execute({ dir, taskDir: task.taskDir, upstream: 'https://chatgpt.com/backend-api/codex', run_id: cell.run_id, tool: cell.harness,
+          task_id: task.id, task_source: task.source.kind, task_revision: task.source.revision, task_repository: task.source.repository,
+          task_base_revision: task.baseRevision, task_regime: task.regime, model: LUNA_MODEL, price_book: PRICE_BOOK,
+          condition: 'pinned', rep: cell.rep, timeoutS: task.timeoutS, environment: task.environment, verifier: task.verifier, transportFactory });
+        Object.assign(cell, inspectAttempt(dir, cell, task, definition, api), { finished_at: new Date().toISOString(), admission: cell.rep === 0 ? 'funded-first-repetition' : 'funded-repetition' });
+      } catch {
+        cell.status = 'blocked'; state.halted = true; state.halt_reason = 'attempt-or-accounting-failed';
+      }
+      saveState(path, state); (deps.progress ?? (message => process.stdout.write(`${message}\n`)))(`${cell.harness} ${cell.task} repetition ${cell.rep + 1}: ${cell.status}`);
+      if (state.halted) break;
+    }
+    return state;
+  } catch (error) { throw error instanceof CampaignError ? error : new CampaignError(); }
+  finally { if (lockFd !== undefined) { closeSync(lockFd); rmSync(lockPath); } }
+}
+export function parseOptions(args) {
+  const names = { '--task-root': 'taskRoot', '--output': 'output', '--auth-file': 'authFile', '--bridge-binary': 'bridgeBinary', '--private-root': 'privateRoot', '--harnesses': 'harnesses' };
+  const options = {};
+  for (let i = 0; i < args.length; i++) { const key = names[args[i]]; check(key && options[key] === undefined && args[i + 1] && !args[i + 1].startsWith('--')); options[key] = args[++i]; }
+  check(['taskRoot', 'output', 'privateRoot', 'authFile', 'bridgeBinary'].every(k => typeof options[k] === 'string' && isAbsolute(options[k])));
+  options.harnesses = harnesses(options.harnesses === undefined ? undefined : options.harnesses.split(',')); return options;
+}
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  process.umask(0o077);
+  Promise.resolve().then(() => runCampaign(parseOptions(process.argv.slice(2)))).then(state => { if (state.halted) process.exitCode = 1; })
+    .catch(() => { process.stderr.write('Luna campaign refused; inspect private state before any further execution.\n'); process.exitCode = 1; });
+}
