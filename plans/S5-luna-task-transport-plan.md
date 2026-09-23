@@ -61,3 +61,11 @@ then one real prepared Docker task against scripted responses and the unchanged
 verifier with no WAN credentials. Only then S7 may launch funded task cells. No
 benchmark reruns or smoke reruns are a prerequisite if existing evidence plus
 changed-path offline tests cover the condition.
+
+Acceptance passed on Linux on September 23 UTC: the existing SuperJSON task ran
+through native Codex, the pinned bridge, canonical C1/C4 and unchanged verifier
+using two synthetic provider responses. The marker-only candidate correctly
+failed verification; usage was complete and USD stayed null. No account allowance
+was used. See [sanitized proof](s5-evidence/luna-task-transport/offline-proof.json).
+Independent review approved the runner, service and lifecycle changes; focused
+tests, workspace types and lint passed. The S7 collection stage may now proceed.
