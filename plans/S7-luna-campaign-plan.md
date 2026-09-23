@@ -149,3 +149,22 @@ before its check was added. Exact-counter admission requires the complete first
 missing or contradictory samples, both preserved implementation epochs, six-cell
 raw-file preservation, provider/source drift, and every missing receipt/backup
 link. No credentials, provider calls or benchmark task reruns were used.
+
+## Verifier summary followed by asynchronous stderr
+
+The retained Textual attempt contains one coherent reward-zero summary (13/20
+fail-to-pass and 6/6 pass-to-pass tests) followed by a candidate-triggered asynchronous
+ValueError traceback. The Docker verifier collector concatenates stdout with
+stderr, so the last line of the combined log is not a trustworthy summary boundary.
+No standalone reward.json is retained for this attempt. Admission therefore uses
+the unique structured reward record anywhere in the combined verifier log, with
+all existing count/fraction coherence checks and required native exit 0/verifier
+exit 1. Missing, duplicate, malformed or incoherent records still halt. Raw logs
+and C4 outcomes remain unchanged; the second repair still requires its exact
+historical hashes. A representative regression uses the actual reward summary and
+asynchronous traceback shape, without committing the private full candidate trace.
+
+Verifier-ordering acceptance: the new regression failed before the one-condition
+change; 18/18 focused tests then passed. The unchanged full retained Textual log
+also passed the current parser in a read-only local check. Syntax/diff checks
+passed, and no inference or task rerun occurred.

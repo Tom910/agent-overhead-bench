@@ -243,3 +243,15 @@ test('second recovery refuses arbitrary pins, source/provider drift, and tamperi
     await assert.rejects(runCampaign(f.options, f.deps), CampaignError); assert.equal(f.calls.length, 6);
   }
 });
+
+test('valid unique Textual reward summary survives asynchronous traceback appended to verifier output', async () => {
+  const summary = '[verifier] reward.json={"reward": 0, "f2p_total": 20, "f2p_passed": 13, "p2p_total": 6, "p2p_passed": 6, "f2p": 0.65, "p2p": 1.0, "partial": 0.7307692307692307}';
+  const suffix = '\nTask exception was never retrieved\nfuture: <Task finished name="message pump RichLog" exception=ValueError("too many values to unpack (expected 3)")>\nTraceback (most recent call last):\n  File "/work/workspace/src/textual/strip.py", line 40, in get_line_length\nValueError: too many values to unpack (expected 3)\n';
+  const valid = fixture(c => { taskFailure(c); c.footer = summary + suffix; });
+  const state = await runCampaign({ ...valid.options, harnesses: ['hermes'] }, valid.deps);
+  assert.equal(state.halted, false); assert.equal(valid.calls.length, 40); assert.equal(state.cells.filter(c => c.status === 'task_failed').length, 40);
+  for (const record of ['', summary + '\n' + summary, '[verifier] reward.json={broken}', summary.replace('"f2p_passed": 13', '"f2p_passed": 21'), summary.replace('"f2p": 0.65', '"f2p": 0.7')]) {
+    const invalid = fixture(c => { taskFailure(c); c.footer = record + suffix; });
+    assert.equal((await runCampaign({ ...invalid.options, harnesses: ['hermes'] }, invalid.deps)).halted, true); assert.equal(invalid.calls.length, 1);
+  }
+});

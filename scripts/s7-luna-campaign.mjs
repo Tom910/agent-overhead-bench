@@ -132,7 +132,8 @@ async function loadTasks({ taskRoot }) {
 }
 function genuineFailure(log) {
   const lines = log.split('\n').map(l => l.trim()).filter(Boolean); const markers = lines.filter(l => l.startsWith('[verifier] reward.json='));
-  if (markers.length !== 1 || lines.at(-1) !== markers[0]) return false;
+  // Docker combines stdout then stderr; asynchronous stderr can follow the summary.
+  if (markers.length !== 1) return false;
   try {
     const r = JSON.parse(markers[0].slice('[verifier] reward.json='.length));
     const values = [r.f2p_total, r.f2p_passed, r.p2p_total, r.p2p_passed];
