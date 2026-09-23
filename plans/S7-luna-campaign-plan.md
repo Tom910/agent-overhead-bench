@@ -94,6 +94,8 @@ without query or truncation: one GET each for api-models, backend-tags,
 backend-version and model-detail, at most two GET backend-properties, and one POST
 backend-show. Any other rejection, duplicate beyond that bound, provider failure
 or incomplete accounting still halts admission. The relay continues returning 404.
+The model-detail category is restricted to the proved /v1/models/gpt-6-luna
+target; other model-detail paths remain unclassified and stop admission.
 
 A single-purpose exported `repairLunaMetadataStop(options)` has no CLI reset flag.
 It pins the known old state, implementation, Hermes C1/C4/observations, native image

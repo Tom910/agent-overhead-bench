@@ -177,7 +177,9 @@ test('front rejection diagnostics retain fixed classifications without hostile p
   {path:'/v1/responses?token=private-query-secret',method:'POST',auth:false,reason:'auth',status:401,route:'responses',query:true},
   {path:'/v1/chat/completions?private-query-secret',method:'POST',route:'chat-completions',query:true},
   {path:'/v1/models?api_key=private-query-secret',method:'GET',route:'models',query:true},
-  {path:'/v1/models/private-model-secret',method:'GET',route:'model-detail',query:false},
+  {path:'/v1/models/private-model-secret',method:'GET',route:'other',query:false},
+  {path:'/v1/models/gpt-6-luna',method:'GET',route:'model-detail',query:false},
+  {path:'/models/gpt-6-luna',method:'GET',route:'other',query:false},
   {path:'/v1/generation?id=private-query-secret',method:'GET',route:'generation',query:true},
   {path:'/v1/responses/compact',method:'POST',route:'responses-compact',query:false},
   {path:'/health?private-query-secret',method:'GET',route:'root-or-health',query:true},
@@ -193,7 +195,7 @@ test('front rejection diagnostics retain fixed classifications without hostile p
  for(const item of cases){const r=await fetch(service.frontUrl+item.path,{method:item.method,headers:{authorization:item.auth===false?'Bearer private-header-secret':`Bearer ${spec.bridgeKey}`}});await r.text();assert.equal(r.status,item.status??404);}
  await service.close();const raw=await readFile(spec.observationsPath,'utf8'),obs=JSON.parse(raw);
  assert.deepEqual(obs.front_rejections,cases.map(item=>({reason:item.reason??'path',status:item.status??404,method:item.savedMethod??item.method,route:item.route,query_present:item.query})));
- assert.equal(obs.front_refused,15);assert.equal(obs.front_rejections_truncated,0);
+ assert.equal(obs.front_refused,17);assert.equal(obs.front_rejections_truncated,0);
  for(const secret of ['private-query-secret','private-model-secret','private-path-secret','private-header-secret','%2f',spec.bridgeKey])assert.equal(raw.includes(secret),false);
  assert.equal(seen.length,0);assert.equal(frontSeen.length,0);assert.equal(await readFile(spec.outPath,'utf8'),'');
 });

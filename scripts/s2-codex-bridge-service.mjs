@@ -47,7 +47,7 @@ function rejectionCategory(req, reason, status) {
   if (/^\/(?:v1\/)?responses$/.test(path)) route = 'responses';
   else if (/^\/(?:v1\/)?chat\/completions$/.test(path)) route = 'chat-completions';
   else if (/^\/(?:v1\/)?models$/.test(path)) route = 'models';
-  else if (/^\/(?:v1\/)?models\/[^/]+$/.test(path)) route = 'model-detail';
+  else if (path === '/v1/models/gpt-6-luna') route = 'model-detail';
   else if (/^\/(?:v1\/)?generation$/.test(path)) route = 'generation';
   else if (/^\/(?:v1\/)?responses\/compact$/.test(path)) route = 'responses-compact';
   else if (path === '/api/v1/models') route = 'api-models';
