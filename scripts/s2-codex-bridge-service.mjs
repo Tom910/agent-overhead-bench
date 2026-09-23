@@ -1,7 +1,7 @@
 import { createServer, request as httpRequest } from 'node:http';
 import { timingSafeEqual } from 'node:crypto';
 import { constants } from 'node:fs';
-import { open, lstat } from 'node:fs/promises';
+import { open, lstat, readFile } from 'node:fs/promises';
 import { dirname, isAbsolute } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { startProxy } from '@aob/proxy';
@@ -62,6 +62,10 @@ function relay(req, res, target, body, active, options = {}) {
     const headers = { ...req.headers, host: new URL(target).host, 'content-length': String(body.length) };
     delete headers['transfer-encoding'];
     if (options.identityEncoding) headers['accept-encoding'] = 'identity';
+    if (options.bridgeAuthorization) {
+      headers.authorization = options.bridgeAuthorization;
+      delete headers['x-aob-proxy-token'];
+    }
     const forwarded = httpRequest(target, { method: req.method, headers }, upstream => {
       options.onResponse?.(upstream.headers);
       res.writeHead(upstream.statusCode ?? 502, upstream.headers);
@@ -104,6 +108,13 @@ function validateSpec(spec) {
 /** Port overrides support isolated local integration; the CLI always uses the fixed topology. */
 export async function startBridgeService(spec, options = {}) {
   validateSpec(spec);
+  const maxModelRequests = options.maxModelRequests === undefined ? 2 : options.maxModelRequests;
+  if (!Number.isSafeInteger(maxModelRequests) || maxModelRequests < 1 || maxModelRequests > 512
+    || ['maxInputTokens', 'maxOutputTokens'].some(key => options[key] !== undefined && (!Number.isSafeInteger(options[key]) || options[key] < 1))
+    || (options.ingressAuthToken !== undefined && (typeof options.ingressAuthToken !== 'string' || !/^[A-Za-z0-9_-]{32,256}$/.test(options.ingressAuthToken)))) throw new BridgeServiceError();
+  const taskMode = ['maxModelRequests', 'maxInputTokens', 'maxOutputTokens', 'ingressAuthToken'].some(key => options[key] !== undefined);
+  const observationLimit = taskMode ? 2 * maxModelRequests + 16 : MAX_OBSERVATIONS;
+  let admission = Promise.resolve(); let taskForwarded = 0; let taskHalted = false;
   const bridge = options.bridge ?? 'http://127.0.0.1:8317';
   const bridgeUrl = new URL(bridge);
   if (bridgeUrl.protocol !== 'http:' || bridgeUrl.hostname !== '127.0.0.1' || bridgeUrl.pathname !== '/' || bridgeUrl.search || bridgeUrl.hash || bridgeUrl.username || bridgeUrl.password) throw new BridgeServiceError();
@@ -132,8 +143,31 @@ export async function startBridgeService(spec, options = {}) {
     const output = await open(spec.outPath, 'wx', 0o600); await output.close();
     observationsFile = await open(spec.observationsPath, 'wx', 0o600);
     meter = await startProxy({ run_id: spec.runId, upstream: spec.upstream, outPath: spec.outPath,
-      authToken: spec.meterKey, expectedModel: 'gpt-6-luna', maxModelRequests: 2,
+      authToken: spec.meterKey, expectedModel: 'gpt-6-luna', maxModelRequests,
       host: '127.0.0.1', port: options.meterPort ?? 3212 });
+    async function taskAdmissionAllowed() {
+      if (closePromise || taskHalted) return false;
+      try {
+        // The completed canonical records are the only token-accounting source.
+        // Serial gate ownership prevents another admission while this drains.
+        await meter.flush();
+        const text = await readFile(spec.outPath, 'utf8');
+        const events = text.trim() === '' ? [] : text.trim().split('\n').map(line => JSON.parse(line));
+        const actual = events.filter(event => event.method === 'POST' && event.error?.kind !== 'proxy_refused');
+        if (actual.length !== taskForwarded) throw new BridgeServiceError();
+        let input = 0; let output = 0;
+        for (const event of actual) {
+          if (event.protocol !== 'openai_responses' || event.status !== 200 || event.error !== null
+            || event.model_requested !== 'gpt-6-luna' || event.model_served !== 'gpt-6-luna'
+            || !event.usage || !['input', 'cached_input', 'output', 'reasoning_output'].every(key => Number.isSafeInteger(event.usage[key]) && event.usage[key] >= 0)) throw new BridgeServiceError();
+          input += event.usage.input; output += event.usage.output;
+        }
+        if (!Number.isSafeInteger(input) || !Number.isSafeInteger(output)) throw new BridgeServiceError();
+        if (actual.length >= maxModelRequests || input >= (options.maxInputTokens ?? Infinity)
+          || output >= (options.maxOutputTokens ?? Infinity)) { taskHalted = true; return false; }
+        return true;
+      } catch { taskHalted = true; return false; }
+    }
     function dispatch(handler) {
       return (req, res) => {
         const task = handler(req, res).catch(() => reject(res, 400));
@@ -146,21 +180,36 @@ export async function startBridgeService(spec, options = {}) {
       const body = await bodyBytes(req);
       if (body === null) { observations.gate_refused++; reject(res, 413); return; }
       let parsed; try { parsed = JSON.parse(body.toString('utf8')); } catch { observations.gate_refused++; reject(res, 400); return; }
-      if (observations.requests.length >= MAX_OBSERVATIONS) { observations.gate_refused++; reject(res, 429); return; }
+      if (observations.requests.length >= observationLimit) { observations.gate_refused++; reject(res, 429); return; }
       const observation = observeRequest(parsed, spec.marker); observations.requests.push(observation);
       if (!observation.accepted) { observations.gate_refused++; reject(res, 400); return; }
-      await relay(req, res, `${meter.baseUrl}/responses`, body, active, { identityEncoding: true, onResponse: headers => Object.assign(observation, responseTransport(headers)) });
+      const forward = () => relay(req, res, `${meter.baseUrl}/responses`, body, active, { identityEncoding: true, onResponse: headers => Object.assign(observation, responseTransport(headers)) });
+      if (!taskMode) { await forward(); return; }
+      const queued = admission.then(async () => {
+        if (res.destroyed || closePromise) return;
+        if (!await taskAdmissionAllowed()) { observation.accepted = false; observations.gate_refused++; reject(res, 429); return; }
+        taskForwarded++;
+        await forward();
+      });
+      admission = queued.catch(() => { taskHalted = true; });
+      await queued;
     }));
     const gateUrl = await listen(gate, options.gatePort ?? 3211, '127.0.0.1');
     front = createServer(dispatch(async (req, res) => {
-      if (!authenticated(req.headers.authorization, `Bearer ${spec.bridgeKey}`)) { observations.front_refused++; reject(res, 401); return; }
+      const authorized = options.ingressAuthToken === undefined
+        ? authenticated(req.headers.authorization, `Bearer ${spec.bridgeKey}`)
+        : authenticated(req.headers['x-aob-proxy-token'], options.ingressAuthToken);
+      if (!authorized) { observations.front_refused++; reject(res, 401); return; }
       if (!['GET /v1/models', 'POST /v1/chat/completions', 'POST /v1/responses'].includes(`${req.method} ${req.url}`)) { observations.front_refused++; reject(res, 404); return; }
       const body = await bodyBytes(req);
       if (body === null) { observations.front_refused++; reject(res, 413); return; }
-      await relay(req, res, `${bridge}${req.url}`, body, active);
+      await relay(req, res, `${bridge}${req.url}`, body, active, options.ingressAuthToken === undefined ? {} : { bridgeAuthorization: `Bearer ${spec.bridgeKey}` });
     }));
     const frontUrl = await listen(front, options.frontPort ?? 3210, '0.0.0.0');
-    return { frontUrl, gateUrl, close };
+    return { frontUrl, gateUrl, anchor: meter.anchor, flush: async () => {
+      await Promise.allSettled([...pending]);
+      await meter.flush();
+    }, close };
   } catch {
     await close().catch(() => {});
     throw new BridgeServiceError();

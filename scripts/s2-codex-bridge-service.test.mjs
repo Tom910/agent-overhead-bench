@@ -23,19 +23,19 @@ async function mock(t, handler) {
   t.after(()=>new Promise(resolve=>{server.closeAllConnections();server.close(resolve);}));
   return `http://127.0.0.1:${server.address().port}`;
 }
-async function fixture(t, upstreamStatus = 200) {
+async function fixture(t, upstreamStatus = 200, options = {}, responseChange = {}) {
   const dir=await mkdtemp(join(tmpdir(),'aob-service-'));t.after(()=>rm(dir,{recursive:true,force:true}));
   const seen=[];
   const upstream=await mock(t,async(req,res)=>{
     const chunks=[];for await(const chunk of req)chunks.push(chunk);
     seen.push({body:Buffer.concat(chunks).toString(),headers:req.headers,path:req.url});
     res.statusCode=upstreamStatus;res.setHeader('content-type','application/json');
-    res.end(JSON.stringify({id:'fake-response',object:'response',status:'completed',model:'gpt-6-luna',output:[],usage:{input_tokens:100,output_tokens:30,total_tokens:130,input_tokens_details:{cached_tokens:40},output_tokens_details:{reasoning_tokens:10}}}));
+    res.end(JSON.stringify({id:'fake-response',object:'response',status:'completed',model:'gpt-6-luna',output:[],usage:{input_tokens:100,output_tokens:30,total_tokens:130,input_tokens_details:{cached_tokens:40},output_tokens_details:{reasoning_tokens:10}},...responseChange}));
   });
   const frontSeen=[];
-  const bridge=await mock(t,async(req,res)=>{let body='';for await(const c of req)body+=c;frontSeen.push({path:req.url,body,authorization:req.headers.authorization});res.end('{}');});
+  const bridge=await mock(t,async(req,res)=>{let body='';for await(const c of req)body+=c;frontSeen.push({path:req.url,body,authorization:req.headers.authorization,capability:req.headers['x-aob-proxy-token']});res.end('{}');});
   const spec={upstream:`${upstream}/backend`,outPath:join(dir,'c1.jsonl'),observationsPath:join(dir,'observations.json'),meterKey:'m'.repeat(48),bridgeKey:'b'.repeat(48),marker:'harmless-marker',runId:'synthetic-service'};
-  const service=await startBridgeService(spec,{frontPort:0,gatePort:0,meterPort:0,bridge});
+  const service=await startBridgeService(spec,{frontPort:0,gatePort:0,meterPort:0,bridge,...options});
   t.after(()=>service.close());
   return {spec,service,seen,frontSeen};
 }
@@ -123,4 +123,50 @@ test('native tool content-array text proves marker output without accepting IDs 
 test('transport observations retain only known MIME and encoding classes',()=>{
  assert.deepEqual(responseTransport({'content-type':'Text/Event-Stream; charset=utf-8','content-encoding':'gzip'}),{response_content_type:'text/event-stream',response_content_encoding:'gzip'});
  assert.deepEqual(responseTransport({'content-type':'secret-value','content-encoding':'private-value'}),{response_content_type:'other',response_content_encoding:'other'});
+});
+
+
+test('task relay ingress accepts only its token, inserts bridge auth and strips the task capability',async t=>{
+ const token='r'.repeat(48);const {spec,service,frontSeen}=await fixture(t,200,{ingressAuthToken:token});
+ assert.equal((await fetch(`${service.frontUrl}/v1/models`,{headers:{authorization:`Bearer ${spec.bridgeKey}`}})).status,401);
+ const response=await post(`${service.frontUrl}/v1/responses`,JSON.stringify(payload()),{'x-aob-proxy-token':token,authorization:'Bearer task-supplied-value'});
+ assert.equal(response.status,200);await response.text();assert.equal(frontSeen.length,1);
+ assert.equal(frontSeen[0].authorization,`Bearer ${spec.bridgeKey}`);assert.equal(frontSeen[0].capability,undefined);
+});
+
+test('task cap allows more than smoke and flush exposes complete canonical evidence with its anchor',async t=>{
+ const {spec,service,seen}=await fixture(t,200,{maxModelRequests:3});
+ const results=await Promise.all(Array.from({length:5},async()=>{const r=await post(`${service.gateUrl}/responses`,JSON.stringify(payload()),{'x-aob-proxy-token':spec.meterKey});await r.text();return r.status;}));
+ assert.deepEqual(results.sort(),[200,200,200,429,429]);assert.equal(seen.length,3);
+ await service.flush();const events=(await readFile(spec.outPath,'utf8')).trim().split('\n').map(JSON.parse);
+ assert.equal(events.filter(e=>e.error===null).length,3);assert(Number.isFinite(service.anchor.monotonic_zero));assert(Number.isFinite(Date.parse(service.anchor.wall_clock_iso)));
+});
+
+test('serialized task admissions stop following requests at raw input or output token ceiling',async t=>{
+ for(const limits of [{maxInputTokens:100},{maxOutputTokens:30},{maxInputTokens:60}]){
+  const {spec,service,seen}=await fixture(t,200,{maxModelRequests:5,...limits});
+  const results=await Promise.all(Array.from({length:3},async()=>{const r=await post(`${service.gateUrl}/responses`,JSON.stringify(payload()),{'x-aob-proxy-token':spec.meterKey});await r.text();return r.status;}));
+  assert.deepEqual(results.sort(),[200,429,429]);assert.equal(seen.length,1);
+  await service.flush();const events=(await readFile(spec.outPath,'utf8')).trim().split('\n').map(JSON.parse);assert.equal(events.length,1);assert.equal(events[0].usage.input,100);
+ }
+});
+
+test('task admissions stop after provider denial, wrong identity or missing canonical usage without retries',async t=>{
+ for(const [status,change]of [[401,{}],[200,{model:'other-model'}],[200,{usage:null}],[200,{model:null}]]){
+  const {spec,service,seen}=await fixture(t,status,{maxModelRequests:5},change);
+  const first=await post(`${service.gateUrl}/responses`,JSON.stringify(payload()),{'x-aob-proxy-token':spec.meterKey});await first.text();assert.equal(first.status,status);
+  const second=await post(`${service.gateUrl}/responses`,JSON.stringify(payload()),{'x-aob-proxy-token':spec.meterKey});await second.text();assert.equal(second.status,429);assert.equal(seen.length,1);
+  await service.flush();const events=(await readFile(spec.outPath,'utf8')).trim().split('\n').map(JSON.parse);assert.equal(events.length,1);
+ }
+});
+
+test('invalid task limits or relay credentials fail before opening service listeners',async t=>{
+ for(const options of [{maxModelRequests:null},{maxModelRequests:0},{maxModelRequests:513},{maxModelRequests:1.5},{maxInputTokens:0},{maxOutputTokens:NaN},{maxInputTokens:Number.MAX_SAFE_INTEGER+1},{ingressAuthToken:''},{ingressAuthToken:'too-short'}])await assert.rejects(fixture(t,200,options),{name:'BridgeServiceError'});
+});
+
+test('task observations scale with cap and rejected conditions do not spend provider allowance',async t=>{
+ const {spec,service,seen}=await fixture(t,200,{maxModelRequests:65});
+ for(let i=0;i<130;i++){const r=await post(`${service.gateUrl}/responses`,JSON.stringify({...payload(),store:true}),{'x-aob-proxy-token':spec.meterKey});await r.text();assert.equal(r.status,400);}
+ const valid=await post(`${service.gateUrl}/responses`,JSON.stringify(payload()),{'x-aob-proxy-token':spec.meterKey});await valid.text();assert.equal(valid.status,200);assert.equal(seen.length,1);
+ await service.close();const obs=JSON.parse(await readFile(spec.observationsPath,'utf8'));assert.equal(obs.requests.length,131);
 });
