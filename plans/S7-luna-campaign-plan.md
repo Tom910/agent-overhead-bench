@@ -116,3 +116,36 @@ including the repair pin dependency seam; the production export retains fixed
 historical hashes and exposes no reset option. No credentials or inference were
 used for this change. The historical attribution remains an inference even after
 successful repair; future records contain observed rejection categories.
+
+## Repeated observed metadata probes and second audited continuation
+
+The seven-call assumption was too strict: native Hermes can repeat context
+metadata lookup within one attempt. Safe metadata admission now depends on the
+classification, never a maximum count of each safe category. Complete historical
+arrays must account for every refusal without truncation. New bounded exact
+category counters may prove larger populations beyond the 128-item diagnostic
+sample: every refusal must belong to a permitted method/path-reason/404/no-query
+category, the unclassified count must be zero, totals must reconcile, and the
+retained sample must agree with the counters. Unknown/auth/body/model-endpoint
+refusals, inconsistent counters and missing evidence still halt admission.
+
+A second narrowly pinned export, `repairLunaRepeatedMetadataStop(options)`, repairs
+only the known state with five task failures, one blocked Hermes Textual attempt
+and 194 pending slots. All 39 provider requests and the genuine verifier failure
+remain required. Unlike the first count-only adjudication, this attempt has 11
+fully observed metadata diagnostics; no inferred path attribution is needed.
+It preserves the second stopped state and a new receipt with exclusive creation,
+validates and links the unchanged first receipt and backup, and binds every raw
+artifact in all six consumed slots. The first two slots retain their original
+implementation epoch; slots 2–5 acquire their actual second epoch. Every future
+resume validates the full two-receipt chain and immutable raw evidence. No consumed
+slot is staged again, and no arbitrary implementation drift is accepted.
+
+Second-continuation acceptance: 17/17 focused tests passed. New repeat/recovery
+cases failed before implementation; the missing retained-prefix case also failed
+before its check was added. Exact-counter admission requires the complete first
+`min(128, front_refused)` sample and reconciled truncation. Tests include a valid
+140-refusal population, a correctly totaled unsafe tail, malformed counters,
+missing or contradictory samples, both preserved implementation epochs, six-cell
+raw-file preservation, provider/source drift, and every missing receipt/backup
+link. No credentials, provider calls or benchmark task reruns were used.

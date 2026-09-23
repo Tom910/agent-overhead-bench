@@ -23,6 +23,16 @@ const LEGACY_PINS = Object.freeze({
   proof: 'c74c4efe03ab5e3845abfd38ad8b574ffc64ae7230171b1e097ffe2e8e1312a8',
   image: 'sha256:76f02c972b829dc60e4be7aea921bb98ffc847254121f5cc318125a2fb4631a5',
 });
+const REPEATED_PINS = Object.freeze({
+  state: '864a39eaf0cfbe1399a7d2641015241f69b00efb8ead2b6151d4d214565309c0',
+  implementation: 'd21e2622b816fba8a5bb6ad770d47be974022c47c2528b281f9a37a4f37a0bad', session: '586921d27c1250c7',
+  run: 'ed364a088215e9734e7dc740799ff2502e077de0ab09c8606d95feafdacb5b84',
+  events: '580444671bd10ce2a0adcb4da6202034a35d657de4f5886c80d3db4c3d140a28',
+  observations: '6988ca961c9ca6ff20c26b0d20bd0e0094678b4fd94bcbe523e54b183cbd748d',
+  first_receipt: '9a07dcf8cee593ae9237be01d07195c7350d94d51e71d3215ca4843e0c1f5ed0',
+});
+const REPEATED_BACKUP = 'repeated-metadata-state.json';
+const REPEATED_RECEIPT = 'repeated-metadata-adjudication.json';
 const LEGACY_BACKUP = 'legacy-metadata-state.json';
 const LEGACY_RECEIPT = 'legacy-metadata-adjudication.json';
 const BOUND_FILES = ['run.json', 'events.jsonl', 'verify.log', 'execution-conditions.json', 'candidate-evidence.json', 'transport.json', 'bridge-conditions.json'];
@@ -132,11 +142,25 @@ function genuineFailure(log) {
   } catch { return false; }
 }
 function cellDirectory(output, cell) { return join(output, 'results', cell.harness, cell.task, String(cell.rep)); }
+const METADATA_ROUTES = ['api-models', 'model-detail', 'backend-tags', 'backend-properties', 'backend-version', 'backend-show'];
+const nonnegativeInteger = value => Number.isSafeInteger(value) && value >= 0;
+const safeMetadataRecord = r => r && r.reason === 'path' && r.status === 404 && r.query_present === false
+  && r.method === (r.route === 'backend-show' ? 'POST' : 'GET') && METADATA_ROUTES.includes(r.route);
 function allowedMetadata(observed, harness) {
-  if (observed.front_refused === 0) return (observed.front_rejections === undefined || (Array.isArray(observed.front_rejections) && observed.front_rejections.length === 0)) && (observed.front_rejections_truncated === undefined || observed.front_rejections_truncated === 0);
-  if (harness !== 'hermes' || observed.front_rejections_truncated !== 0 || !Array.isArray(observed.front_rejections) || observed.front_rejections.length !== observed.front_refused) return false;
-  const remaining = { 'api-models': 1, 'backend-tags': 1, 'backend-properties': 2, 'backend-version': 1, 'model-detail': 1, 'backend-show': 1 };
-  return observed.front_rejections.every(r => r && r.reason === 'path' && r.status === 404 && r.query_present === false && r.method === (r.route === 'backend-show' ? 'POST' : 'GET') && Object.hasOwn(remaining, r.route) && remaining[r.route]-- > 0);
+  if (!nonnegativeInteger(observed.front_refused)) return false;
+  const records = observed.front_rejections; const truncated = observed.front_rejections_truncated;
+  if (observed.front_metadata_counts !== undefined || observed.front_unclassified_refused !== undefined) {
+    const counts = observed.front_metadata_counts;
+    if (!counts || typeof counts !== 'object' || Array.isArray(counts) || Object.keys(counts).length !== METADATA_ROUTES.length
+      || !METADATA_ROUTES.every(k => Object.hasOwn(counts, k) && nonnegativeInteger(counts[k])) || observed.front_unclassified_refused !== 0
+      || !Array.isArray(records) || records.length !== Math.min(128, observed.front_refused) || !nonnegativeInteger(truncated) || records.length + truncated !== observed.front_refused
+      || !records.every(safeMetadataRecord)) return false;
+    const total = METADATA_ROUTES.reduce((sum, k) => sum + counts[k], 0);
+    return nonnegativeInteger(total) && total === observed.front_refused && (total === 0 || harness === 'hermes')
+      && METADATA_ROUTES.every(k => records.filter(r => r.route === k).length <= counts[k]);
+  }
+  if (observed.front_refused === 0) return (records === undefined || (Array.isArray(records) && records.length === 0)) && (truncated === undefined || truncated === 0);
+  return harness === 'hermes' && truncated === 0 && Array.isArray(records) && records.length <= 128 && records.length === observed.front_refused && records.every(safeMetadataRecord);
 }
 function inspectAttempt(dir, cell, task, definition, api, legacy = false) {
   const hashes = Object.fromEntries(BOUND_FILES.map(name => [name, hashFile(join(dir, name))]));
@@ -205,6 +229,7 @@ function legacyEvidence(output, oldBytes, context, deps) {
   return { old, receipt, preserved };
 }
 function validateAdjudication(output, state, context, deps) {
+  if (state.repeated_metadata_adjudication) return validateRepeatedAdjudication(output, state, context, deps);
   if (!state.legacy_metadata_adjudication) {
     check(state.cells.every(c => c.legacy_metadata_classification === undefined && c.original_implementation_sha256 === undefined)); return false;
   }
@@ -213,6 +238,42 @@ function validateAdjudication(output, state, context, deps) {
   check(isDeepStrictEqual(JSON.parse(bytes), expected.receipt) && state.session === expected.old.session
     && isDeepStrictEqual(state.cells.slice(0, 2), expected.preserved)
     && state.cells.slice(2).every(c => c.legacy_metadata_classification === undefined && c.original_implementation_sha256 === undefined));
+  return true;
+}
+function repeatedEvidence(output, oldBytes, context, deps) {
+  const pins = deps.repeatedPins ?? REPEATED_PINS; const old = JSON.parse(oldBytes); const { api, tasks, definition } = context;
+  check(sha(oldBytes) === pins.state && old.schema_version === 1 && old.official_release === false && old.collection === 'diagnostic'
+    && old.halted === true && old.halt_reason === 'attempt-or-accounting-failed' && old.session === pins.session
+    && old.definition.implementation_sha256 === pins.implementation && definition.implementation_sha256 !== pins.implementation
+    && isDeepStrictEqual({ ...old.definition, implementation_sha256: definition.implementation_sha256 }, definition)
+    && !old.repeated_metadata_adjudication && old.legacy_metadata_adjudication === pins.first_receipt);
+  check(Array.isArray(old.cells) && old.cells.length === 200);
+  // Validate the first transition against its actual historical implementation epoch.
+  const historicalContext = { ...context, definition: old.definition };
+  check(validateAdjudication(output, old, historicalContext, deps));
+  const expected = schedule(old.session);
+  for (let i = 0; i < expected.length; i++) check(['harness', 'task', 'rep', 'run_id'].every(k => old.cells[i][k] === expected[i][k])
+    && old.cells[i].status === (i < 5 ? 'task_failed' : i === 5 ? 'blocked' : 'pending'));
+  const dir = cellDirectory(output, old.cells[5]);
+  check(hashFile(join(dir, 'run.json')) === pins.run && hashFile(join(dir, 'events.jsonl')) === pins.events && hashFile(join(dir, 'bridge-conditions.json')) === pins.observations);
+  const observations = json(join(dir, 'bridge-conditions.json'));
+  check(observations.front_refused === 11 && observations.requests.length === 39 && observations.front_rejections.length === 11 && observations.front_rejections_truncated === 0);
+  const checked = old.cells.slice(0, 6).map((cell, i) => inspectAttempt(cellDirectory(output, cell), cell, tasks.get(cell.task), definition, api, i === 1));
+  check(checked.every(c => c.status === 'task_failed') && checked.slice(0, 5).every((c, i) => isDeepStrictEqual(c.hashes, old.cells[i].hashes)));
+  const receipt = { schema_version: 1, classification: 'observed_repeated_metadata', reason: 'complete-safe-metadata-diagnostics',
+    old_state_sha256: pins.state, old_implementation_sha256: pins.implementation, new_implementation_sha256: definition.implementation_sha256,
+    first_receipt_sha256: pins.first_receipt, session: old.session,
+    preserved_cells: old.cells.slice(0, 6).map((c, i) => ({ run_id: c.run_id, hashes: checked[i].hashes, original_implementation_sha256: i < 2 ? c.original_implementation_sha256 : pins.implementation })) };
+  const preserved = old.cells.slice(0, 6).map((c, i) => i < 2 ? c : ({ ...c, ...checked[i], original_implementation_sha256: pins.implementation,
+    ...(i === 5 ? { repeated_metadata_classification: 'observed', admission: 'funded-first-repetition' } : {}) }));
+  return { old, receipt, preserved };
+}
+function validateRepeatedAdjudication(output, state, context, deps) {
+  const bytes = regularBytes(join(output, REPEATED_RECEIPT)); check(sha(bytes) === state.repeated_metadata_adjudication);
+  const expected = repeatedEvidence(output, regularBytes(join(output, REPEATED_BACKUP)), context, deps);
+  check(isDeepStrictEqual(JSON.parse(bytes), expected.receipt) && state.session === expected.old.session
+    && state.legacy_metadata_adjudication === expected.old.legacy_metadata_adjudication && isDeepStrictEqual(state.cells.slice(0, 6), expected.preserved)
+    && state.cells.slice(6).every(c => c.legacy_metadata_classification === undefined && c.repeated_metadata_classification === undefined && c.original_implementation_sha256 === undefined));
   return true;
 }
 function exclusiveEvidence(path, bytes) {
@@ -234,6 +295,25 @@ export async function repairLunaMetadataStop(options, deps = {}) {
     exclusiveEvidence(join(output, LEGACY_BACKUP), oldBytes);
     const receiptBytes = Buffer.from(`${JSON.stringify(receipt, null, 2)}\n`); exclusiveEvidence(join(output, LEGACY_RECEIPT), receiptBytes);
     const next = { ...old, definition: context.definition, halted: false, cells: [...preserved, ...old.cells.slice(2)], legacy_metadata_adjudication: sha(receiptBytes) };
+    delete next.halt_reason; saveState(path, next); return next;
+  } catch (error) { throw error instanceof CampaignError ? error : new CampaignError(); }
+  finally { if (lockFd !== undefined) { closeSync(lockFd); rmSync(lockPath); } }
+}
+
+/** One exact observed stop, preserving the first audit chain and both consumed epochs. */
+export async function repairLunaRepeatedMetadataStop(options, deps = {}) {
+  let lockFd; let lockPath;
+  try {
+    check(options && ['taskRoot', 'output', 'privateRoot', 'authFile', 'bridgeBinary'].every(k => typeof options[k] === 'string' && isAbsolute(options[k])));
+    check((deps.platform ?? process.platform) === 'linux'); const output = privateDirectory(options.output); const privateRoot = privateDirectory(options.privateRoot);
+    check(!within(output, privateRoot) && !within(privateRoot, output));
+    lockPath = join(output, 'campaign.lock'); lockFd = openSync(lockPath, 'wx', 0o600);
+    const context = await campaignDefinition(options, deps); const path = join(output, 'state.json'); const oldBytes = regularBytes(path);
+    const { old, receipt, preserved } = repeatedEvidence(output, oldBytes, context, deps);
+    check(!exists(join(output, REPEATED_BACKUP)) && !exists(join(output, REPEATED_RECEIPT)));
+    exclusiveEvidence(join(output, REPEATED_BACKUP), oldBytes);
+    const receiptBytes = Buffer.from(`${JSON.stringify(receipt, null, 2)}\n`); exclusiveEvidence(join(output, REPEATED_RECEIPT), receiptBytes);
+    const next = { ...old, definition: context.definition, halted: false, cells: [...preserved, ...old.cells.slice(6)], repeated_metadata_adjudication: sha(receiptBytes) };
     delete next.halt_reason; saveState(path, next); return next;
   } catch (error) { throw error instanceof CampaignError ? error : new CampaignError(); }
   finally { if (lockFd !== undefined) { closeSync(lockFd); rmSync(lockPath); } }

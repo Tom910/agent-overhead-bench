@@ -49,7 +49,7 @@ function fixture(change) {
     },
     progress: () => {},
   };
-  return { root, options, deps, calls, factories };
+  return { root, options, deps, calls, factories, setChange: fn => { change = fn; } };
 }
 
 test('persists exactly 200 ordered slots and runs each funded cell once across harness subsets', async () => {
@@ -125,10 +125,10 @@ test('binds one Linux host without retaining its machine identifier', async () =
 
 const metadata = () => ['api-models', 'backend-tags', 'backend-properties', 'backend-properties', 'backend-version', 'model-detail', 'backend-show'].map(route => ({ reason: 'path', status: 404, method: route === 'backend-show' ? 'POST' : 'GET', route, query_present: false }));
 const taskFailure = c => { c.run.outcome = 'verify_error'; c.run.verification.exit = 1; c.footer = '[verifier] reward.json=' + JSON.stringify({ reward: 0, f2p_total: 2, f2p_passed: 1, p2p_total: 2, p2p_passed: 2, f2p: .5, p2p: 1, partial: .75 }) + '\n'; };
-test('allows only bounded classified Hermes metadata refusals, with no relaxation for other routes or harnesses', async () => {
+test('allows only classified Hermes metadata refusals, with no relaxation for other routes or harnesses', async () => {
   const good = fixture(c => { c.observed.front_refused = 7; c.observed.front_rejections = metadata(); c.observed.front_rejections_truncated = 0; });
   const result = await runCampaign({ ...good.options, harnesses: ['hermes'] }, good.deps); assert.equal(result.halted, false); assert.equal(good.calls.length, 40);
-  for (const mutate of [r => r[0].reason = 'auth', r => r[0].reason = 'body', r => r[0].route = 'responses', r => r[0].query_present = true, r => r[0].status = 401, r => r[0].method = 'POST', r => r.push(r[0])]) {
+  for (const mutate of [r => r[0].reason = 'auth', r => r[0].reason = 'body', r => r[0].route = 'responses', r => r[0].query_present = true, r => r[0].status = 401, r => r[0].method = 'POST']) {
     const bad = fixture(c => { const records = metadata(); mutate(records); Object.assign(c.observed, { front_refused: records.length, front_rejections: records, front_rejections_truncated: 0 }); });
     assert.equal((await runCampaign({ ...bad.options, harnesses: ['hermes'] }, bad.deps)).halted, true); assert.equal(bad.calls.length, 1);
   }
@@ -179,5 +179,67 @@ test('production repair pins and preserved backup refuse arbitrary stops and evi
     const f = await legacyFixture(); await campaign.repairLunaMetadataStop(f.options, f.deps);
     const path = name === 'bridge-conditions.json' ? join(f.calls[1].dir, name) : join(f.options.output, name);
     rmSync(path); await assert.rejects(runCampaign(f.options, f.deps), CampaignError); assert.equal(f.calls.length, 2);
+  }
+});
+
+const countsFor = records => {
+  const counts = Object.fromEntries(['api-models', 'model-detail', 'backend-tags', 'backend-properties', 'backend-version', 'backend-show'].map(k => [k, 0]));
+  for (const r of records) counts[r.route]++;
+  return counts;
+};
+test('repeated known Hermes metadata is allowed with complete arrays or exact counters beyond sample capacity', async () => {
+  for (const count of [11, 140]) {
+    const good = fixture(c => {
+      const records = Array.from({ length: count }, (_, i) => metadata()[i % 7]);
+      Object.assign(c.observed, { front_refused: count, front_rejections: records.slice(0, 128), front_rejections_truncated: Math.max(0, count - 128) });
+      if (count > 128) Object.assign(c.observed, { front_metadata_counts: countsFor(records), front_unclassified_refused: 0 });
+    });
+    const state = await runCampaign({ ...good.options, harnesses: ['hermes'] }, good.deps); assert.equal(state.halted, false); assert.equal(good.calls.length, 40);
+  }
+});
+test('exact metadata counters reject unknowns, invalid totals, truncated legacy samples and contradicted samples', async () => {
+  for (const mutate of [o => { o.front_unclassified_refused = 1; o.front_metadata_counts['api-models']--; }, o => o.front_metadata_counts['api-models']++, o => o.front_metadata_counts.extra = 0,
+    o => o.front_metadata_counts['api-models'] = -1, o => o.front_metadata_counts['api-models'] = .5, o => delete o.front_metadata_counts['api-models'],
+    o => { delete o.front_metadata_counts; delete o.front_unclassified_refused; }, o => o.front_rejections[0].reason = 'auth',
+    o => { o.front_metadata_counts['api-models'] = 0; o.front_metadata_counts['backend-tags'] += 20; }, o => o.front_rejections_truncated++, o => { o.front_rejections = []; o.front_rejections_truncated = 140; }]) {
+    const bad = fixture(c => { const records = Array.from({ length: 140 }, (_, i) => metadata()[i % 7]);
+      Object.assign(c.observed, { front_refused: 140, front_rejections: records.slice(0, 128), front_rejections_truncated: 12, front_metadata_counts: countsFor(records), front_unclassified_refused: 0 }); mutate(c.observed); });
+    assert.equal((await runCampaign({ ...bad.options, harnesses: ['hermes'] }, bad.deps)).halted, true); assert.equal(bad.calls.length, 1);
+  }
+});
+async function repeatedFixture() {
+  const f = await legacyFixture(); await campaign.repairLunaMetadataStop(f.options, f.deps);
+  f.setChange(c => { taskFailure(c); if (c.index === 5) { c.eventCount = 39; Object.assign(c.observed, { front_refused: 11, front_rejections: [...metadata(), ...metadata().slice(0, 4)], front_rejections_truncated: 0 }); } });
+  const execute = f.deps.runCell;
+  f.deps.runCell = async spec => { const result = await execute(spec); if (f.calls.length === 6) throw new Error('simulate original count-bound stop after raw evidence'); return result; };
+  const old = await runCampaign(f.options, f.deps); assert.equal(f.calls.length, 6); assert.equal(old.cells[5].status, 'blocked');
+  f.deps.repeatedPins = { first_receipt: old.legacy_metadata_adjudication, state: fileHash(join(f.options.output, 'state.json')), implementation: old.definition.implementation_sha256, session: old.session,
+    run: fileHash(join(f.calls[5].dir, 'run.json')), events: fileHash(join(f.calls[5].dir, 'events.jsonl')), observations: fileHash(join(f.calls[5].dir, 'bridge-conditions.json')) };
+  f.deps.implementationHash = async () => 'f'.repeat(64); return f;
+}
+test('second audited recovery preserves both epochs and raw evidence, then skips all six consumed cells', async () => {
+  const f = await repeatedFixture(); const firstReceipt = fileHash(join(f.options.output, 'legacy-metadata-adjudication.json'));
+  const raw = f.calls.map(c => Object.fromEntries(readdirSync(c.dir).map(name => [name, fileHash(join(c.dir, name))])));
+  const state = await campaign.repairLunaRepeatedMetadataStop(f.options, f.deps); assert.equal(state.halted, false); assert.equal(state.cells.filter(c => c.status === 'pending').length, 194);
+  assert.equal(fileHash(join(f.options.output, 'legacy-metadata-adjudication.json')), firstReceipt);
+  assert.deepEqual(state.cells.slice(0, 6).map(c => c.original_implementation_sha256), ['a', 'a', 'e', 'e', 'e', 'e'].map(s => s.repeat(64)));
+  assert.equal(fileHash(join(f.options.output, 'repeated-metadata-state.json')), f.deps.repeatedPins.state);
+  for (let i = 0; i < 6; i++) for (const [name, hash] of Object.entries(raw[i])) assert.equal(fileHash(join(f.calls[i].dir, name)), hash);
+  const consumed = f.calls.map(c => c.run_id); f.deps.runCell = async spec => { assert.ok(!consumed.includes(spec.run_id)); throw new Error('stop synthetic continuation'); };
+  assert.equal((await runCampaign(f.options, f.deps)).cells[6].status, 'blocked');
+  await assert.rejects(campaign.repairLunaRepeatedMetadataStop(f.options, f.deps), CampaignError);
+});
+test('second recovery refuses arbitrary pins, source/provider drift, and tampering anywhere in receipt chain', async () => {
+  for (const mutation of ['production', 'source', 'provider', 'old-receipt']) {
+    const f = await repeatedFixture();
+    if (mutation === 'production') delete f.deps.repeatedPins;
+    if (mutation === 'source') { const load = f.deps.loadTasks; f.deps.loadTasks = async () => { const loaded = await load(); loaded.tasks[2].baseRevision = '9'.repeat(40); return loaded; }; }
+    if (mutation === 'provider') { const path = join(f.calls[5].dir, 'events.jsonl'); const rows = readFileSync(path, 'utf8').trim().split('\n').map(JSON.parse); rows[0].status = 429; writeFileSync(path, rows.map(JSON.stringify).join('\n') + '\n'); f.deps.repeatedPins.events = fileHash(path); }
+    if (mutation === 'old-receipt') { const path = join(f.options.output, 'legacy-metadata-adjudication.json'); chmodSync(path, 0o600); writeFileSync(path, '{}'); }
+    await assert.rejects(campaign.repairLunaRepeatedMetadataStop(f.options, f.deps), CampaignError); assert.equal(read(join(f.options.output, 'state.json')).halted, true);
+  }
+  for (const name of ['legacy-metadata-state.json', 'legacy-metadata-adjudication.json', 'repeated-metadata-state.json', 'repeated-metadata-adjudication.json']) {
+    const f = await repeatedFixture(); await campaign.repairLunaRepeatedMetadataStop(f.options, f.deps); rmSync(join(f.options.output, name));
+    await assert.rejects(runCampaign(f.options, f.deps), CampaignError); assert.equal(f.calls.length, 6);
   }
 });
