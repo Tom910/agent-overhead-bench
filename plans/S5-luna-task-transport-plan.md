@@ -69,3 +69,28 @@ failed verification; usage was complete and USD stayed null. No account allowanc
 was used. See [sanitized proof](s5-evidence/luna-task-transport/offline-proof.json).
 Independent review approved the runner, service and lifecycle changes; focused
 tests, workspace types and lint passed. The S7 collection stage may now proceed.
+
+## Follow-up: diagnose locally rejected ingress requests
+
+The first funded Hermes task completed with 47 successful, fully accounted Luna
+requests but seven frontend refusals. The service retained only their count, so
+their reason cannot be recovered from canonical C1 (they never reached C1).
+Before another funded task, extend the private bridge-conditions sidecar with
+bounded rejection diagnostics: fixed reason/status/method/route categories and a
+query-present boolean. Never retain raw URLs, query values, bodies, authorization
+headers, account identity or tokens. Preserve existing refusal behavior and the
+provider-side C1/C4 measurement model. Truncation must be explicit and counters
+must remain exact. Exercise auth, path, body-limit and hostile-URL cases offline.
+Do not infer or backfill missing diagnostics into the completed Hermes evidence.
+An S7 adjudication/continuation change is a separate stage after this diagnosis.
+
+The pinned Hermes context-discovery function was then reproduced offline in its
+exact task image: six metadata GETs and POST /api/show receive the same seven
+404s, with no inference and a 256000-token fallback context. The original S2
+Hermes smoke also recorded seven refusals. See
+[reproducible evidence](s5-evidence/luna-task-transport/hermes-metadata-probes.json).
+The old campaign recorded no paths, so its attribution remains an explicit
+inference. Keep raw historical evidence and all 404 response behavior unchanged.
+Only future fully classified metadata-probe refusals can receive the narrow S7
+exception; authentication, body limits, model endpoints and unknown requests
+must still stop admission. Diagnostic tests and independent review passed.
