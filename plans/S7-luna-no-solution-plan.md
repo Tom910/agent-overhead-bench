@@ -39,3 +39,5 @@ actual Linux Ink attempt with its immutable verifier image: capture exit0,
 126037-byte retained candidate, zero-byte reconstructed verifier patch. That
 read-only invocation returned a proof without writing campaign evidence or
 changing original files. No model calls or agent/grader reruns were used.
+Independent review reran all five focused tests and approved the reconstruction,
+hash/exclusion bindings, isolated capture and exact empty-output checks.
