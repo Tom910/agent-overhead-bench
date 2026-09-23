@@ -168,3 +168,41 @@ Verifier-ordering acceptance: the new regression failed before the one-condition
 change; 18/18 focused tests then passed. The unchanged full retained Textual log
 also passed the current parser in a read-only local check. Syntax/diff checks
 passed, and no inference or task rerun occurred.
+
+## Evidence-bound no-solution outcomes
+
+An empty verifier log with native exit 0/verifier exit 1 is not by itself a task
+failure. The retained Codex Ink attempt also has a nonempty candidate patch, so
+neither stdout's no-change declaration nor the candidate patch size establishes
+what the immutable verifier consumed. The retained candidate projection can include
+ignored dependency symlinks that the verifier's own capture projection excludes.
+
+For this case and future attempts, retain complete exact-Luna C1 accounting and
+all native/task/image gates, then use the separate S7 no-solution proof helper to
+reconstruct the hash-verified candidate in disposable storage. The exact immutable
+verifier image runs only its capture helper with network disabled; no model calls,
+task verifier execution or original evidence mutation occurs. Admission requires a
+validated proof binding the original run, empty verifier log, candidate evidence,
+patch, prepared tree and immutable images to successful capture of an empty verifier
+patch. Missing, invalid or nonempty proofs halt. The raw C4 remains verify_error;
+operational state records task_failed with failure_reason=no_solution_produced.
+No reward or test-pass counts are invented.
+
+A third exact-state transition preserves the stopped state, the first two receipt
+chains and all nine consumed attempts. The old implementation hash and stopped
+Codex Ink C1/C4/observation hashes are fixed; only implementation drift authorized
+by this transition is accepted. The first six implementation epochs remain intact;
+the latest three receive their actual prior epoch. The proof is validated before
+writing any audit or state transition, and all receipts/proofs are revalidated on
+resume. Only the 191 existing pending slots may execute afterward.
+
+No-solution admission acceptance: 23/23 focused controller tests passed. Positive
+fixtures use the real retained-candidate generator and real proof validator, with
+only the isolated capture process replaced by a synthetic empty-diff result. They
+cover future admission/resume, all nine consumed attempts and three historical
+implementation epochs, unchanged raw C4 and earlier audit files, 191 pending
+slots, proof tampering, every prior/new receipt and backup, and provider/source
+refusal. The blocked slot's original candidate-evidence and patch hashes are also
+pinned explicitly; its drift regression failed before the guard was added. Syntax
+and diff checks passed. The helper's actual Linux empty-diff validation is a
+separate required operational gate before root applies the transition.

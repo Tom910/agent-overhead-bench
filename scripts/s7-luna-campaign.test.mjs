@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test, afterEach } from 'node:test';
-import { chmodSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, readdirSync, realpathSync } from 'node:fs';
+import { chmodSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, readdirSync, realpathSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
@@ -253,5 +253,97 @@ test('valid unique Textual reward summary survives asynchronous traceback append
   for (const record of ['', summary + '\n' + summary, '[verifier] reward.json={broken}', summary.replace('"f2p_passed": 13', '"f2p_passed": 21'), summary.replace('"f2p": 0.65', '"f2p": 0.7')]) {
     const invalid = fixture(c => { taskFailure(c); c.footer = record + suffix; });
     assert.equal((await runCampaign({ ...invalid.options, harnesses: ['hermes'] }, invalid.deps)).halted, true); assert.equal(invalid.calls.length, 1);
+  }
+});
+
+// No-solution proof fixtures are supplied by the real helper schema; the model
+// and capture subprocess seams remain synthetic and never invoke Docker here.
+test('empty verifier output alone cannot become a task failure', async () => {
+  const f = fixture(c => { c.run.outcome = 'verify_error'; c.run.verification.exit = 1; });
+  let captures = 0; f.deps.createNoSolutionProof = async () => { captures++; throw new Error('not proven'); };
+  const state = await runCampaign(f.options, f.deps); assert.equal(state.halted, true); assert.equal(captures, 1); assert.equal(f.calls.length, 1);
+});
+
+async function noSolutionFixture() {
+  const f = await repeatedFixture(); await campaign.repairLunaRepeatedMetadataStop(f.options, f.deps);
+  f.setChange(c => { taskFailure(c); if (c.index === 8) { c.eventCount = 27; c.footer = ''; } });
+  const state = await runCampaign(f.options, { ...f.deps, createNoSolutionProof: async () => { throw new Error('historical proof not available'); } });
+  assert.equal(f.calls.length, 9); assert.equal(state.cells[8].status, 'blocked');
+  writeFileSync(join(f.calls[8].dir, 'candidate.patch'), '');
+  f.deps.noSolutionPins = { candidate_evidence: fileHash(join(f.calls[8].dir, 'candidate-evidence.json')), candidate_patch: fileHash(join(f.calls[8].dir, 'candidate.patch')), state: fileHash(join(f.options.output, 'state.json')), implementation: state.definition.implementation_sha256, session: state.session,
+    run: fileHash(join(f.calls[8].dir, 'run.json')), events: fileHash(join(f.calls[8].dir, 'events.jsonl')), observations: fileHash(join(f.calls[8].dir, 'bridge-conditions.json')), second_receipt: state.repeated_metadata_adjudication };
+  f.deps.implementationHash = async () => '9'.repeat(64); return f;
+}
+test('third recovery refuses to alter scheduling without a valid independent no-solution proof', async () => {
+  const f = await noSolutionFixture(); let attempted = 0;
+  f.deps.createNoSolutionProof = async () => { attempted++; throw new Error('nonempty or unavailable verifier capture'); };
+  const oldHash = fileHash(join(f.options.output, 'state.json'));
+  await assert.rejects(campaign.repairLunaNoSolutionStop(f.options, f.deps), CampaignError);
+  assert.equal(attempted, 1); assert.equal(fileHash(join(f.options.output, 'state.json')), oldHash);
+  assert.equal(f.calls.length, 9); assert.equal(readdirSync(f.options.output).includes('no-solution-state.json'), false);
+});
+
+async function installSyntheticEmptyCapture(f, call) {
+  const { prepareCandidateBaseline, releaseCandidateBaseline, captureCandidate, bindCandidateToRun } = await import('../packages/runner/src/candidate-evidence.ts');
+  const taskDir = call.taskDir; const workspace = join(taskDir, 'workspace'); mkdirSync(workspace, { recursive: true });
+  writeFileSync(join(workspace, 'source.txt'), 'unchanged source\n'); writeFileSync(join(workspace, '.gitignore'), 'node_modules/\n');
+  writeFileSync(join(taskDir, 'task.yaml'), `id: ${call.task_id}\nsource:\n  kind: ${call.task_source}\n  repository: ${call.task_repository}\n  revision: ${call.task_revision}\n  task_id: ${call.task_id}\n  license_notes: fixture\n  base_revision: "${call.task_base_revision}"\nlanguage: typescript\nsize: small\nshape: feature\ntimeout_s: 10800\nexpected_minutes: [16, 180]\ndescription: fixture\n`);
+  writeFileSync(join(taskDir, 'environment.json'), JSON.stringify({ agent_images: call.environment.agent_images }));
+  const verifier = { ...call.verifier, command: ['sh', '-c', 'test -s /tmp/logs/artifacts/model.patch'] };
+  for (const dir of [taskDir, call.dir]) writeFileSync(join(dir, 'verifier.json'), JSON.stringify(verifier));
+  const baseline = prepareCandidateBaseline(workspace); assert.equal(baseline.status, 'ready');
+  const candidate = join(f.root, 'synthetic-candidate'); mkdirSync(candidate); writeFileSync(join(candidate, 'source.txt'), 'unchanged source\n'); writeFileSync(join(candidate, '.gitignore'), 'node_modules/\n');
+  mkdirSync(join(candidate, 'node_modules')); symlinkSync('/app/node_modules/example', join(candidate, 'node_modules/example'));
+  rmSync(join(call.dir, 'candidate-evidence.json')); rmSync(join(call.dir, 'candidate.patch'), { force: true });
+  const evidence = captureCandidate({ dir: call.dir, workspace: candidate, baseline, runId: call.run_id, taskId: call.task_id, baseRevision: call.task_base_revision, taskRevision: call.task_revision, agentImage: digest, verifierImage: digest });
+  releaseCandidateBaseline(baseline); assert.equal(evidence.status, 'captured'); bindCandidateToRun(call.dir, evidence, readFileSync(join(call.dir, 'run.json')));
+  if (f.deps.noSolutionPins) Object.assign(f.deps.noSolutionPins, { candidate_evidence: fileHash(join(call.dir, 'candidate-evidence.json')), candidate_patch: fileHash(join(call.dir, 'candidate.patch')) });
+  let captures = 0;
+  f.deps.createNoSolutionProof = async args => {
+    const { createNoSolutionProof } = await import('./s7-luna-no-solution.mjs');
+    return createNoSolutionProof(args, { capture: async ({ outputDir }) => { captures++; writeFileSync(join(outputDir, 'model.patch'), '');
+      return { exitCode: 0, helperSha256: 'sha256:0e765789f08663ae455e14cf8a2db1186969310e59d5d55650b762e3d8789ddf', baseRevision: call.task_base_revision }; } });
+  };
+  return () => captures;
+}
+test('third recovery binds empty-verifier-patch proof and preserves all nine consumed cells and earlier receipt epochs', async () => {
+  const f = await noSolutionFixture(); const captures = await installSyntheticEmptyCapture(f, f.calls[8]);
+  const original = f.calls.map(c => Object.fromEntries(readdirSync(c.dir).filter(name => name !== 'workspace').map(name => [name, fileHash(join(c.dir, name))])));
+  const earlier = ['legacy-metadata-state.json', 'legacy-metadata-adjudication.json', 'repeated-metadata-state.json', 'repeated-metadata-adjudication.json'].map(name => [name, fileHash(join(f.options.output, name))]);
+  const state = await campaign.repairLunaNoSolutionStop(f.options, f.deps);
+  assert.equal(state.halted, false); assert.equal(state.cells[8].failure_reason, 'no_solution_produced'); assert.equal(state.cells.filter(c => c.status === 'pending').length, 191); assert.equal(captures(), 1);
+  assert.deepEqual(state.cells.slice(0, 9).map(c => c.original_implementation_sha256), ['a', 'a', 'e', 'e', 'e', 'e', 'f', 'f', 'f'].map(s => s.repeat(64)));
+  for (const [name, hash] of earlier) assert.equal(fileHash(join(f.options.output, name)), hash);
+  for (let i = 0; i < 9; i++) for (const [name, hash] of Object.entries(original[i])) assert.equal(fileHash(join(f.calls[i].dir, name)), hash);
+  assert.equal(read(join(f.calls[8].dir, 'run.json')).outcome, 'verify_error');
+  const consumed = f.calls.map(c => c.run_id); f.deps.runCell = async spec => { assert.ok(!consumed.includes(spec.run_id)); throw new Error('stop synthetic continuation'); };
+  const resumed = await runCampaign(f.options, f.deps); assert.equal(resumed.cells[9].status, 'blocked'); assert.equal(captures(), 1);
+  rmSync(join(f.calls[8].dir, 'no-solution-proof.json')); await assert.rejects(runCampaign(f.options, f.deps), CampaignError);
+});
+test('general no-solution admission requires complete C1 and validates proof on each resume', async () => {
+  const f = fixture(c => { taskFailure(c); if (c.index === 0) c.footer = ''; }); const execute = f.deps.runCell; let captures;
+  f.deps.runCell = async spec => { const result = await execute(spec); if (f.calls.length === 1) captures = await installSyntheticEmptyCapture(f, spec); return result; };
+  const state = await runCampaign({ ...f.options, harnesses: ['codex'] }, f.deps); assert.equal(state.halted, false); assert.equal(f.calls.length, 40); assert.equal(captures(), 1);
+  assert.equal(state.cells[0].failure_reason, 'no_solution_produced');
+  await runCampaign({ ...f.options, harnesses: ['codex'] }, f.deps); assert.equal(captures(), 1); assert.equal(f.calls.length, 40);
+  const path = join(f.calls[0].dir, 'no-solution-proof.json'); chmodSync(path, 0o600); const proof = read(path); proof.model_patch_bytes = 1; writeFileSync(path, JSON.stringify(proof));
+  await assert.rejects(runCampaign(f.options, f.deps), CampaignError);
+  const bad = fixture(c => { c.run.outcome = 'verify_error'; c.run.verification.exit = 1; c.event.usage = null; c.event.usage_source = 'unavailable'; });
+  let attempted = 0; bad.deps.createNoSolutionProof = async () => { attempted++; throw new Error('should never capture'); };
+  assert.equal((await runCampaign(bad.options, bad.deps)).halted, true); assert.equal(attempted, 0);
+});
+
+test('third recovery rejects arbitrary pins, bad accounting and loss anywhere in its receipt chain', async () => {
+  for (const mutation of ['production', 'provider', 'source', 'candidate']) {
+    const f = await noSolutionFixture(); let captures = 0; f.deps.createNoSolutionProof = async () => { captures++; throw new Error('not eligible'); };
+    if (mutation === 'production') delete f.deps.noSolutionPins;
+    if (mutation === 'candidate') writeFileSync(join(f.calls[8].dir, 'candidate.patch'), 'changed after historical capture');
+    if (mutation === 'provider') { const path = join(f.calls[8].dir, 'events.jsonl'); const rows = readFileSync(path, 'utf8').trim().split('\n').map(JSON.parse); rows[0].status = 429; writeFileSync(path, rows.map(JSON.stringify).join('\n') + '\n'); f.deps.noSolutionPins.events = fileHash(path); }
+    if (mutation === 'source') { const load = f.deps.loadTasks; f.deps.loadTasks = async () => { const loaded = await load(); loaded.tasks[4].baseRevision = '8'.repeat(40); return loaded; }; }
+    await assert.rejects(campaign.repairLunaNoSolutionStop(f.options, f.deps), CampaignError); assert.equal(captures, 0); assert.equal(read(join(f.options.output, 'state.json')).halted, true);
+  }
+  for (const name of ['legacy-metadata-state.json', 'legacy-metadata-adjudication.json', 'repeated-metadata-state.json', 'repeated-metadata-adjudication.json', 'no-solution-state.json', 'no-solution-adjudication.json']) {
+    const f = await noSolutionFixture(); await installSyntheticEmptyCapture(f, f.calls[8]); await campaign.repairLunaNoSolutionStop(f.options, f.deps);
+    rmSync(join(f.options.output, name)); await assert.rejects(runCampaign(f.options, f.deps), CampaignError); assert.equal(f.calls.length, 9);
   }
 });

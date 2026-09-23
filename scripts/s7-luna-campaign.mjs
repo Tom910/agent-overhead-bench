@@ -31,6 +31,18 @@ const REPEATED_PINS = Object.freeze({
   observations: '6988ca961c9ca6ff20c26b0d20bd0e0094678b4fd94bcbe523e54b183cbd748d',
   first_receipt: '9a07dcf8cee593ae9237be01d07195c7350d94d51e71d3215ca4843e0c1f5ed0',
 });
+const NO_SOLUTION_PINS = Object.freeze({
+  state: '7024cc027a601c7212ad8720fa38b2e9cf2c664f6802c4a786fc14e058dc2f92',
+  implementation: 'd67b6a81cf8aa5a4bddff66536b472aac930686a0c382e80ffdadc981cbc8d7d', session: '586921d27c1250c7',
+  run: '7e3338e4e90bf5886d6d207eb38e1350fbff23402272c3a810dee5ed3f887530',
+  events: '719baf70839eacfe3dbfaa6a20e373a5a6e1b5669f83ecfdcd33f0e8347bcc66',
+  observations: '8801a9ff6b0ae9aa1d5fc2f9f028b454ad652e475745ba032fe409ff1c2dcfe5',
+  second_receipt: 'e8837eb27dcc3f90e27f14371368c15aca623574da7094b8919d4bd6c57f4b7c',
+  candidate_evidence: 'b4297992f21fdb72a8286517994d442399c9244779a2686c791fd4c1dc6ecee4',
+  candidate_patch: 'ae9eeab779e2fe319ba38f1bf04eaa1a046ef71c4965e0d864540588a79183e5',
+});
+const NO_SOLUTION_BACKUP = 'no-solution-state.json';
+const NO_SOLUTION_RECEIPT = 'no-solution-adjudication.json';
 const REPEATED_BACKUP = 'repeated-metadata-state.json';
 const REPEATED_RECEIPT = 'repeated-metadata-adjudication.json';
 const LEGACY_BACKUP = 'legacy-metadata-state.json';
@@ -90,7 +102,7 @@ async function contracts() {
   return import('@aob/contracts');
 }
 async function implementationHash() {
-  const scripts = ['s7-luna-campaign.mjs', 's5-luna-task-transport.mjs', 's2-codex-bridge-service.mjs', 's2-codex-bridge-prepare.mjs', 'ts-source-loader.mjs'].map(f => `scripts/${f}`);
+  const scripts = ['s7-luna-campaign.mjs', 's7-luna-no-solution.mjs', 's5-luna-task-transport.mjs', 's2-codex-bridge-service.mjs', 's2-codex-bridge-prepare.mjs', 'ts-source-loader.mjs'].map(f => `scripts/${f}`);
   const files = [...scripts, 'package-lock.json', ...['runner', 'proxy', 'adapters', 'contracts', 'tasks'].flatMap(p =>
     readdirSync(join(ROOT, 'packages', p, 'src'), { recursive: true }).filter(f => f.endsWith('.ts')).map(f => `packages/${p}/src/${f}`))].sort();
   return sha(files.map(f => `${f}:${hashFile(join(ROOT, f))}`).join('\n'));
@@ -163,9 +175,9 @@ function allowedMetadata(observed, harness) {
   if (observed.front_refused === 0) return (records === undefined || (Array.isArray(records) && records.length === 0)) && (truncated === undefined || truncated === 0);
   return harness === 'hermes' && truncated === 0 && Array.isArray(records) && records.length <= 128 && records.length === observed.front_refused && records.every(safeMetadataRecord);
 }
-function inspectAttempt(dir, cell, task, definition, api, legacy = false) {
+function inspectAttempt(dir, cell, task, definition, api, legacy = false, allowProofPreparation = false) {
   const hashes = Object.fromEntries(BOUND_FILES.map(name => [name, hashFile(join(dir, name))]));
-  for (const name of ['candidate.patch', 'events.jsonl.upstream.jsonl', 'stdout.log', 'stderr.log']) if (exists(join(dir, name))) hashes[name] = hashFile(join(dir, name));
+  for (const name of ['candidate.patch', 'events.jsonl.upstream.jsonl', 'stdout.log', 'stderr.log', 'no-solution-proof.json']) if (exists(join(dir, name))) hashes[name] = hashFile(join(dir, name));
   const run = api.validateC4Run(json(join(dir, 'run.json')));
   const events = regularBytes(join(dir, 'events.jsonl')).toString('utf8').trim().split('\n').filter(Boolean).map(line => api.validateC1Event(JSON.parse(line)));
   const agent = task.environment.agent_images[cell.harness];
@@ -188,11 +200,18 @@ function inspectAttempt(dir, cell, task, definition, api, legacy = false) {
   check(run.adapter_result.exitCode === 0);
   if (run.outcome === 'completed' && run.verification.exit === 0) return { status: 'completed', hashes };
   if (run.outcome === 'verify_error' && run.verification.exit === 1 && genuineFailure(regularBytes(join(dir, 'verify.log')).toString('utf8'))) return { status: 'task_failed', hashes };
+  if (run.outcome === 'verify_error' && run.verification.exit === 1 && regularBytes(join(dir, 'verify.log')).length === 0) {
+    if (exists(join(dir, 'no-solution-proof.json'))) {
+      api.validateNoSolutionProof({ cellDir: dir, taskDir: task.taskDir, proof: json(join(dir, 'no-solution-proof.json')) });
+      return { status: 'task_failed', failure_reason: 'no_solution_produced', hashes };
+    }
+    if (allowProofPreparation) return { status: 'no_solution_proof_required', hashes };
+  }
   throw new CampaignError();
 }
 
 async function campaignDefinition(options, deps) {
-    const api = await contracts();
+    const api = { ...await contracts(), ...await import('./s7-luna-no-solution.mjs') };
     const loaded = await (deps.loadTasks ?? loadTasks)({ taskRoot: realpathSync(options.taskRoot) });
     check(loaded.tasks.length === 8 && new Set(loaded.tasks.map(t => t.id)).size === 8 && TASK_IDS.every(id => loaded.tasks.some(t => t.id === id)));
     const tasks = new Map(loaded.tasks.map(t => [t.id, t]));
@@ -230,6 +249,7 @@ function legacyEvidence(output, oldBytes, context, deps) {
   return { old, receipt, preserved };
 }
 function validateAdjudication(output, state, context, deps) {
+  if (state.no_solution_adjudication) return validateNoSolutionAdjudication(output, state, context, deps);
   if (state.repeated_metadata_adjudication) return validateRepeatedAdjudication(output, state, context, deps);
   if (!state.legacy_metadata_adjudication) {
     check(state.cells.every(c => c.legacy_metadata_classification === undefined && c.original_implementation_sha256 === undefined)); return false;
@@ -277,6 +297,51 @@ function validateRepeatedAdjudication(output, state, context, deps) {
     && state.cells.slice(6).every(c => c.legacy_metadata_classification === undefined && c.repeated_metadata_classification === undefined && c.original_implementation_sha256 === undefined));
   return true;
 }
+async function inspectOrProve(dir, cell, task, definition, api, deps, legacy = false) {
+  const inspected = inspectAttempt(dir, cell, task, definition, api, legacy, true);
+  if (inspected.status !== 'no_solution_proof_required') return inspected;
+  const proof = await (deps.createNoSolutionProof ?? api.createNoSolutionProof)({ cellDir: dir, taskDir: task.taskDir });
+  api.validateNoSolutionProof({ cellDir: dir, taskDir: task.taskDir, proof });
+  exclusiveEvidence(join(dir, 'no-solution-proof.json'), Buffer.from(`${JSON.stringify(proof, null, 2)}\n`));
+  return inspectAttempt(dir, cell, task, definition, api, legacy);
+}
+function noSolutionEvidence(output, oldBytes, context, deps, allowProofPreparation = false) {
+  const pins = deps.noSolutionPins ?? NO_SOLUTION_PINS; const old = JSON.parse(oldBytes); const { api, tasks, definition } = context;
+  check(sha(oldBytes) === pins.state && old.schema_version === 1 && old.official_release === false && old.collection === 'diagnostic'
+    && old.halted === true && old.halt_reason === 'attempt-or-accounting-failed' && old.session === pins.session
+    && old.definition.implementation_sha256 === pins.implementation && definition.implementation_sha256 !== pins.implementation
+    && isDeepStrictEqual({ ...old.definition, implementation_sha256: definition.implementation_sha256 }, definition)
+    && !old.no_solution_adjudication && old.repeated_metadata_adjudication === pins.second_receipt);
+  check(Array.isArray(old.cells) && old.cells.length === 200);
+  check(validateAdjudication(output, old, { ...context, definition: old.definition }, deps));
+  const expected = schedule(old.session);
+  for (let i = 0; i < expected.length; i++) check(['harness', 'task', 'rep', 'run_id'].every(k => old.cells[i][k] === expected[i][k])
+    && old.cells[i].status === (i < 8 ? 'task_failed' : i === 8 ? 'blocked' : 'pending'));
+  const dir = cellDirectory(output, old.cells[8]);
+  check(hashFile(join(dir, 'candidate-evidence.json')) === pins.candidate_evidence && hashFile(join(dir, 'candidate.patch')) === pins.candidate_patch);
+  check(hashFile(join(dir, 'run.json')) === pins.run && hashFile(join(dir, 'events.jsonl')) === pins.events && hashFile(join(dir, 'bridge-conditions.json')) === pins.observations);
+  check(json(join(dir, 'bridge-conditions.json')).requests.length === 27);
+  const checked = old.cells.slice(0, 9).map((cell, i) => inspectAttempt(cellDirectory(output, cell), cell, tasks.get(cell.task), definition, api, i === 1, allowProofPreparation && i === 8));
+  check(checked.slice(0, 8).every((c, i) => c.status === 'task_failed' && isDeepStrictEqual(c.hashes, old.cells[i].hashes)));
+  if (allowProofPreparation && checked[8].status === 'no_solution_proof_required') return { old, proofRequired: true };
+  check(checked[8].status === 'task_failed' && checked[8].failure_reason === 'no_solution_produced');
+  const receipt = { schema_version: 1, classification: 'verified_empty_verifier_patch', reason: 'no_solution_produced',
+    old_state_sha256: pins.state, old_implementation_sha256: pins.implementation, new_implementation_sha256: definition.implementation_sha256,
+    second_receipt_sha256: pins.second_receipt, no_solution_proof_sha256: checked[8].hashes['no-solution-proof.json'], session: old.session,
+    preserved_cells: old.cells.slice(0, 9).map((c, i) => ({ run_id: c.run_id, hashes: checked[i].hashes, original_implementation_sha256: i < 6 ? c.original_implementation_sha256 : pins.implementation })) };
+  const preserved = old.cells.slice(0, 9).map((c, i) => i < 6 ? c : ({ ...c, ...checked[i], original_implementation_sha256: pins.implementation,
+    ...(i === 8 ? { no_solution_classification: 'verified', admission: 'funded-first-repetition' } : {}) }));
+  return { old, receipt, preserved, proofRequired: false };
+}
+function validateNoSolutionAdjudication(output, state, context, deps) {
+  const bytes = regularBytes(join(output, NO_SOLUTION_RECEIPT)); check(sha(bytes) === state.no_solution_adjudication);
+  const expected = noSolutionEvidence(output, regularBytes(join(output, NO_SOLUTION_BACKUP)), context, deps);
+  check(isDeepStrictEqual(JSON.parse(bytes), expected.receipt) && state.session === expected.old.session
+    && state.legacy_metadata_adjudication === expected.old.legacy_metadata_adjudication && state.repeated_metadata_adjudication === expected.old.repeated_metadata_adjudication
+    && isDeepStrictEqual(state.cells.slice(0, 9), expected.preserved)
+    && state.cells.slice(9).every(c => c.legacy_metadata_classification === undefined && c.repeated_metadata_classification === undefined && c.no_solution_classification === undefined && c.original_implementation_sha256 === undefined));
+  return true;
+}
 function exclusiveEvidence(path, bytes) {
   const fd = openSync(path, 'wx', 0o400);
   try { writeFileSync(fd, bytes); fsyncSync(fd); } finally { closeSync(fd); }
@@ -320,6 +385,31 @@ export async function repairLunaRepeatedMetadataStop(options, deps = {}) {
   finally { if (lockFd !== undefined) { closeSync(lockFd); rmSync(lockPath); } }
 }
 
+/** One exact no-solution stop; capture proof precedes all audit/state mutation. */
+export async function repairLunaNoSolutionStop(options, deps = {}) {
+  let lockFd; let lockPath;
+  try {
+    check(options && ['taskRoot', 'output', 'privateRoot', 'authFile', 'bridgeBinary'].every(k => typeof options[k] === 'string' && isAbsolute(options[k])));
+    check((deps.platform ?? process.platform) === 'linux'); const output = privateDirectory(options.output); const privateRoot = privateDirectory(options.privateRoot);
+    check(!within(output, privateRoot) && !within(privateRoot, output));
+    lockPath = join(output, 'campaign.lock'); lockFd = openSync(lockPath, 'wx', 0o600);
+    const context = await campaignDefinition(options, deps); const path = join(output, 'state.json'); const oldBytes = regularBytes(path);
+    let evidence = noSolutionEvidence(output, oldBytes, context, deps, true);
+    check(!exists(join(output, NO_SOLUTION_BACKUP)) && !exists(join(output, NO_SOLUTION_RECEIPT)));
+    if (evidence.proofRequired) {
+      const cell = evidence.old.cells[8];
+      await inspectOrProve(cellDirectory(output, cell), cell, context.tasks.get(cell.task), context.definition, context.api, deps);
+      evidence = noSolutionEvidence(output, oldBytes, context, deps);
+    }
+    const { old, receipt, preserved } = evidence;
+    exclusiveEvidence(join(output, NO_SOLUTION_BACKUP), oldBytes);
+    const receiptBytes = Buffer.from(`${JSON.stringify(receipt, null, 2)}\n`); exclusiveEvidence(join(output, NO_SOLUTION_RECEIPT), receiptBytes);
+    const next = { ...old, definition: context.definition, halted: false, cells: [...preserved, ...old.cells.slice(9)], no_solution_adjudication: sha(receiptBytes) };
+    delete next.halt_reason; saveState(path, next); return next;
+  } catch (error) { throw error instanceof CampaignError ? error : new CampaignError(); }
+  finally { if (lockFd !== undefined) { closeSync(lockFd); rmSync(lockPath); } }
+}
+
 /** Injected dependencies are for zero-spend tests; no runtime override is exposed by the CLI. */
 export async function runCampaign(options, deps = {}) {
   let lockFd; let lockPath;
@@ -341,7 +431,7 @@ export async function runCampaign(options, deps = {}) {
           && ['harness', 'task', 'rep', 'run_id'].every(k => cell[k] === e[k]));
         if (['completed', 'task_failed'].includes(cell.status)) {
           const checked = inspectAttempt(cellDirectory(output, cell), cell, tasks.get(cell.task), definition, api, adjudicated && i === 1);
-          check(checked.status === cell.status && isDeepStrictEqual(checked.hashes, cell.hashes));
+          check(checked.status === cell.status && checked.failure_reason === cell.failure_reason && isDeepStrictEqual(checked.hashes, cell.hashes));
         }
         if (cell.status === 'started' || cell.status === 'blocked') { state.halted = true; state.halt_reason = 'consumed-attempt-requires-investigation'; }
       }
@@ -364,7 +454,7 @@ export async function runCampaign(options, deps = {}) {
           task_id: task.id, task_source: task.source.kind, task_revision: task.source.revision, task_repository: task.source.repository,
           task_base_revision: task.baseRevision, task_regime: task.regime, model: LUNA_MODEL, price_book: PRICE_BOOK,
           condition: 'pinned', rep: cell.rep, timeoutS: task.timeoutS, environment: task.environment, verifier: task.verifier, transportFactory });
-        Object.assign(cell, inspectAttempt(dir, cell, task, definition, api), { finished_at: new Date().toISOString(), admission: cell.rep === 0 ? 'funded-first-repetition' : 'funded-repetition' });
+        Object.assign(cell, await inspectOrProve(dir, cell, task, definition, api, deps), { finished_at: new Date().toISOString(), admission: cell.rep === 0 ? 'funded-first-repetition' : 'funded-repetition' });
       } catch {
         cell.status = 'blocked'; state.halted = true; state.halt_reason = 'attempt-or-accounting-failed';
       }
