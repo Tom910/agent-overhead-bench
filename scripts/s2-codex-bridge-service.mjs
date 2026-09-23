@@ -8,6 +8,7 @@ import { startProxy } from '@aob/proxy';
 
 const MAX_BODY = 16 * 1024 * 1024;
 const MAX_OBSERVATIONS = 128;
+const MAX_FRONT_REJECTIONS = 128;
 export class BridgeServiceError extends Error {
   constructor() { super('Codex bridge service failed'); this.name = 'BridgeServiceError'; }
 }
@@ -37,6 +38,26 @@ function authenticated(actual, expected) {
   if (typeof actual !== 'string') return false;
   const a = Buffer.from(actual); const b = Buffer.from(expected);
   return a.length === b.length && timingSafeEqual(a, b);
+}
+/** Classify transient request fields into fixed labels; never retain raw targets. */
+function rejectionCategory(req, reason, status) {
+  const target = typeof req.url === 'string' ? req.url : '';
+  const path = target.split('?', 1)[0];
+  let route = 'other';
+  if (/^\/(?:v1\/)?responses$/.test(path)) route = 'responses';
+  else if (/^\/(?:v1\/)?chat\/completions$/.test(path)) route = 'chat-completions';
+  else if (/^\/(?:v1\/)?models$/.test(path)) route = 'models';
+  else if (/^\/(?:v1\/)?models\/[^/]+$/.test(path)) route = 'model-detail';
+  else if (/^\/(?:v1\/)?generation$/.test(path)) route = 'generation';
+  else if (/^\/(?:v1\/)?responses\/compact$/.test(path)) route = 'responses-compact';
+  else if (path === '/api/v1/models') route = 'api-models';
+  else if (path === '/api/tags') route = 'backend-tags';
+  else if (['/v1/props', '/props'].includes(path)) route = 'backend-properties';
+  else if (path === '/version') route = 'backend-version';
+  else if (path === '/api/show') route = 'backend-show';
+  else if (['/', '/health', '/healthz', '/ready', '/readyz'].includes(path)) route = 'root-or-health';
+  const method = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS', 'CONNECT', 'TRACE'].includes(req.method) ? req.method : 'other';
+  return { reason, status, method, route, query_present: target.includes('?') };
 }
 function reject(res, status) {
   if (res.headersSent) { res.destroy(); return; }
@@ -120,7 +141,14 @@ export async function startBridgeService(spec, options = {}) {
   if (bridgeUrl.protocol !== 'http:' || bridgeUrl.hostname !== '127.0.0.1' || bridgeUrl.pathname !== '/' || bridgeUrl.search || bridgeUrl.hash || bridgeUrl.username || bridgeUrl.password) throw new BridgeServiceError();
   let meter; let gate; let front; let observationsFile; let closePromise;
   const active = new Set(); const pending = new Set();
-  const observations = { schema_version: 1, requests: [], front_refused: 0, gate_refused: 0 };
+  const observations = { schema_version: 1, requests: [], front_refused: 0, gate_refused: 0,
+    front_rejections: [], front_rejections_truncated: 0 };
+  function rejectFront(req, res, reason, status) {
+    observations.front_refused++;
+    if (observations.front_rejections.length < MAX_FRONT_REJECTIONS) observations.front_rejections.push(rejectionCategory(req, reason, status));
+    else observations.front_rejections_truncated++;
+    reject(res, status);
+  }
   const close = () => closePromise ??= (async () => {
     await stop(front); await stop(gate);
     for (const request of active) request.destroy();
@@ -199,10 +227,10 @@ export async function startBridgeService(spec, options = {}) {
       const authorized = options.ingressAuthToken === undefined
         ? authenticated(req.headers.authorization, `Bearer ${spec.bridgeKey}`)
         : authenticated(req.headers['x-aob-proxy-token'], options.ingressAuthToken);
-      if (!authorized) { observations.front_refused++; reject(res, 401); return; }
-      if (!['GET /v1/models', 'POST /v1/chat/completions', 'POST /v1/responses'].includes(`${req.method} ${req.url}`)) { observations.front_refused++; reject(res, 404); return; }
+      if (!authorized) { rejectFront(req, res, 'auth', 401); return; }
+      if (!['GET /v1/models', 'POST /v1/chat/completions', 'POST /v1/responses'].includes(`${req.method} ${req.url}`)) { rejectFront(req, res, 'path', 404); return; }
       const body = await bodyBytes(req);
-      if (body === null) { observations.front_refused++; reject(res, 413); return; }
+      if (body === null) { rejectFront(req, res, 'body-limit', 413); return; }
       await relay(req, res, `${bridge}${req.url}`, body, active, options.ingressAuthToken === undefined ? {} : { bridgeAuthorization: `Bearer ${spec.bridgeKey}` });
     }));
     const frontUrl = await listen(front, options.frontPort ?? 3210, '0.0.0.0');

@@ -170,3 +170,48 @@ test('task observations scale with cap and rejected conditions do not spend prov
  const valid=await post(`${service.gateUrl}/responses`,JSON.stringify(payload()),{'x-aob-proxy-token':spec.meterKey});await valid.text();assert.equal(valid.status,200);assert.equal(seen.length,1);
  await service.close();const obs=JSON.parse(await readFile(spec.observationsPath,'utf8'));assert.equal(obs.requests.length,131);
 });
+
+test('front rejection diagnostics retain fixed classifications without hostile paths, queries or credentials',async t=>{
+ const {spec,service,seen,frontSeen}=await fixture(t);
+ const cases=[
+  {path:'/v1/responses?token=private-query-secret',method:'POST',auth:false,reason:'auth',status:401,route:'responses',query:true},
+  {path:'/v1/chat/completions?private-query-secret',method:'POST',route:'chat-completions',query:true},
+  {path:'/v1/models?api_key=private-query-secret',method:'GET',route:'models',query:true},
+  {path:'/v1/models/private-model-secret',method:'GET',route:'model-detail',query:false},
+  {path:'/v1/generation?id=private-query-secret',method:'GET',route:'generation',query:true},
+  {path:'/v1/responses/compact',method:'POST',route:'responses-compact',query:false},
+  {path:'/health?private-query-secret',method:'GET',route:'root-or-health',query:true},
+  {path:'/private-path-secret/%2fprivate-secret?private-query-secret',method:'DELETE',route:'other',query:true},
+  {path:'/private-path-secret',method:'PROPFIND',savedMethod:'other',route:'other',query:false},
+  {path:'/api/v1/models',method:'GET',route:'api-models',query:false},
+  {path:'/api/tags',method:'GET',route:'backend-tags',query:false},
+  {path:'/v1/props',method:'GET',route:'backend-properties',query:false},
+  {path:'/props',method:'GET',route:'backend-properties',query:false},
+  {path:'/version',method:'GET',route:'backend-version',query:false},
+  {path:'/api/show',method:'POST',route:'backend-show',query:false},
+ ];
+ for(const item of cases){const r=await fetch(service.frontUrl+item.path,{method:item.method,headers:{authorization:item.auth===false?'Bearer private-header-secret':`Bearer ${spec.bridgeKey}`}});await r.text();assert.equal(r.status,item.status??404);}
+ await service.close();const raw=await readFile(spec.observationsPath,'utf8'),obs=JSON.parse(raw);
+ assert.deepEqual(obs.front_rejections,cases.map(item=>({reason:item.reason??'path',status:item.status??404,method:item.savedMethod??item.method,route:item.route,query_present:item.query})));
+ assert.equal(obs.front_refused,15);assert.equal(obs.front_rejections_truncated,0);
+ for(const secret of ['private-query-secret','private-model-secret','private-path-secret','private-header-secret','%2f',spec.bridgeKey])assert.equal(raw.includes(secret),false);
+ assert.equal(seen.length,0);assert.equal(frontSeen.length,0);assert.equal(await readFile(spec.outPath,'utf8'),'');
+});
+
+test('front body-limit diagnostics preserve 413 and never retain rejected body data',async t=>{
+ const {spec,service,seen,frontSeen}=await fixture(t);
+ const r=await post(`${service.frontUrl}/v1/responses`,'private-body-secret'+'x'.repeat(16*1024*1024+1-'private-body-secret'.length),{authorization:`Bearer ${spec.bridgeKey}`});await r.text();assert.equal(r.status,413);
+ await service.close();const raw=await readFile(spec.observationsPath,'utf8'),obs=JSON.parse(raw);
+ assert.deepEqual(obs.front_rejections,[{reason:'body-limit',status:413,method:'POST',route:'responses',query_present:false}]);
+ assert.equal(obs.front_refused,1);assert.equal(obs.front_rejections_truncated,0);assert.equal(raw.includes('private-body-secret'),false);
+ assert.equal(seen.length,0);assert.equal(frontSeen.length,0);assert.equal(await readFile(spec.outPath,'utf8'),'');
+});
+
+test('front rejection retention is bounded while exact refusal and truncation counters continue',async t=>{
+ const {spec,service,seen}=await fixture(t);
+ for(let i=0;i<131;i++){const r=await fetch(`${service.frontUrl}/private-path-secret?token=private-query-secret`);await r.text();assert.equal(r.status,401);}
+ await service.close();const raw=await readFile(spec.observationsPath,'utf8'),obs=JSON.parse(raw);
+ assert.equal(obs.front_refused,131);assert.equal(obs.front_rejections.length,128);assert.equal(obs.front_rejections_truncated,3);
+ assert(obs.front_rejections.every(item=>item.reason==='auth'&&item.status===401&&item.route==='other'&&item.query_present));
+ assert.equal(raw.includes('private-'),false);assert.equal(seen.length,0);
+});
