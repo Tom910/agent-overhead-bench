@@ -249,3 +249,66 @@ harness-subset resumes, streak reset after a completed transport, persistent
 circuit breaking, 21 original attempts/receipt epochs preserved, and 179 pending
 slots. Syntax/diff checks passed. All tests used synthetic model execution; no
 credentials, account access, inference or task verifier reruns were used.
+
+## Pre-inference image preflight and never-started setup recovery
+
+Docker cleanup can remove pinned images between attempts. Before consuming any
+pending slot, inspect the local exact bridge runtime and the selected native-agent
+and verifier image tags/IDs; never pull or substitute images. Check the selected
+pending matrix at startup and the current cell again immediately before admission.
+A missing or mismatched image records preflight_blocked and leaves every pending
+slot unconsumed. Availability may be checked again safely after external restoration;
+no transport factory, credentials or model request is involved in the preflight.
+
+A reusable but explicit `repairLunaEnvironmentSetup` requires an independently supplied
+expected state hash, exactly one last blocked setup admission, and unchanged earlier
+receipts/results. Only the known staging artifact set may exist, with empty canonical
+and upstream logs, zero bridge activity and no native output/result/transport marker.
+No paid or native-executed attempt can qualify. Hash every file and symlink without
+following links, preserve the original state, and atomically move the whole setup
+directory into a private archive before returning only that run_id to pending.
+The receipt binds the archive, old/new implementation, earlier receipt context and
+all retained consumed slots. Future resumes revalidate the archive and chain.
+No arbitrary task retry or implementation drift is allowed. Missing images remain
+a blocker until separately restored and verified; this recovery does not claim
+restoration or infer success from an empty model log alone.
+
+The original pinned task images were pruned and are not assumed reproducible by
+identity. A rebuilt image generation may serve only the 179 pending slots after
+separate restoration verification. Combine the zero-activity setup archival with
+an explicit generation transition, pinning the supplied new suite/source hashes.
+Compare both prepared roots: source/base revision, timeout/regime, task YAML,
+prompt and workspace visible contents, and verifier command/network/workdir must
+remain equivalent; only image identities/names and corresponding manifest hashes
+may change. Preserve the original prepared root and definition for all consumed
+attempts and their read-only proof validation. Non-original manifest hashes are
+accepted only through the audited generation receipt or its explicit creation
+arguments, never by disabling the original loader checks. All selected pending
+images must pass local preflight before the transition can admit new work.
+
+Generation recovery binds an independently supplied old-state SHA and restoration
+proof SHA. It validates all 200 deterministic schedule identities before any write,
+then preserves all 21 paid results and all four earlier receipt epochs. The exact
+setup directory is archived without rewriting it, and only its unstarted run_id
+returns to pending. New attempts carry the generation receipt hash, including
+orphan-directory admissions. Every resume revalidates the setup archive, original
+state, receipt chain and old-root proof context. Runtime import/loader setup is
+cached once; image checks remain read-only and run before admission.
+
+Upstream source checksums, suite source bindings and reference-polarity source task
+checksums are invariant across image generations. Only the prepared suite checksum,
+image fields and corresponding source/polarity manifest digests may change. Tests
+cover these boundaries independently of the source loader.
+
+Acceptance: the full 33-test focused suite passed, followed by the added
+orphan-admission/receipt-loss regression (1/1); all 34 current tests are covered.
+Lint and diff checks passed. Independent review approved the final schedule,
+archive, old-context and preflight gates. A read-only check on Linux accepted all
+8 actual restored task generations, including visible workspace hashes, only
+after the original frozen review artifact was retained. The initial regenerated
+review hash was correctly rejected; no provenance gate was relaxed. The accepted
+restoration proof is `restoration-preserved-review.json`, SHA-256
+`611e48f6e282395e8b36b53e3476ff948fb3af87cfb9ec5aa4efffbb8f5ba43c`.
+The temporary inspection module was removed and the Linux checkout remained clean.
+These checks performed no model calls and did not mutate campaign state. Actual
+recovery/restart remains a separate supervised action after integration.

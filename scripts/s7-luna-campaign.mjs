@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { createHash, randomBytes } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { constants, closeSync, fstatSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, readSync, readdirSync, realpathSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { constants, closeSync, fstatSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, readSync, readdirSync, readlinkSync, realpathSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { register } from 'node:module';
@@ -60,6 +60,9 @@ const REPEATED_BACKUP = 'repeated-metadata-state.json';
 const REPEATED_RECEIPT = 'repeated-metadata-adjudication.json';
 const LEGACY_BACKUP = 'legacy-metadata-state.json';
 const LEGACY_RECEIPT = 'legacy-metadata-adjudication.json';
+const ENVIRONMENT_BACKUP = 'environment-state.json';
+const ENVIRONMENT_RECEIPT = 'environment-adjudication.json';
+const RESTORATION_PROOF = 'environment-restoration-proof.json';
 const BOUND_FILES = ['run.json', 'events.jsonl', 'verify.log', 'execution-conditions.json', 'candidate-evidence.json', 'transport.json', 'bridge-conditions.json'];
 export class CampaignError extends Error {
   constructor(message = 'Luna campaign refused; inspect private campaign state.') { super(message); this.name = 'CampaignError'; }
@@ -131,12 +134,12 @@ function verifyWorkspace(taskDir, revision) {
     { encoding: 'utf8', env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' }, stdio: ['ignore', 'pipe', 'pipe'] }).trim();
   check(git(['rev-parse', 'HEAD']) === revision && git(['status', '--porcelain=v1', '--untracked-files=all']) === '');
 }
-async function loadTasks({ taskRoot }) {
+async function loadTasks({ taskRoot, manifestPins = { suite: SUITE_SHA, source: SOURCE_SHA.slice(7) } }) {
   const { validateLocalTaskManifest, validateSelectedLocalTaskManifest, validateDeepSWEReferencePolarity, sourceManifestSha256, loadTaskYaml, validateVerifierSpec } = await import('@aob/tasks');
   const { regimeForExpectedMinutes } = await import('../packages/tasks/src/regime.ts');
   const suiteBytes = regularBytes(join(taskRoot, 'suite-manifest.json')); const suite = JSON.parse(suiteBytes);
   const source = json(join(taskRoot, 'deepswe-source-manifest.json'));
-  check(sha(suiteBytes) === SUITE_SHA && sourceManifestSha256(source) === SOURCE_SHA);
+  check(validHash(manifestPins.suite) && validHash(manifestPins.source) && sha(suiteBytes) === manifestPins.suite && sourceManifestSha256(source) === `sha256:${manifestPins.source}`);
   validateLocalTaskManifest(taskRoot, suite); validateSelectedLocalTaskManifest(taskRoot, suite, TASK_IDS, source);
   check(suite.tasks.length === 8 && TASK_IDS.every(id => suite.tasks.some(t => t.id === id)));
   for (const task of source.tasks) {
@@ -153,7 +156,84 @@ async function loadTasks({ taskRoot }) {
       verifier: validateVerifierSpec(json(join(taskDir, 'verifier.json'))) };
     check(task.timeoutS === 10800 && task.regime === 'extended'); verifyWorkspace(taskDir, task.baseRevision); tasks.push({ ...task, taskDir });
   }
-  return { tasks, suiteSha256: sha(suiteBytes), sourceSha256: SOURCE_SHA.slice(7) };
+  return { tasks, suiteSha256: sha(suiteBytes), sourceSha256: sourceManifestSha256(source).slice(7) };
+}
+let runtimeImagePromise;
+/** Read-only Docker inspection; never pull or substitute an unavailable image. */
+export async function preflightLunaImages({ tasks, slots }, runtime = {}) {
+  try {
+    if (slots.length === 0) return;
+    runtimeImagePromise ??= (async () => { register('./ts-source-loader.mjs', import.meta.url); return import('./s5-luna-task-transport.mjs'); })();
+    const { LUNA_BRIDGE_RUNTIME_IMAGE } = await runtimeImagePromise;
+    check(typeof LUNA_BRIDGE_RUNTIME_IMAGE === 'string' && /^golang@sha256:[a-f0-9]{64}$/.test(LUNA_BRIDGE_RUNTIME_IMAGE));
+    const required = new Map([[LUNA_BRIDGE_RUNTIME_IMAGE, null]]); const byId = new Map(tasks.map(t => [t.id, t]));
+    for (const slot of slots) {
+      const task = byId.get(slot.task); const agent = task?.environment.agent_images[slot.harness]; check(agent && task.verifier);
+      for (const image of [agent, task.verifier]) { check(typeof image.image === 'string' && /^sha256:[a-f0-9]{64}$/.test(image.image_digest));
+        if (required.has(image.image)) check(required.get(image.image) === image.image_digest); required.set(image.image, image.image_digest); }
+    }
+    const images = [...required.keys()];
+    const inspect = runtime.inspect ?? (async names => JSON.parse(execFileSync('docker', ['image', 'inspect', ...names], { encoding: 'utf8', timeout: 30000, maxBuffer: 16 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'] })));
+    const found = await inspect(images); check(Array.isArray(found) && found.length === images.length);
+    for (let i = 0; i < images.length; i++) { const item = found[i]; const expected = required.get(images[i]);
+      check(item && /^sha256:[a-f0-9]{64}$/.test(item.Id));
+      if (expected === null) check(Array.isArray(item.RepoDigests) && item.RepoDigests.includes(LUNA_BRIDGE_RUNTIME_IMAGE));
+      else check(item.Id === expected);
+    }
+  } catch { throw new CampaignError('Required pinned Docker images are unavailable or changed; no pending slot was consumed.'); }
+}
+const CLI_VERSIONS = { codex: '0.149.1', hermes: '0.20.5', cline: '3.0.61', pi: '0.73.1', qwen: '0.22.2' };
+function treeHash(root, skipGit = false) {
+  check(lstatSync(root).isDirectory() && !lstatSync(root).isSymbolicLink()); const entries = []; let bytes = 0;
+  const visit = (path, depth) => {
+    check(depth <= 64);
+    for (const name of readdirSync(join(root, path)).sort()) {
+      if (skipGit && name === '.git') continue;
+      check(entries.length < 100000); const relativePath = path ? `${path}/${name}` : name; const file = join(root, relativePath); const info = lstatSync(file);
+      if (info.isSymbolicLink()) { const target = readlinkSync(file, { encoding: 'buffer' }); bytes += target.length; entries.push([relativePath, 'link', target.toString('base64')]); }
+      else if (info.isDirectory()) { entries.push([relativePath, 'dir']); visit(relativePath, depth + 1); }
+      else { check(info.isFile()); bytes += info.size; entries.push([relativePath, 'file', info.mode & 0o111 ? 1 : 0, info.size, hashFile(file)]); }
+      check(bytes <= 512 * 1024 * 1024);
+    }
+  };
+  visit('', 0); return sha(JSON.stringify(entries));
+}
+const omit = (object, keys) => Object.fromEntries(Object.entries(object).filter(([key]) => !keys.includes(key)));
+function conditionWithoutImages(task) {
+  return { ...omit(task, ['taskDir']), environment: { ...task.environment, agent_images: Object.fromEntries(Object.entries(task.environment.agent_images).filter(([h]) => h !== 'claude-code').map(([h, image]) => [h, omit(image, ['image', 'image_digest'])])) }, verifier: omit(task.verifier, ['image', 'image_digest']) };
+}
+function normalizedSource(source) {
+  return { ...source, tasks: source.tasks.map(t => ({ ...omit(t, ['environment_image', 'environment_image_digest', 'verifier_image', 'verifier_image_digest', 'reference_polarity_sha256', 'agent_images']),
+    agent_images: Object.fromEntries(Object.entries(t.agent_images).filter(([h]) => h !== 'claude-code').map(([h, image]) => [h, omit(image, ['image', 'image_digest'])])) })) };
+}
+function normalizedSuite(suite) {
+  return { ...suite, source_provenance: omit(suite.source_provenance, ['source_manifest_sha256']), tasks: suite.tasks.map(t => ({ ...omit(t, ['checksum', 'source_binding']), source_binding: t.source_binding })) };
+}
+/** Compare task semantics independently of the rebuilt image and checksum fields. */
+export function comparePreparedGenerations({ oldRoot, newRoot, oldTasks, newTasks, cliVersions }) {
+  try {
+    check(isDeepStrictEqual(cliVersions, CLI_VERSIONS));
+    const oldSource = normalizedSource(json(join(oldRoot, 'deepswe-source-manifest.json'))), nextSource = normalizedSource(json(join(newRoot, 'deepswe-source-manifest.json')));
+    const oldSuite = normalizedSuite(json(join(oldRoot, 'suite-manifest.json'))), nextSuite = normalizedSuite(json(join(newRoot, 'suite-manifest.json')));
+    check(isDeepStrictEqual(oldSource, nextSource) && isDeepStrictEqual(oldSuite, nextSuite));
+    check(oldTasks.length === 8 && newTasks.length === 8 && oldTasks.every((t, i) => t.id === TASK_IDS[i] && newTasks[i].id === t.id));
+    const tasks = oldTasks.map((task, i) => {
+      const next = newTasks[i]; check(isDeepStrictEqual(conditionWithoutImages(task), conditionWithoutImages(next)));
+      const oldDir = join(oldRoot, task.id), newDir = join(newRoot, task.id);
+      const taskYaml = hashFile(join(oldDir, 'task.yaml')), prompt = hashFile(join(oldDir, 'prompt.md'));
+      check(taskYaml === hashFile(join(newDir, 'task.yaml')) && prompt === hashFile(join(newDir, 'prompt.md')));
+      const verifier = omit(json(join(oldDir, 'verifier.json')), ['image', 'image_digest']); check(isDeepStrictEqual(verifier, omit(json(join(newDir, 'verifier.json')), ['image', 'image_digest'])));
+      const oldEnvironment = json(join(oldDir, 'environment.json')), nextEnvironment = json(join(newDir, 'environment.json'));
+      const normalizeEnvironment = env => ({ ...omit(env, ['agent_images']), agent_images: Object.fromEntries(Object.entries(env.agent_images).filter(([h]) => h !== 'claude-code').map(([h, image]) => [h, omit(image, ['image', 'image_digest'])])) });
+      check(isDeepStrictEqual(normalizeEnvironment(oldEnvironment), normalizeEnvironment(nextEnvironment)));
+      const workspace = treeHash(join(oldDir, 'workspace'), true); check(workspace === treeHash(join(newDir, 'workspace'), true));
+      const normalizePolarity = root => omit(json(join(root, 'reference-polarity', `${task.id}.json`)), ['verifier_image', 'verifier_image_digest', 'created_at', 'captured_at']);
+      const polarity = normalizePolarity(oldRoot), nextPolarity = normalizePolarity(newRoot);
+      check(isDeepStrictEqual(polarity, nextPolarity) && polarity.reference_passed === true && polarity.samples === 5 && polarity.exit_codes.length === 5 && polarity.exit_codes.every(exit => exit === 0));
+      return { task_id: task.id, task_yaml_sha256: taskYaml, prompt_sha256: prompt, workspace_visible_sha256: workspace, verifier_conditions_sha256: sha(JSON.stringify(verifier)), source_checks_sha256: sha(JSON.stringify(polarity)) };
+    });
+    return { schema_version: 1, normalized_source_sha256: sha(JSON.stringify(oldSource)), normalized_suite_sha256: sha(JSON.stringify(oldSuite)), cli_versions: cliVersions, tasks };
+  } catch { throw new CampaignError('Prepared generations differ beyond permitted image identities.'); }
 }
 function genuineFailure(log) {
   const lines = log.split('\n').map(l => l.trim()).filter(Boolean); const markers = lines.filter(l => l.startsWith('[verifier] reward.json='));
@@ -253,9 +333,9 @@ function inspectAttempt(dir, cell, task, definition, api, legacy = false, allowP
   throw new CampaignError();
 }
 
-async function campaignDefinition(options, deps) {
+async function campaignDefinition(options, deps, manifestPins) {
     const api = { ...await contracts(), ...await import('./s7-luna-no-solution.mjs') };
-    const loaded = await (deps.loadTasks ?? loadTasks)({ taskRoot: realpathSync(options.taskRoot) });
+    const loaded = await (deps.loadTasks ?? loadTasks)({ taskRoot: realpathSync(options.taskRoot), manifestPins });
     check(loaded.tasks.length === 8 && new Set(loaded.tasks.map(t => t.id)).size === 8 && TASK_IDS.every(id => loaded.tasks.some(t => t.id === id)));
     const tasks = new Map(loaded.tasks.map(t => [t.id, t]));
     const implementation = await (deps.implementationHash ?? implementationHash)(); check(validHash(implementation));
@@ -267,6 +347,92 @@ async function campaignDefinition(options, deps) {
     return { api, tasks, definition };
 }
 
+function manifestPins(definition) { return { suite: definition.suite_sha256, source: definition.source_sha256 }; }
+async function campaignContext(options, deps, state) {
+  if (!state?.environment_adjudication) return campaignDefinition(options, deps);
+  const receiptBytes = regularBytes(join(options.output, ENVIRONMENT_RECEIPT)); check(sha(receiptBytes) === state.environment_adjudication);
+  const receipt = JSON.parse(receiptBytes); check(realpathSync(options.taskRoot) === receipt.active_task_root);
+  const context = await campaignDefinition(options, deps, receipt.active_manifest);
+  const old = json(join(options.output, ENVIRONMENT_BACKUP));
+  const previous = await campaignDefinition({ ...options, taskRoot: receipt.previous_task_root }, { ...deps, implementationHash: async () => old.definition.implementation_sha256 }, manifestPins(old.definition));
+  check(isDeepStrictEqual(previous.definition, old.definition));
+  return { ...context, previousGeneration: previous, generationReceipt: receipt };
+}
+function contextForCell(context, cell) {
+  return context.generationReceipt?.preserved_run_ids.includes(cell.run_id) ? context.previousGeneration : context;
+}
+function setupTree(dir, task, cell) {
+  const names = readdirSync(dir).sort();
+  check(isDeepStrictEqual(names, ['bridge-conditions.json', 'events.jsonl', 'events.jsonl.upstream.jsonl', 'prompt.md', 'verifier.json', 'workspace'].sort()));
+  check(regularBytes(join(dir, 'events.jsonl')).length === 0 && regularBytes(join(dir, 'events.jsonl.upstream.jsonl')).length === 0);
+  const observed = json(join(dir, 'bridge-conditions.json'));
+  check(observed.schema_version === 1 && Array.isArray(observed.requests) && observed.requests.length === 0 && observed.gate_refused === 0 && observed.front_refused === 0 && allowedMetadata(observed, cell.harness));
+  check(hashFile(join(dir, 'prompt.md')) === hashFile(join(task.taskDir, 'prompt.md')) && isDeepStrictEqual(json(join(dir, 'verifier.json')), json(join(task.taskDir, 'verifier.json'))));
+  const workspace = join(dir, 'workspace');
+  check(!['.aob-home', '.aob-codex-home', '.aob-qwen-home', '.aob-pi-home', '.aob-cline-home', 'stdout.log', 'stderr.log', 'tool-events.jsonl'].some(name => exists(join(workspace, name))));
+  return treeHash(dir);
+}
+function validateRestoration(proof, oldRoot, newRoot, oldContext, nextContext) {
+  check(proof.status === 'verified' && realpathSync(proof.old_root) === oldRoot && realpathSync(proof.new_root) === newRoot);
+  check(proof.old_suite_manifest_sha256 === hashFile(join(oldRoot, 'suite-manifest.json')) && proof.suite_manifest_sha256 === hashFile(join(newRoot, 'suite-manifest.json'))
+    && proof.old_source_manifest_sha256 === hashFile(join(oldRoot, 'deepswe-source-manifest.json')) && proof.source_manifest_sha256 === hashFile(join(newRoot, 'deepswe-source-manifest.json'))
+    && proof.old_canonical_source_manifest_sha256 === oldContext.definition.source_sha256 && proof.canonical_source_manifest_sha256 === nextContext.definition.source_sha256
+    && proof.old_suite_manifest_sha256 === oldContext.definition.suite_sha256 && proof.suite_manifest_sha256 === nextContext.definition.suite_sha256);
+  check(isDeepStrictEqual(proof.cli_versions, CLI_VERSIONS) && proof.cli_image_ids && HARNESS_ORDER.every(h => /^sha256:[a-f0-9]{64}$/.test(proof.cli_image_ids[h])) && validHash(proof.archive_sha256));
+  const equivalence = comparePreparedGenerations({ oldRoot, newRoot, oldTasks: [...oldContext.tasks.values()], newTasks: [...nextContext.tasks.values()], cliVersions: proof.cli_versions });
+  check(Array.isArray(proof.tasks) && proof.tasks.length === 8 && new Set(proof.tasks.map(t => t.task_id)).size === 8);
+  const source = json(join(newRoot, 'deepswe-source-manifest.json'));
+  for (const task of equivalence.tasks) {
+    const report = proof.tasks.find(t => t.task_id === task.task_id), origin = source.tasks.find(t => t.id === task.task_id), prepared = nextContext.tasks.get(task.task_id);
+    check(report && report.prompt_sha256 === task.prompt_sha256 && report.workspace_revision === prepared.baseRevision && report.upstream_revision === origin.upstream_revision
+      && report.timeout_s === prepared.timeoutS && isDeepStrictEqual(report.expected_minutes, origin.expected_minutes) && report.verifier_behavior_unchanged === true
+      && report.new_verifier_image === prepared.verifier.image_digest && report.old_verifier_image === oldContext.tasks.get(task.task_id).verifier.image_digest
+      && report.reference_polarity_sha256 === hashFile(join(newRoot, 'reference-polarity', `${task.task_id}.json`)));
+  }
+  return equivalence;
+}
+function environmentEvidence(output, oldBytes, context, proofBytes, expectedStateHash, deps, setupDir) {
+  const old = JSON.parse(oldBytes), previous = context.previousGeneration, receipt = context.generationReceipt;
+  check(validHash(expectedStateHash) && sha(oldBytes) === expectedStateHash && isDeepStrictEqual(old.definition, previous.definition)
+    && old.schema_version === 1 && old.official_release === false && old.collection === 'diagnostic' && old.halted === true && old.halt_reason === 'attempt-or-accounting-failed'
+    && !old.environment_adjudication && old.definition.implementation_sha256 !== context.definition.implementation_sha256);
+  check(typeof old.session === 'string' && /^[a-f0-9]{16}$/.test(old.session) && Array.isArray(old.cells) && old.cells.length === 200);
+  const expectedSchedule = schedule(old.session);
+  check(old.cells.every((cell, index) => ['harness', 'task', 'rep', 'run_id'].every(key => cell[key] === expectedSchedule[index][key])));
+  check(validateAdjudication(output, old, previous, deps)); validateAdmissionOrder(old);
+  const lastId = old.admission_order.at(-1), index = old.cells.findIndex(c => c.run_id === lastId), reset = old.cells[index];
+  check(reset?.status === 'blocked' && old.cells.filter(c => ['blocked', 'started'].includes(c.status)).length === 1);
+  const consumed = old.cells.filter(c => ['completed', 'task_failed', 'transport_failed'].includes(c.status));
+  check(consumed.length === old.admission_order.length - 1 && old.cells.every(c => c === reset || c.status === 'pending' || consumed.includes(c)));
+  const archiveHash = setupTree(setupDir, previous.tasks.get(reset.task), reset);
+  for (const cell of consumed) {
+    const checked = inspectAttempt(cellDirectory(output, cell), cell, previous.tasks.get(cell.task), previous.definition, previous.api, cell === old.cells[1]);
+    check(checked.status === cell.status && checked.failure_reason === cell.failure_reason && checked.accounting === cell.accounting && isDeepStrictEqual(checked.hashes, cell.hashes));
+  }
+  const oldRoot = receipt.previous_task_root, newRoot = receipt.active_task_root;
+  const proof = JSON.parse(proofBytes), equivalence = validateRestoration(proof, oldRoot, newRoot, previous, context);
+  const oldConditions = omit(old.definition, ['implementation_sha256', 'source_sha256', 'suite_sha256', 'tasks']);
+  const nextConditions = omit(context.definition, ['implementation_sha256', 'source_sha256', 'suite_sha256', 'tasks']); check(isDeepStrictEqual(oldConditions, nextConditions));
+  const expected = { schema_version: 1, classification: 'unstarted-setup-and-equivalent-image-generation', previous_state_sha256: expectedStateHash,
+    previous_implementation_sha256: old.definition.implementation_sha256, active_implementation_sha256: context.definition.implementation_sha256,
+    previous_task_root: oldRoot, active_task_root: newRoot, active_manifest: manifestPins(context.definition), restoration_proof_sha256: sha(proofBytes),
+    equivalence, equivalence_sha256: sha(JSON.stringify(equivalence)), setup_run_id: reset.run_id, setup_index: index,
+    setup_archive: `setup-archives/${reset.run_id}`, setup_tree_sha256: archiveHash, preserved_run_ids: old.admission_order.slice(0, -1),
+    prior_receipts: Object.fromEntries(Object.entries(old).filter(([k]) => k.endsWith('_adjudication'))) };
+  return { old, expected, reset, index, consumed };
+}
+function validateEnvironmentAdjudication(output, state, context, deps) {
+  const receiptBytes = regularBytes(join(output, ENVIRONMENT_RECEIPT)); check(sha(receiptBytes) === state.environment_adjudication);
+  const receipt = JSON.parse(receiptBytes); check(isDeepStrictEqual(receipt, context.generationReceipt));
+  const priorBytes = regularBytes(join(output, ENVIRONMENT_BACKUP)), proofBytes = regularBytes(join(output, RESTORATION_PROOF));
+  check(receipt.setup_archive === `setup-archives/${receipt.setup_run_id}` && /^[A-Za-z0-9_-]{1,160}$/.test(receipt.setup_run_id));
+  const result = environmentEvidence(output, priorBytes, context, proofBytes, receipt.previous_state_sha256, deps, join(output, receipt.setup_archive));
+  check(isDeepStrictEqual(receipt, result.expected) && state.session === result.old.session && isDeepStrictEqual(state.admission_order.slice(0, receipt.preserved_run_ids.length), receipt.preserved_run_ids));
+  for (const cell of result.consumed) check(isDeepStrictEqual(state.cells.find(c => c.run_id === cell.run_id), cell));
+  for (const [key, value] of Object.entries(receipt.prior_receipts)) check(state[key] === value);
+  for (const cell of state.cells) if (!receipt.preserved_run_ids.includes(cell.run_id) && cell.status !== 'pending') check(cell.environment_generation === state.environment_adjudication);
+  return true;
+}
 function legacyEvidence(output, oldBytes, context, deps) {
   const pins = deps.legacyPins ?? LEGACY_PINS; const old = JSON.parse(oldBytes); const { api, tasks, definition } = context;
   check(sha(oldBytes) === pins.state && old.schema_version === 1 && old.official_release === false && old.collection === 'diagnostic'
@@ -292,6 +458,7 @@ function legacyEvidence(output, oldBytes, context, deps) {
   return { old, receipt, preserved };
 }
 function validateAdjudication(output, state, context, deps) {
+  if (state.environment_adjudication) return validateEnvironmentAdjudication(output, state, context, deps);
   if (state.transport_adjudication) return validateTransportAdjudication(output, state, context, deps);
   if (state.no_solution_adjudication) return validateNoSolutionAdjudication(output, state, context, deps);
   if (state.repeated_metadata_adjudication) return validateRepeatedAdjudication(output, state, context, deps);
@@ -514,6 +681,41 @@ export async function repairLunaTransportStop(options, deps = {}) {
   finally { if (lockFd !== undefined) { closeSync(lockFd); rmSync(lockPath); } }
 }
 
+/** Archive a proven pre-native setup failure and admit only equivalent rebuilt images. */
+export async function repairLunaEnvironmentSetup(options, deps = {}) {
+  let lockFd; let lockPath;
+  try {
+    check(options && ['taskRoot', 'previousTaskRoot', 'restorationProofPath', 'output', 'privateRoot', 'authFile', 'bridgeBinary'].every(k => typeof options[k] === 'string' && isAbsolute(options[k]))
+      && validHash(options.expectedStateSha256) && validHash(options.expectedRestorationProofSha256));
+    check((deps.platform ?? process.platform) === 'linux'); const output = privateDirectory(options.output); const privateRoot = privateDirectory(options.privateRoot);
+    check(!within(output, privateRoot) && !within(privateRoot, output));
+    lockPath = join(output, 'campaign.lock'); lockFd = openSync(lockPath, 'wx', 0o600);
+    const path = join(output, 'state.json'), oldBytes = regularBytes(path); check(sha(oldBytes) === options.expectedStateSha256); const old = JSON.parse(oldBytes);
+    const proofBytes = regularBytes(options.restorationProofPath); check(sha(proofBytes) === options.expectedRestorationProofSha256); const proof = JSON.parse(proofBytes);
+    const oldRoot = realpathSync(options.previousTaskRoot), newRoot = realpathSync(options.taskRoot); check(oldRoot !== newRoot && realpathSync(proof.old_root) === oldRoot && realpathSync(proof.new_root) === newRoot);
+    const active = await campaignDefinition(options, deps, { suite: proof.suite_manifest_sha256, source: proof.canonical_source_manifest_sha256 });
+    const previous = await campaignDefinition({ ...options, taskRoot: oldRoot }, { ...deps, implementationHash: async () => old.definition.implementation_sha256 }, manifestPins(old.definition));
+    const context = { ...active, previousGeneration: previous, generationReceipt: { previous_task_root: oldRoot, active_task_root: newRoot } };
+    const reset = old.cells.find(c => c.run_id === old.admission_order?.at(-1)); check(reset);
+    const setupDir = cellDirectory(output, reset);
+    const evidence = environmentEvidence(output, oldBytes, context, proofBytes, options.expectedStateSha256, deps, setupDir);
+    await (deps.preflightImages ?? preflightLunaImages)({ tasks: [...active.tasks.values()], slots: old.cells.filter(c => c.status === 'pending' || c === reset) });
+    const archive = join(output, evidence.expected.setup_archive);
+    check(!exists(archive) && [ENVIRONMENT_BACKUP, ENVIRONMENT_RECEIPT, RESTORATION_PROOF].every(name => !exists(join(output, name))));
+    const archiveRoot = privateDirectory(join(output, 'setup-archives')); check(dirname(archive) === archiveRoot);
+    const receiptBytes = Buffer.from(`${JSON.stringify(evidence.expected, null, 2)}\n`);
+    // Exclusive immutable records precede the atomic state replacement. Any
+    // interrupted transition remains halted; neither archive nor proof is overwritten.
+    exclusiveEvidence(join(output, ENVIRONMENT_BACKUP), oldBytes); exclusiveEvidence(join(output, RESTORATION_PROOF), proofBytes);
+    exclusiveEvidence(join(output, ENVIRONMENT_RECEIPT), receiptBytes); renameSync(setupDir, archive);
+    const pending = schedule(old.session)[evidence.index];
+    const next = { ...old, definition: active.definition, halted: false, preflight_blocked: false,
+      cells: old.cells.map((cell, index) => index === evidence.index ? pending : cell), admission_order: old.admission_order.slice(0, -1), environment_adjudication: sha(receiptBytes) };
+    delete next.halt_reason; saveState(path, next); return next;
+  } catch (error) { throw error instanceof CampaignError ? error : new CampaignError(); }
+  finally { if (lockFd !== undefined) { closeSync(lockFd); rmSync(lockPath); } }
+}
+
 /** Injected dependencies are for zero-spend tests; no runtime override is exposed by the CLI. */
 export async function runCampaign(options, deps = {}) {
   let lockFd; let lockPath;
@@ -523,18 +725,20 @@ export async function runCampaign(options, deps = {}) {
     const output = privateDirectory(options.output); const privateRoot = privateDirectory(options.privateRoot);
     check(!within(output, privateRoot) && !within(privateRoot, output));
     lockPath = join(output, 'campaign.lock'); lockFd = openSync(lockPath, 'wx', 0o600);
-    const { api, tasks, definition } = await campaignDefinition(options, deps);
-    const path = join(output, 'state.json'); let state;
+    const path = join(output, 'state.json');
+    const context = await campaignContext(options, deps, exists(path) ? json(path) : null);
+    const { api, tasks, definition } = context; let state;
     if (exists(path)) {
       state = json(path); check(state.schema_version === 1 && state.official_release === false && isDeepStrictEqual(state.definition, definition)
         && typeof state.session === 'string' && /^[a-f0-9]{16}$/.test(state.session) && Array.isArray(state.cells) && state.cells.length === 200 && typeof state.halted === 'boolean');
-      const adjudicated = validateAdjudication(output, state, { api, tasks, definition }, deps);
+      const adjudicated = validateAdjudication(output, state, context, deps);
       const expected = schedule(state.session);
       for (let i = 0; i < expected.length; i++) {
         const cell = state.cells[i]; const e = expected[i]; check(cell && ['pending', 'started', 'completed', 'task_failed', 'transport_failed', 'blocked'].includes(cell.status)
           && ['harness', 'task', 'rep', 'run_id'].every(k => cell[k] === e[k]));
         if (['completed', 'task_failed', 'transport_failed'].includes(cell.status)) {
-          const checked = inspectAttempt(cellDirectory(output, cell), cell, tasks.get(cell.task), definition, api, adjudicated && i === 1);
+          const historical = contextForCell(context, cell);
+          const checked = inspectAttempt(cellDirectory(output, cell), cell, historical.tasks.get(cell.task), historical.definition, api, adjudicated && i === 1);
           check(checked.status === cell.status && checked.failure_reason === cell.failure_reason && checked.accounting === cell.accounting && isDeepStrictEqual(checked.hashes, cell.hashes));
         }
         if (cell.status === 'started' || cell.status === 'blocked') { state.halted = true; state.halt_reason = 'consumed-attempt-requires-investigation'; }
@@ -548,11 +752,18 @@ export async function runCampaign(options, deps = {}) {
     saveState(path, state); if (state.halted) return state;
     const execute = deps.runCell ?? (await import('@aob/runner')).runDockerCell;
     const factory = deps.createTransportFactory ?? (await import('./s5-luna-task-transport.mjs')).createLunaTaskTransportFactory;
+    const preflight = async slots => {
+      try { await (deps.preflightImages ?? preflightLunaImages)({ tasks: [...tasks.values()], slots }); state.preflight_blocked = false; }
+      catch { state.preflight_blocked = true; saveState(path, state); return false; }
+      return true;
+    };
+    if (!await preflight(state.cells.filter(c => c.status === 'pending' && selected.includes(c.harness)))) return state;
     for (const cell of state.cells) {
       if (cell.status !== 'pending' || !selected.includes(cell.harness)) continue;
       const task = tasks.get(cell.task); const dir = cellDirectory(output, cell);
-      if (exists(dir)) { state.admission_order.push(cell.run_id); cell.status = 'blocked'; state.halted = true; state.halt_reason = 'existing-attempt-directory'; saveState(path, state); break; }
-      state.admission_order.push(cell.run_id); cell.status = 'started'; cell.started_at = new Date().toISOString(); saveState(path, state);
+      if (exists(dir)) { state.admission_order.push(cell.run_id); if (state.environment_adjudication) cell.environment_generation = state.environment_adjudication; cell.status = 'blocked'; state.halted = true; state.halt_reason = 'existing-attempt-directory'; saveState(path, state); break; }
+      if (!await preflight([cell])) return state;
+      state.admission_order.push(cell.run_id); if (state.environment_adjudication) cell.environment_generation = state.environment_adjudication; cell.status = 'started'; cell.started_at = new Date().toISOString(); saveState(path, state);
       try {
         mkdirSync(dir, { recursive: true, mode: 0o700 });
         const transportFactory = await factory({ authFile: options.authFile, bridgeBinary: options.bridgeBinary, privateRoot, timeoutS: task.timeoutS });
@@ -581,6 +792,6 @@ export function parseOptions(args) {
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   process.umask(0o077);
-  Promise.resolve().then(() => runCampaign(parseOptions(process.argv.slice(2)))).then(state => { if (state.halted) process.exitCode = 1; })
+  Promise.resolve().then(() => runCampaign(parseOptions(process.argv.slice(2)))).then(state => { if (state.halted || state.preflight_blocked) process.exitCode = 1; })
     .catch(() => { process.stderr.write('Luna campaign refused; inspect private state before any further execution.\n'); process.exitCode = 1; });
 }

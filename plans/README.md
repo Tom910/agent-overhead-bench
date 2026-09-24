@@ -50,6 +50,8 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
+| [S7-luna-campaign-plan.md](./S7-luna-campaign-plan.md) | Diagnostic Linux Luna collection; preserved funded attempts, image preflight and audited environment recovery |
+| [S5-luna-image-restoration-20260924-plan.md](./S5-luna-image-restoration-20260924-plan.md) | Rebuild pruned images with unchanged task definitions, fresh reference checks, retention and an image archive |
 | [S2-codex-bridge-preparation-plan.md](./S2-codex-bridge-preparation-plan.md) | Private setup and reviewed bridge patches; see the completed bounded live transport check below |
 | [S2-luna-live-qualification-plan.md](./S2-luna-live-qualification-plan.md) | All five Linux native loops completed in ten provider calls; original Codex accounting unknown, four complete; no benchmark reruns |
 | [S5-attempt-evidence-retention-plan.md](./S5-attempt-evidence-retention-plan.md) | Implemented and independently reviewed: private retry retention and pre-verifier candidate patches; Linux focused checks pass |

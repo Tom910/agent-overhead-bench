@@ -8,7 +8,8 @@ import { prepareCodexBridge, BRIDGE_COMMIT, LUNA_MODEL, CONTROLLED_POLICY } from
 import { startBridgeService } from './s2-codex-bridge-service.mjs';
 
 export const LUNA_BRIDGE_BINARY_SHA256 = '6ac16cf587b39083b15616fea2ed3e276fa85b3ef95d8ba4084f8166408fa58e';
-const GO_IMAGE = 'golang@sha256:2a0ba12e116687098780d3ce700f9ce3cb340783779646aafbabed748fa6677c';
+export const LUNA_BRIDGE_RUNTIME_IMAGE = 'golang@sha256:2a0ba12e116687098780d3ce700f9ce3cb340783779646aafbabed748fa6677c';
+const GO_IMAGE = LUNA_BRIDGE_RUNTIME_IMAGE;
 const exec = promisify(execFile);
 export class LunaTransportError extends Error {
   constructor() { super('Luna task transport failed; inspect sanitized campaign state.'); this.name = 'LunaTransportError'; }

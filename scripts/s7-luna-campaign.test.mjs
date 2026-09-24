@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test, afterEach } from 'node:test';
-import { chmodSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, readdirSync, realpathSync, symlinkSync } from 'node:fs';
+import { chmodSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, readdirSync, realpathSync, symlinkSync, cpSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
@@ -22,7 +22,7 @@ function fixture(change) {
     baseRevision: '2'.repeat(40), timeoutS: 10800, regime: 'extended', environment: { kind: 'prepared-local', network: 'disabled', agent_images: Object.fromEntries(HARNESS_ORDER.map(h => [h, { image: `fixture-${h}`, image_digest: digest }])) },
     verifier: { kind: 'docker-command', image: 'fixture-verifier', image_digest: digest, command: ['true'], workdir: '.', network: 'none' } }));
   const deps = {
-    platform: 'linux', hostFingerprint: async () => 'd'.repeat(64), implementationHash: async () => 'a'.repeat(64),
+    platform: 'linux', preflightImages: async () => {}, hostFingerprint: async () => 'd'.repeat(64), implementationHash: async () => 'a'.repeat(64),
     loadTasks: async () => ({ tasks, suiteSha256: 'b'.repeat(64), sourceSha256: 'c'.repeat(64) }),
     createTransportFactory: async options => { factories.push(options); return async () => {}; },
     runCell: async spec => {
@@ -142,8 +142,8 @@ test('allows only classified Hermes metadata refusals, with no relaxation for ot
   assert.equal((await runCampaign({ ...other.options, harnesses: ['codex'] }, other.deps)).halted, true);
 });
 const fileHash = path => createHash('sha256').update(readFileSync(path)).digest('hex');
-async function legacyFixture() {
-  const f = fixture(c => { taskFailure(c); if (c.spec.tool === 'hermes') { c.eventCount = 47; c.observed.front_refused = 7; } });
+async function legacyFixture(existing) {
+  const f = existing ?? fixture(); f.setChange(c => { taskFailure(c); if (c.spec.tool === 'hermes') { c.eventCount = 47; c.observed.front_refused = 7; } });
   const old = await runCampaign(f.options, f.deps); assert.equal(f.calls.length, 2); assert.equal(old.cells[0].status, 'task_failed'); assert.equal(old.cells[1].status, 'blocked');
   const proof = join(f.root, 'proof.json'); writeFileSync(proof, 'synthetic offline proof');
   f.deps.legacyPins = { state: fileHash(join(f.options.output, 'state.json')), implementation: old.definition.implementation_sha256, session: old.session,
@@ -209,8 +209,8 @@ test('exact metadata counters reject unknowns, invalid totals, truncated legacy 
     assert.equal((await runCampaign({ ...bad.options, harnesses: ['hermes'] }, bad.deps)).halted, true); assert.equal(bad.calls.length, 1);
   }
 });
-async function repeatedFixture() {
-  const f = await legacyFixture(); await campaign.repairLunaMetadataStop(f.options, f.deps);
+async function repeatedFixture(existing) {
+  const f = await legacyFixture(existing); await campaign.repairLunaMetadataStop(f.options, f.deps);
   f.setChange(c => { taskFailure(c); if (c.index === 5) { c.eventCount = 39; Object.assign(c.observed, { front_refused: 11, front_rejections: [...metadata(), ...metadata().slice(0, 4)], front_rejections_truncated: 0 }); } });
   const execute = f.deps.runCell;
   f.deps.runCell = async spec => { const result = await execute(spec); if (f.calls.length === 6) throw new Error('simulate original count-bound stop after raw evidence'); return result; };
@@ -266,8 +266,8 @@ test('empty verifier output alone cannot become a task failure', async () => {
   const state = await runCampaign(f.options, f.deps); assert.equal(state.halted, true); assert.equal(captures, 1); assert.equal(f.calls.length, 1);
 });
 
-async function noSolutionFixture() {
-  const f = await repeatedFixture(); await campaign.repairLunaRepeatedMetadataStop(f.options, f.deps);
+async function noSolutionFixture(existing) {
+  const f = await repeatedFixture(existing); await campaign.repairLunaRepeatedMetadataStop(f.options, f.deps);
   f.setChange(c => { taskFailure(c); if (c.index === 8) { c.eventCount = 27; c.footer = ''; } });
   const state = await runCampaign(f.options, { ...f.deps, createNoSolutionProof: async () => { throw new Error('historical proof not available'); } });
   assert.equal(f.calls.length, 9); assert.equal(state.cells[8].status, 'blocked');
@@ -390,8 +390,8 @@ test('two consecutive transport failures halt, persist across resume, and use ac
   assert.equal((await runCampaign({ ...broken.options, harnesses: ['codex'] }, broken.deps)).halted, false); assert.equal(broken.calls.length, 40);
 });
 
-async function transportStoppedFixture() {
-  const f = await noSolutionFixture(); await installSyntheticEmptyCapture(f, f.calls[8]); await campaign.repairLunaNoSolutionStop(f.options, f.deps);
+async function transportStoppedFixture(existing) {
+  const f = await noSolutionFixture(existing); await installSyntheticEmptyCapture(f, f.calls[8]); await campaign.repairLunaNoSolutionStop(f.options, f.deps);
   f.setChange(c => { if (c.index !== 10) taskFailure(c); if (c.index === 20) { transportFailure(c); c.eventCount = 17; c.eventOverrides = { 16: c.eventOverrides[2] }; c.observed.requests = Array.from({ length: 18 }, (_, i) => ({ accepted: i < 17, model_matches: true, effort_low: true, summary_auto: true, store_false: true, reasoning_replay_absent: true, continuation_absent: true })); } });
   const execute = f.deps.runCell; f.deps.runCell = async spec => { const result = await execute(spec); if (f.calls.length === 21) throw new Error('original interruption stop'); return result; };
   const old = await runCampaign(f.options, f.deps); assert.equal(f.calls.length, 21); assert.equal(old.cells[20].status, 'blocked');
@@ -426,4 +426,130 @@ test('transport recovery and resumes refuse arbitrary state, bad terminal HTTP e
   }
   const f = fixture(); await runCampaign({ ...f.options, harnesses: ['codex'] }, f.deps); const p = join(f.options.output, 'state.json'); const s = read(p); s.admission_order.pop(); writeFileSync(p, JSON.stringify(s));
   await assert.rejects(runCampaign(f.options, f.deps), CampaignError); assert.equal(f.calls.length, 40);
+});
+
+test('missing local images pause before setup consumes a slot and can be rechecked without replay', async () => {
+  const f = fixture(); f.deps.preflightImages = async () => { throw new Error('missing immutable image'); };
+  const paused = await runCampaign(f.options, f.deps); assert.equal(paused.preflight_blocked, true); assert.equal(paused.halted, false);
+  assert.equal(paused.cells.every(c => c.status === 'pending'), true); assert.equal(paused.admission_order.length, 0); assert.equal(f.calls.length, 0); assert.equal(f.factories.length, 0);
+  let checks = 0; f.deps.preflightImages = async () => { if (++checks === 3) throw new Error('image disappeared after prior attempt'); };
+  const later = await runCampaign({ ...f.options, harnesses: ['codex'] }, f.deps); assert.equal(later.preflight_blocked, true); assert.equal(f.calls.length, 1); assert.equal(later.admission_order.length, 1);
+  f.deps.preflightImages = async () => {};
+  const resumed = await runCampaign({ ...f.options, harnesses: ['codex'] }, f.deps); assert.equal(resumed.preflight_blocked, false); assert.equal(f.calls.length, 40);
+});
+test('Docker image preflight checks selected pending tag identities and pinned runtime without pulls', async () => {
+  const f = fixture(); const { tasks } = await f.deps.loadTasks(); const slots = [{ task: TASK_IDS[0], harness: 'codex' }]; let requested;
+  const inspect = async images => { requested = images; return images.map(image => ({ Id: digest, RepoDigests: image.includes('@sha256:') ? [image] : [] })); };
+  await campaign.preflightLunaImages({ tasks, slots }, { inspect }); assert.equal(requested.length, 3); assert.ok(requested.some(i => i.startsWith('golang@sha256:')));
+  await assert.rejects(campaign.preflightLunaImages({ tasks, slots }, { inspect: async images => (await inspect(images)).map((row, i) => i === 1 ? { ...row, Id: `sha256:${'8'.repeat(64)}` } : row) }), CampaignError);
+  await assert.rejects(campaign.preflightLunaImages({ tasks, slots }, { inspect: async () => [] }), CampaignError);
+});
+
+const cliVersions = { codex: '0.149.1', hermes: '0.20.5', cline: '3.0.61', pi: '0.73.1', qwen: '0.22.2' };
+async function generationFixture() {
+  const f = fixture(); const { tasks } = await f.deps.loadTasks(); const newer = join(f.root, 'rebuilt'); mkdirSync(newer);
+  for (const task of tasks) {
+    mkdirSync(join(task.taskDir, 'workspace'), { recursive: true }); writeFileSync(join(task.taskDir, 'workspace', 'source.txt'), task.id);
+    writeFileSync(join(task.taskDir, 'task.yaml'), `id: ${task.id}\n`); writeFileSync(join(task.taskDir, 'prompt.md'), `Solve ${task.id}\n`);
+    writeFileSync(join(task.taskDir, 'environment.json'), JSON.stringify({ agent_images: task.environment.agent_images })); writeFileSync(join(task.taskDir, 'verifier.json'), JSON.stringify(task.verifier));
+  }
+  mkdirSync(join(f.options.taskRoot, 'reference-polarity')); for (const t of tasks) writeFileSync(join(f.options.taskRoot, 'reference-polarity', `${t.id}.json`), JSON.stringify({ task_id: t.id, samples: 5, exit_codes: [0,0,0,0,0], reference_passed: true }));
+  const source = { version: 1, revision: 'same', review: { reviewed: false }, tasks: tasks.map(t => ({ id: t.id, path: `tasks/${t.id}`, source_task_id: t.id, language: 'python', timeout_s: 10800, expected_minutes: [16,180], checksum: 'old', reference_polarity_sha256: 'old', agent_images: t.environment.agent_images, environment_image: 'old', environment_image_digest: digest, verifier_image: t.verifier.image, verifier_image_digest: digest })) };
+  const suite = { version: 1, source_provenance: { source_manifest_sha256: 'old', revision: 'same' }, tasks: tasks.map(t => ({ id: t.id, source: t.source, checksum: 'old', source_binding: { path: `tasks/${t.id}`, source_checksum: 'old' } })) };
+  writeFileSync(join(f.options.taskRoot, 'deepswe-source-manifest.json'), JSON.stringify(source)); writeFileSync(join(f.options.taskRoot, 'suite-manifest.json'), JSON.stringify(suite));
+  cpSync(f.options.taskRoot, newer, { recursive: true });
+  const newTasks = tasks.map(t => ({ ...structuredClone(t), taskDir: join(newer, t.id), environment: { ...t.environment, agent_images: Object.fromEntries(HARNESS_ORDER.map(h => [h, { image: `rebuilt-${h}`, image_digest: `sha256:${'3'.repeat(64)}` }])) }, verifier: { ...t.verifier, image: 'rebuilt-verifier', image_digest: `sha256:${'3'.repeat(64)}` } }));
+  for (const t of newTasks) { writeFileSync(join(t.taskDir, 'environment.json'), JSON.stringify({ agent_images: t.environment.agent_images })); writeFileSync(join(t.taskDir, 'verifier.json'), JSON.stringify(t.verifier)); }
+  const newSource = structuredClone(source); for (const t of newSource.tasks) { const n = newTasks.find(x => x.id === t.id); Object.assign(t, { agent_images: n.environment.agent_images, environment_image: 'rebuilt-env', environment_image_digest: n.verifier.image_digest, verifier_image: n.verifier.image, verifier_image_digest: n.verifier.image_digest, reference_polarity_sha256: 'new' }); }
+  const newSuite = structuredClone(suite); newSuite.source_provenance.source_manifest_sha256 = 'new'; for (const t of newSuite.tasks) { t.checksum = 'new'; }
+  writeFileSync(join(newer, 'deepswe-source-manifest.json'), JSON.stringify(newSource)); writeFileSync(join(newer, 'suite-manifest.json'), JSON.stringify(newSuite));
+  return { ...f, tasks, newTasks, newer };
+}
+test('prepared generation equivalence permits images only and rejects prompt, workspace, task and verifier semantic drift', async () => {
+  const f = await generationFixture(); const args = { oldRoot: f.options.taskRoot, newRoot: f.newer, oldTasks: f.tasks, newTasks: f.newTasks, cliVersions };
+  const proof = campaign.comparePreparedGenerations(args); assert.equal(proof.tasks.length, 8);
+  for (const file of ['prompt.md', 'task.yaml', 'workspace/source.txt']) { const p = join(f.newer, TASK_IDS[0], file); const bytes = readFileSync(p); writeFileSync(p, 'changed'); assert.throws(() => campaign.comparePreparedGenerations(args), CampaignError); writeFileSync(p, bytes); }
+  for (const [file, mutate] of [
+    ['deepswe-source-manifest.json', value => value.tasks[0].checksum = 'different-upstream'],
+    ['suite-manifest.json', value => value.tasks[0].source_binding.source_checksum = 'different-upstream'],
+    [`reference-polarity/${TASK_IDS[0]}.json`, value => value.source_task_checksum = 'different-upstream'],
+  ]) { const path = join(f.newer, file), bytes = readFileSync(path), value = read(path); mutate(value); writeFileSync(path, JSON.stringify(value)); assert.throws(() => campaign.comparePreparedGenerations(args), CampaignError); writeFileSync(path, bytes); }
+  assert.throws(() => campaign.comparePreparedGenerations({ ...args, cliVersions: { ...cliVersions, codex: 'different' } }), CampaignError);
+  const p = join(f.newer, TASK_IDS[0], 'verifier.json'); const v = read(p); v.command = ['changed']; writeFileSync(p, JSON.stringify(v)); assert.throws(() => campaign.comparePreparedGenerations(args), CampaignError);
+});
+
+async function environmentStoppedFixture() {
+  const f = await generationFixture();
+  const pins = root => ({ suiteSha256: fileHash(join(root, 'suite-manifest.json')), sourceSha256: fileHash(join(root, 'deepswe-source-manifest.json')) });
+  f.deps.loadTasks = async ({ taskRoot }) => ({ tasks: taskRoot === f.newer ? f.newTasks : f.tasks, ...pins(taskRoot) });
+  await transportStoppedFixture(f); await campaign.repairLunaTransportStop(f.options, f.deps);
+  // Copy the finalized old prepared files, including the no-solution fixture's
+  // source-owned capture command; only image identities change in the new tree.
+  for (const t of f.tasks) {
+    const target = f.newTasks.find(n => n.id === t.id); rmSync(target.taskDir, { recursive: true }); cpSync(t.taskDir, target.taskDir, { recursive: true });
+    writeFileSync(join(target.taskDir, 'environment.json'), JSON.stringify({ agent_images: target.environment.agent_images }));
+    writeFileSync(join(target.taskDir, 'verifier.json'), JSON.stringify({ ...read(join(t.taskDir, 'verifier.json')), image: target.verifier.image, image_digest: target.verifier.image_digest }));
+  }
+  f.deps.runCell = async spec => {
+    cpSync(join(spec.taskDir, 'workspace'), join(spec.dir, 'workspace'), { recursive: true });
+    for (const name of ['prompt.md', 'verifier.json']) cpSync(join(spec.taskDir, name), join(spec.dir, name));
+    for (const name of ['events.jsonl', 'events.jsonl.upstream.jsonl']) writeFileSync(join(spec.dir, name), '');
+    writeFileSync(join(spec.dir, 'bridge-conditions.json'), JSON.stringify({ schema_version: 1, requests: [], front_refused: 0, gate_refused: 0, front_rejections: [], front_rejections_truncated: 0, front_metadata_counts: countsFor([]), front_unclassified_refused: 0 }));
+    throw new Error('missing image before factory returned');
+  };
+  const stopped = await runCampaign(f.options, f.deps); assert.equal(stopped.cells[21].status, 'blocked'); assert.equal(f.calls.length, 21);
+  const oldRoot = f.options.taskRoot;
+  const proof = { status: 'verified', old_root: oldRoot, new_root: f.newer, old_suite_manifest_sha256: pins(oldRoot).suiteSha256, suite_manifest_sha256: pins(f.newer).suiteSha256,
+    old_source_manifest_sha256: pins(oldRoot).sourceSha256, source_manifest_sha256: pins(f.newer).sourceSha256,
+    old_canonical_source_manifest_sha256: pins(oldRoot).sourceSha256, canonical_source_manifest_sha256: pins(f.newer).sourceSha256,
+    archive_sha256: '7'.repeat(64), cli_versions: cliVersions, cli_image_ids: Object.fromEntries(HARNESS_ORDER.map(h => [h, digest])),
+    tasks: f.tasks.map(t => ({ task_id: t.id, prompt_sha256: fileHash(join(t.taskDir, 'prompt.md')), workspace_revision: t.baseRevision, timeout_s: t.timeoutS, expected_minutes: [16,180], verifier_behavior_unchanged: true,
+      old_verifier_image: t.verifier.image_digest, new_verifier_image: f.newTasks.find(n => n.id === t.id).verifier.image_digest, reference_polarity_sha256: fileHash(join(f.newer, 'reference-polarity', `${t.id}.json`)) })) };
+  const proofPath = join(f.root, 'restoration.json'); writeFileSync(proofPath, JSON.stringify(proof));
+  f.repairOptions = { ...f.options, taskRoot: f.newer, previousTaskRoot: oldRoot, restorationProofPath: proofPath, expectedRestorationProofSha256: fileHash(proofPath), expectedStateSha256: fileHash(join(f.options.output, 'state.json')) };
+  f.deps.implementationHash = async () => '6'.repeat(64); return f;
+}
+test('image generation transition archives only zero-activity setup and preserves21 paid cells, old proof context and179 pending', async () => {
+  const f = await environmentStoppedFixture(); const old = read(join(f.options.output, 'state.json'));
+  const receipts = readdirSync(f.options.output).filter(n => /(?:state|adjudication)\.json$/.test(n) && n !== 'state.json').map(n => [n, fileHash(join(f.options.output, n))]);
+  const next = await campaign.repairLunaEnvironmentSetup(f.repairOptions, f.deps);
+  assert.deepEqual(next.cells.slice(0, 21), old.cells.slice(0, 21)); assert.equal(next.cells.filter(c => c.status === 'pending').length, 179);
+  assert.equal(next.halted, false); assert.equal(next.admission_order.length, 21); assert.equal(f.calls.length, 21);
+  assert.equal(fileHash(join(f.options.output, 'environment-state.json')), f.repairOptions.expectedStateSha256);
+  for (const [n,h] of receipts) assert.equal(fileHash(join(f.options.output, n)), h);
+  const receipt = read(join(f.options.output, 'environment-adjudication.json')); assert.equal(receipt.preserved_run_ids.length, 21);
+  assert.equal(existsSync(join(f.options.output, 'results', 'hermes', TASK_IDS[2], '1')), false);
+  assert.ok(existsSync(join(f.options.output, receipt.setup_archive, 'bridge-conditions.json')));
+  let invoked = 0; f.deps.runCell = async spec => { invoked++; assert.equal(spec.run_id, old.cells[21].run_id); assert.equal(spec.taskDir, join(f.newer, TASK_IDS[2])); assert.equal(spec.verifier.image_digest, f.newTasks[2].verifier.image_digest); throw new Error('synthetic stop before inference'); };
+  const resumed = await runCampaign(f.repairOptions, f.deps); assert.equal(invoked, 1); assert.equal(resumed.cells[21].environment_generation, next.environment_adjudication);
+  await runCampaign(f.repairOptions, f.deps); assert.equal(invoked, 1);
+  writeFileSync(join(f.options.output, receipt.setup_archive, 'events.jsonl'), '{}');
+  await assert.rejects(runCampaign(f.repairOptions, f.deps), CampaignError);
+});
+test('environment recovery refuses unsafe setup, semantic/proof drift and missing images before any archive or reset', async () => {
+  for (const mutation of ['activity', 'native', 'proof', 'state', 'root', 'semantic', 'images', 'schedule']) {
+    const f = await environmentStoppedFixture(); const dir = join(f.options.output, 'results', 'hermes', TASK_IDS[2], '1');
+    if (mutation === 'activity') writeFileSync(join(dir, 'events.jsonl'), '{}');
+    if (mutation === 'native') writeFileSync(join(dir, 'transport.json'), '{}');
+    if (mutation === 'proof') f.repairOptions.expectedRestorationProofSha256 = '0'.repeat(64);
+    if (mutation === 'state') f.repairOptions.expectedStateSha256 = '0'.repeat(64);
+    if (mutation === 'root') f.repairOptions.previousTaskRoot = f.newer;
+    if (mutation === 'semantic') writeFileSync(join(f.newer, TASK_IDS[0], 'prompt.md'), 'changed');
+    if (mutation === 'schedule') { const path = join(f.options.output, 'state.json'); const state = read(path); state.cells[199].rep = 6; writeFileSync(path, JSON.stringify(state)); f.repairOptions.expectedStateSha256 = fileHash(path); }
+    const expectedState = fileHash(join(f.options.output, 'state.json'));
+    if (mutation === 'images') f.deps.preflightImages = async () => { throw new Error('missing image'); };
+    await assert.rejects(campaign.repairLunaEnvironmentSetup(f.repairOptions, f.deps), CampaignError);
+    assert.equal(fileHash(join(f.options.output, 'state.json')), expectedState); assert.equal(existsSync(join(f.options.output, 'environment-state.json')), false); assert.equal(existsSync(dir), true); assert.equal(f.calls.length, 21);
+  }
+});
+
+test('generation orphan admission is marked and receipt or archived-state loss remains fail closed', async () => {
+  const f = await environmentStoppedFixture(); const next = await campaign.repairLunaEnvironmentSetup(f.repairOptions, f.deps);
+  const dir = join(f.options.output, 'results', 'hermes', TASK_IDS[2], '1'); mkdirSync(dir); writeFileSync(join(dir, 'retained'), 'orphan');
+  let calls = 0; f.deps.runCell = async () => { calls++; throw new Error('must not run'); };
+  const halted = await runCampaign(f.repairOptions, f.deps); assert.equal(halted.cells[21].environment_generation, next.environment_adjudication); assert.equal(halted.halted, true); assert.equal(calls, 0);
+  await runCampaign(f.repairOptions, f.deps); assert.equal(calls, 0); assert.equal(readFileSync(join(dir, 'retained'), 'utf8'), 'orphan');
+  for (const name of ['environment-adjudication.json', 'environment-state.json', 'environment-restoration-proof.json', 'legacy-metadata-adjudication.json']) {
+    const path = join(f.options.output, name), bytes = readFileSync(path); rmSync(path); await assert.rejects(runCampaign(f.repairOptions, f.deps)); writeFileSync(path, bytes, { mode: 0o400 });
+  }
 });
