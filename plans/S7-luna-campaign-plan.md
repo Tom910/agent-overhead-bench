@@ -312,3 +312,40 @@ restoration proof is `restoration-preserved-review.json`, SHA-256
 The temporary inspection module was removed and the Linux checkout remained clean.
 These checks performed no model calls and did not mutate campaign state. Actual
 recovery/restart remains a separate supervised action after integration.
+
+## Exact provider access-verification 503 continuation
+
+The next observed stop was a provider HTTP503 after39 complete Luna requests,
+with a complete69-byte error body whose SHA-256 is
+`39b34ad272f10d75ddfe6dfce35ba8a89d64a60ed80721c656d326832a04f764`.
+The body asks to retry an unavailable access verification. This establishes a
+specific provider failure, not a historical quota cause or a task result. Current
+read-only account/model readiness is checked separately before supervised restart.
+
+Recognize only this exact C1-bound upstream status/body signature, with a complete
+successful request prefix, native exit1, unrun verifier, policy-valid observations
+and no later forwarded requests. Preserve unknown usage/model identity on the final
+request. Classify it as transport_failed/incomplete and retain the existing two
+consecutive transport-failure breaker. Other503 bodies and401/403/429, truncated
+bodies, missing sidecars, policy drift or nonterminal failures still halt.
+
+An explicit expected-state-hash repair preserves the complete old state and receipt
+chain, verifies every scheduled identity and all consumed artifacts, and changes
+only the final blocked funded attempt to the evidenced unscored transport outcome.
+Old and new definitions may differ only in implementation hash. Historical
+image-generation receipts validate in their original implementation/task contexts;
+no old receipt/raw evidence is rewritten. The repair does not stage, retry or refund
+any attempt. Subsequent resumes revalidate the new immutable receipt and old chain.
+
+Acceptance: the exact-response classifier and51-slot continuation tests failed
+before implementation. All38 focused controller tests then passed, including the
+full earlier receipt chain, original no-solution proof context, replacement image
+generation,51 funded slots preserved/149 pending, no paid replay, unknown accounting,
+and the persistent two-failure breaker. Other503 bodies,401/403/429, incomplete or
+truncated error evidence, mismatched sidecars, later paid requests, source/host drift
+and malformed scheduling are rejected. The tested repair writes only an immutable
+old-state copy, a linked receipt, and the updated operational state. Historical
+C1/C4 and previous receipts remain unchanged. Tests used synthetic execution only;
+actual recovery and restart remain separate supervised actions after integration.
+Independent review approved the final classifier and nested receipt contexts;
+reviewer reran all4 new focused tests. Lint, syntax and diff checks passed.

@@ -60,6 +60,8 @@ const REPEATED_BACKUP = 'repeated-metadata-state.json';
 const REPEATED_RECEIPT = 'repeated-metadata-adjudication.json';
 const LEGACY_BACKUP = 'legacy-metadata-state.json';
 const LEGACY_RECEIPT = 'legacy-metadata-adjudication.json';
+const PROVIDER_BACKUP = 'provider-failure-state.json';
+const PROVIDER_RECEIPT = 'provider-failure-adjudication.json';
 const ENVIRONMENT_BACKUP = 'environment-state.json';
 const ENVIRONMENT_RECEIPT = 'environment-adjudication.json';
 const RESTORATION_PROOF = 'environment-restoration-proof.json';
@@ -286,6 +288,24 @@ function interruptedStream(dir, run, events, attempts, observed, api) {
   return upstream.length === events.length && upstream.every((u, i) => u.v === 1 && u.run_id === events[i].run_id && u.seq === events[i].seq
     && u.c1_sha256 === sha(`${JSON.stringify(events[i])}\n`)) && upstream.at(-1).upstream_status === 200 && upstream.at(-1).error === null;
 }
+function accessVerificationFailure(dir, run, events, attempts, observed, api) {
+  const last = attempts.at(-1);
+  if (!last || events.at(-1) !== last || !attempts.slice(0, -1).every(e => api.isSuccessfulModelEvent(e) && e.protocol === 'openai_responses'
+    && e.model_requested === LUNA_MODEL && e.model_served === LUNA_MODEL && e.usage !== null && e.usage_source !== 'unavailable')
+    || last.protocol !== 'openai_responses' || last.method !== 'POST' || last.model_requested !== LUNA_MODEL
+    || last.status !== 503 || last.streamed !== false || !Number.isFinite(last.t_upstream_sent) || last.error?.kind !== 'upstream_http'
+    || last.model_served !== null || last.usage !== null || last.usage_source !== 'unavailable'
+    || run.outcome !== 'adapter_error' || run.adapter_result.exitCode !== 1 || run.verification.exit !== 1 || run.verification.duration_ms !== 0
+    || regularBytes(join(dir, 'verify.log')).length !== 0 || !allowedMetadata(observed, run.tool) || observed.gate_refused !== 0
+    || !Array.isArray(observed.requests) || observed.requests.length !== attempts.length
+    || !observed.requests.every(r => r.accepted === true && REQUEST_FLAGS.every(k => r[k] === true))) return false;
+  const path = join(dir, 'events.jsonl.upstream.jsonl'); if (!exists(path)) return false;
+  const upstream = regularBytes(path).toString('utf8').trim().split('\n').filter(Boolean).map(JSON.parse), terminal = upstream.at(-1);
+  return upstream.length === events.length && upstream.every((u, i) => u.v === 1 && u.run_id === events[i].run_id && u.seq === events[i].seq
+    && u.c1_sha256 === sha(`${JSON.stringify(events[i])}\n`)) && terminal.upstream_status === 503 && terminal.error === null
+    && terminal.error_body_sha256 === '39b34ad272f10d75ddfe6dfce35ba8a89d64a60ed80721c656d326832a04f764'
+    && terminal.error_body_bytes === 69 && terminal.error_body_complete === true && terminal.error_body_truncated === false;
+}
 function validateAdmissionOrder(state) {
   check(Array.isArray(state.admission_order) && new Set(state.admission_order).size === state.admission_order.length);
   const consumed = new Set(state.cells.filter(c => c.status !== 'pending').map(c => c.run_id));
@@ -317,6 +337,7 @@ function inspectAttempt(dir, cell, task, definition, api, legacy = false, allowP
     && transport.refresh_token_imported === false && transport.subscription_usd === null && transport.timeout_s === 10800
     && transport.max_model_requests === 512 && transport.max_input_tokens === 100000000 && transport.max_output_tokens === 1000000);
   if (interruptedStream(dir, run, events, attempts, observed, api)) return { status: 'transport_failed', failure_reason: 'upstream_stream_interrupted', accounting: 'incomplete', hashes };
+  if (accessVerificationFailure(dir, run, events, attempts, observed, api)) return { status: 'transport_failed', failure_reason: 'provider_access_verification_failed', accounting: 'incomplete', hashes };
   check(accountingComplete);
   check((allowedMetadata(observed, cell.harness) || (legacy && observed.front_refused === 7 && observed.front_rejections === undefined && observed.front_rejections_truncated === undefined && attempts.length === 47)) && observed.gate_refused === 0 && Array.isArray(observed.requests) && observed.requests.length === attempts.length
     && observed.requests.every(r => ['accepted', 'model_matches', 'effort_low', 'summary_auto', 'store_false', 'reasoning_replay_absent', 'continuation_absent'].every(k => r[k] === true)));
@@ -349,6 +370,13 @@ async function campaignDefinition(options, deps, manifestPins) {
 
 function manifestPins(definition) { return { suite: definition.suite_sha256, source: definition.source_sha256 }; }
 async function campaignContext(options, deps, state) {
+  if (state?.provider_failure_adjudication) {
+    const bytes = regularBytes(join(options.output, PROVIDER_RECEIPT)); check(sha(bytes) === state.provider_failure_adjudication);
+    const old = json(join(options.output, PROVIDER_BACKUP)); check(!old.provider_failure_adjudication);
+    const previous = await campaignContext(options, { ...deps, implementationHash: async () => old.definition.implementation_sha256 }, old);
+    const active = await campaignContext(options, deps, old);
+    return { ...active, previousProviderContext: previous, providerReceipt: JSON.parse(bytes) };
+  }
   if (!state?.environment_adjudication) return campaignDefinition(options, deps);
   const receiptBytes = regularBytes(join(options.output, ENVIRONMENT_RECEIPT)); check(sha(receiptBytes) === state.environment_adjudication);
   const receipt = JSON.parse(receiptBytes); check(realpathSync(options.taskRoot) === receipt.active_task_root);
@@ -359,6 +387,7 @@ async function campaignContext(options, deps, state) {
   return { ...context, previousGeneration: previous, generationReceipt: receipt };
 }
 function contextForCell(context, cell) {
+  if (context.providerReceipt?.preserved_run_ids.includes(cell.run_id)) return contextForCell(context.previousProviderContext, cell);
   return context.generationReceipt?.preserved_run_ids.includes(cell.run_id) ? context.previousGeneration : context;
 }
 function setupTree(dir, task, cell) {
@@ -433,6 +462,44 @@ function validateEnvironmentAdjudication(output, state, context, deps) {
   for (const cell of state.cells) if (!receipt.preserved_run_ids.includes(cell.run_id) && cell.status !== 'pending') check(cell.environment_generation === state.environment_adjudication);
   return true;
 }
+function providerFailureEvidence(output, oldBytes, context, expectedHash, deps) {
+  const old = JSON.parse(oldBytes), historical = context.previousProviderContext;
+  check(validHash(expectedHash) && sha(oldBytes) === expectedHash && !old.provider_failure_adjudication
+    && old.schema_version === 1 && old.collection === 'diagnostic' && old.official_release === false && old.halted === true && old.halt_reason === 'attempt-or-accounting-failed'
+    && typeof old.session === 'string' && /^[a-f0-9]{16}$/.test(old.session) && Array.isArray(old.cells) && old.cells.length === 200
+    && isDeepStrictEqual(old.definition, historical.definition) && old.definition.implementation_sha256 !== context.definition.implementation_sha256
+    && isDeepStrictEqual({ ...old.definition, implementation_sha256: context.definition.implementation_sha256 }, context.definition));
+  const expected = schedule(old.session); check(old.cells.every((c, i) => ['harness', 'task', 'rep', 'run_id'].every(k => c[k] === expected[i][k])));
+  check(validateAdjudication(output, old, historical, deps)); validateAdmissionOrder(old);
+  const target = old.cells.find(c => c.run_id === old.admission_order.at(-1));
+  check(target?.status === 'blocked' && old.cells.filter(c => ['blocked', 'started'].includes(c.status)).length === 1
+    && old.cells.every(c => c === target || ['pending', 'completed', 'task_failed', 'transport_failed'].includes(c.status)));
+  const preserved = old.cells.map((cell, i) => {
+    if (cell.status === 'pending') return cell;
+    const previous = contextForCell(historical, cell), checked = inspectAttempt(cellDirectory(output, cell), cell, previous.tasks.get(cell.task), previous.definition, previous.api, i === 1);
+    if (cell !== target) { check(checked.status === cell.status && checked.failure_reason === cell.failure_reason && checked.accounting === cell.accounting && isDeepStrictEqual(checked.hashes, cell.hashes)); return cell; }
+    check(checked.status === 'transport_failed' && checked.failure_reason === 'provider_access_verification_failed' && checked.accounting === 'incomplete');
+    return { ...cell, ...checked, admission: cell.rep === 0 ? 'funded-first-repetition' : 'funded-repetition' };
+  });
+  const receipt = { schema_version: 1, classification: 'exact_provider_access_verification_503', accounting: 'incomplete',
+    old_state_sha256: expectedHash, old_implementation_sha256: old.definition.implementation_sha256, new_implementation_sha256: context.definition.implementation_sha256,
+    session: old.session, target_run_id: target.run_id, preserved_run_ids: old.admission_order,
+    target_hashes: preserved.find(c => c.run_id === target.run_id).hashes,
+    prior_receipts: Object.fromEntries(Object.entries(old).filter(([k]) => k.endsWith('_adjudication'))) };
+  return { old, receipt, preserved };
+}
+function validateProviderAdjudication(output, state, context, deps) {
+  const bytes = regularBytes(join(output, PROVIDER_RECEIPT)); check(sha(bytes) === state.provider_failure_adjudication);
+  const receipt = JSON.parse(bytes); check(isDeepStrictEqual(receipt, context.providerReceipt));
+  const expected = providerFailureEvidence(output, regularBytes(join(output, PROVIDER_BACKUP)), context, receipt.old_state_sha256, deps);
+  check(isDeepStrictEqual(receipt, expected.receipt) && state.session === expected.old.session
+    && isDeepStrictEqual(state.admission_order.slice(0, receipt.preserved_run_ids.length), receipt.preserved_run_ids));
+  for (const cell of expected.preserved) if (cell.status !== 'pending') check(isDeepStrictEqual(state.cells.find(c => c.run_id === cell.run_id), cell));
+  for (const [key, value] of Object.entries(receipt.prior_receipts)) check(state[key] === value);
+  if (state.environment_adjudication) for (const cell of state.cells) if (!context.generationReceipt.preserved_run_ids.includes(cell.run_id) && cell.status !== 'pending') check(cell.environment_generation === state.environment_adjudication);
+  return true;
+}
+
 function legacyEvidence(output, oldBytes, context, deps) {
   const pins = deps.legacyPins ?? LEGACY_PINS; const old = JSON.parse(oldBytes); const { api, tasks, definition } = context;
   check(sha(oldBytes) === pins.state && old.schema_version === 1 && old.official_release === false && old.collection === 'diagnostic'
@@ -458,6 +525,7 @@ function legacyEvidence(output, oldBytes, context, deps) {
   return { old, receipt, preserved };
 }
 function validateAdjudication(output, state, context, deps) {
+  if (state.provider_failure_adjudication) return validateProviderAdjudication(output, state, context, deps);
   if (state.environment_adjudication) return validateEnvironmentAdjudication(output, state, context, deps);
   if (state.transport_adjudication) return validateTransportAdjudication(output, state, context, deps);
   if (state.no_solution_adjudication) return validateNoSolutionAdjudication(output, state, context, deps);
@@ -712,6 +780,26 @@ export async function repairLunaEnvironmentSetup(options, deps = {}) {
     const next = { ...old, definition: active.definition, halted: false, preflight_blocked: false,
       cells: old.cells.map((cell, index) => index === evidence.index ? pending : cell), admission_order: old.admission_order.slice(0, -1), environment_adjudication: sha(receiptBytes) };
     delete next.halt_reason; saveState(path, next); return next;
+  } catch (error) { throw error instanceof CampaignError ? error : new CampaignError(); }
+  finally { if (lockFd !== undefined) { closeSync(lockFd); rmSync(lockPath); } }
+}
+
+/** Preserve an exact observed provider-access failure; never retry a funded slot. */
+export async function repairLunaProviderFailureStop(options, deps = {}) {
+  let lockFd; let lockPath;
+  try {
+    check(options && ['taskRoot', 'output', 'privateRoot', 'authFile', 'bridgeBinary'].every(k => typeof options[k] === 'string' && isAbsolute(options[k])) && validHash(options.expectedStateSha256));
+    check((deps.platform ?? process.platform) === 'linux'); const output = privateDirectory(options.output), privateRoot = privateDirectory(options.privateRoot);
+    check(!within(output, privateRoot) && !within(privateRoot, output)); lockPath = join(output, 'campaign.lock'); lockFd = openSync(lockPath, 'wx', 0o600);
+    const path = join(output, 'state.json'), oldBytes = regularBytes(path); check(sha(oldBytes) === options.expectedStateSha256); const old = JSON.parse(oldBytes); check(!old.provider_failure_adjudication);
+    const historical = await campaignContext(options, { ...deps, implementationHash: async () => old.definition.implementation_sha256 }, old);
+    const active = await campaignContext(options, deps, old), context = { ...active, previousProviderContext: historical };
+    const { receipt, preserved } = providerFailureEvidence(output, oldBytes, context, options.expectedStateSha256, deps);
+    check(!exists(join(output, PROVIDER_BACKUP)) && !exists(join(output, PROVIDER_RECEIPT)));
+    const receiptBytes = Buffer.from(`${JSON.stringify(receipt, null, 2)}\n`); exclusiveEvidence(join(output, PROVIDER_BACKUP), oldBytes); exclusiveEvidence(join(output, PROVIDER_RECEIPT), receiptBytes);
+    const next = { ...old, definition: active.definition, halted: false, cells: preserved, provider_failure_adjudication: sha(receiptBytes) }; delete next.halt_reason;
+    if (transportFailureStreak(next) >= 2) { next.halted = true; next.halt_reason = 'consecutive-transport-failures'; }
+    saveState(path, next); return next;
   } catch (error) { throw error instanceof CampaignError ? error : new CampaignError(); }
   finally { if (lockFd !== undefined) { closeSync(lockFd); rmSync(lockPath); } }
 }

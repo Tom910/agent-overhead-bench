@@ -31,8 +31,8 @@ function fixture(change) {
         task_source: spec.task_source, task_revision: spec.task_revision, task_repository: spec.task_repository,
         task_base_revision: spec.task_base_revision, task_regime: spec.task_regime, rep: spec.rep, model: spec.model,
         price_book: spec.price_book, spend_usd_estimate: null,
-        container: { ...baseRun.container, image_digest: digest, verifier_image_digest: digest },
-        task_environment: { kind: 'prepared-local', network: 'disabled', agent_image: `fixture-${spec.tool}`, agent_image_digest: digest } };
+        container: { ...baseRun.container, image_digest: spec.environment.agent_images[spec.tool].image_digest, verifier_image_digest: spec.verifier.image_digest },
+        task_environment: { kind: 'prepared-local', network: 'disabled', agent_image: spec.environment.agent_images[spec.tool].image, agent_image_digest: spec.environment.agent_images[spec.tool].image_digest } };
       const event = { ...structuredClone(baseEvent), run_id: spec.run_id, seq: 0, path: '/responses', protocol: 'openai_responses', model_requested: spec.model, model_served: spec.model };
       const context = { run, event, spec, index: calls.length - 1, footer: '', eventCount: 1, observed: { front_refused: 0, gate_refused: 0, requests: [] } }; change?.(context);
       context.observed.requests = context.observed.requests.length ? context.observed.requests : Array.from({ length: context.eventCount }, () => ({ accepted: true, model_matches: true, effort_low: true, summary_auto: true, store_false: true, reasoning_replay_absent: true, continuation_absent: true }));
@@ -51,7 +51,7 @@ function fixture(change) {
     },
     progress: () => {},
   };
-  return { root, options, deps, calls, factories, setChange: fn => { change = fn; } };
+  return { root, options, deps, calls, factories, execute: deps.runCell, setChange: fn => { change = fn; } };
 }
 
 test('persists exactly 200 ordered slots and runs each funded cell once across harness subsets', async () => {
@@ -551,5 +551,56 @@ test('generation orphan admission is marked and receipt or archived-state loss r
   await runCampaign(f.repairOptions, f.deps); assert.equal(calls, 0); assert.equal(readFileSync(join(dir, 'retained'), 'utf8'), 'orphan');
   for (const name of ['environment-adjudication.json', 'environment-state.json', 'environment-restoration-proof.json', 'legacy-metadata-adjudication.json']) {
     const path = join(f.options.output, name), bytes = readFileSync(path); rmSync(path); await assert.rejects(runCampaign(f.repairOptions, f.deps)); writeFileSync(path, bytes, { mode: 0o400 });
+  }
+});
+
+const ACCESS_BODY_SHA = '39b34ad272f10d75ddfe6dfce35ba8a89d64a60ed80721c656d326832a04f764';
+function accessFailure(c) {
+  c.footer = '';
+  c.run.outcome = 'adapter_error'; c.run.adapter_result.exitCode = 1; c.run.verification.exit = 1; c.run.verification.duration_ms = 0;
+  c.eventCount = 3; c.upstreamEvidence = true; c.eventOverrides = { 2: { status: 503, streamed: false, model_served: null, usage: null, usage_source: 'unavailable', error: { kind: 'upstream_http', detail: 'status 503' } } };
+  c.changeUpstream = rows => Object.assign(rows.at(-1), { upstream_status: 503, error_body_sha256: ACCESS_BODY_SHA, error_body_bytes: 69, error_body_complete: true, error_body_truncated: false });
+}
+test('exact provider access-verification503 stays unscored and uses the existing persistent transport breaker', async () => {
+  const f = fixture(c => { if (c.index < 2) accessFailure(c); }); const state = await runCampaign(f.options, f.deps);
+  assert.equal(f.calls.length, 2); assert.equal(state.halted, true); assert.equal(state.halt_reason, 'consecutive-transport-failures');
+  assert.equal(state.cells[0].failure_reason, 'provider_access_verification_failed'); assert.equal(state.cells[0].accounting, 'incomplete');
+  assert.equal(state.cells[1].status, 'transport_failed'); await runCampaign(f.options, f.deps); assert.equal(f.calls.length, 2);
+});
+test('access-verification exception rejects other errors, incomplete bodies, sidecar drift and later paid requests', async () => {
+  for (const mutate of [c => c.eventOverrides[2].status = 401, c => c.eventOverrides[2].status = 403, c => c.eventOverrides[2].status = 429,
+    c => c.changeUpstream = rows => Object.assign(rows.at(-1), { upstream_status: 503, error_body_sha256: '0'.repeat(64), error_body_bytes: 69, error_body_complete: true, error_body_truncated: false }),
+    c => { const base = c.changeUpstream; c.changeUpstream = rows => { base(rows); rows.at(-1).error_body_complete = false; }; },
+    c => { const base = c.changeUpstream; c.changeUpstream = rows => { base(rows); rows.at(-1).error_body_truncated = true; }; },
+    c => { const base = c.changeUpstream; c.changeUpstream = rows => { base(rows); rows.at(-1).c1_sha256 = '0'.repeat(64); }; },
+    c => c.eventCount = 4, c => c.upstreamEvidence = false, c => c.observed.gate_refused = 1,
+    c => c.eventOverrides[0] = { model_served: 'different' }, c => c.run.verification.duration_ms = 1]) {
+    const f = fixture(c => { accessFailure(c); mutate(c); }); assert.equal((await runCampaign(f.options, f.deps)).cells[0].status, 'blocked'); assert.equal(f.calls.length, 1);
+  }
+});
+async function accessStoppedFixture() {
+  const f = await environmentStoppedFixture(); await campaign.repairLunaEnvironmentSetup(f.repairOptions, f.deps);
+  f.setChange(c => { if (![30,40].includes(c.index)) taskFailure(c); if (c.index === 50) { accessFailure(c); c.eventCount = 40; c.eventOverrides = { 39: c.eventOverrides[2] }; } });
+  f.deps.runCell = async spec => { const result = await f.execute(spec); if (f.calls.length === 51) throw new Error('historical503stop'); return result; };
+  const old = await runCampaign(f.repairOptions, f.deps); assert.equal(f.calls.length, 51); assert.equal(old.cells[50].status, 'blocked');
+  f.providerOptions = { ...f.repairOptions, expectedStateSha256: fileHash(join(f.options.output, 'state.json')) }; f.deps.implementationHash = async () => '5'.repeat(64); return f;
+}
+test('provider failure repair preserves51 funded cells and environment history, then admits only149 pending', async () => {
+  const f = await accessStoppedFixture(); const old = read(join(f.options.output, 'state.json'));
+  const receipts = readdirSync(f.options.output).filter(n => /(?:state|adjudication)\.json$/.test(n) && n !== 'state.json').map(n => [n,fileHash(join(f.options.output,n))]);
+  const state = await campaign.repairLunaProviderFailureStop(f.providerOptions, f.deps);
+  assert.equal(state.cells.filter(c => c.status === 'pending').length,149); assert.deepEqual(state.cells.slice(0,50),old.cells.slice(0,50)); assert.deepEqual(state.admission_order,old.admission_order);
+  assert.equal(state.cells[50].status,'transport_failed'); assert.equal(state.cells[50].accounting,'incomplete'); assert.equal(state.halted,false);
+  for (const [name,hash] of receipts) assert.equal(fileHash(join(f.options.output,name)),hash);
+  let invoked=0; f.deps.runCell=async spec=>{ invoked++;assert.equal(spec.run_id,old.cells[51].run_id);throw new Error('synthetic stop'); };
+  await runCampaign(f.providerOptions,f.deps); assert.equal(invoked,1); await runCampaign(f.providerOptions,f.deps);assert.equal(invoked,1);
+  rmSync(join(f.options.output,'environment-adjudication.json'));await assert.rejects(runCampaign(f.providerOptions,f.deps));
+});
+test('provider repair refuses definition drift and altered evidence before writing any receipt', async () => {
+  for (const mutate of [f=>f.providerOptions.expectedStateSha256='0'.repeat(64),f=>f.deps.hostFingerprint=async()=>'0'.repeat(64),
+    f=>writeFileSync(join(f.calls[50].dir,'events.jsonl.upstream.jsonl'),'{}'),
+    f=>{const p=join(f.options.output,'state.json'),v=read(p);v.cells[199].rep=8;writeFileSync(p,JSON.stringify(v));f.providerOptions.expectedStateSha256=fileHash(p);}]) {
+    const f=await accessStoppedFixture();mutate(f);const hash=fileHash(join(f.options.output,'state.json'));
+    await assert.rejects(campaign.repairLunaProviderFailureStop(f.providerOptions,f.deps));assert.equal(fileHash(join(f.options.output,'state.json')),hash);assert.equal(existsSync(join(f.options.output,'provider-failure-state.json')),false);assert.equal(f.calls.length,51);
   }
 });
