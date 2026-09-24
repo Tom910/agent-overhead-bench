@@ -41,6 +41,19 @@ const NO_SOLUTION_PINS = Object.freeze({
   candidate_evidence: 'b4297992f21fdb72a8286517994d442399c9244779a2686c791fd4c1dc6ecee4',
   candidate_patch: 'ae9eeab779e2fe319ba38f1bf04eaa1a046ef71c4965e0d864540588a79183e5',
 });
+const TRANSPORT_PINS = Object.freeze({
+  state: 'd2d2a14c1f04ce388dbb88287f0c395e3f4d8267ed433b47c12e44fbc045b400',
+  implementation: '134b64915b9729d9f0e5915a3cdbeaf0a33c4e19c99b6deb7310c1f392ec6f15', session: '586921d27c1250c7',
+  run: '42fa77792f9dffa91c9a8b876254ea8f2cdafb87faeb5d7ddd9ffcb984b746bc',
+  events: '0bdb04130b5d1997a721499d7097f72d9d6ee9c94eadfc875ce5eb5c2b4413a7',
+  observations: 'ef97501c470b978f92e32dc5296ca0600986cd407c227b084252c10f78917e5f',
+  upstream: 'a046b517bb60e8e58d296946f91e578918a56e82aeaf9d882d83d75590bdf9dd',
+  candidate_evidence: 'aaff7d25084176ad9eba713d8150f8717b7917ca730dc25d7c686bd85b6096e1',
+  candidate_patch: 'e08ffb092688923ee5d060e678f0cc0fc5613db7afdc462828a7ffc21bd7539e',
+  third_receipt: '05aaedbfe990723aa97b70edb761577ad62902939697ef732119bf81e769e728',
+});
+const TRANSPORT_BACKUP = 'transport-state.json';
+const TRANSPORT_RECEIPT = 'transport-adjudication.json';
 const NO_SOLUTION_BACKUP = 'no-solution-state.json';
 const NO_SOLUTION_RECEIPT = 'no-solution-adjudication.json';
 const REPEATED_BACKUP = 'repeated-metadata-state.json';
@@ -175,6 +188,34 @@ function allowedMetadata(observed, harness) {
   if (observed.front_refused === 0) return (records === undefined || (Array.isArray(records) && records.length === 0)) && (truncated === undefined || truncated === 0);
   return harness === 'hermes' && truncated === 0 && Array.isArray(records) && records.length <= 128 && records.length === observed.front_refused && records.every(safeMetadataRecord);
 }
+const REQUEST_FLAGS = ['model_matches', 'effort_low', 'summary_auto', 'store_false', 'reasoning_replay_absent', 'continuation_absent'];
+function interruptedStream(dir, run, events, attempts, observed, api) {
+  const last = attempts.at(-1); const complete = e => api.isSuccessfulModelEvent(e) && e.protocol === 'openai_responses'
+    && e.model_requested === LUNA_MODEL && e.model_served === LUNA_MODEL && e.usage !== null && e.usage_source !== 'unavailable';
+  if (!last || events.at(-1) !== last || !attempts.slice(0, -1).every(complete)
+    || last.protocol !== 'openai_responses' || last.method !== 'POST' || last.model_requested !== LUNA_MODEL
+    || last.status !== 0 || last.streamed !== true || !Number.isFinite(last.t_upstream_sent) || last.error?.kind !== 'network'
+    || last.model_served !== null || last.usage !== null || last.usage_source !== 'unavailable'
+    || run.outcome !== 'adapter_error' || run.adapter_result.exitCode !== 1 || run.verification.exit !== 1 || run.verification.duration_ms !== 0
+    || regularBytes(join(dir, 'verify.log')).length !== 0 || !allowedMetadata(observed, run.tool)
+    || !Array.isArray(observed.requests) || observed.requests.length < attempts.length || observed.requests.length > 1040
+    || observed.gate_refused !== observed.requests.length - attempts.length
+    || !observed.requests.every((r, i) => r.accepted === (i < attempts.length) && REQUEST_FLAGS.every(k => r[k] === true))) return false;
+  const path = join(dir, 'events.jsonl.upstream.jsonl'); if (!exists(path)) return false;
+  const upstream = regularBytes(path).toString('utf8').trim().split('\n').filter(Boolean).map(JSON.parse);
+  return upstream.length === events.length && upstream.every((u, i) => u.v === 1 && u.run_id === events[i].run_id && u.seq === events[i].seq
+    && u.c1_sha256 === sha(`${JSON.stringify(events[i])}\n`)) && upstream.at(-1).upstream_status === 200 && upstream.at(-1).error === null;
+}
+function validateAdmissionOrder(state) {
+  check(Array.isArray(state.admission_order) && new Set(state.admission_order).size === state.admission_order.length);
+  const consumed = new Set(state.cells.filter(c => c.status !== 'pending').map(c => c.run_id));
+  check(state.admission_order.length === consumed.size && state.admission_order.every(id => consumed.has(id)));
+}
+function transportFailureStreak(state) {
+  const cells = new Map(state.cells.map(c => [c.run_id, c])); let count = 0;
+  for (const id of [...state.admission_order].reverse()) { if (cells.get(id).status !== 'transport_failed') break; count++; }
+  return count;
+}
 function inspectAttempt(dir, cell, task, definition, api, legacy = false, allowProofPreparation = false) {
   const hashes = Object.fromEntries(BOUND_FILES.map(name => [name, hashFile(join(dir, name))]));
   for (const name of ['candidate.patch', 'events.jsonl.upstream.jsonl', 'stdout.log', 'stderr.log', 'no-solution-proof.json']) if (exists(join(dir, name))) hashes[name] = hashFile(join(dir, name));
@@ -190,11 +231,13 @@ function inspectAttempt(dir, cell, task, definition, api, legacy = false, allowP
   for (const e of events) { check(e.run_id === cell.run_id && e.seq > sequence); sequence = e.seq; }
   const attempts = events.filter(api.isModelRequestAttempt);
   check(attempts.length > 0 && events.every(e => api.isModelRequestAttempt(e) || (e.method === 'GET' && e.model_requested === null && e.model_served === null)));
-  check(attempts.every(e => api.isSuccessfulModelEvent(e) && e.protocol === 'openai_responses' && e.model_requested === LUNA_MODEL && e.model_served === LUNA_MODEL && e.usage !== null && e.usage_source !== 'unavailable'));
+  const accountingComplete = attempts.every(e => api.isSuccessfulModelEvent(e) && e.protocol === 'openai_responses' && e.model_requested === LUNA_MODEL && e.model_served === LUNA_MODEL && e.usage !== null && e.usage_source !== 'unavailable');
   const transport = json(join(dir, 'transport.json')); const observed = json(join(dir, 'bridge-conditions.json'));
   check(transport.model === LUNA_MODEL && transport.policy === CONTROLLED_POLICY && transport.bridge_binary_sha256 === definition.bridge_binary_sha256
     && transport.refresh_token_imported === false && transport.subscription_usd === null && transport.timeout_s === 10800
     && transport.max_model_requests === 512 && transport.max_input_tokens === 100000000 && transport.max_output_tokens === 1000000);
+  if (interruptedStream(dir, run, events, attempts, observed, api)) return { status: 'transport_failed', failure_reason: 'upstream_stream_interrupted', accounting: 'incomplete', hashes };
+  check(accountingComplete);
   check((allowedMetadata(observed, cell.harness) || (legacy && observed.front_refused === 7 && observed.front_rejections === undefined && observed.front_rejections_truncated === undefined && attempts.length === 47)) && observed.gate_refused === 0 && Array.isArray(observed.requests) && observed.requests.length === attempts.length
     && observed.requests.every(r => ['accepted', 'model_matches', 'effort_low', 'summary_auto', 'store_false', 'reasoning_replay_absent', 'continuation_absent'].every(k => r[k] === true)));
   check(run.adapter_result.exitCode === 0);
@@ -249,6 +292,7 @@ function legacyEvidence(output, oldBytes, context, deps) {
   return { old, receipt, preserved };
 }
 function validateAdjudication(output, state, context, deps) {
+  if (state.transport_adjudication) return validateTransportAdjudication(output, state, context, deps);
   if (state.no_solution_adjudication) return validateNoSolutionAdjudication(output, state, context, deps);
   if (state.repeated_metadata_adjudication) return validateRepeatedAdjudication(output, state, context, deps);
   if (!state.legacy_metadata_adjudication) {
@@ -342,6 +386,47 @@ function validateNoSolutionAdjudication(output, state, context, deps) {
     && state.cells.slice(9).every(c => c.legacy_metadata_classification === undefined && c.repeated_metadata_classification === undefined && c.no_solution_classification === undefined && c.original_implementation_sha256 === undefined));
   return true;
 }
+function transportEvidence(output, oldBytes, context, deps) {
+  const pins = deps.transportPins ?? TRANSPORT_PINS; const old = JSON.parse(oldBytes); const { api, tasks, definition } = context;
+  check(sha(oldBytes) === pins.state && old.schema_version === 1 && old.official_release === false && old.collection === 'diagnostic'
+    && old.halted === true && old.halt_reason === 'attempt-or-accounting-failed' && old.session === pins.session
+    && old.definition.implementation_sha256 === pins.implementation && definition.implementation_sha256 !== pins.implementation
+    && isDeepStrictEqual({ ...old.definition, implementation_sha256: definition.implementation_sha256 }, definition)
+    && !old.transport_adjudication && old.no_solution_adjudication === pins.third_receipt);
+  check(Array.isArray(old.cells) && old.cells.length === 200);
+  check(validateAdjudication(output, old, { ...context, definition: old.definition }, deps));
+  const expected = schedule(old.session);
+  for (let i = 0; i < expected.length; i++) check(['harness', 'task', 'rep', 'run_id'].every(k => old.cells[i][k] === expected[i][k])
+    && old.cells[i].status === (i === 10 ? 'completed' : i < 20 ? 'task_failed' : i === 20 ? 'blocked' : 'pending'));
+  const dir = cellDirectory(output, old.cells[20]);
+  for (const [name, pin] of [['run.json', 'run'], ['events.jsonl', 'events'], ['bridge-conditions.json', 'observations'], ['events.jsonl.upstream.jsonl', 'upstream'], ['candidate-evidence.json', 'candidate_evidence']]) check(hashFile(join(dir, name)) === pins[pin]);
+  check(pins.candidate_patch === null ? !exists(join(dir, 'candidate.patch')) : hashFile(join(dir, 'candidate.patch')) === pins.candidate_patch);
+  const observed = json(join(dir, 'bridge-conditions.json')); check(observed.requests.length === 18 && observed.gate_refused === 1);
+  const canonical = regularBytes(join(dir, 'events.jsonl')).toString('utf8').trim().split('\n').map(line => api.validateC1Event(JSON.parse(line)));
+  check(canonical.filter(api.isModelRequestAttempt).length === 17);
+  const checked = old.cells.slice(0, 21).map((cell, i) => inspectAttempt(cellDirectory(output, cell), cell, tasks.get(cell.task), definition, api, i === 1));
+  check(checked.slice(0, 20).every((c, i) => c.status === old.cells[i].status && c.failure_reason === old.cells[i].failure_reason && c.accounting === old.cells[i].accounting && isDeepStrictEqual(c.hashes, old.cells[i].hashes))
+    && checked[20].status === 'transport_failed' && checked[20].accounting === 'incomplete');
+  const admissionOrder = old.cells.slice(0, 21).map(c => c.run_id);
+  if (old.admission_order !== undefined) check(isDeepStrictEqual(old.admission_order, admissionOrder));
+  const receipt = { schema_version: 1, classification: 'interrupted_upstream_stream', accounting: 'incomplete',
+    old_state_sha256: pins.state, old_implementation_sha256: pins.implementation, new_implementation_sha256: definition.implementation_sha256,
+    third_receipt_sha256: pins.third_receipt, session: old.session, admission_order: admissionOrder,
+    preserved_cells: old.cells.slice(0, 21).map((c, i) => ({ run_id: c.run_id, hashes: checked[i].hashes, original_implementation_sha256: i < 9 ? c.original_implementation_sha256 : pins.implementation })) };
+  const preserved = old.cells.slice(0, 21).map((c, i) => i < 9 ? c : ({ ...c, ...checked[i], original_implementation_sha256: pins.implementation,
+    ...(i === 20 ? { transport_classification: 'observed', admission: 'funded-repetition' } : {}) }));
+  return { old, receipt, preserved, admissionOrder };
+}
+function validateTransportAdjudication(output, state, context, deps) {
+  const bytes = regularBytes(join(output, TRANSPORT_RECEIPT)); check(sha(bytes) === state.transport_adjudication);
+  const expected = transportEvidence(output, regularBytes(join(output, TRANSPORT_BACKUP)), context, deps);
+  check(isDeepStrictEqual(JSON.parse(bytes), expected.receipt) && state.session === expected.old.session
+    && ['legacy_metadata_adjudication', 'repeated_metadata_adjudication', 'no_solution_adjudication'].every(k => state[k] === expected.old[k])
+    && isDeepStrictEqual(state.cells.slice(0, 21), expected.preserved)
+    && isDeepStrictEqual(state.admission_order.slice(0, 21), expected.admissionOrder)
+    && state.cells.slice(21).every(c => c.legacy_metadata_classification === undefined && c.repeated_metadata_classification === undefined && c.no_solution_classification === undefined && c.transport_classification === undefined && c.original_implementation_sha256 === undefined));
+  return true;
+}
 function exclusiveEvidence(path, bytes) {
   const fd = openSync(path, 'wx', 0o400);
   try { writeFileSync(fd, bytes); fsyncSync(fd); } finally { closeSync(fd); }
@@ -410,6 +495,25 @@ export async function repairLunaNoSolutionStop(options, deps = {}) {
   finally { if (lockFd !== undefined) { closeSync(lockFd); rmSync(lockPath); } }
 }
 
+/** Preserve one known interrupted attempt as unscored; never replay its requests. */
+export async function repairLunaTransportStop(options, deps = {}) {
+  let lockFd; let lockPath;
+  try {
+    check(options && ['taskRoot', 'output', 'privateRoot', 'authFile', 'bridgeBinary'].every(k => typeof options[k] === 'string' && isAbsolute(options[k])));
+    check((deps.platform ?? process.platform) === 'linux'); const output = privateDirectory(options.output); const privateRoot = privateDirectory(options.privateRoot);
+    check(!within(output, privateRoot) && !within(privateRoot, output));
+    lockPath = join(output, 'campaign.lock'); lockFd = openSync(lockPath, 'wx', 0o600);
+    const context = await campaignDefinition(options, deps); const path = join(output, 'state.json'); const oldBytes = regularBytes(path);
+    const { old, receipt, preserved, admissionOrder } = transportEvidence(output, oldBytes, context, deps);
+    check(!exists(join(output, TRANSPORT_BACKUP)) && !exists(join(output, TRANSPORT_RECEIPT)));
+    exclusiveEvidence(join(output, TRANSPORT_BACKUP), oldBytes);
+    const receiptBytes = Buffer.from(`${JSON.stringify(receipt, null, 2)}\n`); exclusiveEvidence(join(output, TRANSPORT_RECEIPT), receiptBytes);
+    const next = { ...old, definition: context.definition, halted: false, cells: [...preserved, ...old.cells.slice(21)], admission_order: admissionOrder, transport_adjudication: sha(receiptBytes) };
+    delete next.halt_reason; saveState(path, next); return next;
+  } catch (error) { throw error instanceof CampaignError ? error : new CampaignError(); }
+  finally { if (lockFd !== undefined) { closeSync(lockFd); rmSync(lockPath); } }
+}
+
 /** Injected dependencies are for zero-spend tests; no runtime override is exposed by the CLI. */
 export async function runCampaign(options, deps = {}) {
   let lockFd; let lockPath;
@@ -427,26 +531,28 @@ export async function runCampaign(options, deps = {}) {
       const adjudicated = validateAdjudication(output, state, { api, tasks, definition }, deps);
       const expected = schedule(state.session);
       for (let i = 0; i < expected.length; i++) {
-        const cell = state.cells[i]; const e = expected[i]; check(cell && ['pending', 'started', 'completed', 'task_failed', 'blocked'].includes(cell.status)
+        const cell = state.cells[i]; const e = expected[i]; check(cell && ['pending', 'started', 'completed', 'task_failed', 'transport_failed', 'blocked'].includes(cell.status)
           && ['harness', 'task', 'rep', 'run_id'].every(k => cell[k] === e[k]));
-        if (['completed', 'task_failed'].includes(cell.status)) {
+        if (['completed', 'task_failed', 'transport_failed'].includes(cell.status)) {
           const checked = inspectAttempt(cellDirectory(output, cell), cell, tasks.get(cell.task), definition, api, adjudicated && i === 1);
-          check(checked.status === cell.status && checked.failure_reason === cell.failure_reason && isDeepStrictEqual(checked.hashes, cell.hashes));
+          check(checked.status === cell.status && checked.failure_reason === cell.failure_reason && checked.accounting === cell.accounting && isDeepStrictEqual(checked.hashes, cell.hashes));
         }
         if (cell.status === 'started' || cell.status === 'blocked') { state.halted = true; state.halt_reason = 'consumed-attempt-requires-investigation'; }
       }
     } else {
       const session = randomBytes(8).toString('hex'); state = { schema_version: 1, official_release: false, collection: 'diagnostic', session, definition,
-        created_at: new Date().toISOString(), halted: false, cells: schedule(session) };
+        created_at: new Date().toISOString(), halted: false, cells: schedule(session), admission_order: [] };
     }
+    validateAdmissionOrder(state);
+    if (transportFailureStreak(state) >= 2) { state.halted = true; state.halt_reason = 'consecutive-transport-failures'; }
     saveState(path, state); if (state.halted) return state;
     const execute = deps.runCell ?? (await import('@aob/runner')).runDockerCell;
     const factory = deps.createTransportFactory ?? (await import('./s5-luna-task-transport.mjs')).createLunaTaskTransportFactory;
     for (const cell of state.cells) {
       if (cell.status !== 'pending' || !selected.includes(cell.harness)) continue;
       const task = tasks.get(cell.task); const dir = cellDirectory(output, cell);
-      if (exists(dir)) { cell.status = 'blocked'; state.halted = true; state.halt_reason = 'existing-attempt-directory'; saveState(path, state); break; }
-      cell.status = 'started'; cell.started_at = new Date().toISOString(); saveState(path, state);
+      if (exists(dir)) { state.admission_order.push(cell.run_id); cell.status = 'blocked'; state.halted = true; state.halt_reason = 'existing-attempt-directory'; saveState(path, state); break; }
+      state.admission_order.push(cell.run_id); cell.status = 'started'; cell.started_at = new Date().toISOString(); saveState(path, state);
       try {
         mkdirSync(dir, { recursive: true, mode: 0o700 });
         const transportFactory = await factory({ authFile: options.authFile, bridgeBinary: options.bridgeBinary, privateRoot, timeoutS: task.timeoutS });
@@ -458,6 +564,7 @@ export async function runCampaign(options, deps = {}) {
       } catch {
         cell.status = 'blocked'; state.halted = true; state.halt_reason = 'attempt-or-accounting-failed';
       }
+      if (transportFailureStreak(state) >= 2) { state.halted = true; state.halt_reason = 'consecutive-transport-failures'; }
       saveState(path, state); (deps.progress ?? (message => process.stdout.write(`${message}\n`)))(`${cell.harness} ${cell.task} repetition ${cell.rep + 1}: ${cell.status}`);
       if (state.halted) break;
     }

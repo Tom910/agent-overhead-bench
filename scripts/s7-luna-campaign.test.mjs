@@ -35,8 +35,10 @@ function fixture(change) {
         task_environment: { kind: 'prepared-local', network: 'disabled', agent_image: `fixture-${spec.tool}`, agent_image_digest: digest } };
       const event = { ...structuredClone(baseEvent), run_id: spec.run_id, seq: 0, path: '/responses', protocol: 'openai_responses', model_requested: spec.model, model_served: spec.model };
       const context = { run, event, spec, index: calls.length - 1, footer: '', eventCount: 1, observed: { front_refused: 0, gate_refused: 0, requests: [] } }; change?.(context);
-      context.observed.requests = Array.from({ length: context.eventCount }, () => ({ accepted: true, model_matches: true, effort_low: true, summary_auto: true, store_false: true, reasoning_replay_absent: true, continuation_absent: true }));
-      writeFileSync(join(spec.dir, 'events.jsonl'), Array.from({ length: context.eventCount }, (_, seq) => JSON.stringify({ ...event, seq })).join('\n') + '\n');
+      context.observed.requests = context.observed.requests.length ? context.observed.requests : Array.from({ length: context.eventCount }, () => ({ accepted: true, model_matches: true, effort_low: true, summary_auto: true, store_false: true, reasoning_replay_absent: true, continuation_absent: true }));
+      const emittedEvents = Array.from({ length: context.eventCount }, (_, seq) => ({ ...event, seq, ...(context.eventOverrides?.[seq] ?? {}) }));
+      writeFileSync(join(spec.dir, 'events.jsonl'), emittedEvents.map(JSON.stringify).join('\n') + '\n');
+      if (context.upstreamEvidence) { const rows = emittedEvents.map(e => ({ v: 1, run_id: e.run_id, seq: e.seq, c1_sha256: createHash('sha256').update(JSON.stringify(e) + '\n').digest('hex'), upstream_status: 200, error: null })); context.changeUpstream?.(rows); writeFileSync(join(spec.dir, 'events.jsonl.upstream.jsonl'), rows.map(JSON.stringify).join('\n') + '\n'); }
       writeFileSync(join(spec.dir, 'verify.log'), context.footer);
       writeFileSync(join(spec.dir, 'run.json'), JSON.stringify(run));
       writeFileSync(join(spec.dir, 'execution-conditions.json'), '{}');
@@ -346,4 +348,82 @@ test('third recovery rejects arbitrary pins, bad accounting and loss anywhere in
     const f = await noSolutionFixture(); await installSyntheticEmptyCapture(f, f.calls[8]); await campaign.repairLunaNoSolutionStop(f.options, f.deps);
     rmSync(join(f.options.output, name)); await assert.rejects(runCampaign(f.options, f.deps), CampaignError); assert.equal(f.calls.length, 9);
   }
+});
+
+function transportFailure(c, denied = 1, detail = 'other side closed') {
+  c.upstreamEvidence = true; c.eventCount = 3; c.eventOverrides = { 2: { status: 0, model_served: null, usage: null, usage_source: 'unavailable', error: { kind: 'network', detail } } };
+  c.run.outcome = 'adapter_error'; c.run.adapter_result.exitCode = 1; c.run.verification.exit = 1; c.run.verification.duration_ms = 0; c.footer = '';
+  c.observed.gate_refused = denied; c.observed.requests = Array.from({ length: 3 + denied }, (_, i) => ({ accepted: i < 3, model_matches: true, effort_low: true, summary_auto: true, store_false: true, reasoning_replay_absent: true, continuation_absent: true }));
+}
+test('typed terminal stream failure is unscored transport_failed without rerun, including varied local retry counts', async () => {
+  for (const denied of [0, 1, 3]) {
+    const f = fixture(c => { if (c.index === 0) transportFailure(c, denied, 'socket reset by peer'); });
+    const state = await runCampaign({ ...f.options, harnesses: ['codex'] }, f.deps);
+    assert.equal(state.halted, false); assert.equal(f.calls.length, 40); assert.equal(state.cells[0].status, 'transport_failed'); assert.equal(state.cells[0].accounting, 'incomplete');
+    const run = read(join(f.calls[0].dir, 'run.json')); assert.equal(run.outcome, 'adapter_error'); assert.equal(run.spend_usd_estimate, null);
+    await runCampaign({ ...f.options, harnesses: ['codex'] }, f.deps); assert.equal(f.calls.length, 40);
+  }
+});
+test('transport exception never admits provider auth/quota/model errors, unexplained accounting or another forwarded request', async () => {
+  for (const mutate of [c => c.eventOverrides[2].status = 429, c => c.eventOverrides[2].status = 401,
+    c => c.eventOverrides[2].error = null, c => c.eventOverrides[2].error.kind = 'proxy_refused', c => c.eventOverrides[2].streamed = false,
+    c => c.eventOverrides[2].t_upstream_sent = null, c => c.eventOverrides[2].model_served = 'different-model',
+    c => c.eventOverrides[0] = { status: 429 }, c => c.eventOverrides[0] = { model_served: 'different-model' },
+    c => c.eventOverrides[1] = c.eventOverrides[2], c => { c.eventOverrides[1] = c.eventOverrides[2]; delete c.eventOverrides[2]; },
+    c => c.observed.requests.at(-1).accepted = true, c => c.observed.requests.at(-1).effort_low = false,
+    c => c.observed.gate_refused++, c => c.upstreamEvidence = false,
+    c => c.changeUpstream = rows => rows.at(-1).upstream_status = 429, c => c.changeUpstream = rows => rows.at(-1).upstream_status = 401,
+    c => c.changeUpstream = rows => rows.at(-1).c1_sha256 = '0'.repeat(64), c => c.changeUpstream = rows => rows.push(rows.at(-1)), c => c.changeUpstream = rows => rows.at(-1).error = 'upstream_error', c => c.observed.front_refused = 1, c => c.run.verification.duration_ms = 1, c => c.footer = 'unexpected verifier output']) {
+    const f = fixture(c => { transportFailure(c); mutate(c); });
+    const state = await runCampaign(f.options, f.deps); assert.equal(state.halted, true); assert.equal(f.calls.length, 1); assert.equal(state.cells[0].status, 'blocked');
+  }
+});
+test('two consecutive transport failures halt, persist across resume, and use actual admission order across harness subsets', async () => {
+  const consecutive = fixture(c => transportFailure(c));
+  const stopped = await runCampaign(consecutive.options, consecutive.deps); assert.equal(stopped.halted, true); assert.equal(consecutive.calls.length, 2);
+  assert.equal(stopped.halt_reason, 'consecutive-transport-failures'); assert.equal(stopped.cells.filter(c => c.status === 'transport_failed').length, 2);
+  await runCampaign(consecutive.options, consecutive.deps); assert.equal(consecutive.calls.length, 2);
+  const subsets = fixture(c => { if (c.index === 39 || c.index === 40) transportFailure(c); });
+  const first = await runCampaign({ ...subsets.options, harnesses: ['codex'] }, subsets.deps); assert.equal(first.halted, false); assert.equal(subsets.calls.length, 40);
+  const second = await runCampaign({ ...subsets.options, harnesses: ['hermes'] }, subsets.deps); assert.equal(second.halted, true); assert.equal(subsets.calls.length, 41);
+  const broken = fixture(c => { if (c.index === 0 || c.index === 2) transportFailure(c); });
+  assert.equal((await runCampaign({ ...broken.options, harnesses: ['codex'] }, broken.deps)).halted, false); assert.equal(broken.calls.length, 40);
+});
+
+async function transportStoppedFixture() {
+  const f = await noSolutionFixture(); await installSyntheticEmptyCapture(f, f.calls[8]); await campaign.repairLunaNoSolutionStop(f.options, f.deps);
+  f.setChange(c => { if (c.index !== 10) taskFailure(c); if (c.index === 20) { transportFailure(c); c.eventCount = 17; c.eventOverrides = { 16: c.eventOverrides[2] }; c.observed.requests = Array.from({ length: 18 }, (_, i) => ({ accepted: i < 17, model_matches: true, effort_low: true, summary_auto: true, store_false: true, reasoning_replay_absent: true, continuation_absent: true })); } });
+  const execute = f.deps.runCell; f.deps.runCell = async spec => { const result = await execute(spec); if (f.calls.length === 21) throw new Error('original interruption stop'); return result; };
+  const old = await runCampaign(f.options, f.deps); assert.equal(f.calls.length, 21); assert.equal(old.cells[20].status, 'blocked');
+  f.deps.transportPins = { state: fileHash(join(f.options.output, 'state.json')), implementation: old.definition.implementation_sha256, session: old.session,
+    run: fileHash(join(f.calls[20].dir, 'run.json')), events: fileHash(join(f.calls[20].dir, 'events.jsonl')), observations: fileHash(join(f.calls[20].dir, 'bridge-conditions.json')),
+    upstream: fileHash(join(f.calls[20].dir, 'events.jsonl.upstream.jsonl')), candidate_evidence: fileHash(join(f.calls[20].dir, 'candidate-evidence.json')),
+    candidate_patch: null, third_receipt: old.no_solution_adjudication };
+  f.deps.implementationHash = async () => '8'.repeat(64); return f;
+}
+test('transport recovery preserves21 consumed slots and prior epochs, continues179 pending and never replays the interrupted attempt', async () => {
+  const f = await transportStoppedFixture(); const before = f.calls.map(c => Object.fromEntries(readdirSync(c.dir).map(name => [name, fileHash(join(c.dir, name))])));
+  const receipts = readdirSync(f.options.output).filter(n => /(?:state|adjudication)\.json$/.test(n) && n !== 'state.json').map(n => [n, fileHash(join(f.options.output, n))]);
+  const state = await campaign.repairLunaTransportStop(f.options, f.deps); assert.equal(state.halted, false);
+  assert.equal(state.cells[20].status, 'transport_failed'); assert.equal(state.cells[20].accounting, 'incomplete'); assert.equal(state.cells.filter(c => c.status === 'pending').length, 179);
+  assert.equal(state.cells.filter(c => c.status === 'completed').length, 1); assert.equal(state.cells.filter(c => c.status === 'task_failed').length, 19);
+  assert.deepEqual(state.cells.slice(9, 21).map(c => c.original_implementation_sha256), Array(12).fill('9'.repeat(64)));
+  assert.deepEqual(state.admission_order, state.cells.slice(0, 21).map(c => c.run_id));
+  for (const [n, h] of receipts) assert.equal(fileHash(join(f.options.output, n)), h);
+  for (let i = 0; i < 21; i++) for (const [n, h] of Object.entries(before[i])) assert.equal(fileHash(join(f.calls[i].dir, n)), h);
+  const consumed = f.calls.map(c => c.run_id); f.deps.runCell = async spec => { assert.ok(!consumed.includes(spec.run_id)); throw new Error('stop synthetic continuation'); };
+  assert.equal((await runCampaign(f.options, f.deps)).cells[21].status, 'blocked'); await assert.rejects(campaign.repairLunaTransportStop(f.options, f.deps), CampaignError);
+});
+test('transport recovery and resumes refuse arbitrary state, bad terminal HTTP evidence and receipt/order tampering', async () => {
+  for (const mutation of ['production', 'upstream']) {
+    const f = await transportStoppedFixture(); if (mutation === 'production') delete f.deps.transportPins;
+    else { const p = join(f.calls[20].dir, 'events.jsonl.upstream.jsonl'); const rows = readFileSync(p, 'utf8').trim().split('\n').map(JSON.parse); rows.at(-1).upstream_status = 429; writeFileSync(p, rows.map(JSON.stringify).join('\n') + '\n'); f.deps.transportPins.upstream = fileHash(p); }
+    await assert.rejects(campaign.repairLunaTransportStop(f.options, f.deps), CampaignError); assert.equal(read(join(f.options.output, 'state.json')).halted, true);
+  }
+  for (const name of ['transport-state.json', 'transport-adjudication.json', 'no-solution-state.json', 'no-solution-adjudication.json', 'legacy-metadata-adjudication.json', 'repeated-metadata-adjudication.json']) {
+    const f = await transportStoppedFixture(); await campaign.repairLunaTransportStop(f.options, f.deps); rmSync(join(f.options.output, name));
+    await assert.rejects(runCampaign(f.options, f.deps), CampaignError); assert.equal(f.calls.length, 21);
+  }
+  const f = fixture(); await runCampaign({ ...f.options, harnesses: ['codex'] }, f.deps); const p = join(f.options.output, 'state.json'); const s = read(p); s.admission_order.pop(); writeFileSync(p, JSON.stringify(s));
+  await assert.rejects(runCampaign(f.options, f.deps), CampaignError); assert.equal(f.calls.length, 40);
 });

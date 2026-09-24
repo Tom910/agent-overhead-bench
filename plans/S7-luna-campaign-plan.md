@@ -206,3 +206,46 @@ refusal. The blocked slot's original candidate-evidence and patch hashes are als
 pinned explicitly; its drift regression failed before the guard was added. Syntax
 and diff checks passed. The helper's actual Linux empty-diff validation is a
 separate required operational gate before root applies the transition.
+
+## Interrupted-stream outcomes without retrying consumed tasks
+
+A narrowly evidenced interrupted stream is an operational transport failure, not a
+verified task failure or success. Admission may continue once when an otherwise
+complete exact-Luna request sequence ends in one streamed Responses request with
+status 0, a typed network error after upstream forwarding, unavailable usage and
+unknown served model. Error-detail wording is not part of this classification;
+zero or more fully observed local denied retries may follow. Require all earlier
+provider events to be successful and complete, unchanged policy flags, and the
+accepted observation prefix to match all canonical calls. The gate-refused count
+must exactly equal the denied tail within the service record cap. Require native
+exit 1/adapter_error and skipped verification (duration
+0 and empty log). Provider 429/auth failures, model drift, unavailable accounting
+without this terminal network evidence, other gate refusals and ambiguous native
+failures still halt. A matching terminal upstream sidecar must bind the exact C1 hash/sequence/run and
+show upstream HTTP 200 with no upstream error; a disconnected auth or quota-error
+body cannot enter this classification. The original C1/C4 remain unchanged and incomplete accounting
+remains unscored; state records transport_failed, never task_failed or completed.
+
+Do not replay any consumed attempt. A persistent admission-order ledger records
+actual serial invocation order, including harness-subset resumes; two consecutive
+transport_failed attempts trip a circuit breaker before another attempt starts.
+A successful transport with a legitimate task result breaks the consecutive streak.
+Resume validates the ledger and recomputes the breaker from hash-bound outcomes.
+
+One audited exact-state transition preserves all 21 consumed slots, all earlier
+receipts and their implementation epochs, and 179 pending slots. It binds the known
+stopped state's implementation and interrupted attempt artifacts, validates the
+strict transport signature, preserves the original state, and adds a linked receipt.
+The latest 12 consumed slots retain their original implementation epoch; the first
+nine remain untouched. Recovery seeds the proven existing invocation order and
+continues only pending work. No state changes or model calls occur during tests.
+
+Transport-continuation acceptance: new positive classification/breaker and recovery
+cases failed before implementation; 28/28 focused tests then passed. Coverage
+includes zero/one/multiple fully observed local retries, unknown usage left intact,
+no task replays, HTTP 401/429 or missing/mismatched/duplicate upstream evidence
+rejection, policy/model/accounting drift refusal, actual-order streaks across
+harness-subset resumes, streak reset after a completed transport, persistent
+circuit breaking, 21 original attempts/receipt epochs preserved, and 179 pending
+slots. Syntax/diff checks passed. All tests used synthetic model execution; no
+credentials, account access, inference or task verifier reruns were used.
