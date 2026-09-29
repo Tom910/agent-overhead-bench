@@ -95,13 +95,8 @@ function checkedUsageBlob(value: unknown, protocol: Protocol): UsageBlob | null 
   return blob;
 }
 
-function servedModel(value: unknown): string | null {
-  const root = record(value);
-  if (root === null) return null;
-  for (const candidate of [root.model, record(root.response)?.model, record(root.message)?.model]) {
-    if (typeof candidate === "string") return candidate;
-  }
-  return null;
+function validServedModel(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0 && value === value.trim();
 }
 
 export type ResponseMetadata = {
@@ -116,8 +111,36 @@ export class ResponseUsageAccumulator {
   private usage: C1Usage | null = null;
   private model: string | null = null;
   private anthropicUsage: UsageBlob | null = null;
+  private readonly streamed: boolean;
+  private modelContradiction = false;
+  private responsesStream: boolean;
+  private terminalModel: string | null = null;
+  private invalidTerminalModel = false;
 
-  constructor(protocol: Protocol) { this.protocol = protocol; }
+  constructor(protocol: Protocol, streamed = false) {
+    this.protocol = protocol;
+    this.streamed = streamed;
+    this.responsesStream = streamed && protocol === "openai_responses";
+  }
+
+  /** An unobserved/malformed event may contain contradictory identity. */
+  invalidateModel(): void { this.modelContradiction = true; }
+
+  private observeModels(root: Record<string, unknown>): void {
+    const response = record(root.response);
+    for (const candidate of [root.model, response?.model, record(root.message)?.model]) {
+      if (!validServedModel(candidate)) continue;
+      if (this.model !== null && this.model !== candidate) this.modelContradiction = true;
+      this.model ??= candidate;
+    }
+    // Whole-body model inspection has no request path; infer only the explicit
+    // Responses SSE event family, never a requested model or generic DONE marker.
+    if (this.streamed && typeof root.type === "string" && root.type.startsWith("response.")) this.responsesStream = true;
+    if (this.responsesStream && (root.type === "response.completed" || root.type === "response.incomplete")) {
+      if (!validServedModel(response?.model)) this.invalidTerminalModel = true;
+      else this.terminalModel = response.model;
+    }
+  }
 
   invalidateUsage(): void {
     this.usage = null;
@@ -128,9 +151,9 @@ export class ResponseUsageAccumulator {
     if (payload.trim() === "[DONE]") return;
     let root: Record<string, unknown> | null;
     try { root = record(JSON.parse(payload)); }
-    catch { this.invalidateUsage(); return; }
-    if (root === null) { this.invalidateUsage(); return; }
-    this.model ??= servedModel(root);
+    catch { this.invalidateUsage(); this.invalidateModel(); return; }
+    if (root === null) { this.invalidateUsage(); this.invalidateModel(); return; }
+    this.observeModels(root);
     if (this.protocol === "unknown") return;
     if (this.protocol === "anthropic_messages" && root.type === "message_start") {
       this.invalidateUsage();
@@ -163,7 +186,8 @@ export class ResponseUsageAccumulator {
 
   result(): ResponseMetadata {
     return { usage: this.usage === null ? null : { ...this.usage },
-      usage_source: this.usage === null ? "unavailable" : "response_body", model_served: this.model };
+      usage_source: this.usage === null ? "unavailable" : "response_body",
+      model_served: this.modelContradiction || (this.responsesStream && (this.terminalModel === null || this.invalidTerminalModel)) ? null : this.model };
   }
 }
 
@@ -177,7 +201,7 @@ export function extractUsage(
   }
   const text = body.toString("utf8");
   const streamed = (contentType ?? "").includes("event-stream") || text.includes("data:");
-  const accumulator = new ResponseUsageAccumulator(protocol);
+  const accumulator = new ResponseUsageAccumulator(protocol, streamed);
   if (streamed) {
     for (const line of text.split("\n")) {
       const trimmed = line.trim();
@@ -237,22 +261,15 @@ export function peekModel(body: Buffer, cap = 16 * 1024 * 1024): string | null {
 export function peekServedModel(body: Buffer): string | null {
   const text = body.toString("utf8");
   try {
-    const model = servedModel(JSON.parse(text));
-    if (model !== null) return model;
-  } catch {
-    /* SSE or non-JSON */
-  }
+    JSON.parse(text);
+    const accumulator = new ResponseUsageAccumulator("unknown");
+    accumulator.consume(text);
+    return accumulator.result().model_served;
+  } catch { /* SSE or non-JSON */ }
+  const accumulator = new ResponseUsageAccumulator("unknown", true);
   for (const line of text.split("\n")) {
     const trimmed = line.trim();
-    if (!trimmed.startsWith("data:")) continue;
-    const payload = trimmed.slice(5).trim();
-    if (payload === "[DONE]") continue;
-    try {
-      const model = servedModel(JSON.parse(payload));
-      if (model !== null) return model;
-    } catch {
-      /* skip */
-    }
+    if (trimmed.startsWith("data:")) accumulator.consume(trimmed.slice(5).trim());
   }
-  return null;
+  return accumulator.result().model_served;
 }
