@@ -144,6 +144,10 @@ npm test
 
 Running the full comparison matrix (later stages) needs API keys and will cost money. CI never holds keys and never spends tokens.
 
+The experimental Codex subscription route has been retired after an
+[independent review](docs/reviews/2026-09-29-codex-integration-audit.md).
+The Codex CLI harness remains available through the normal API-backed runner.
+
 ## Local validation
 
 The proxy self-overhead calibration uses only the checked-in mock upstream and
