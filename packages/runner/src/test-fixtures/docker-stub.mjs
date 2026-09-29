@@ -75,6 +75,10 @@ if (entrypoint === "/opt/aob/runner-entrypoint.sh") {
     process.exit(1);
   }
   writeFileSync(source + "/SOLVED", "ok\n");
+  const behavior = existsSync(source + "/fixture-behavior") ? readFileSync(source + "/fixture-behavior", "utf8") : "";
+  if (behavior === "error") process.exit(7);
+  if (behavior === "timeout") await new Promise(() => { setInterval(() => {}, 1000); });
+
   if (args.includes("--json")) {
     process.stdout.write(JSON.stringify({ type: "thread.started", thread_id: "integration" }) + "\n");
     process.stdout.write(JSON.stringify({ type: "item.started", item: { id: "integration-command", type: "command_execution", command: "true" } }) + "\n");

@@ -22,7 +22,7 @@ instrument and future evidence; they do not retroactively certify old runs.
 - Keep one Linux host and serial measured execution. Use existing randomization, budget and resume machinery.
 - No npm dependencies. CI uses offline fixtures and mock providers only.
 - Keep pass rate, average task cost, total benchmark cost, cache and tokens first in the UI.
-- DeepSeek and exact `gpt-6-luna` are the intended model choices. Show only models with actual validated data. No subscription-to-generic-API bridge has been established; no quota-consuming probe is authorized here.
+- Show only models with actual validated data. DeepSeek remains the canonical dataset; any additional API-backed model requires a separately qualified report. The experimental subscription route has been retired. No quota-consuming probe is authorized here.
 - Future empirical calibration and a newly funded campaign remain separate from these engineering checks.
 
 Implementation and review evidence are recorded in the corresponding stage plans
