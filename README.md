@@ -9,10 +9,10 @@ dataset. See [METHODOLOGY.md](./METHODOLOGY.md) for measurement boundaries.
 Official v1 results are unpublished until the v1 dataset ships.
 
 <!-- CURRENT-CAMPAIGN:START -->
-## Linux results — five-CLI 1017 descriptive snapshot
+## Linux results — report-generated descriptive snapshot
 
 **Model: `deepseek/deepseek-v4.1-flash-1017` · one Linux host · 80/80 attempts.**
-Eight tasks × two repetitions per CLI: 16 runs each. 44 native passes and 36 failures. Collection is complete. Rows are alphabetical. This is not the frozen v1 dataset.
+8 tasks × two repetitions per CLI: 16 runs each. 44 native passes and 36 failures. Rows are alphabetical. This is not the frozen v1 dataset.
 
 80 completion-selected outcomes across two tool cohorts; 83 observed paid primary attempts and 52 prerequisites. This is a descriptive snapshot, not one randomized five-CLI experiment. Full experiment cost is unknown. Three partial native captures retain valid required grade artifacts. Native tool timing remains partial.
 
@@ -30,20 +30,18 @@ Each column has its own baseline. Higher pass/cache rates and lower costs/token 
 
 All harnesses combined: $10.088 for 80 selected runs at the shared reference prices.
 
-**Cost per task** averages each task's two repetitions, then the eight tasks. **Whole benchmark** sums all 16 runs per CLI, including failures. Cache and tokens are medians per attempt; input includes cached tokens. **Reference cost:** selected reference estimates total **$10.088272872**. These estimates use `deepseek-v41-1017-reference-2026-10-18`: $0.15/M uncached input, $0.003/M cached input and $0.6/M output. They are not actual billing.
+**Cost per task** averages each task's repetitions, then the tasks. **Whole benchmark** sums selected runs per CLI, including failures. Cache and tokens are medians per attempt; input includes cached tokens. **Reference cost:** selected reference estimates total **$10.088272872** using `deepseek-v41-1017-reference-2026-10-18`: $0.15/M uncached input, $0.003/M cached input and $0.6/M output. These are estimates, not actual billing.
 
-The three extra attempts have $2.284068444 in known prefix reference estimates and unknown full costs. The 52 prerequisites have a known reference subtotal of $5.283952392; their full cost is unknown. Reserves are not charges. See [all extra attempts](evidence/linux-results-2026-10-24/extra-attempts.json) and [both original cohorts and six collection windows](evidence/linux-results-2026-10-24/cohorts.json). Open ledger ends remain open.
+The 3 extra attempts have $2.284068444 in known prefix reference estimates and unknown full costs. The 52 prerequisites have a known reference subtotal of $5.283952392; full cost is unknown. Reserves are not charges. See [extra attempts](evidence/linux-results-2026-10-24/extra-attempts.json) and [cohorts and collection windows](evidence/linux-results-2026-10-24/cohorts.json).
 
-**Comparison confidence:** eight task clusters. Repeated runs are not independent tasks. Relative scores describe observed measurements; they do not establish causality or a universal winner. Recorded image and environment differences limit interpretation. Non-model time includes unobserved tools and harness work.
+**Comparison confidence:** 8 task clusters. Repeated runs are not independent tasks. Relative scores describe observed measurements; they do not establish causality or a universal winner. Recorded image and environment differences limit interpretation. Non-model time includes unobserved tools and harness work.
 
-[**Open the interactive website →**](https://tom910.github.io/agent-overhead-bench/) · [Result interpretation and native workflow findings](https://github.com/Tom910/agent-overhead-bench/blob/main/docs/snapshots/2026-10-24-five-cli.md) · [Detailed report](evidence/linux-results-2026-10-24/analysis.html) · [Canonical data](evidence/linux-results-2026-10-24/analysis.json) · [Source and reproduction](evidence/linux-results-2026-10-24/README.md) · [Historical 200-trial snapshot](evidence/linux-results-2026-09-19-r1/README.md) · [Earlier mixed-host snapshot](evidence/nonclaude-results-2026-09-14/README.md)
+[**Open the interactive website →**](https://tom910.github.io/agent-overhead-bench/) · [Report data](evidence/linux-results-2026-10-24/report.json) · [Result interpretation](https://github.com/Tom910/agent-overhead-bench/blob/main/docs/snapshots/2026-10-24-five-cli.md) · [Detailed report](evidence/linux-results-2026-10-24/analysis.html) · [Canonical data](evidence/linux-results-2026-10-24/analysis.json) · [Source and reproduction](evidence/linux-results-2026-10-24/README.md) · [Historical snapshot](evidence/linux-results-2026-09-19-r1/README.md) · [Earlier mixed-host snapshot](evidence/nonclaude-results-2026-09-14/README.md)
 
-One exact version2 [current-campaign pointer](evidence/current-campaign.json) selects this validated source. Historical source files and outcomes are unchanged. Snapshot collection ended at 2026-10-24T08:12:53.079Z. This is not an official release.
+The current-campaign pointer selects the validated source. Original outcomes are unchanged. Collection is complete as of 2026-10-24T08:12:53.079Z; official release status remains false.
 
-Refresh and check offline without API keys or model calls:
-
-```bash
-npm run report:refresh
+```sh
+npm run report:build
 npm run report:check
 ```
 <!-- CURRENT-CAMPAIGN:END -->
@@ -85,11 +83,15 @@ metric comparisons and a pass-rate/cost chart. Read the
 [result interpretation and native workflow findings](docs/snapshots/2026-10-24-five-cli.md)
 for the verified Cline commit-check detail and comparison limits.
 
+`npm run report:build` generates `report.json` from validated inputs, then builds
+the page from that file. The same report supplies the README and detailed report
+overview values. Use `npm run site:build` to rebuild the page from an existing
+report, or `npm run report:check` to check saved output. Do not edit generated HTML.
+
 To refresh and preview it locally (no API keys or model calls):
 
 ```bash
-npm run report:refresh
-npm run site:build
+npm run report:build
 python3 -m http.server 8000 --directory _site
 ```
 

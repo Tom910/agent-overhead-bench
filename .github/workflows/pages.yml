@@ -21,7 +21,7 @@ jobs:
       - run: npm run typecheck --workspace @aob/report
       - run: npm run test --workspace @aob/report -- --maxWorkers=1
       - name: Build validated static results (offline, no API keys)
-        run: npm run site:build
+        run: npm run report:build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

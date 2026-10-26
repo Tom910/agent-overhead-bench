@@ -7,6 +7,10 @@ export type OverviewRow = {
   harness: string; version: string; selected: number; passes: number; pass_rate: number; tasks: number;
   cost: Measurement; benchmark: Measurement; cache: Measurement; input: Measurement; output: Measurement;
 };
+export type DisplayOverviewSource = { overviews: readonly {
+  key: string; run_ids: readonly string[]; rows: readonly (OverviewRow & { estimated: boolean })[];
+}[] };
+export type OverviewPresentation = ReadonlyMap<string, boolean> | DisplayOverviewSource;
 
 /** Presentation values only; the recorded rows and attempts stay unchanged. */
 export function displayOverview(rows: OverviewRow[], attempts: AnalysisAttempt[], estimates?: ReadonlyMap<string, boolean>): (OverviewRow & { estimated: boolean })[] {

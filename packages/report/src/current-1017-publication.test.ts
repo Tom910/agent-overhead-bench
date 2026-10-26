@@ -1,9 +1,11 @@
 import { createHash } from "node:crypto";
-import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, expect, it } from "vitest";
 import { publishCurrentCampaign, loadValidatedCurrentCampaign } from "./current-campaign.js";
+import { loadPublishedReport, buildPublishedSite } from "./current-report.js";
+import { renderPublishedReport } from "./report-document.js";
 
 const roots: string[] = [], dataset = "linux-results-2026-10-24";
 afterEach(() => { for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true }); });
@@ -39,7 +41,7 @@ it("publishes truthful80 default views, limits and local downloads from the exac
 });
 it("checks without writes, repairs generated views, and preserves every immutable byte", () => {
   const f = fixture(); f.run();
-  const files = ["source.json", "analysis.json", "summary.json", "cohorts.json", "extra-attempts.json", "native-evidence.json", "collection-ledger.json"];
+  const files = ["source.json", "analysis.json", "summary.json", "cohorts.json", "extra-attempts.json", "native-evidence.json", "collection-ledger.json", "cline-workflow-audit.json"];
   const original = files.map(name => readFileSync(join(f.dir, name)));
   for (const file of [join(f.root, "site/index.html"), join(f.dir, "diagnostics.json"), join(f.dir, "index.html"), join(f.dir, "decision-cards.json")]) {
     writeFileSync(file, "stale"); expect(() => f.run(true)).toThrow(/stale/);
@@ -70,7 +72,8 @@ it("shows compact Cline estimates for each scope without replacing native grades
   const panels = JSON.parse(html.match(/<script id="site-data" type="application\/json">([\s\S]*?)<\/script>/)![1]!).panels;
   const views = panels[0].views;
   const all = views[0].rows.find((r: { harness: string }) => r.harness === "cline");
-  expect(all.pass_rate).toBe(0); expect(all.scores.pass).toBe(0);
+  expect(all.pass_rate).toBe(37.5); expect(all.scores.pass).toBeCloseTo(6 / 13 * 100);
+  expect(all.recorded).toEqual({ passes: 0, pass_rate: 0, pass_score: 0 });
   expect(all.pass_estimate).toEqual({ passed: 6, total: 16, rate: 37.5 });
   expect(all.pass_display).toEqual({ passed: 6, rate: 37.5, estimated: true, score: 6 / 13 * 100 });
   expect(all.display.pass).toBe("37.5%");
@@ -104,3 +107,51 @@ it("rejects an edited Cline trace dossier instead of approving a new pass count"
   expect(() => f.run()).toThrow(/Cline.*audit/);
   expect(() => f.run(true)).toThrow(/Cline.*audit/);
 });
+
+it("builds page output from the bound report even after saved HTML is removed", () => {
+  const f = fixture(); f.run();
+  const report = loadPublishedReport(f.root);
+  expect(report.dataset).toBe(dataset);
+  expect(JSON.parse(readFileSync(join(f.dir, "report.json"), "utf8"))).toEqual(report);
+  rmSync(join(f.root, "site/index.html")); rmSync(join(f.dir, "index.html"));
+  rmSync(join(f.dir, "analysis.html")); rmSync(join(f.dir, "report.html"));
+  const out = join(f.root, "built"); buildPublishedSite(f.root, out);
+  expect(readFileSync(join(out, "index.html"), "utf8")).toBe(renderPublishedReport(report));
+  expect(readFileSync(join(out, "data/report.json"), "utf8")).toBe(readFileSync(join(f.dir, "report.json"), "utf8"));
+});
+
+it("rejects a forged report even when adjacent provenance is updated to match", () => {
+  const f = fixture(); f.run();
+  const path = join(f.dir, "report.json"), report = JSON.parse(readFileSync(path, "utf8"));
+  report.panels[0].views[0].rows[0].display.pass = "100.0%";
+  const bytes = JSON.stringify(report, null, 2) + "\n"; writeFileSync(path, bytes);
+  const provenance = JSON.parse(readFileSync(join(f.dir, "provenance.json"), "utf8"));
+  provenance.artifacts["report.json"] = "sha256:" + createHash("sha256").update(bytes).digest("hex");
+  writeFileSync(join(f.dir, "provenance.json"), JSON.stringify(provenance));
+  expect(() => loadPublishedReport(f.root)).toThrow(/report.*(differ|reproduc|binding)/i);
+});
+
+it("rejects forged derived downloads with matching adjacent hashes", () => {
+  const f = fixture(); f.run();
+  const file = "diagnostics.json", bytes = '{"forged":true}\n';
+  writeFileSync(join(f.dir, file), bytes);
+  const provenance = JSON.parse(readFileSync(join(f.dir, "provenance.json"), "utf8"));
+  provenance.artifacts[file] = "sha256:" + createHash("sha256").update(bytes).digest("hex");
+  writeFileSync(join(f.dir, "provenance.json"), JSON.stringify(provenance));
+  expect(() => buildPublishedSite(f.root, join(f.root, "built"))).toThrow(/download reproducibility differs/);
+});
+
+it("rejects unsafe output locations and symlinked downloads", () => {
+  const f = fixture(); f.run();
+  const original = readFileSync(join(f.dir, "analysis.json"));
+  for (const target of [f.root, join(f.root, "evidence"), join(f.root, "scripts"), join(f.root, "..", "outside")]) {
+    expect(() => buildPublishedSite(f.root, target)).toThrow(/isolated build directory/);
+  }
+  symlinkSync(f.dir, join(f.root, "_site"));
+  expect(() => buildPublishedSite(f.root, join(f.root, "_site"))).toThrow(/isolated build directory/);
+  rmSync(join(f.root, "_site"));
+  const path = join(f.dir, "analysis.md"), elsewhere = join(f.root, "elsewhere.md");
+  writeFileSync(elsewhere, readFileSync(path)); rmSync(path); symlinkSync(elsewhere, path);
+  expect(() => buildPublishedSite(f.root, join(f.root, "built"))).toThrow(/unsafe report download/);
+  expect(readFileSync(join(f.dir, "analysis.json"))).toEqual(original);
+}, 30000);

@@ -1,10 +1,11 @@
+import { ConfigError } from "@aob/contracts";
 import type { AnalysisAttempt, AnalysisExport, AnalysisMetric, AnalysisPopulation, MatchedComparison, TaskDistribution } from "./analysis.js";
 import { summarizeBenchmarkCosts } from "./benchmark-cost.js";
 import type { AnalysisRequest } from "./request-analysis.js";
 import { comparisonGroups, relativeMetricScore, type RelativeMetric, type ComparisonGroup } from "./comparison-overview.js";
 import type { PriceRates } from "./aggregate.js";
 import { median } from "./derive.js";
-import { summarizeOverview, displayOverview, overviewValue, type OverviewRow } from "./overview.js";
+import { summarizeOverview, displayOverview, overviewValue, type OverviewRow, type OverviewPresentation } from "./overview.js";
 
 type Table = { headers: string[]; rows: string[][]; outcomes?: AnalysisAttempt["outcome"][] };
 
@@ -213,8 +214,17 @@ function taskCosts(attempts: AnalysisAttempt[], rates: PriceRates | null): Table
         prefix + overviewValue(t.known_usd, "cost"), `${t.complete_attempts}/${t.selected}`];
     })) };
 }
-export function overviewMarkdown(attempts: AnalysisAttempt[], rates: PriceRates | null = null, compact = false, estimates?: ReadonlyMap<string, boolean>): string {
-  const rows = displayOverview(costOverview(attempts, rates), attempts, estimates);
+function preparedOverview(attempts: AnalysisAttempt[], rates: PriceRates | null, presentation?: OverviewPresentation) {
+  if (presentation && "overviews" in presentation) {
+    const ids = new Set(attempts.map(attempt => attempt.run_id));
+    const prepared = presentation.overviews.find(view => view.run_ids.length === attempts.length && view.run_ids.every(id => ids.has(id)));
+    if (!prepared) throw new ConfigError("report overview does not match selected runs");
+    return [...prepared.rows];
+  }
+  return displayOverview(costOverview(attempts, rates), attempts, presentation);
+}
+export function overviewMarkdown(attempts: AnalysisAttempt[], rates: PriceRates | null = null, compact = false, presentation?: OverviewPresentation): string {
+  const rows = preparedOverview(attempts, rates, presentation);
   if (compact) {
     const score = (row: OverviewRow, key: RelativeMetric) => {
       const text = relativeText(row, rows, key);
@@ -237,8 +247,8 @@ export function overviewMarkdown(attempts: AnalysisAttempt[], rates: PriceRates 
   });
 }
 
-function overviewHtml(attempts: AnalysisAttempt[], rates: PriceRates | null = null, estimates?: ReadonlyMap<string, boolean>): string {
-  const rows = displayOverview(costOverview(attempts, rates), attempts, estimates);
+function overviewHtml(attempts: AnalysisAttempt[], rates: PriceRates | null = null, presentation?: OverviewPresentation): string {
+  const rows = preparedOverview(attempts, rates, presentation);
   const metricBar = (row: OverviewRow, key: RelativeMetric) => {
     const score = relativeMetricScore(row, rows, key);
     return `${score === null ? "" : `<span class="metric-track" aria-hidden="true"><span style="width:${score.toFixed(2)}%"></span></span>`}<span class="relative-score">${relativeText(row, rows, key)}</span>`;
@@ -250,12 +260,12 @@ function overviewHtml(attempts: AnalysisAttempt[], rates: PriceRates | null = nu
 ${primaryMetrics.map(([key, label, kind]) => `<div class="primary-metric" data-metric="${key}"><span class="metric-label">${key === "cost" && rates !== null ? "Average reference cost / task" : label}</span><strong tabindex="0" title="${html(row[key].value === null ? "No measured values" : String(row[key].value))}" aria-label="${html(label + ': ' + (row[key].value === null ? 'Unavailable' : String(row[key].value)))}">${metricValue(row, key, kind)}</strong>${metricBar(row, key)}<small>${overviewCoverage(row, row[key].n)}</small></div>`).join("")}</div>`).join("")}</div><details><summary>Metric definitions</summary><p>${overviewNote}</p><p>${relativeNote}</p><p>K = 1,000; M = 1,000,000. Focus a value for its exact accessible value. Overview values include every selected outcome and do not change with the detail outcome filter.</p></details></div>`;
 }
 
-export function renderAnalysisMarkdown(data: AnalysisExport, estimates?: ReadonlyMap<string, boolean>): string {
+export function renderAnalysisMarkdown(data: AnalysisExport, presentation?: OverviewPresentation): string {
   const lines = ["# Selected-attempt analysis", "", `Selected attempts: ${data.attempts.length}. Populations: ${data.populations.length}.`, "", overviewNote, ""];
   if (data.attempts.length === 0) lines.push("No selected attempts.", "");
   for (const [index, group] of comparisonGroups(data).entries()) {
     const population = group.originals[0]!;
-    lines.push(`## Comparison ${index + 1}: ${md(population.model)} · ${md(population.host.os)}`, "", "### At a glance", "", overviewMarkdown(group.attempts, group.rates, false, estimates), "", benchmarkTotalNote(group.attempts, group.rates), "", "### Cost by task", "", "Average across each task’s repetitions; all-repetition totals sum to the whole benchmark. ≥ marks a known lower bound where accounting is incomplete.", "", markdownTable(taskCosts(group.attempts, group.rates)), "", referenceNote(group), "", imageVariantNote(group), "", relativeNote, "");
+    lines.push(`## Comparison ${index + 1}: ${md(population.model)} · ${md(population.host.os)}`, "", "### At a glance", "", overviewMarkdown(group.attempts, group.rates, false, presentation), "", benchmarkTotalNote(group.attempts, group.rates), "", "### Cost by task", "", "Average across each task’s repetitions; all-repetition totals sum to the whole benchmark. ≥ marks a known lower bound where accounting is incomplete.", "", markdownTable(taskCosts(group.attempts, group.rates)), "", referenceNote(group), "", imageVariantNote(group), "", relativeNote, "");
   }
   lines.push("## Detailed original accounting", "");
   for (const [index, population] of data.populations.entries()) {
@@ -441,7 +451,7 @@ function sortOverview() {
 overviewSort.addEventListener('change', sortOverview);
 `;
 
-export function renderAnalysisHtml(data: AnalysisExport, estimates?: ReadonlyMap<string, boolean>): string {
+export function renderAnalysisHtml(data: AnalysisExport, presentation?: OverviewPresentation): string {
   const groups = comparisonGroups(data);
   const populations = groups.map((group, index) => {
     const heading = group.originals[0]!;
@@ -457,7 +467,7 @@ export function renderAnalysisHtml(data: AnalysisExport, estimates?: ReadonlyMap
     const distributions = population.distributions.map((row) => `<div data-outcome="${html(row.outcome)}"><details><summary>${html(row.task)} · ${html(row.harness)} @ ${html(row.version)} · ${outcome(row.outcome)} · selected ${row.attempts.length}, timing n=${row.metrics.end_to_end.n}, missing=${row.metrics.end_to_end.missing}, median ${duration(row.metrics.end_to_end.median)}</summary><p class="identity">Task identity: ${html(row.task_key)}</p>${htmlTable(distributionTable(row, true))}</details></div>`).join("");
     return `<div class="original-population"><h3>Original accounting: ${html(population.price_book)}</h3><details><summary>Recorded population identity</summary><dl>${identity(population).map(([name, value]) => `<dt>${html(name)}</dt><dd>${html(value)}</dd>`).join("")}</dl></details><details class="secondary-details"><summary>Explore timing, outcomes and request evidence</summary><h3>Coverage</h3><p>All selected outcomes; these denominators remain visible when outcome filters are applied.</p>${htmlTable(coverage(attempts, population.distributions))}<h3>Selected spend by outcome</h3>${htmlTable(outcomeCosts(attempts))}<h3>Request-level summaries</h3>${htmlTable(requestCoverage(attempts))}<h3>Common successful tasks</h3>${comparisons}<details><summary>Individual run timings</summary>${timingDots(attempts, population.distributions)}</details><h3>Per-task outcome distributions</h3>${distributions}${annotatedSection(data, attempts)}</details></div>`;
     }).join("\n");
-    return `<section class="population" data-population="${index}"><h2>Comparison ${index + 1}: ${html(heading.model)} · ${html(heading.host.os)}</h2>${overviewHtml(group.attempts, group.rates, estimates)}<p>${html(benchmarkTotalNote(group.attempts, group.rates))}</p><details><summary>Cost by task — repetition averages and totals</summary><p>Average across each task’s repetitions; all-repetition totals sum to the whole benchmark. ≥ marks a known lower bound where accounting is incomplete.</p>${htmlTable(taskCosts(group.attempts, group.rates))}</details><p class="overview-note">${html(referenceNote(group))}</p><p class="overview-note">${html(imageVariantNote(group))}</p><details class="secondary-details"><summary>Original accounting and detailed evidence</summary>${details}</details></section>`;
+    return `<section class="population" data-population="${index}"><h2>Comparison ${index + 1}: ${html(heading.model)} · ${html(heading.host.os)}</h2>${overviewHtml(group.attempts, group.rates, presentation)}<p>${html(benchmarkTotalNote(group.attempts, group.rates))}</p><details><summary>Cost by task — repetition averages and totals</summary><p>Average across each task’s repetitions; all-repetition totals sum to the whole benchmark. ≥ marks a known lower bound where accounting is incomplete.</p>${htmlTable(taskCosts(group.attempts, group.rates))}</details><p class="overview-note">${html(referenceNote(group))}</p><p class="overview-note">${html(imageVariantNote(group))}</p><details class="secondary-details"><summary>Original accounting and detailed evidence</summary>${details}</details></section>`;
   }).join("\n");
   const options = groups.map((group, index) => { const population = group.originals[0]!; return `<option value="${index}">Population ${index + 1}: ${html(population.model)} · ${html(group.reference_book ?? population.price_book)} · ${html(population.host.os)} · ${html(population.condition)}</option>`; }).join("");
   return `<!doctype html>

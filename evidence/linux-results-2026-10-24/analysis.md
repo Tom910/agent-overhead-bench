@@ -1527,12 +1527,12 @@ Exploratory 95% percentile task-cluster bootstrap, 10,000 deterministic resample
 
 ## Original incomplete attempts
 
-The following three paid primary attempts are outside the selected80. The original Cline timeout lasted 10,800.372 seconds. Open ledger ends stay open. Known prefix estimates do not give complete charges.
+Three extra attempts are outside the selected 80. Prefix estimates do not give complete charges.
 
 | Attempt | Outcome | Adapter time | Known prefix reference estimate | Full cost |
 |---|---|---|---|---|
-| pinned:cline:textual-richlog-follow-state:0 | timeout | 10800.372 s | $1.836203754 | unknown |
+| pinned:cline:textual-richlog-follow-state:0 | timeout | 10,800.372 s | $1.836203754 | unknown |
 | pinned:cline:tomlkit-toml-table-converters:1 | budget-interrupted | unknown | $0.444080070 | unknown |
 | pinned:pi:textual-richlog-follow-state:0 | interrupted | unknown | $0.003784620 | unknown |
 
-See [all extra facts and captured request series](extra-attempts.json), [original cohorts and windows](cohorts.json), and [collection ledger](collection-ledger.json). Event-only prefix estimates are separate from the ledger's full-artifact subtotal. Reserved amounts are not charges. The zero-request operator startup failure and 5.671709 ms offline proxy calibration rejection remain recorded; the 5 ms threshold did not change.
+See [all extra attempts](extra-attempts.json), [cohorts and windows](cohorts.json), and [collection ledger](collection-ledger.json). Reserves are not charges.

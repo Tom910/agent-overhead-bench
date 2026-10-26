@@ -60,6 +60,7 @@ The explained-only archive correction is tracked in
 
 | Plan | Status |
 |---|---|
+| [S6-report-driven-page-plan.md](./S6-report-driven-page-plan.md) | Report JSON drives the page and shared overview values; one offline build command |
 | [S8-five-cli-1017-publication-plan.md](./S8-five-cli-1017-publication-plan.md) | Verified 80-trial descriptive snapshot, fresh independent approval, report and GitHub Pages publication |
 | [S5-attempt-evidence-retention-plan.md](./S5-attempt-evidence-retention-plan.md) | In progress: private retry retention implemented; independent review correction and candidate capture next |
 | [S3-task-validity-gate-plan.md](./S3-task-validity-gate-plan.md) | Packaged: evidence-bound validity cards, control checks and fresh verifier execution |
