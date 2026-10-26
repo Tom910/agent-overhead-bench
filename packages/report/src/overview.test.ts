@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { AnalysisAttempt } from "./analysis.js";
-import { summarizeOverview } from "./overview.js";
+import { displayOverview, summarizeOverview } from "./overview.js";
 
 const row = (overrides: Partial<AnalysisAttempt> = {}) => ({
   harness: "alpha", version: "v1", task: "one", task_base_revision: "base",
@@ -29,5 +29,16 @@ describe("overview summaries", () => {
     expect(summaries[0]).toMatchObject({ version: "v1", tasks: 2, cost: { value: null, n: 0 } });
     expect(summaries[1]).toMatchObject({ version: "v2", selected: 1 });
     expect(summarizeOverview([])).toEqual([]);
+  });
+
+  it("uses complete trace estimates for presentation without changing recorded measurements", () => {
+    const attempts = [row({ run_id: "one", outcome: "verify_error" }), row({ run_id: "two", outcome: "verify_error" })];
+    const original = summarizeOverview(attempts), before = structuredClone(original);
+    const shown = displayOverview(original, attempts, new Map([["one", true], ["two", false]]));
+    expect(shown[0]).toMatchObject({ passes: 1, pass_rate: 50, estimated: true });
+    expect(original).toEqual(before);
+    expect(attempts.every(a => a.outcome === "verify_error")).toBe(true);
+    for (const metric of ["cost", "benchmark", "cache", "input", "output"] as const) expect(shown[0]![metric]).toEqual(original[0]![metric]);
+    expect(() => displayOverview(original, attempts, new Map([["one", true]]))).toThrow(/Incomplete pass estimate/);
   });
 });

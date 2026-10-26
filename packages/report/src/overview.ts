@@ -1,11 +1,24 @@
 import type { AnalysisAttempt } from "./analysis.js";
 import { median } from "./derive.js";
+import { ConfigError } from "@aob/contracts";
 
 type Measurement = { value: number | null; n: number };
 export type OverviewRow = {
   harness: string; version: string; selected: number; passes: number; pass_rate: number; tasks: number;
   cost: Measurement; benchmark: Measurement; cache: Measurement; input: Measurement; output: Measurement;
 };
+
+/** Presentation values only; the recorded rows and attempts stay unchanged. */
+export function displayOverview(rows: OverviewRow[], attempts: AnalysisAttempt[], estimates?: ReadonlyMap<string, boolean>): (OverviewRow & { estimated: boolean })[] {
+  return rows.map(row => {
+    const runs = attempts.filter(a => a.harness === row.harness && a.version === row.version);
+    const known = estimates ? runs.filter(a => estimates.has(a.run_id)) : [];
+    if (known.length === 0) return { ...row, estimated: false };
+    if (known.length !== runs.length) throw new ConfigError("Incomplete pass estimate for selected scope");
+    const passes = known.filter(a => estimates!.get(a.run_id)).length;
+    return { ...row, passes, pass_rate: passes / row.selected * 100, estimated: true };
+  });
+}
 
 /** Caller supplies one recorded population; summaries include all selected outcomes. */
 export function summarizeOverview(attempts: AnalysisAttempt[], costForAttempt: (attempt: AnalysisAttempt) => number | null = attempt => attempt.cost_usd): OverviewRow[] {

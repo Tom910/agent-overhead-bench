@@ -13,13 +13,13 @@
   let viewIndex = 0, sort = "harness", ascending = true, chartMetric = "cost", selected = null;
   const scoreText = score => score === null ? "Not scored" : `${(score === 100 ? 100 : Math.min(99.9, score)).toFixed(1)}% of best`;
   const current = () => data.views[viewIndex];
-  const value = (r,key) => key === "harness" ? r.label : key === "pass" ? r.pass_rate : r[key].value;
+  const value = (r,key) => key === "harness" ? r.label : key === "pass" ? r.pass_display.rate : r[key].value;
   const dot = h => `<span class="dot" style="background:${colors[h]}"></span>`;
   const filtered = () => current().rows.filter(r => visible.has(r.id));
   function details(row) {
     selected = row.id;
     document.querySelectorAll(".plot-point").forEach(point => point.setAttribute("aria-pressed", String(point.dataset.harness === selected)));
-    $("chart-detail").innerHTML = `<span class="eyebrow">${esc(current().task || `ALL ${data.views.length - 1} TASKS`)}</span><h3>${dot(row.id)} ${esc(row.label)}</h3><p><strong>${row.display.pass}</strong> pass rate · ${row.passes}/${row.selected} runs</p><p><strong>${row.display[chartMetric]}</strong> ${chartMetric === "cost" ? "average / task" : "selected-run total"}</p><p class="muted">Pass rate: ${scoreText(row.scores.pass)}<br>Cost: ${scoreText(row.scores[chartMetric])}</p>`;
+    $("chart-detail").innerHTML = `<span class="eyebrow">${esc(current().task || `ALL ${data.views.length - 1} TASKS`)}</span><h3>${dot(row.id)} ${esc(row.label)}</h3><p><strong>${row.display.pass}</strong> ${row.pass_display.estimated ? "estimated pass rate" : "pass rate"} · ${row.pass_display.passed}/${row.selected} runs</p><p><strong>${row.display[chartMetric]}</strong> ${chartMetric === "cost" ? "average / task" : "selected-run total"}</p><p class="muted">Pass rate: ${scoreText(row.pass_display.score)}<br>Cost: ${scoreText(row.scores[chartMetric])}</p>`;
   }
   function renderChart(rows) {
     const eligible = rows.filter(r => r[chartMetric].n === r.selected && r[chartMetric].value !== null);
@@ -35,12 +35,13 @@
     for (let i = 0; i <= ticks; i++) svg += `<text x="${x(max*i/ticks)}" y="${top+height+24}" text-anchor="middle">$${(max*i/ticks).toFixed(chartMetric === "cost" ? 3 : 2)}</text>`;
     svg += `<text x="${left}" y="16">PASS RATE ↑</text><text x="${canvasWidth/2}" y="${top+height+52}" text-anchor="middle">${chartMetric === "cost" ? "AVERAGE COST / TASK" : "SELECTED BENCHMARK COST"} (USD) →</text>`;
     // Place labels away from every marker and previously placed label.
-    const points = eligible.map(row => ({row, x:x(row[chartMetric].value), y:y(row.pass_rate)}));
+    const points = eligible.map(row => ({row, x:x(row[chartMetric].value), y:y(row.pass_display.rate)}));
     const labels = [];
     const intersects = (a,b) => a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y;
     for (const point of points.toSorted((a,b) => a.y-b.y)) {
       const {row, x:px, y:py} = point;
-      const labelWidth = row.label.length * 7 + 6;
+      const pointLabel = row.label + (row.pass_display.estimated ? " (est.)" : "");
+      const labelWidth = pointLabel.length * 7 + 6;
       const candidates = [[13,4],[13,-15],[-labelWidth-13,4],[-labelWidth-13,-15],[13,24],[13,-34],[-labelWidth-13,24],[13,-53],[13,43]];
       let box;
       for (const [dx,dy] of candidates) {
@@ -53,7 +54,7 @@
       labels.push(box);
       const labelX = box.x, labelY = box.y+12;
       const anchorX = px < box.x ? box.x : box.x+box.w;
-      svg += `<g class="plot-point" tabindex="0" role="button" data-harness="${esc(row.id)}" aria-label="${esc(row.label)}: ${row.display.pass} pass rate, ${row.display[chartMetric]}. Show details."><title>${esc(row.label)}: ${row.display.pass}, ${row.display[chartMetric]}</title><circle cx="${px}" cy="${py}" r="14" fill="transparent"/><line x1="${px}" y1="${py}" x2="${anchorX}" y2="${labelY-4}" stroke="${colors[row.id]}" opacity=".45"/><circle class="selection-ring" cx="${px}" cy="${py}" r="12" fill="none"/><circle class="marker" cx="${px}" cy="${py}" r="7" fill="${colors[row.id]}"/><text class="plot-label" x="${labelX}" y="${labelY}">${esc(row.label)}</text></g>`;
+      svg += `<g class="plot-point" tabindex="0" role="button" data-harness="${esc(row.id)}" aria-label="${esc(row.label)}: ${row.display.pass} ${row.pass_display.estimated ? "estimated " : ""}pass rate, ${row.display[chartMetric]}. Show details."><title>${esc(row.label)}: ${row.display.pass}, ${row.display[chartMetric]}</title><circle cx="${px}" cy="${py}" r="14" fill="transparent"/><line x1="${px}" y1="${py}" x2="${anchorX}" y2="${labelY-4}" stroke="${colors[row.id]}" opacity=".45"/><circle class="selection-ring" cx="${px}" cy="${py}" r="12" fill="none"/><circle class="marker" cx="${px}" cy="${py}" r="7" fill="${colors[row.id]}"/><text class="plot-label" x="${labelX}" y="${labelY}">${esc(pointLabel)}</text></g>`;
     }
     $("chart").innerHTML = svg + "</svg>";
     $("legend").innerHTML = rows.map(r => `<span>${dot(r.id)}${esc(r.label)}</span>`).join("");
@@ -62,7 +63,7 @@
       point.addEventListener("click", show); point.addEventListener("focus", show);
       point.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); show(); } });
     });
-    const active = eligible.find(r => r.id === selected) || eligible.toSorted((a,b) => b.pass_rate - a.pass_rate)[0];
+    const active = eligible.find(r => r.id === selected) || eligible.toSorted((a,b) => b.pass_display.rate - a.pass_display.rate)[0];
     if (active) details(active);
     else { selected = null; $("chart-detail").innerHTML = '<span class="eyebrow">EXPLORE THE PLOT</span><h3>Cost meets outcome.</h3><p>Select a point to inspect its measurements.</p><p class="muted">Up = more passes<br>Left = lower cost</p>'; }
     if (!eligible.length) $("chart-detail").innerHTML = '<h3>Cost unavailable</h3><p>No complete cost measurements in this selection. See the table for known lower bounds.</p>';
@@ -102,7 +103,7 @@
     rows.sort((a,b) => { const av = value(a,sort), bv = value(b,sort); if (av === null) return bv === null ? 0 : 1; if (bv === null) return -1; const result = typeof av === "string" ? av.localeCompare(bv) : av-bv; return (ascending ? 1 : -1)*result; });
     $("mobile-sort").value = sort;
     $("active-scope").textContent = `${view.task || `All ${data.views.length - 1} tasks`} · ${view.rows[0].selected} runs per harness · showing ${rows.length} of ${harnesses.length} harnesses`;
-    $("results-body").innerHTML = rows.map(row => `<tr><th scope="row">${dot(row.id)} ${esc(row.label)}<small>${row.passes}/${row.selected} passes</small></th>${data.metrics.map(m => { const score = row.scores[m.key]; const best = score === 100; return `<td data-label="${esc(m.label)}"><span class="value">${esc(row.display[m.key])}</span>${m.key === "pass" && row.pass_estimate ? `<small class="pass-estimate">${esc(row.pass_estimate.rate)}% estimated · ${row.pass_estimate.passed}/${row.pass_estimate.total}</small>` : ""}<span class="score ${best ? "best" : ""}">${scoreText(score)}</span>${score === null ? "" : `<span class="track" aria-hidden="true"><span class="${best ? "best" : ""}" style="width:${Math.max(0,Math.min(100,score))}%"></span></span>`}</td>`; }).join("")}</tr>`).join("");
+    $("results-body").innerHTML = rows.map(row => `<tr><th scope="row">${dot(row.id)} ${esc(row.label)}<small>${row.pass_display.passed}/${row.selected} ${row.pass_display.estimated ? "estimated passes" : "passes"}</small></th>${data.metrics.map(m => { const score = m.key === "pass" ? row.pass_display.score : row.scores[m.key]; const best = score === 100; return `<td data-label="${esc(m.label)}"><span class="value">${esc(row.display[m.key])}</span>${m.key === "pass" && row.pass_estimate ? `<small class="pass-estimate">estimated</small>` : ""}<span class="score ${best ? "best" : ""}">${scoreText(score)}</span>${score === null ? "" : `<span class="track" aria-hidden="true"><span class="${best ? "best" : ""}" style="width:${Math.max(0,Math.min(100,score))}%"></span></span>`}</td>`; }).join("")}</tr>`).join("");
     $("total-note").textContent = view.total + (visible.size < harnesses.length ? " Total includes hidden harnesses." : "");
     document.querySelectorAll("[data-sort]").forEach(button => { button.parentElement.setAttribute("aria-sort",button.dataset.sort === sort ? ascending ? "ascending" : "descending" : "none"); button.querySelector("span").textContent = button.dataset.sort === sort ? ascending ? "↑" : "↓" : "↕"; });
     renderChart(rows);
@@ -122,7 +123,7 @@
     $("confidence-baseline").innerHTML = data.views[0].rows.map(r => `<option value="${esc(r.id)}">${esc(r.label)}</option>`).join("");
     $("confidence-baseline").value = data.baseline || data.views[0].rows.toSorted((a,b) => b.pass_rate-a.pass_rate || a.id.localeCompare(b.id))[0].id;
     $("harness-controls").innerHTML = harnesses.map(h => `<button class="harness-toggle" type="button" data-harness="${esc(h)}" aria-pressed="true">${dot(h)}${esc(label(h))}</button>`).join("");
-    $("task-matrix").innerHTML = `<table><caption class="sr-only">Passes and selected repetitions per task, all measured harnesses.</caption><thead><tr><th scope="col">Task</th>${harnesses.map(h => `<th scope="col">${esc(label(h))}</th>`).join("")}</tr></thead><tbody>${data.views.slice(1).map((v,i) => `<tr><th scope="row"><button class="task-button" data-task-index="${i+1}">${esc(v.task)}</button></th>${v.rows.map(r => `<td><span class="heat" style="background:rgba(0,125,104,${.04+r.pass_rate/100*.24})">${r.passes} / ${r.selected}</span></td>`).join("")}</tr>`).join("")}</tbody></table>`;
+    $("task-matrix").innerHTML = `<table><caption class="sr-only">Passes and selected repetitions per task, all measured harnesses.</caption><thead><tr><th scope="col">Task</th>${harnesses.map(h => `<th scope="col">${esc(label(h))}</th>`).join("")}</tr></thead><tbody>${data.views.slice(1).map((v,i) => `<tr><th scope="row"><button class="task-button" data-task-index="${i+1}">${esc(v.task)}</button></th>${v.rows.map(r => `<td><span class="heat" style="background:rgba(0,125,104,${.04+r.pass_display.rate/100*.24})">${r.pass_display.passed} / ${r.selected}${r.pass_display.estimated ? " est." : ""}</span></td>`).join("")}</tr>`).join("")}</tbody></table>`;
     $("model-name").textContent = data.model;
     $("model-name").setAttribute("title", data.model);
     $("confidence-method").textContent = `${data.views.length - 1} task clusters; 10,000 deterministic task-cluster resamples. Exploratory 95% intervals, no winner-selection correction. Repetitions are not independent tasks.`;

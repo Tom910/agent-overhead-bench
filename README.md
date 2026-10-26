@@ -18,11 +18,11 @@ Eight tasks × two repetitions per CLI: 16 runs each. 44 native passes and 36 fa
 
 Cline: **37.5% estimated (6/16)**. [Method notes](evidence/linux-results-2026-10-24/cline-workflow-audit.json).
 
-Each column has its own baseline. Higher pass/cache rates and lower costs/token usage score higher. Relative scores describe the observed values.
+Each column has its own baseline. Higher pass/cache rates and lower costs/token usage score higher. Relative scores describe the displayed values.
 
 | Harness | Pass rate | Avg cost / task | Whole benchmark | Cache rate | Tokens in | Tokens out |
 | --- | --- | --- | --- | --- | --- | --- |
-| cline | 0.0% (0/16) · **0.0%** | $0.308 · **20.2%** | $4.931 · **20.2%** | 96.4% · **97.4%** | 12.67M · **35.1%** | 163.4K · **35.6%** |
+| cline | 37.5% estimated (6/16) · **46.2%** | $0.308 · **20.2%** | $4.931 · **20.2%** | 96.4% · **97.4%** | 12.67M · **35.1%** | 163.4K · **35.6%** |
 | codex | 81.3% (13/16) · **100.0%** | $0.077 · **80.8%** | $1.235 · **80.8%** | 98.6% · **99.5%** | 6.83M · **65.0%** | 73.6K · **79.2%** |
 | hermes | 56.3% (9/16) · **69.2%** | $0.103 · **60.6%** | $1.645 · **60.6%** | 98.9% · **99.9%** | 9.50M · **46.8%** | 74.9K · **77.7%** |
 | pi | 81.3% (13/16) · **100.0%** | $0.062 · **100.0%** | $0.997 · **100.0%** | 98.4% · **99.3%** | 4.44M · **100.0%** | 58.3K · **100.0%** |

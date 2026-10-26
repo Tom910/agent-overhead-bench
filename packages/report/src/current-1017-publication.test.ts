@@ -72,6 +72,8 @@ it("shows compact Cline estimates for each scope without replacing native grades
   const all = views[0].rows.find((r: { harness: string }) => r.harness === "cline");
   expect(all.pass_rate).toBe(0); expect(all.scores.pass).toBe(0);
   expect(all.pass_estimate).toEqual({ passed: 6, total: 16, rate: 37.5 });
+  expect(all.pass_display).toEqual({ passed: 6, rate: 37.5, estimated: true, score: 6 / 13 * 100 });
+  expect(all.display.pass).toBe("37.5%");
   for (const view of views.slice(1)) {
     const row = view.rows.find((r: { harness: string }) => r.harness === "cline");
     expect(row.pass_estimate.total).toBe(2);
@@ -82,8 +84,17 @@ it("shows compact Cline estimates for each scope without replacing native grades
   }
   expect(views[0].rows.filter((r: { harness: string; pass_estimate: unknown }) => r.harness !== "cline").every((r: { pass_estimate: unknown }) => r.pass_estimate === null)).toBe(true);
   const table = html.split('<tbody id="results-body">')[1]!.split('</tbody>')[0]!;
-  expect(table).toContain("37.5% estimated");
+  expect(table).toContain('<span class="value">37.5%</span>');
+  expect(table).toContain("estimated");
   expect(table).toContain("6/16");
+  const cline = table.split("cline @ 3.0.61")[1]!.split("</tr>")[0]!;
+  expect(cline).not.toContain('class="value">0.0%');
+  const overview = readFileSync(join(f.dir, "analysis.html"), "utf8").split('data-name="cline @ 3.0.61"')[1]!.split('class="overview-row"')[0]!;
+  expect(overview).toContain('data-pass="37.5"');
+  expect(overview).toContain("37.5%");
+  expect(overview).toContain("estimated");
+  expect(readFileSync(join(f.dir, "analysis.html"), "utf8")).toContain('<details><summary>Recorded pass-rate comparisons</summary><p>Uses recorded grades; estimates are excluded.</p>');
+  expect(readFileSync(join(f.root, "README.md"), "utf8")).toContain("37.5% estimated (6/16)");
 });
 
 it("rejects an edited Cline trace dossier instead of approving a new pass count", () => {

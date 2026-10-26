@@ -49,7 +49,7 @@ export function clineWorkflowNote(dir: string): {
     return { hash: APPROVED_AUDIT, markdown: markdown(""), repositoryMarkdown: markdown(`evidence/${audit.dataset}/`),
       passEstimates: new Map(audit.cells.map(row => [row.run_id, row.trace_estimated_combined_pass])),
       html: (prefix = "") => `<p class="scope-note">Cline: <strong>37.5% estimated (6/16)</strong>. <a href="${prefix}${CLINE_WORKFLOW_AUDIT}">Method notes</a>.</p>`,
-      detailsHtml: (prefix = "") => `<details id="cline-result-notes"><summary>Cline method notes</summary><p>The table keeps recorded pass rates and shows a separate estimate from retained run traces. The estimate excludes Cline's private cache from the commit check; the original Git state is incomplete.</p><p><a href="${prefix}${CLINE_WORKFLOW_AUDIT}">Calculation and per-run evidence</a></p></details>` };
+      detailsHtml: (prefix = "") => `<details id="cline-result-notes"><summary>Cline method notes</summary><p>Cline pass rates use the retained-trace estimate. Other pass rates use recorded grades. The original Cline verifier result is preserved in the source data. The estimate excludes Cline's private cache from the commit check; the original Git state is incomplete.</p><p><a href="${prefix}${CLINE_WORKFLOW_AUDIT}">Calculation and per-run evidence</a></p></details>` };
   } catch (error) {
     if (error instanceof ConfigError) throw error;
     throw new ConfigError("Cline trace audit is unavailable or invalid");
