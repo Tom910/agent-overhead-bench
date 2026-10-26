@@ -16,22 +16,23 @@
     "rejected_proxy_calibration_log_sha256": "sha256:c006559d466c5e536027af1b4730d2d1a9c769e2621c0484546ad90d55b5460b"
   },
   "artifacts": {
-    "README.md": "sha256:8c68e009280176c978d63ef6c7da5c3e47b021be639008c131adcc0334e09fbc",
-    "analysis.html": "sha256:7aa79d04d1d733f9152e3d1b25b4ceec220cbbf13de4ad1e28c25acea023f9a2",
+    "README.md": "sha256:19fba762db58b17b4eaaf2b7c1ccca9bc5b2817b4d4904685d262d234f48ecbd",
+    "analysis.html": "sha256:a220189e2b8f4fd85e5562ebf6bd6cfe43c05b77819aedc6a60abfdda7c4fd63",
     "analysis.json": "sha256:c66eff9528e366dd0e8af2c050086e98770c1424c0a969298a93d071415e4fba",
-    "analysis.md": "sha256:352bfe2155a4f492127331a543a50ac3834cf440d44e2569420bc3e8ab5548eb",
+    "analysis.md": "sha256:9c0e2a10ff984da41b20666a0cb4677392a31fc95535fdb4d4c41c669c1fd955",
     "cohorts.json": "sha256:2c5e4e6ba813f4061529c887e3ee9443c659041d4040ffda59855856872b1428",
     "collection-ledger.json": "sha256:ced1f409b87bc1ca5f33eb0b4889ac030c11797f1f67555499201ac195628702",
     "comparison.json": "sha256:6c00e64a1f7f07606ee1460f83b43d3038553267957664c08d3da224602f380b",
     "decision-cards.json": "sha256:95c4485554d33d2106f8e69dd15e2828236da40dd78e79f1eb23d2d2e06fe387",
     "diagnostics.json": "sha256:afb7717a6ad9308e6a68cdf62a1cbfd05f00c0d3510e14dc0c5a32a0322716fb",
     "extra-attempts.json": "sha256:19198777df4994e6ebf098e64de54a853ced25c67535806eea28d10f1c16891a",
-    "index.html": "sha256:c31827dfe256ce460041355cb7df8b59160014e04a193d516d84af63a68df3b3",
+    "index.html": "sha256:5babc7438c5ff390e3d9b43a35d32049b4aa732677b6065cdcda023bac4ba0b9",
     "native-evidence.json": "sha256:25020676c958116a567e08640b7612709f62cdf6fb22778e12f0cdb3757d0eeb",
-    "report.html": "sha256:7aa79d04d1d733f9152e3d1b25b4ceec220cbbf13de4ad1e28c25acea023f9a2",
+    "report.html": "sha256:a220189e2b8f4fd85e5562ebf6bd6cfe43c05b77819aedc6a60abfdda7c4fd63",
     "summary.json": "sha256:839eea3f4d13bf60efea502dc1506f1035d093680e6ce7c611628903b6a9dc4e",
-    "source.json": "sha256:df6381aaa6b6b53ef0d9e0cd3f344cbe101a142a48721d1691e2aaad7c654dee"
+    "source.json": "sha256:df6381aaa6b6b53ef0d9e0cd3f344cbe101a142a48721d1691e2aaad7c654dee",
+    "cline-workflow-audit.json": "sha256:1383d088c1359c8e7f2c661ec85528448092665fec246773b6377f0c925a721c"
   },
   "source_sha256": "sha256:df6381aaa6b6b53ef0d9e0cd3f344cbe101a142a48721d1691e2aaad7c654dee",
-  "site_index_sha256": "sha256:37a7922468f3a6af977860530dd8a999a44f01614697d63a0a5977b86f35dde4"
+  "site_index_sha256": "sha256:4106da24e084a80e4125532885def0446efc032d9f04e62938694eef9497f3a9"
 }

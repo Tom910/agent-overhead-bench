@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "status": "root-cause-confirmed-no-regrade",
+  "commit_owner": "The coding agent in each trial; Cline owns its task commit. The runner prepares and checks the task.",
+  "original_observed_grade": "0/16",
+  "cells_with_successful_commits": 15,
+  "root_cause": "The workflow verifier omits .aob-cline-home from its private-cache exclusions. Its Git status check counts the untracked cache as uncommitted task work.",
+  "adapter_source": "packages/adapters/src/cline.ts:37",
+  "checker_source": "scripts/deepswe-workflow-check.py:23",
+  "original_checker_sha256": "ab0942cc1910cf2938adac13dbe851ab0696339e466bcb69e79e85e96e2611d2",
+  "offline_replay": {
+    "original_checker": "failed",
+    "only_change": "Exclude .aob-cline-home",
+    "amended_checker": "passed",
+    "uncommitted_source_control": "failed",
+    "missing_commit_control": "failed",
+    "candidate_commit": "Explicitly synthetic commit of retained candidate code; not an original task grade"
+  },
+  "historical_cause": {
+    "earlier_passing_cline_version": "3.0.61",
+    "earlier_cache_already_present": true,
+    "earlier_workflow_check_present": false,
+    "checker_introduced_commit": "9b7b7cdbf95c514183b12202a363e208cb883f8d",
+    "checker_wired_into_grading_commit": "3e36169",
+    "conclusion": "Evidence supports a verifier regression. It does not support a model-caused commit regression."
+  },
+  "scope_from_original_command_traces": {
+    "expected_corrected_workflow_passes": 14,
+    "possible_corrected_task_passes": 6,
+    "remaining_functional_failures": 8,
+    "remaining_workflow_failures": [
+      "cattrs-partial-structuring-recovery repetition 0: source changed after last commit",
+      "textual-richlog-follow-state repetition 1: no commit"
+    ],
+    "possible_corrected_task_pass_cells": [
+      "psd-tools-blend-range-api repetition 0",
+      "psd-tools-blend-range-api repetition 1",
+      "superjson-error-stack-serialization repetition 0",
+      "superjson-error-stack-serialization repetition 1",
+      "textual-richlog-follow-state repetition 0",
+      "true-myth-iterable-collection-combinators repetition 1"
+    ]
+  },
+  "evidence_limits": "Original pre-verifier Git metadata was overwritten by patch capture. Counts are diagnostic estimates from original command/status traces and a copied-code predicate replay. A formal correction audit is required before amended grades are published.",
+  "prompt_delivery": "All 16 received the exact task prompt and branch/commit obligation.",
+  "separate_capture_finding": "Native model.patch capture also admits Cline and Pi private homes. That needs a separate audit.",
+  "verification": {
+    "parent_replayed_predicate_and_controls": true,
+    "parent_rechecked_original_artifact_hashes": 96,
+    "original_artifacts_changed": 0,
+    "provider_calls": 0
+  },
+  "private_evidence_directory": "scratch/cline-commit-root-cause-20261025",
+  "original_grades_changed": false,
+  "production_fix_applied": false,
+  "public_snapshot_changed": false
+}

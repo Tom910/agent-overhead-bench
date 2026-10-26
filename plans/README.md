@@ -1,5 +1,11 @@
 # Stage plans
 
+October 25: the [Cline verifier repair](./S3-cline-workflow-cache-exclusion-plan.md)
+fixes the private-cache exclusion. The
+[S6 report correction](./S6-cline-workflow-report-correction-plan.md) shows a
+separate six-pass trace estimate and its limits. Original native grades and
+immutable snapshot inputs remain unchanged; no exact historical regrade is claimed.
+
 The experimental subscription route is retired. See the
 [cleanup scope](./S7-codex-integration-cleanup-plan.md) and
 [review](../docs/reviews/2026-09-29-codex-integration-audit.md).

@@ -16,6 +16,12 @@ Eight tasks × two repetitions per CLI: 16 runs each. 44 native passes and 36 fa
 
 80 completion-selected outcomes across two tool cohorts; 83 observed paid primary attempts and 52 prerequisites. This is a descriptive snapshot, not one randomized five-CLI experiment. Full experiment cost is unknown. Three partial native captures retain valid required grade artifacts. Native tool timing remains partial.
 
+## Cline verifier correction
+
+**Cline trace estimate: 6/16 (37.5%).** The recorded result is 0/16, affected by a verifier defect: Cline's private cache was counted as uncommitted task work. This estimate covers all 16 Cline runs. Eight runs passed all code assertions; two of those still had real commit failures. Original Git metadata was overwritten, so an exact regrade is unavailable. Four of the six estimated passes lack a complete final Git status. Do not use Cline's recorded pass rate for a performance comparison. Original grades, costs, time and cache data are unchanged.
+
+[Read the trace audit and per-run limits](evidence/linux-results-2026-10-24/cline-workflow-audit.json).
+
 Each column has its own baseline. Higher pass/cache rates and lower costs/token usage score higher. Relative scores describe the observed values.
 
 | Harness | Pass rate | Avg cost / task | Whole benchmark | Cache rate | Tokens in | Tokens out |

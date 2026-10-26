@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "date": "2026-10-25",
+  "status": "fixed-and-verified-locally",
+  "stage_plan": "plans/S3-cline-workflow-cache-exclusion-plan.md",
+  "diagnosis_report": "docs/reviews/2026-10-25-cline-commit-root-cause.json",
+  "repair": {
+    "file": "scripts/deepswe-workflow-check.py",
+    "change": "Add .aob-cline-home to the existing PRIVATE_CACHES exclusions",
+    "checker_sha256": "63aaa429cd76939bdd33ddf2f5dc0570bef9e2007d79c4a3146dfa29ac62474d"
+  },
+  "validation": {
+    "test_command": "node --test scripts/deepswe-workflow-check.test.mjs scripts/deepswe-named-grade.test.mjs scripts/deepswe-assurance-command.test.mjs scripts/s3-prepare-native-revision.test.mjs",
+    "targeted_tests_passed": 53,
+    "workflow_tests_passed": 28,
+    "regression_failed_before_fix": true,
+    "lint": "passed",
+    "production_checker_psd_replay": [
+      "passed committed candidate plus cache",
+      "failed uncommitted source",
+      "failed missing commit"
+    ],
+    "psd_replay_commit": "synthetic; not an amended original grade",
+    "corrected_images": 8,
+    "image_git_checks_passed": 48,
+    "independent_review": "No material findings",
+    "original_selected_artifact_hashes_rechecked": 96,
+    "original_selected_artifacts_changed": 0,
+    "original_source_files_unchanged": true,
+    "original_tags_unchanged": true,
+    "provider_calls": 0
+  },
+  "image_verification_receipt": {
+    "private_path": "scratch/cline-workflow-cache-fix-20261025/image-verification.json",
+    "sha256": "b20dc7ccd914a7346d28e6db3fc223a4ae6e148bb6921409cec7b536df8327d1"
+  },
+  "images": [
+    {
+      "task_id": "cattrs-partial-structuring-recovery",
+      "original_tag": "aob-deepswe-cattrs-partial-structuring-recovery-verifier:native-fixture-20261004-v6",
+      "original_image_id": "sha256:b985f2bd17e9e80bee0fa9b7c0747b2ded92d54d070b32ebfe102e8829a44076",
+      "corrected_tag": "aob-deepswe-cattrs-partial-structuring-recovery-verifier:cline-cache-fix-20261025-v1",
+      "corrected_image_id": "sha256:2fc62829fad4e996aef679fdeff22fbde7fc9b929e5ce51db449106641dc3e65"
+    },
+    {
+      "task_id": "psd-tools-blend-range-api",
+      "original_tag": "aob-deepswe-psd-tools-blend-range-api-verifier:native-fixture-20261004-v6",
+      "original_image_id": "sha256:fbfcc5b7e68a2d8fd97688c69808049d582113368f388929d7d46ac44a592cd9",
+      "corrected_tag": "aob-deepswe-psd-tools-blend-range-api-verifier:cline-cache-fix-20261025-v1",
+      "corrected_image_id": "sha256:690f1d01d93270871d079ac93c905a0a45176f5d70018ca3b6f9eec9a5c4f21c"
+    },
+    {
+      "task_id": "textual-richlog-follow-state",
+      "original_tag": "aob-deepswe-textual-richlog-follow-state-verifier:native-fixture-20261004-v6",
+      "original_image_id": "sha256:73fd3d800de9d5dae47edd9b5269e40966664b72d49d8f598964b8b91fdd0b92",
+      "corrected_tag": "aob-deepswe-textual-richlog-follow-state-verifier:cline-cache-fix-20261025-v1",
+      "corrected_image_id": "sha256:d442cc9eeccb3c6d6900e3205a182e8efab8719076a4c086dfb0a89b9ed23e94"
+    },
+    {
+      "task_id": "tomlkit-toml-table-converters",
+      "original_tag": "aob-deepswe-tomlkit-toml-table-converters-verifier:native-fixture-20261004-v6",
+      "original_image_id": "sha256:68dd891458463c9f930dcbbd59b4442065c145d66ce3b5813af82ca5ec8f4966",
+      "corrected_tag": "aob-deepswe-tomlkit-toml-table-converters-verifier:cline-cache-fix-20261025-v1",
+      "corrected_image_id": "sha256:ff244a47f898900a984130ebe8fc05d697cc1956769c945812003845bf260679"
+    },
+    {
+      "task_id": "ink-grid-box-layout",
+      "original_tag": "aob-deepswe-ink-grid-box-layout-verifier:native-fixture-20261004-v6",
+      "original_image_id": "sha256:73daa7eb11dec0d43e523434d28a66ee9d3ac063fda33d9e26183d867739dbb1",
+      "corrected_tag": "aob-deepswe-ink-grid-box-layout-verifier:cline-cache-fix-20261025-v1",
+      "corrected_image_id": "sha256:c8e703bfe771e6616eab4fba517e2ccfada28e9f9e1c4b70dd4ef77cb1e2ea2e"
+    },
+    {
+      "task_id": "true-myth-iterable-collection-combinators",
+      "original_tag": "aob-deepswe-true-myth-iterable-collection-combinators-verifier:native-fixture-20261004-v6",
+      "original_image_id": "sha256:0ecebbb45e561b37ee5d7bcbe80588427f4890fb80fffbbb73ca6b94c7cb8855",
+      "corrected_tag": "aob-deepswe-true-myth-iterable-collection-combinators-verifier:cline-cache-fix-20261025-v1",
+      "corrected_image_id": "sha256:627e1c11bdf2ba9319e083e5c6d7b47ed07a04636c662e2cb29679ebe31f35b2"
+    },
+    {
+      "task_id": "happy-dom-deterministic-intersectionobserver",
+      "original_tag": "aob-deepswe-happy-dom-deterministic-intersectionobserver-verifier:native-fixture-20261004-v6",
+      "original_image_id": "sha256:a4df294272f2165ce894306ab1eec5284fe426ddaa66cf08bb3c4755a9f8faa2",
+      "corrected_tag": "aob-deepswe-happy-dom-deterministic-intersectionobserver-verifier:cline-cache-fix-20261025-v1",
+      "corrected_image_id": "sha256:3173f3dd810c003756394ec1342ad744d4c691d45f79e3714b693ad9d10e14f4"
+    },
+    {
+      "task_id": "superjson-error-stack-serialization",
+      "original_tag": "aob-deepswe-superjson-error-stack-serialization-verifier:native-fixture-20261004-v6",
+      "original_image_id": "sha256:dcc10590630fcc927468099eb5118e4bc7170a1f12e01ca5c9404011de072444",
+      "corrected_tag": "aob-deepswe-superjson-error-stack-serialization-verifier:cline-cache-fix-20261025-v1",
+      "corrected_image_id": "sha256:a2640f6d3a654ebaa533cecb34a21c2f4b29c5d9c2bc0db8edf7b733a412f565"
+    }
+  ],
+  "qualification": "not granted; source review, reference controls and campaign admission remain required",
+  "historical_grades_changed": false,
+  "published_snapshot_changed": false,
+  "separate_patch_capture_finding_fixed": false,
+  "next_historical_step": "A separate correction audit is required before amended grades can be published."
+}

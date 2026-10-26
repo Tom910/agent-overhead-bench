@@ -1,0 +1,695 @@
+{
+  "schema_version": 1,
+  "audit_kind": "read-only retained-evidence correction audit; no native regrade",
+  "original_recorded_pass_count": 0,
+  "total_cells": 16,
+  "native_functional_pass_count": 8,
+  "native_branch_pass_count": 16,
+  "successful_commit_cells": 15,
+  "trace_estimated_workflow_pass_count": 14,
+  "trace_estimated_combined_pass_count": 6,
+  "trace_estimated_combined_pass_percent": 37.5,
+  "exact_amended_native_pass_count": null,
+  "estimate_assessment": "The six-pass estimate is supported as a conditional trace estimate. No later explicit public-file mutation was found for the six. Incomplete status coverage prevents a verified corrected grade.",
+  "independence": "Native rewards and branch grades read directly. Successful commits parsed from original structured stdout. Later tool events inspected for all 14 estimated workflow passes. cattrs0/textual1 failures checked against final statuses and subsequent commands. Existing collect-summary.py hardcodes cattrs0; this audit did not treat that classification as proof.",
+  "prohibited_claim": "Do not call 6/16 a regraded result, verified correction, or exact amended native pass count.",
+  "limitations": [
+    "Original .git was overwritten by native patch capture. A commit made from retained candidate files is synthetic.",
+    "Cache-exclusion replay establishes the predicate defect, not the original commit/final-tree relationship.",
+    "Source capture contains generated and ignored files and does not reconstruct the original commit state.",
+    "Command-output line order within a tool batch does not prove command execution ordering."
+  ],
+  "original_evidence_modified": false,
+  "provider_calls": 0,
+  "grade_changes": 0,
+  "cells": [
+    {
+      "run_id": "pinned:cline:cattrs-partial-structuring-recovery:0",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/cattrs-partial-structuring-recovery/rep-0",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 93,
+      "native_functional_failure_count": 0,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 102344,
+        "id": "f182839"
+      },
+      "last_status": {
+        "line": 277412,
+        "omits_untracked": false,
+        "public_dirty_path_count": 9,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 277412,
+        "omits_untracked": false,
+        "public_dirty_path_count": 9,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 275505,
+      "tool_start_count_after_last_commit": 664,
+      "trace_estimated_workflow_pass": false,
+      "trace_estimated_combined_pass": false,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit.",
+        "Last full status shows uncommitted public changes; no subsequent commit or public edit was observed. cattrs0 has edits after its final commit; textual1 has no commit command in the structured trace."
+      ],
+      "sha256": {
+        "run.json": "f6d72227d7c4ea192ef34a7de56fb8bdba1065a249fe074b5e5259f0440ff7d4",
+        "native-verifier-evidence.json": "81d55215b1f7a8b206c6ac645ae7c0346e066036f34b8b85d4800ed0417d68d0",
+        "native-verifier-evidence/logs/verifier/reward.json": "69ce90312f8f3c1374111f0985cc8213fc27ef7943291bf606cb2311a52a9fb5",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "05a6ec4af10a417620e79e4ab0c941fff42897007428c1ce6d93d97352631c05"
+      }
+    },
+    {
+      "run_id": "pinned:cline:cattrs-partial-structuring-recovery:1",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/cattrs-partial-structuring-recovery/rep-1",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 93,
+      "native_functional_failure_count": 2,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 60321,
+        "id": "9e222c6"
+      },
+      "last_status": {
+        "line": 60407,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 60407,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 58658,
+      "tool_start_count_after_last_commit": 2,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": false,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit."
+      ],
+      "sha256": {
+        "run.json": "bd5febcd72ffe67d9a4dcb9ac37292b55e2f90b393095c6d4eadc7122356cbd8",
+        "native-verifier-evidence.json": "63a3ab3dc7d3da8d14171e04ec4b104c9fd6578394d15469a689e17cd2faa9ce",
+        "native-verifier-evidence/logs/verifier/reward.json": "753fc07437a625fa366085266ee8f4b9cd5fba6d11ed2f05c3fd304b4e54d2fb",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "981c173f670ec9b6fbe34e62d082d403274a12c9d5627862eabd6a2b6a76643a"
+      }
+    },
+    {
+      "run_id": "pinned:cline:happy-dom-deterministic-intersectionobserver:0",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/happy-dom-deterministic-intersectionobserver/rep-0",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 33,
+      "native_functional_failure_count": 2,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 49260,
+        "id": "426108a"
+      },
+      "last_status": {
+        "line": 49260,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 49260,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 47878,
+      "tool_start_count_after_last_commit": 4,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": false,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit."
+      ],
+      "sha256": {
+        "run.json": "1eea12bdf18654d5a696878d9ecab486b1605bc742a25369e7cd02d5f6aa9dae",
+        "native-verifier-evidence.json": "4268dbcd19c1078bbd9eaaa9a2cf2fa3c9f1868c2660d6c8d89101a56582aa5e",
+        "native-verifier-evidence/logs/verifier/reward.json": "83bc20a48cd1390fb2e04ec937821c6afe78cdd943af8b7a03a52e831de0ec5e",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "c042968d0565977fb893623593341ef56a648fbd3f862da80e687fde40db76bb"
+      }
+    },
+    {
+      "run_id": "pinned:cline:happy-dom-deterministic-intersectionobserver:1",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/happy-dom-deterministic-intersectionobserver/rep-1",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 33,
+      "native_functional_failure_count": 2,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 118726,
+        "id": "f9bce91"
+      },
+      "last_status": {
+        "line": 118726,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 118726,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 118567,
+      "tool_start_count_after_last_commit": 1,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": false,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit."
+      ],
+      "sha256": {
+        "run.json": "c88b76dd023d9bf3b5879e27353ef71ed46b9dff75de0dd9bbff2d2e2ced1fc3",
+        "native-verifier-evidence.json": "2d9ee73e75ddb043bb7f41eea513ebfca0bfdeb4fbc747febc7784fd9b64bd0a",
+        "native-verifier-evidence/logs/verifier/reward.json": "83bc20a48cd1390fb2e04ec937821c6afe78cdd943af8b7a03a52e831de0ec5e",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "86b6687abee329e75c4f135eb1607cffafdac16cf12a7918b45bd9fd47dec1f5"
+      }
+    },
+    {
+      "run_id": "pinned:cline:ink-grid-box-layout:0",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/ink-grid-box-layout/rep-0",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 78,
+      "native_functional_failure_count": 1,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 87660,
+        "id": "5aabe2e"
+      },
+      "last_status": {
+        "line": 87791,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 87791,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 74715,
+      "tool_start_count_after_last_commit": 1,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": false,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit."
+      ],
+      "sha256": {
+        "run.json": "dff7a1e09dbca793d1d8af94baab9da10cbb882d8d482534e3ad6a451efd27aa",
+        "native-verifier-evidence.json": "c996d74acb761270cba799e23edfa172a50f6997cd81c9efbe9a4a460231aea9",
+        "native-verifier-evidence/logs/verifier/reward.json": "f4d5e9d410b6da17b41e0d641c385e417e80be9313df8c4155fcb97d8a81d352",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "22f59ab83139ad5411130550c2e8d0314c3e6aedcc80a266af7dc2a644f86e0e"
+      }
+    },
+    {
+      "run_id": "pinned:cline:ink-grid-box-layout:1",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/ink-grid-box-layout/rep-1",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 78,
+      "native_functional_failure_count": 1,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 113129,
+        "id": "41c4248"
+      },
+      "last_status": {
+        "line": 113194,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 113194,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 112385,
+      "tool_start_count_after_last_commit": 1,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": false,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit."
+      ],
+      "sha256": {
+        "run.json": "4e7c63a12c71b54df498f0233589674fc6eac05fccf8d79a267d675db361e8e3",
+        "native-verifier-evidence.json": "3e884073f586656131a158abd4a483e8e042ff525746feef2fc68a9ca096af29",
+        "native-verifier-evidence/logs/verifier/reward.json": "f369b9a2546a3d9f69bb0e845c34f9e768ac4635c3b7646392a7e74110be86ba",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "ce7887bf8930dfefb88db88ccc3dc0326c583f1b6ef928d19f73b98240b1af05"
+      }
+    },
+    {
+      "run_id": "pinned:cline:psd-tools-blend-range-api:0",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/psd-tools-blend-range-api/rep-0",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 1051,
+      "native_functional_failure_count": 0,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 141174,
+        "id": "236118e"
+      },
+      "last_status": {
+        "line": 141174,
+        "omits_untracked": true,
+        "public_dirty_path_count": 0,
+        "private_cache_present": false
+      },
+      "last_full_status": {
+        "line": 139861,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 141004,
+      "tool_start_count_after_last_commit": 2,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": true,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit.",
+        "Final status at stdout line 141174 uses --untracked-files=no. Last full status at line 139861 precedes later tests, tool installation, public edits, and final amend. Tests and a read-only round-trip probe run after the final amend."
+      ],
+      "sha256": {
+        "run.json": "75437fad7a095f0e389dcd8723b4baa2d98ce69e79ff676ea1fb63cc16cce336",
+        "native-verifier-evidence.json": "cc9a90373c31e84d91860a79fc545c24d337f596bc8ef200f14922dc8a7d0f93",
+        "native-verifier-evidence/logs/verifier/reward.json": "aa8173285ee562212b0f80e0c300e271747b0c5df3ffacc6131d8a30e20e5499",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "71977002e1203d6726a38c507f0e83d3df4091aba1a6cf3e12a57c19163a5839"
+      }
+    },
+    {
+      "run_id": "pinned:cline:psd-tools-blend-range-api:1",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/psd-tools-blend-range-api/rep-1",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 1051,
+      "native_functional_failure_count": 0,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 75013,
+        "id": "03bedc6"
+      },
+      "last_status": {
+        "line": 75466,
+        "omits_untracked": true,
+        "public_dirty_path_count": 0,
+        "private_cache_present": false
+      },
+      "last_full_status": {
+        "line": 75013,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 61394,
+      "tool_start_count_after_last_commit": 1,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": true,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit.",
+        "Last full status at stdout line 75013 is followed by read-only queries and an in-memory probe; final status at line 75466 omits untracked files."
+      ],
+      "sha256": {
+        "run.json": "0b84cf7e26aeb355159d4ce96f8adc9a1227b3bf8f32b03b79b24a2394329771",
+        "native-verifier-evidence.json": "3eaee51e7a252202f3908b8f62450def5ee0a4e9a064686ab43a4fd583272699",
+        "native-verifier-evidence/logs/verifier/reward.json": "aa8173285ee562212b0f80e0c300e271747b0c5df3ffacc6131d8a30e20e5499",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "55cce0b228df6316ec049d5e6c2d5fbb6faa6b56381971636772fda60cc02b77"
+      }
+    },
+    {
+      "run_id": "pinned:cline:superjson-error-stack-serialization:0",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/superjson-error-stack-serialization/rep-0",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 205,
+      "native_functional_failure_count": 0,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 66376,
+        "id": "8e5bcc0"
+      },
+      "last_status": {
+        "line": 66435,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 66435,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 65436,
+      "tool_start_count_after_last_commit": 9,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": true,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit.",
+        "Vitest is in the same later tool batch as the last full status; no subsequent full status is recorded. Tests can have filesystem side effects. No later explicit public edit was observed."
+      ],
+      "sha256": {
+        "run.json": "3e704b70b7d1a6d70b725cf8eda09e327e9c967d0db53c2f4f88013f45c4ed9b",
+        "native-verifier-evidence.json": "112a4186190c6aea7f2e31e2bf30fd62a4314d17fd0d9fa377fa7854b5a67259",
+        "native-verifier-evidence/logs/verifier/reward.json": "c8e78befa27e11d99af761230e86b67ee1ed9785a08d0234336a2a61ab77023f",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "3ee8b87a1e15609ed4d97b528b566cff67d9fe218c8bcb4d85071c00c4b5e128"
+      }
+    },
+    {
+      "run_id": "pinned:cline:superjson-error-stack-serialization:1",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/superjson-error-stack-serialization/rep-1",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 205,
+      "native_functional_failure_count": 0,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 57870,
+        "id": "2df29bf"
+      },
+      "last_status": {
+        "line": 57906,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 57906,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 49058,
+      "tool_start_count_after_last_commit": 1,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": true,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit.",
+        "Vitest is in the same later tool batch as the last full status; no subsequent full status is recorded. Tests can have filesystem side effects. No later explicit public edit was observed."
+      ],
+      "sha256": {
+        "run.json": "a50bc9f5c6f02747f8546bc7a4492b442dd0bc09d5d370107a3ca7efbc8ceb88",
+        "native-verifier-evidence.json": "70d1117f0844d9cdfa83f8da620ad240600cd1f000bfc1e54b1599adc311ee47",
+        "native-verifier-evidence/logs/verifier/reward.json": "c8e78befa27e11d99af761230e86b67ee1ed9785a08d0234336a2a61ab77023f",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "a907834174a8ba29c2e8ac66d9b9149ab984c4f1d9ea79a5f59df91a42cff68c"
+      }
+    },
+    {
+      "run_id": "pinned:cline:textual-richlog-follow-state:0",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/textual-richlog-follow-state/rep-0",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 30,
+      "native_functional_failure_count": 0,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 332459,
+        "id": "b2ace30"
+      },
+      "last_status": {
+        "line": 332726,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 332726,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 329966,
+      "tool_start_count_after_last_commit": 2,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": true,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit.",
+        "Full status after final tests shows only private cache; no later tool call is recorded."
+      ],
+      "sha256": {
+        "run.json": "54be11874fba10e52ec39f67ee30678706cfa142f7211252637d3663be2625df",
+        "native-verifier-evidence.json": "304593cdf5337ed8b2d605958825e56250b3767c2c27420271c07c2d75b76e19",
+        "native-verifier-evidence/logs/verifier/reward.json": "011bdcce8966fb939328c5e5cbe16e3470e826ea77401076ac5f5a6b0338cc0e",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "56bf814a80c75b324044045eff055db6ce4cfb8f2f68cb8a20b0214bb967cce5"
+      }
+    },
+    {
+      "run_id": "pinned:cline:textual-richlog-follow-state:1",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/textual-richlog-follow-state/rep-1",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 30,
+      "native_functional_failure_count": 0,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": false,
+      "last_commit": null,
+      "last_status": {
+        "line": 223550,
+        "omits_untracked": false,
+        "public_dirty_path_count": 7,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 223550,
+        "omits_untracked": false,
+        "public_dirty_path_count": 7,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 223392,
+      "tool_start_count_after_last_commit": null,
+      "trace_estimated_workflow_pass": false,
+      "trace_estimated_combined_pass": false,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit.",
+        "Last full status shows uncommitted public changes; no subsequent commit or public edit was observed. cattrs0 has edits after its final commit; textual1 has no commit command in the structured trace."
+      ],
+      "sha256": {
+        "run.json": "6939996502763afbbba24a96a98c3dd7b81c3c62e82904a10c80869f20614bfd",
+        "native-verifier-evidence.json": "2f4fa37a081f2af8239188d279c8c6f66c0f179533c7d4c3a1ed301fe595c9a4",
+        "native-verifier-evidence/logs/verifier/reward.json": "011bdcce8966fb939328c5e5cbe16e3470e826ea77401076ac5f5a6b0338cc0e",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "30c81d919eab05247d36718d040aef0807d6502cb79cae0da7591adbc2dd1a7b"
+      }
+    },
+    {
+      "run_id": "pinned:cline:tomlkit-toml-table-converters:0",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/tomlkit-toml-table-converters/rep-0",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 1042,
+      "native_functional_failure_count": 1,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 347095,
+        "id": "cfd932e"
+      },
+      "last_status": {
+        "line": 347095,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 347095,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 341614,
+      "tool_start_count_after_last_commit": 0,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": false,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit."
+      ],
+      "sha256": {
+        "run.json": "4a9adb51d6998525451d535859e9374e232bd5dd48282801eb650e794d6708ab",
+        "native-verifier-evidence.json": "4efb02f53ce4fd80d8fe1aa2df16d21952e80d24fe5c53b02c58a6c803b1e4b4",
+        "native-verifier-evidence/logs/verifier/reward.json": "cdf85071fe63791040777411dede5056783203936e72e9d51a3024ad3ab429e8",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "ef8cefe752a7080240addd90cc9e74170c3c668d2f4e90aa78ec67258339aa57"
+      }
+    },
+    {
+      "run_id": "pinned:cline:tomlkit-toml-table-converters:1",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/tomlkit-toml-table-converters/rep-1",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 1042,
+      "native_functional_failure_count": 2,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 119066,
+        "id": "e59ee38"
+      },
+      "last_status": {
+        "line": 119117,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 119117,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 116767,
+      "tool_start_count_after_last_commit": 1,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": false,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit."
+      ],
+      "sha256": {
+        "run.json": "e80462bbaa93ed03d35e3db0172366ee81dbb963273885f55e998f5903e96a77",
+        "native-verifier-evidence.json": "35190f0f8102708fc8b27da03adcfdc39b3fb5138609b7585357c8f66cc3d50e",
+        "native-verifier-evidence/logs/verifier/reward.json": "9b39ca5b46d56961d40e19c556e0a5b15c27f41a535cd07912bd93dc7f99ebcf",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "85c4d5919f25768bc6b9ccd61878287c759e8309dfc676dd721ce121ca1b2fee"
+      }
+    },
+    {
+      "run_id": "pinned:cline:true-myth-iterable-collection-combinators:0",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/true-myth-iterable-collection-combinators/rep-0",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 663,
+      "native_functional_failure_count": 5,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 24141,
+        "id": "19849cd"
+      },
+      "last_status": {
+        "line": 24246,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 24246,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 23977,
+      "tool_start_count_after_last_commit": 1,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": false,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit."
+      ],
+      "sha256": {
+        "run.json": "d28adb783c730a691ce0d263d177e0218e45088ec78bd469cb55c9776c852b03",
+        "native-verifier-evidence.json": "86eee501bcc24af32ea3e1b23a5146c69cd05c9e7dc2fc34b6725f25d61cb0d0",
+        "native-verifier-evidence/logs/verifier/reward.json": "f246b27121f1aef478ed1939f40685970bbe60ff83a6b6ac78bac0600bb4ce2c",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "5dd4ef0a7beaf7fd59000b81fbd62c0e0dccd294da1df81e0d59cfba77e57862"
+      }
+    },
+    {
+      "run_id": "pinned:cline:true-myth-iterable-collection-combinators:1",
+      "source": "scratch/five-cli-extension-1017-20261023-r5/campaign/results/pinned/cline/true-myth-iterable-collection-combinators/rep-1",
+      "original_native_reward": 0,
+      "native_functional_assertion_count": 663,
+      "native_functional_failure_count": 0,
+      "original_branch_grade": "passed",
+      "original_commit_grade": "failed",
+      "observed_successful_commit": true,
+      "last_commit": {
+        "line": 27747,
+        "id": "374ea5e"
+      },
+      "last_status": {
+        "line": 27904,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_full_status": {
+        "line": 27904,
+        "omits_untracked": false,
+        "public_dirty_path_count": 0,
+        "private_cache_present": true
+      },
+      "last_public_editor_line": 26647,
+      "tool_start_count_after_last_commit": 1,
+      "trace_estimated_workflow_pass": true,
+      "trace_estimated_combined_pass": true,
+      "status_limitations": [
+        "Original pre-verifier Git metadata is unavailable; no exact amended native grade can be produced from this record.",
+        "Tool/status traces do not prove final filesystem equality to the original commit.",
+        "Last full status shows only private cache; the paired command only reads source. No later tool call is recorded."
+      ],
+      "sha256": {
+        "run.json": "912c0af77fa02d607338a61d44194f8f4d9d0429627c4324180b179101b580f4",
+        "native-verifier-evidence.json": "f406b3428d3beafbf478c413b542ee32f6f241a9f93c02a21b6e1d077caa39a5",
+        "native-verifier-evidence/logs/verifier/reward.json": "845fd53650b22bfda5bc174f56e7149ff1dcf9a03218887c2bc04ef66caaee0c",
+        "native-verifier-evidence/logs/verifier/reports/workflow.json": "47feec986b4faf443cb9abfb95db4fb7f10b937aec7708db36754f34672c7e65",
+        "stdout.log": "951e6766d18fae54158e54da5f91f7b2f5b7ab6b517b815e4263b13558750031"
+      }
+    }
+  ],
+  "original_artifact_hashes_rechecked_against_prior_manifest": 96,
+  "original_artifact_hash_mismatches": 0,
+  "dataset": "linux-results-2026-10-24",
+  "original_source_sha256": "sha256:df6381aaa6b6b53ef0d9e0cd3f344cbe101a142a48721d1691e2aaad7c654dee",
+  "native_evidence_sha256": "sha256:25020676c958116a567e08640b7612709f62cdf6fb22778e12f0cdb3757d0eeb",
+  "checker_before_sha256": "sha256:ab0942cc1910cf2938adac13dbe851ab0696339e466bcb69e79e85e96e2611d2",
+  "checker_after_sha256": "sha256:63aaa429cd76939bdd33ddf2f5dc0570bef9e2007d79c4a3146dfa29ac62474d"
+}

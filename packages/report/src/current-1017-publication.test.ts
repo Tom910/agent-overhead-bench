@@ -50,3 +50,26 @@ it("checks without writes, repairs generated views, and preserves every immutabl
   writeFileSync(join(f.dir, "analysis.json"), readFileSync(join(f.dir, "analysis.json"), "utf8") + "\n");
   expect(() => f.run()).toThrow(/immutable/); expect(() => f.run(true)).toThrow(/immutable/);
 }, 30000);
+
+it("shows the Cline trace estimate on every report without replacing native grades", () => {
+  const f = fixture(), original = readFileSync(join(f.dir, "analysis.json")); f.run();
+  for (const path of [join(f.root, "README.md"), join(f.root, "site/index.html"), ...["README.md", "analysis.md", "analysis.html", "report.html", "index.html"].map(name => join(f.dir, name))]) {
+    const page = readFileSync(path, "utf8");
+    expect(page, path).toContain("Cline verifier correction");
+    expect(page, path).toContain("trace estimate: 6/16 (37.5%)");
+    expect(page, path).toContain("exact regrade is unavailable");
+    expect(page, path).toContain("cline-workflow-audit.json");
+    expect(page, path).not.toContain("No separate corrected-verifier audit is bound.");
+  }
+  expect(readFileSync(join(f.dir, "analysis.json")).equals(original)).toBe(true);
+  const data = loadValidatedCurrentCampaign(f.root).analysis.attempts;
+  expect(data.filter(a => a.harness === "cline" && a.outcome === "completed")).toHaveLength(0);
+});
+
+it("rejects an edited Cline trace dossier instead of approving a new pass count", () => {
+  const f = fixture();
+  const path = join(f.dir, "cline-workflow-audit.json");
+  writeFileSync(path, readFileSync(path, "utf8") + "\n");
+  expect(() => f.run()).toThrow(/Cline.*audit/);
+  expect(() => f.run(true)).toThrow(/Cline.*audit/);
+});

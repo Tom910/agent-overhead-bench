@@ -15,10 +15,10 @@ mkdirSync(join(output, "data"), { recursive: true });
 cpSync(join(root, "site/index.html"), join(output, "index.html"));
 const snapshot = schema_version === 2 && kind === "five-cli-1017-descriptive-snapshot" && dataset === "linux-results-2026-10-24";
 let report = readFileSync(join(root, "evidence", dataset, "analysis.html"), "utf8");
-if (snapshot) for (const file of ["extra-attempts.json", "cohorts.json", "collection-ledger.json"]) report = report.replaceAll(`href="${file}"`, `href="data/${file}"`);
+if (snapshot) for (const file of ["extra-attempts.json", "cohorts.json", "collection-ledger.json", "cline-workflow-audit.json"]) report = report.replaceAll(`href="${file}"`, `href="data/${file}"`);
 writeFileSync(join(output, "report.html"), report);
 const files = snapshot
-  ? ["analysis.json", "analysis.md", "analysis.html", "index.html", "report.html", "README.md", "summary.json", "provenance.json", "comparison.json", "diagnostics.json", "decision-cards.json", "extra-attempts.json", "cohorts.json", "native-evidence.json", "collection-ledger.json", "source.json"]
+  ? ["analysis.json", "analysis.md", "analysis.html", "index.html", "report.html", "README.md", "summary.json", "provenance.json", "comparison.json", "diagnostics.json", "decision-cards.json", "extra-attempts.json", "cohorts.json", "native-evidence.json", "collection-ledger.json", "source.json", "cline-workflow-audit.json"]
   : ["analysis.json", "analysis.md", "summary.json", "provenance.json", "comparison.json", "diagnostics.json"];
 for (const file of files) {
   cpSync(join(root, "evidence", dataset, file), join(output, "data", file));
