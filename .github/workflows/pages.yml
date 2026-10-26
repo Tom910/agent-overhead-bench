@@ -19,7 +19,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck --workspace @aob/report
-      - run: npm run test --workspace @aob/report
+      - run: npm run test --workspace @aob/report -- --maxWorkers=1
       - name: Build validated static results (offline, no API keys)
         run: npm run site:build
       - uses: actions/upload-pages-artifact@v3

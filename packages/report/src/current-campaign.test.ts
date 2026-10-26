@@ -3,7 +3,8 @@ import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } f
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, expect, it } from "vitest";
-import { publishCurrentCampaign } from "./current-campaign.js";
+import type { ValidityDiagnostics } from "./validity-diagnostics.js";
+import { loadValidatedCurrentCampaign, publishCurrentCampaign } from "./current-campaign.js";
 
 const roots: string[] = [];
 afterEach(() => { for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true }); });
@@ -17,13 +18,17 @@ function fixture() {
   writeFileSync(join(root, "README.md"), "Intro\n<!-- CURRENT-CAMPAIGN:START -->\nstale\n<!-- CURRENT-CAMPAIGN:END -->\nFooter\n");
   return { root, dir, run: (check = false) => publishCurrentCampaign(root, check) };
 }
-it("binds separate audit and condition evidence and publishes consistent comparison artifacts", () => {
+function currentFixture() {
   const f = fixture();
   for (const dataset of ["linux-results-2026-09-19-r1", "linux-conditions-2026-09-21", "task-verification-2026-09-21"]) {
     cpSync(new URL(`../../../evidence/${dataset}`, import.meta.url), join(f.root, "evidence", dataset), { recursive: true });
   }
   cpSync(new URL("../../../task-revisions", import.meta.url), join(f.root, "task-revisions"), { recursive: true });
   writeFileSync(join(f.root, "evidence/current-campaign.json"), JSON.stringify({ dataset: "linux-results-2026-09-19-r1", conditions_dataset: "linux-conditions-2026-09-21", audit_dataset: "task-verification-2026-09-21" }));
+  return { ...f, dir: join(f.root, "evidence/linux-results-2026-09-19-r1") };
+}
+it("binds separate audit and condition evidence and publishes consistent comparison artifacts", () => {
+  const f = currentFixture();
   f.run();
   const comparison = JSON.parse(readFileSync(join(f.root, "evidence/linux-results-2026-09-19-r1/comparison.json"), "utf8"));
   expect(comparison.conditions.controlled_comparison).toBe(false);
@@ -105,13 +110,15 @@ it("publishes complete replacements with preserved originals and disclosed addit
     if (a.usage_unavailable === null && a.cost_unavailable !== "incomplete-accounting") return a;
     const next = structuredClone(data.attempts.find((b: typeof a) => b.harness === a.harness && b.task === a.task && b.usage_unavailable === null && b.cost_unavailable === null));
     next.run_id = a.run_id + "-replacement"; next.rep = a.rep;
+    // A replacement has its own artifacts, even when the fixture reuses usage facts.
+    next.hashes = { run: `sha256:${createHash("sha256").update(next.run_id).digest("hex")}`, events: `sha256:${createHash("sha256").update(`events:${next.run_id}`).digest("hex")}` };
     replacements.push({ original_run_id: a.run_id, replacement_run_id: next.run_id });
     const slot = summary.slots.find((s: { run_id: string }) => s.run_id === a.run_id);
     Object.assign(slot, { run_id: next.run_id, outcome: next.outcome, run_sha256: next.hashes.run, events_sha256: next.hashes.events });
     return next;
   });
   expect(replacements).toHaveLength(4);
-  Object.assign(summary, { prior_dataset: "linux-results-2026-09-19", replacements, interrupted_recovery_note: "Retained interrupted startup" });
+  Object.assign(summary, { prior_dataset: "linux-results-2026-09-19", replacements, interrupted_recovery_note: "Retained interrupted startup", interrupted_recovery_evidence: [{ run_id: "interrupted", events_sha256: "sha256:" + "0".repeat(64), event_count: 12 }] });
   writeFileSync(join(nextDir, "analysis.json"), JSON.stringify(data));
   writeFileSync(join(nextDir, "summary.json"), JSON.stringify(summary));
   const provenance = JSON.parse(readFileSync(join(nextDir, "provenance.json"), "utf8"));
@@ -127,4 +134,71 @@ it("publishes complete replacements with preserved originals and disclosed addit
   writeFileSync(join(nextDir, "summary.json"), JSON.stringify(summary));
   provenance.summary_sha256 = hash("summary.json"); writeFileSync(join(nextDir, "provenance.json"), JSON.stringify(provenance));
   expect(f.run).toThrow(/replacement membership/);
+});
+
+it("publishes deterministic bound diagnostics, preserving grades and selected costs", () => {
+  const f = currentFixture();
+  const original = readFileSync(join(f.dir, "analysis.json"));
+  f.run(); f.run(true);
+  const bytes = readFileSync(join(f.dir, "diagnostics.json"));
+  const d = JSON.parse(bytes.toString()) as ValidityDiagnostics;
+  expect(d.reliability.reduce((sum, row) => sum + row.passes, 0)).toBe(105);
+  expect(d.reliability.reduce((sum, row) => sum + row.repetitions, 0)).toBe(200);
+  expect(d.failures).toHaveLength(200);
+  expect(d.failures.filter(row => row.category === "confirmed-verifier-false-negative")).toHaveLength(4);
+  // Owner sorts Pi before Qwen; negate the endpoints to express Qwen minus Pi.
+  const pair = d.sensitivity.find(row => JSON.parse(row.left)[0] === "pi" && JSON.parse(row.right)[0] === "qwen")!;
+  expect(-pair.max_pp!).toBeCloseTo(2.857142857142857, 10);
+  expect(-pair.min_pp!).toBeCloseTo(11.428571428571429, 10);
+  const subtotal = (role: string) => d.collection.items.filter(row => row.class === role).reduce((sum, row) => sum + (row.known_reference_usd ?? 0), 0);
+  expect(subtotal("selected")).toBeCloseTo(27.184785825, 10);
+  expect(subtotal("superseded")).toBeCloseTo(0.673298502, 10);
+  expect(d.collection).toMatchObject({ selected_count: 200, superseded_count: 4, interrupted_count: 1,
+    missing_cost_count: 5, complete_total_usd: null, historical_excluded_scope: "unknown" });
+  expect(d.collection.known_reference_usd).toBeCloseTo(27.858084327, 10);
+  expect(d.collection.items.find(row => row.class === "interrupted")).toMatchObject({
+    run_id: "pinned:hermes:textual-richlog-follow-state:4:usage-replacements-20260919",
+    events_sha256: "sha256:a4e9a3d6f78ca4d144e9a73d1eb1c811a814d7875680a904e55d6be3e2b2d068", known_reference_usd: null });
+  const provenance = readFileSync(join(f.dir, "provenance.json"));
+  expect(JSON.parse(provenance.toString()).artifacts["diagnostics.json"]).toBe(`sha256:${createHash("sha256").update(bytes).digest("hex")}`);
+  f.run();
+  expect(readFileSync(join(f.dir, "diagnostics.json")).equals(bytes)).toBe(true);
+  expect(readFileSync(join(f.dir, "provenance.json")).equals(provenance)).toBe(true);
+  expect(readFileSync(join(f.dir, "analysis.json")).equals(original)).toBe(true);
+  writeFileSync(join(f.dir, "diagnostics.json"), "stale");
+  expect(() => f.run(true)).toThrow(/stale generated view.*diagnostics/);
+  expect(readFileSync(join(f.dir, "diagnostics.json"), "utf8")).toBe("stale");
+});
+it("rejects tampered prior bytes before publishing collection costs", () => {
+  const f = currentFixture(), prior = join(f.root, "evidence/linux-results-2026-09-19/analysis.json");
+  writeFileSync(prior, readFileSync(prior, "utf8") + "\n");
+  expect(f.run).toThrow(/prior source hash mismatch/);
+});
+it.each(["hash", "count", "run-id", "missing"])("rejects invalid interrupted %s evidence even when the summary hash is refreshed", field => {
+  const f = currentFixture(), path = join(f.dir, "summary.json");
+  const summary = JSON.parse(readFileSync(path, "utf8"));
+  if (field === "hash") summary.interrupted_recovery_evidence[0].events_sha256 = "invalid";
+  if (field === "count") summary.interrupted_recovery_evidence[0].event_count = -1;
+  if (field === "run-id") summary.interrupted_recovery_evidence[0].run_id = 123;
+  if (field === "missing") delete summary.interrupted_recovery_evidence;
+  writeFileSync(path, JSON.stringify(summary));
+  const provenancePath = join(f.dir, "provenance.json"), provenance = JSON.parse(readFileSync(provenancePath, "utf8"));
+  provenance.summary_sha256 = `sha256:${createHash("sha256").update(readFileSync(path)).digest("hex")}`;
+  writeFileSync(provenancePath, JSON.stringify(provenance));
+  expect(f.run).toThrow(/interrupted/);
+});
+
+it("loads a validated campaign without rewriting stale presentation files", () => {
+  const f = currentFixture(); const site = join(f.root, "site/index.html");
+  mkdirSync(join(f.root, "site")); writeFileSync(site, "stale presentation sentinel");
+  const loaded = loadValidatedCurrentCampaign(f.root);
+  expect(loaded.dataset).toBe("linux-results-2026-09-19-r1");
+  expect(loaded.analysis.attempts).toHaveLength(200); expect(loaded.diagnostics.failures).toHaveLength(200);
+  expect(readFileSync(site, "utf8")).toBe("stale presentation sentinel");
+  expect(readFileSync(join(f.root, "README.md"), "utf8")).toContain("stale");
+  const path = join(f.dir, "diagnostics.json"); writeFileSync(path, "stale diagnostics sentinel");
+  expect(() => loadValidatedCurrentCampaign(f.root)).toThrow(/diagnostics/);
+  expect(readFileSync(path, "utf8")).toBe("stale diagnostics sentinel");
+  // Refresh derives from validated canonical inputs, never from this stale sidecar.
+  f.run(); expect(loadValidatedCurrentCampaign(f.root).diagnostics.failures).toHaveLength(200);
 });

@@ -1,0 +1,15 @@
+{
+  "id": "deepseek-v41-1017-reference-2026-10-18",
+  "as_of": "2026-10-18",
+  "source": "https://openrouter.ai/api/v1/models/deepseek/deepseek-v4.1-flash-1017/endpoints",
+  "models": {
+    "deepseek/deepseek-v4.1-flash-1017": {
+      "input": 1.5e-07,
+      "cached_input": 3e-09,
+      "output": 6e-07
+    }
+  },
+  "provider": "deepseek",
+  "canonical_model": "deepseek/deepseek-v4.1-flash-20261017",
+  "notes": "Unconditional reference token-cost snapshot for immediate diagnostics. These reference rates are not a claim about billed provider prices, which vary by UTC time. Account-usage supervision remains required for the funded diagnostic. Enable --wait-for-price-window with the separate conditional low-tier book to require matching prices."
+}

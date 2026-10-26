@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "dataset": "linux-results-2026-10-24",
+  "analysis_sha256": "sha256:c66eff9528e366dd0e8af2c050086e98770c1424c0a969298a93d071415e4fba",
+  "evidence_hashes": {},
+  "method": "Exploratory 95% percentile task-cluster bootstrap, 10,000 deterministic resamples. Each task and all its repetitions move together; harnesses are paired by task, not by random seed. Marginal intervals are not corrected for multiple comparisons or winner selection. Eight task clusters provide limited evidence about other coding tasks. These intervals do not remove configuration, environment or verifier confounding.",
+  "pairwise": [
+    {
+      "left": "cline",
+      "right": "codex",
+      "difference_pp": -81.25,
+      "tasks": 8,
+      "attempts_per_harness": 16,
+      "interval": [
+        -93.75,
+        -62.5
+      ],
+      "interpretation": "directional"
+    },
+    {
+      "left": "cline",
+      "right": "hermes",
+      "difference_pp": -56.25,
+      "tasks": 8,
+      "attempts_per_harness": 16,
+      "interval": [
+        -81.25,
+        -31.25
+      ],
+      "interpretation": "directional"
+    },
+    {
+      "left": "cline",
+      "right": "pi",
+      "difference_pp": -81.25,
+      "tasks": 8,
+      "attempts_per_harness": 16,
+      "interval": [
+        -100,
+        -56.25
+      ],
+      "interpretation": "directional"
+    },
+    {
+      "left": "cline",
+      "right": "qwen",
+      "difference_pp": -56.25,
+      "tasks": 8,
+      "attempts_per_harness": 16,
+      "interval": [
+        -87.5,
+        -25
+      ],
+      "interpretation": "directional"
+    },
+    {
+      "left": "codex",
+      "right": "hermes",
+      "difference_pp": 25,
+      "tasks": 8,
+      "attempts_per_harness": 16,
+      "interval": [
+        0,
+        62.5
+      ],
+      "interpretation": "inconclusive"
+    },
+    {
+      "left": "codex",
+      "right": "pi",
+      "difference_pp": 0,
+      "tasks": 8,
+      "attempts_per_harness": 16,
+      "interval": [
+        -25,
+        31.25
+      ],
+      "interpretation": "inconclusive"
+    },
+    {
+      "left": "codex",
+      "right": "qwen",
+      "difference_pp": 25,
+      "tasks": 8,
+      "attempts_per_harness": 16,
+      "interval": [
+        -12.5,
+        62.5
+      ],
+      "interpretation": "inconclusive"
+    },
+    {
+      "left": "hermes",
+      "right": "pi",
+      "difference_pp": -25,
+      "tasks": 8,
+      "attempts_per_harness": 16,
+      "interval": [
+        -50,
+        -6.25
+      ],
+      "interpretation": "directional"
+    },
+    {
+      "left": "hermes",
+      "right": "qwen",
+      "difference_pp": 0,
+      "tasks": 8,
+      "attempts_per_harness": 16,
+      "interval": [
+        -25,
+        25
+      ],
+      "interpretation": "inconclusive"
+    },
+    {
+      "left": "pi",
+      "right": "qwen",
+      "difference_pp": 25,
+      "tasks": 8,
+      "attempts_per_harness": 16,
+      "interval": [
+        6.25,
+        50
+      ],
+      "interpretation": "directional"
+    }
+  ],
+  "conditions": null,
+  "audit": null,
+  "conditions_dataset": null,
+  "audit_dataset": null
+}

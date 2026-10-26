@@ -1,5 +1,5 @@
 {
-  "dataset": "linux-results-2026-09-19-r1",
-  "conditions_dataset": "linux-conditions-2026-09-21",
-  "audit_dataset": "task-verification-2026-09-21"
+  "schema_version": 2,
+  "kind": "five-cli-1017-descriptive-snapshot",
+  "dataset": "linux-results-2026-10-24"
 }

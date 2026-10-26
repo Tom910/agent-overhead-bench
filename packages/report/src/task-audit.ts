@@ -2,7 +2,8 @@ import { ConfigError } from "@aob/contracts";
 import type { AnalysisAttempt } from "./analysis.js";
 export type AuditSummary = {
   revision: string; audited: number; reproduced: number; corrected: number; unavailable: number;
-  changes: Array<{ run_id: string; task: string; harness: string; rep: number; original: number; corrected: number }>;
+  changes: Array<{ run_id: string; task: string; harness: string; rep: number; original: number; corrected: number;
+    run_sha256: string; verifier_image: string; evidence: string[] }>;
   storage_failures: number;
 };
 const object = (v: unknown): v is Record<string, unknown> => v !== null && typeof v === "object" && !Array.isArray(v);
@@ -19,7 +20,7 @@ function replay(value: unknown, image: string, revised: boolean, amendment?: str
   requireAudit(object(value) && value.image === image && value.revised === revised && value.exit_code === 0, "invalid replay identity or execution");
   for (const key of ["patch_sha256", "stdout_sha256", "stderr_sha256"]) requireAudit(typeof value[key] === "string" && /^sha256:[a-f0-9]{64}$/.test(value[key]), "invalid replay hash");
   if (revised) requireAudit(typeof amendment === "string" && /^sha256:[a-f0-9]{64}$/.test(amendment) && value.amended_test_patch_sha256 === amendment, "amended verifier hash mismatch");
-  return { ...grade(value.grade), patch: value.patch_sha256 };
+  return { ...grade(value.grade), patch: value.patch_sha256 as string, stdout: value.stdout_sha256 as string, stderr: value.stderr_sha256 as string };
 }
 export function validateTaskAudit(attempts: readonly AnalysisAttempt[], document: unknown, amendmentHashes: Record<string, string>): AuditSummary {
   requireAudit(object(document) && document.schema_version === 1 && document.historical_results_replaced === false && document.model_calls === 0
@@ -41,7 +42,7 @@ export function validateTaskAudit(attempts: readonly AnalysisAttempt[], document
   }
   requireAudit(taskIds.every(t => polarityKeys.has(`${t}:reference`) && polarityKeys.has(`${t}:pristine`)) && polarityKeys.has("textual-richlog-follow-state:reference-without-events"), "incomplete polarity coverage");
   const result: AuditSummary = { revision: document.revision, audited: 0, reproduced: 0, corrected: 0, unavailable: 0, changes: [], storage_failures: 0 };
-  for (const record of document.attempts) {
+  for (const [index, record] of document.attempts.entries()) {
     requireAudit(object(record) && typeof record.run_id === "string" && !seen.has(record.run_id), "duplicate or invalid attempt");
     const a = byId.get(record.run_id);
     requireAudit(a !== undefined && a.hashes.run === record.run_sha256 && a.task === record.task && a.harness === record.harness && a.rep === record.rep
@@ -63,7 +64,16 @@ export function validateTaskAudit(attempts: readonly AnalysisAttempt[], document
     requireAudit(corrected.patch === original.patch && corrected.counts[1] === original.counts[1] && corrected.counts[4] === original.counts[4]
       && corrected.reward === record.corrected_reward, "corrected patch or grade mismatch");
     result.corrected++;
-    if (corrected.reward !== original.reward) result.changes.push({ run_id: a.run_id, task: a.task, harness: a.harness, rep: a.rep, original: original.reward, corrected: corrected.reward });
+    if (corrected.reward !== original.reward) {
+      const ref = (field: string, hash: string) => `audit.json#/attempts/${index}/${field}@${hash}`;
+      result.changes.push({ run_id: a.run_id, task: a.task, harness: a.harness, rep: a.rep,
+        original: original.reward, corrected: corrected.reward, run_sha256: a.hashes.run, verifier_image: a.verifier_image,
+        evidence: [ref("original_verify_log_sha256", record.original_verify_log_sha256 as string),
+          ref("original_replay/patch_sha256", original.patch), ref("original_replay/stdout_sha256", original.stdout), ref("original_replay/stderr_sha256", original.stderr),
+          ref("corrected_replay/patch_sha256", corrected.patch), ref("corrected_replay/stdout_sha256", corrected.stdout), ref("corrected_replay/stderr_sha256", corrected.stderr),
+          ref("corrected_replay/amended_test_patch_sha256", amendmentHashes[a.task]!)],
+      });
+    }
   }
   requireAudit(result.audited === document.scope.audited_attempts && result.reproduced === document.scope.original_grade_replays
     && result.corrected === document.scope.corrected_verifier_replays && result.unavailable === document.scope.unavailable_original_images, "coverage mismatch");

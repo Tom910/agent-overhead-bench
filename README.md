@@ -2,85 +2,48 @@
 
 Measure where coding-agent CLIs spend time and money: model calls, harness work,
 and tools. Explore pass rates, token usage, cache rates and reference costs from
-one completed Linux campaign below.
+the completed Linux collection below.
 
 This is a descriptive snapshot, not a capabilities leaderboard or the frozen v1
 dataset. See [METHODOLOGY.md](./METHODOLOGY.md) for measurement boundaries.
 Official v1 results are unpublished until the v1 dataset ships.
 
 <!-- CURRENT-CAMPAIGN:START -->
-## Linux results — completed campaign
+## Linux results — five-CLI 1017 descriptive snapshot
 
-**Model: `deepseek/deepseek-v4.1-flash` · one Linux host · 200/200 attempts.**
-Eight tasks × five repetitions per harness. 105 passes and 95 verification failures.
-Collection is complete; Claude CLI is excluded. Rows are alphabetical.
+**Model: `deepseek/deepseek-v4.1-flash-1017` · one Linux host · 80/80 attempts.**
+Eight tasks × two repetitions per CLI: 16 runs each. 44 native passes and 36 failures. Collection is complete. Rows are alphabetical. This is not the frozen v1 dataset.
 
-Actual measurements come first; **bold percentages compare each metric with its
-observed best (100%)**. Each column has its own baseline. Higher pass/cache rates
-score higher; lower cost/token usage scores higher.
+80 completion-selected outcomes across two tool cohorts; 83 observed paid primary attempts and 52 prerequisites. This is a descriptive snapshot, not one randomized five-CLI experiment. Full experiment cost is unknown. Three partial native captures retain valid required grade artifacts. Native tool timing remains partial.
+
+Each column has its own baseline. Higher pass/cache rates and lower costs/token usage score higher. Relative scores describe the observed values.
 
 | Harness | Pass rate | Avg cost / task | Whole benchmark | Cache rate | Tokens in | Tokens out |
 | --- | --- | --- | --- | --- | --- | --- |
-| cline | 45.0% (18/40) · **72.0%** | $0.205 · **46.4%** | $8.191 · **46.4%** | 96.4% · **97.2%** | 9.77M · **87.4%** | 158.2K · **54.1%** |
-| codex | 50.0% (20/40) · **80.0%** | $0.095 · **100.0%** | $3.798 · **100.0%** | 99.2% · **100.0%** | 8.54M · **100.0%** | 89.0K · **96.2%** |
-| hermes | 47.5% (19/40) · **76.0%** | $0.167 · **56.8%** | $6.688 · **56.8%** | 99.2% · **99.9%** | 15.31M · **55.8%** | 119.4K · **71.7%** |
-| pi | 57.5% (23/40) · **92.0%** | $0.103 · **92.0%** | $4.128 · **92.0%** | 98.3% · **99.1%** | 9.46M · **90.2%** | 86.7K · **98.7%** |
-| qwen | 62.5% (25/40) · **100.0%** | $0.109 · **86.7%** | $4.380 · **86.7%** | 99.2% · **99.9%** | 10.55M · **80.9%** | 85.6K · **100.0%** |
+| cline | 0.0% (0/16) · **0.0%** | $0.308 · **20.2%** | $4.931 · **20.2%** | 96.4% · **97.4%** | 12.67M · **35.1%** | 163.4K · **35.6%** |
+| codex | 81.3% (13/16) · **100.0%** | $0.077 · **80.8%** | $1.235 · **80.8%** | 98.6% · **99.5%** | 6.83M · **65.0%** | 73.6K · **79.2%** |
+| hermes | 56.3% (9/16) · **69.2%** | $0.103 · **60.6%** | $1.645 · **60.6%** | 98.9% · **99.9%** | 9.50M · **46.8%** | 74.9K · **77.7%** |
+| pi | 81.3% (13/16) · **100.0%** | $0.062 · **100.0%** | $0.997 · **100.0%** | 98.4% · **99.3%** | 4.44M · **100.0%** | 58.3K · **100.0%** |
+| qwen | 56.3% (9/16) · **69.2%** | $0.080 · **77.9%** | $1.280 · **77.9%** | 99.0% · **100.0%** | 8.04M · **55.3%** | 70.1K · **83.1%** |
 
-All harnesses combined: $27.185 for 200 selected runs at the shared reference prices.
+All harnesses combined: $10.088 for 80 selected runs at the shared reference prices.
 
-**Cost per task** is the average across each task’s five runs, then across the eight
-tasks. **Whole benchmark** sums all 40 runs per harness, including failures.
-Cache and tokens are medians per attempt; input includes cached tokens.
-Costs use shared token-based reference prices, not actual billing.
+**Cost per task** averages each task's two repetitions, then the eight tasks. **Whole benchmark** sums all 16 runs per CLI, including failures. Cache and tokens are medians per attempt; input includes cached tokens. **Reference cost:** selected reference estimates total **$10.088272872**. These estimates use `deepseek-v41-1017-reference-2026-10-18`: $0.15/M uncached input, $0.003/M cached input and $0.6/M output. They are not actual billing.
 
-**Comparison confidence:** eight task clusters; repeated runs are not 40 independent tasks.
-“Best = 100%” describes the observed result, not statistical certainty.
-Recorded model/provider facts match, but request settings, enforced resource/network controls and cache policy are incomplete; verifier images differ.
-The [separate verification audit](evidence/task-verification-2026-09-21/README.md) finds 4 Textual false negatives. Original outcomes above remain unchanged.
+The three extra attempts have $2.284068444 in known prefix reference estimates and unknown full costs. The 52 prerequisites have a known reference subtotal of $5.283952392; their full cost is unknown. Reserves are not charges. See [all extra attempts](evidence/linux-results-2026-10-24/extra-attempts.json) and [both original cohorts and six collection windows](evidence/linux-results-2026-10-24/cohorts.json). Open ledger ends remain open.
 
+**Comparison confidence:** eight task clusters. Repeated runs are not independent tasks. Relative scores describe observed measurements; they do not establish causality or a universal winner. Recorded image and environment differences limit interpretation. Non-model time includes unobserved tools and harness work.
 
-[**Explore the interactive website →**](https://tom910.github.io/agent-overhead-bench/) ·
-[Detailed tables](evidence/linux-results-2026-09-19-r1/analysis.md) · [Canonical data](evidence/linux-results-2026-09-19-r1/analysis.json)
+[**Open the interactive website →**](https://tom910.github.io/agent-overhead-bench/) · [Result interpretation and native workflow findings](https://github.com/Tom910/agent-overhead-bench/blob/main/docs/snapshots/2026-10-24-five-cli.md) · [Detailed report](evidence/linux-results-2026-10-24/analysis.html) · [Canonical data](evidence/linux-results-2026-10-24/analysis.json) · [Source and reproduction](evidence/linux-results-2026-10-24/README.md) · [Historical 200-trial snapshot](evidence/linux-results-2026-09-19-r1/README.md) · [Earlier mixed-host snapshot](evidence/nonclaude-results-2026-09-14/README.md)
 
-<details>
-<summary>Conditions, provenance and how to refresh</summary>
+One exact version2 [current-campaign pointer](evidence/current-campaign.json) selects this validated source. Historical source files and outcomes are unchanged. Snapshot collection ended at 2026-10-24T08:12:53.079Z. This is not an official release.
 
-Four user-authorized replacements repaired incomplete accounting. The benchmark columns cover the selected 200 runs. The four superseded runs consumed **at least $0.673** in additional reference cost (codex: ≥ $0.067; hermes: ≥ $0.468; pi: ≥ $0.138), excluded from those columns. Their full costs remain unknown. [Original measurements](evidence/linux-results-2026-09-19/analysis.json) and [replacement mapping](evidence/linux-results-2026-09-19-r1/summary.json) remain available. Replacements are selected for complete accounting, regardless of pass/fail outcome.
-
-One additional Hermes recovery startup was interrupted by a model-metadata capture issue. Its extra spend is also outside the selected benchmark columns and is not included in the lower bound above; its raw evidence is retained on Linux.
-
-**Reference cost:** $0.15/M uncached input + $0.003/M cached input + $0.6/M output, from `deepseek-v41-low-2026-09-10`. Exact request tokens are priced across all selected requests. Lower token usage alone does not establish better task performance. K = 1,000; M = 1,000,000.
-
-[Full interactive report](evidence/linux-results-2026-09-19-r1/analysis.html) · [Provenance and reproduction](evidence/linux-results-2026-09-19-r1/README.md)
-
-All 200 selected slots are from the same Linux host. The original collection reused 104 attempts and filled 96 missing slots. Four incomplete-measurement slots were subsequently rerun with explicit user authorization; all other slots are unchanged.
-Model routing is
-pinned to DeepSeek through OpenRouter, with fallbacks disabled and Relace excluded.
-Original accounting books remain provenance; they do not split this model overview.
-
-Retained and rebuilt verifier images occur in this dataset. Detailed comparisons
-preserve their identities; the overview is not an image-matched controlled
-experiment. Tool visibility is partial, so non-model time is not pure harness
-overhead. This is not the frozen v1 dataset or a capabilities leaderboard.
-
-One pointer, [current-campaign.json](evidence/current-campaign.json), selects the
-canonical export. This table, the website and both detailed views are generated from its
-validated attempt facts. The selection summary binds raw evidence hashes.
-Snapshot exported at 2026-09-19T22:14:30.347Z.
-
-Refresh every current view offline, without API keys or model calls:
+Refresh and check offline without API keys or model calls:
 
 ```bash
 npm run report:refresh
 npm run report:check
 ```
-
-The check fails when any generated view is stale. Earlier
-[partial Linux](evidence/linux-results-2026-09-18/README.md) and
-[mixed-host](evidence/nonclaude-results-2026-09-14/README.md) snapshots remain historical.
-
-</details>
 <!-- CURRENT-CAMPAIGN:END -->
 
 ## Earlier local fixture pilot
@@ -114,10 +77,11 @@ node scripts/s8-launch-check.mjs
 
 ## Results website
 
-The [interactive results site](https://tom910.github.io/agent-overhead-bench/) is
-published to GitHub Pages on pushes to `main`. It uses the same validated report
-as the table above, with task filters, independent metric comparisons and a
-pass-rate/cost chart.
+The [interactive results website](https://tom910.github.io/agent-overhead-bench/)
+uses the validated data in the table above. It includes task filters, independent
+metric comparisons and a pass-rate/cost chart. Read the
+[result interpretation and native workflow findings](docs/snapshots/2026-10-24-five-cli.md)
+for the verified Cline commit-check detail and comparison limits.
 
 To refresh and preview it locally (no API keys or model calls):
 

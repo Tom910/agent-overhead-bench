@@ -1,0 +1,2890 @@
+{
+  "schema_version": 1,
+  "dataset": "linux-results-2026-10-24",
+  "analysis_sha256": "sha256:c66eff9528e366dd0e8af2c050086e98770c1424c0a969298a93d071415e4fba",
+  "population_key": "[\"linux\",\"x64\",30.168060302734375,\"pinned\",\"deepseek/deepseek-v4.1-flash-1017\",\"deepseek-v41-1017-reference-2026-10-18\",\"https://github.com/datacurve-ai/deep-swe.git\",\"public-task-pack\",\"0b9fabbb63b9104d678fe965e1632f2dd9eaa2ea\",\"extended\",[[\"relace\"],\"deepseek\",false],null,null]",
+  "reference_book": "deepseek-v41-1017-reference-2026-10-18",
+  "original_grades": true,
+  "reliability": [
+    {
+      "harness": "cline",
+      "version": "3.0.61",
+      "task": "cattrs-partial-structuring-recovery",
+      "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:cline:cattrs-partial-structuring-recovery:0",
+        "pinned:cline:cattrs-partial-structuring-recovery:1"
+      ],
+      "verifier_images": [
+        "sha256:b985f2bd17e9e80bee0fa9b7c0747b2ded92d54d070b32ebfe102e8829a44076"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "cline",
+      "version": "3.0.61",
+      "task": "happy-dom-deterministic-intersectionobserver",
+      "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:cline:happy-dom-deterministic-intersectionobserver:0",
+        "pinned:cline:happy-dom-deterministic-intersectionobserver:1"
+      ],
+      "verifier_images": [
+        "sha256:a4df294272f2165ce894306ab1eec5284fe426ddaa66cf08bb3c4755a9f8faa2"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "cline",
+      "version": "3.0.61",
+      "task": "ink-grid-box-layout",
+      "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:cline:ink-grid-box-layout:0",
+        "pinned:cline:ink-grid-box-layout:1"
+      ],
+      "verifier_images": [
+        "sha256:73daa7eb11dec0d43e523434d28a66ee9d3ac063fda33d9e26183d867739dbb1"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "cline",
+      "version": "3.0.61",
+      "task": "psd-tools-blend-range-api",
+      "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:cline:psd-tools-blend-range-api:0",
+        "pinned:cline:psd-tools-blend-range-api:1"
+      ],
+      "verifier_images": [
+        "sha256:fbfcc5b7e68a2d8fd97688c69808049d582113368f388929d7d46ac44a592cd9"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "cline",
+      "version": "3.0.61",
+      "task": "superjson-error-stack-serialization",
+      "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:cline:superjson-error-stack-serialization:0",
+        "pinned:cline:superjson-error-stack-serialization:1"
+      ],
+      "verifier_images": [
+        "sha256:dcc10590630fcc927468099eb5118e4bc7170a1f12e01ca5c9404011de072444"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "cline",
+      "version": "3.0.61",
+      "task": "textual-richlog-follow-state",
+      "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:cline:textual-richlog-follow-state:0",
+        "pinned:cline:textual-richlog-follow-state:1"
+      ],
+      "verifier_images": [
+        "sha256:73fd3d800de9d5dae47edd9b5269e40966664b72d49d8f598964b8b91fdd0b92"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "cline",
+      "version": "3.0.61",
+      "task": "tomlkit-toml-table-converters",
+      "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:cline:tomlkit-toml-table-converters:0",
+        "pinned:cline:tomlkit-toml-table-converters:1"
+      ],
+      "verifier_images": [
+        "sha256:68dd891458463c9f930dcbbd59b4442065c145d66ce3b5813af82ca5ec8f4966"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "cline",
+      "version": "3.0.61",
+      "task": "true-myth-iterable-collection-combinators",
+      "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:cline:true-myth-iterable-collection-combinators:0",
+        "pinned:cline:true-myth-iterable-collection-combinators:1"
+      ],
+      "verifier_images": [
+        "sha256:0ecebbb45e561b37ee5d7bcbe80588427f4890fb80fffbbb73ca6b94c7cb8855"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "task": "cattrs-partial-structuring-recovery",
+      "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+      "passes": 1,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:codex:cattrs-partial-structuring-recovery:0",
+        "pinned:codex:cattrs-partial-structuring-recovery:1"
+      ],
+      "verifier_images": [
+        "sha256:b985f2bd17e9e80bee0fa9b7c0747b2ded92d54d070b32ebfe102e8829a44076"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "task": "happy-dom-deterministic-intersectionobserver",
+      "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+      "passes": 1,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:codex:happy-dom-deterministic-intersectionobserver:0",
+        "pinned:codex:happy-dom-deterministic-intersectionobserver:1"
+      ],
+      "verifier_images": [
+        "sha256:a4df294272f2165ce894306ab1eec5284fe426ddaa66cf08bb3c4755a9f8faa2"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "task": "ink-grid-box-layout",
+      "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+      "passes": 1,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:codex:ink-grid-box-layout:0",
+        "pinned:codex:ink-grid-box-layout:1"
+      ],
+      "verifier_images": [
+        "sha256:73daa7eb11dec0d43e523434d28a66ee9d3ac063fda33d9e26183d867739dbb1"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "task": "psd-tools-blend-range-api",
+      "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:codex:psd-tools-blend-range-api:0",
+        "pinned:codex:psd-tools-blend-range-api:1"
+      ],
+      "verifier_images": [
+        "sha256:fbfcc5b7e68a2d8fd97688c69808049d582113368f388929d7d46ac44a592cd9"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "task": "superjson-error-stack-serialization",
+      "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:codex:superjson-error-stack-serialization:0",
+        "pinned:codex:superjson-error-stack-serialization:1"
+      ],
+      "verifier_images": [
+        "sha256:dcc10590630fcc927468099eb5118e4bc7170a1f12e01ca5c9404011de072444"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "task": "textual-richlog-follow-state",
+      "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:codex:textual-richlog-follow-state:0",
+        "pinned:codex:textual-richlog-follow-state:1"
+      ],
+      "verifier_images": [
+        "sha256:73fd3d800de9d5dae47edd9b5269e40966664b72d49d8f598964b8b91fdd0b92"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "task": "tomlkit-toml-table-converters",
+      "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:codex:tomlkit-toml-table-converters:0",
+        "pinned:codex:tomlkit-toml-table-converters:1"
+      ],
+      "verifier_images": [
+        "sha256:68dd891458463c9f930dcbbd59b4442065c145d66ce3b5813af82ca5ec8f4966"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "task": "true-myth-iterable-collection-combinators",
+      "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:codex:true-myth-iterable-collection-combinators:0",
+        "pinned:codex:true-myth-iterable-collection-combinators:1"
+      ],
+      "verifier_images": [
+        "sha256:0ecebbb45e561b37ee5d7bcbe80588427f4890fb80fffbbb73ca6b94c7cb8855"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "task": "cattrs-partial-structuring-recovery",
+      "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+      "passes": 1,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:hermes:cattrs-partial-structuring-recovery:0",
+        "pinned:hermes:cattrs-partial-structuring-recovery:1"
+      ],
+      "verifier_images": [
+        "sha256:b985f2bd17e9e80bee0fa9b7c0747b2ded92d54d070b32ebfe102e8829a44076"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "task": "happy-dom-deterministic-intersectionobserver",
+      "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+      "passes": 1,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:hermes:happy-dom-deterministic-intersectionobserver:0",
+        "pinned:hermes:happy-dom-deterministic-intersectionobserver:1"
+      ],
+      "verifier_images": [
+        "sha256:a4df294272f2165ce894306ab1eec5284fe426ddaa66cf08bb3c4755a9f8faa2"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "task": "ink-grid-box-layout",
+      "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+      "passes": 1,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:hermes:ink-grid-box-layout:0",
+        "pinned:hermes:ink-grid-box-layout:1"
+      ],
+      "verifier_images": [
+        "sha256:73daa7eb11dec0d43e523434d28a66ee9d3ac063fda33d9e26183d867739dbb1"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "task": "psd-tools-blend-range-api",
+      "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:hermes:psd-tools-blend-range-api:0",
+        "pinned:hermes:psd-tools-blend-range-api:1"
+      ],
+      "verifier_images": [
+        "sha256:fbfcc5b7e68a2d8fd97688c69808049d582113368f388929d7d46ac44a592cd9"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "task": "superjson-error-stack-serialization",
+      "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:hermes:superjson-error-stack-serialization:0",
+        "pinned:hermes:superjson-error-stack-serialization:1"
+      ],
+      "verifier_images": [
+        "sha256:dcc10590630fcc927468099eb5118e4bc7170a1f12e01ca5c9404011de072444"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "task": "textual-richlog-follow-state",
+      "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:hermes:textual-richlog-follow-state:0",
+        "pinned:hermes:textual-richlog-follow-state:1"
+      ],
+      "verifier_images": [
+        "sha256:73fd3d800de9d5dae47edd9b5269e40966664b72d49d8f598964b8b91fdd0b92"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "task": "tomlkit-toml-table-converters",
+      "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:hermes:tomlkit-toml-table-converters:0",
+        "pinned:hermes:tomlkit-toml-table-converters:1"
+      ],
+      "verifier_images": [
+        "sha256:68dd891458463c9f930dcbbd59b4442065c145d66ce3b5813af82ca5ec8f4966"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "task": "true-myth-iterable-collection-combinators",
+      "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:hermes:true-myth-iterable-collection-combinators:0",
+        "pinned:hermes:true-myth-iterable-collection-combinators:1"
+      ],
+      "verifier_images": [
+        "sha256:0ecebbb45e561b37ee5d7bcbe80588427f4890fb80fffbbb73ca6b94c7cb8855"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "pi",
+      "version": "0.73.1",
+      "task": "cattrs-partial-structuring-recovery",
+      "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:pi:cattrs-partial-structuring-recovery:0",
+        "pinned:pi:cattrs-partial-structuring-recovery:1"
+      ],
+      "verifier_images": [
+        "sha256:b985f2bd17e9e80bee0fa9b7c0747b2ded92d54d070b32ebfe102e8829a44076"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "pi",
+      "version": "0.73.1",
+      "task": "happy-dom-deterministic-intersectionobserver",
+      "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+      "passes": 1,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:pi:happy-dom-deterministic-intersectionobserver:0",
+        "pinned:pi:happy-dom-deterministic-intersectionobserver:1"
+      ],
+      "verifier_images": [
+        "sha256:a4df294272f2165ce894306ab1eec5284fe426ddaa66cf08bb3c4755a9f8faa2"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "pi",
+      "version": "0.73.1",
+      "task": "ink-grid-box-layout",
+      "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:pi:ink-grid-box-layout:0",
+        "pinned:pi:ink-grid-box-layout:1"
+      ],
+      "verifier_images": [
+        "sha256:73daa7eb11dec0d43e523434d28a66ee9d3ac063fda33d9e26183d867739dbb1"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "pi",
+      "version": "0.73.1",
+      "task": "psd-tools-blend-range-api",
+      "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:pi:psd-tools-blend-range-api:0",
+        "pinned:pi:psd-tools-blend-range-api:1"
+      ],
+      "verifier_images": [
+        "sha256:fbfcc5b7e68a2d8fd97688c69808049d582113368f388929d7d46ac44a592cd9"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "pi",
+      "version": "0.73.1",
+      "task": "superjson-error-stack-serialization",
+      "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:pi:superjson-error-stack-serialization:0",
+        "pinned:pi:superjson-error-stack-serialization:1"
+      ],
+      "verifier_images": [
+        "sha256:dcc10590630fcc927468099eb5118e4bc7170a1f12e01ca5c9404011de072444"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "pi",
+      "version": "0.73.1",
+      "task": "textual-richlog-follow-state",
+      "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:pi:textual-richlog-follow-state:0",
+        "pinned:pi:textual-richlog-follow-state:1"
+      ],
+      "verifier_images": [
+        "sha256:73fd3d800de9d5dae47edd9b5269e40966664b72d49d8f598964b8b91fdd0b92"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "pi",
+      "version": "0.73.1",
+      "task": "tomlkit-toml-table-converters",
+      "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:pi:tomlkit-toml-table-converters:0",
+        "pinned:pi:tomlkit-toml-table-converters:1"
+      ],
+      "verifier_images": [
+        "sha256:68dd891458463c9f930dcbbd59b4442065c145d66ce3b5813af82ca5ec8f4966"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "pi",
+      "version": "0.73.1",
+      "task": "true-myth-iterable-collection-combinators",
+      "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:pi:true-myth-iterable-collection-combinators:0",
+        "pinned:pi:true-myth-iterable-collection-combinators:1"
+      ],
+      "verifier_images": [
+        "sha256:0ecebbb45e561b37ee5d7bcbe80588427f4890fb80fffbbb73ca6b94c7cb8855"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "qwen",
+      "version": "0.22.2",
+      "task": "cattrs-partial-structuring-recovery",
+      "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:qwen:cattrs-partial-structuring-recovery:0",
+        "pinned:qwen:cattrs-partial-structuring-recovery:1"
+      ],
+      "verifier_images": [
+        "sha256:b985f2bd17e9e80bee0fa9b7c0747b2ded92d54d070b32ebfe102e8829a44076"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "qwen",
+      "version": "0.22.2",
+      "task": "happy-dom-deterministic-intersectionobserver",
+      "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:qwen:happy-dom-deterministic-intersectionobserver:0",
+        "pinned:qwen:happy-dom-deterministic-intersectionobserver:1"
+      ],
+      "verifier_images": [
+        "sha256:a4df294272f2165ce894306ab1eec5284fe426ddaa66cf08bb3c4755a9f8faa2"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "qwen",
+      "version": "0.22.2",
+      "task": "ink-grid-box-layout",
+      "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:qwen:ink-grid-box-layout:0",
+        "pinned:qwen:ink-grid-box-layout:1"
+      ],
+      "verifier_images": [
+        "sha256:73daa7eb11dec0d43e523434d28a66ee9d3ac063fda33d9e26183d867739dbb1"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "qwen",
+      "version": "0.22.2",
+      "task": "psd-tools-blend-range-api",
+      "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:qwen:psd-tools-blend-range-api:0",
+        "pinned:qwen:psd-tools-blend-range-api:1"
+      ],
+      "verifier_images": [
+        "sha256:fbfcc5b7e68a2d8fd97688c69808049d582113368f388929d7d46ac44a592cd9"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "qwen",
+      "version": "0.22.2",
+      "task": "superjson-error-stack-serialization",
+      "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:qwen:superjson-error-stack-serialization:0",
+        "pinned:qwen:superjson-error-stack-serialization:1"
+      ],
+      "verifier_images": [
+        "sha256:dcc10590630fcc927468099eb5118e4bc7170a1f12e01ca5c9404011de072444"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "qwen",
+      "version": "0.22.2",
+      "task": "textual-richlog-follow-state",
+      "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+      "passes": 1,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:qwen:textual-richlog-follow-state:0",
+        "pinned:qwen:textual-richlog-follow-state:1"
+      ],
+      "verifier_images": [
+        "sha256:73fd3d800de9d5dae47edd9b5269e40966664b72d49d8f598964b8b91fdd0b92"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "qwen",
+      "version": "0.22.2",
+      "task": "tomlkit-toml-table-converters",
+      "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+      "passes": 0,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:qwen:tomlkit-toml-table-converters:0",
+        "pinned:qwen:tomlkit-toml-table-converters:1"
+      ],
+      "verifier_images": [
+        "sha256:68dd891458463c9f930dcbbd59b4442065c145d66ce3b5813af82ca5ec8f4966"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    },
+    {
+      "harness": "qwen",
+      "version": "0.22.2",
+      "task": "true-myth-iterable-collection-combinators",
+      "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+      "passes": 2,
+      "repetitions": 2,
+      "run_ids": [
+        "pinned:qwen:true-myth-iterable-collection-combinators:0",
+        "pinned:qwen:true-myth-iterable-collection-combinators:1"
+      ],
+      "verifier_images": [
+        "sha256:0ecebbb45e561b37ee5d7bcbe80588427f4890fb80fffbbb73ca6b94c7cb8855"
+      ],
+      "environments": [
+        "prepared-local"
+      ]
+    }
+  ],
+  "repeat_bins": [
+    {
+      "harness": "cline",
+      "version": "3.0.61",
+      "bins": [
+        {
+          "passes": 0,
+          "repetitions": 2,
+          "tasks": 8
+        },
+        {
+          "passes": 1,
+          "repetitions": 2,
+          "tasks": 0
+        },
+        {
+          "passes": 2,
+          "repetitions": 2,
+          "tasks": 0
+        }
+      ]
+    },
+    {
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "bins": [
+        {
+          "passes": 0,
+          "repetitions": 2,
+          "tasks": 0
+        },
+        {
+          "passes": 1,
+          "repetitions": 2,
+          "tasks": 3
+        },
+        {
+          "passes": 2,
+          "repetitions": 2,
+          "tasks": 5
+        }
+      ]
+    },
+    {
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "bins": [
+        {
+          "passes": 0,
+          "repetitions": 2,
+          "tasks": 2
+        },
+        {
+          "passes": 1,
+          "repetitions": 2,
+          "tasks": 3
+        },
+        {
+          "passes": 2,
+          "repetitions": 2,
+          "tasks": 3
+        }
+      ]
+    },
+    {
+      "harness": "pi",
+      "version": "0.73.1",
+      "bins": [
+        {
+          "passes": 0,
+          "repetitions": 2,
+          "tasks": 1
+        },
+        {
+          "passes": 1,
+          "repetitions": 2,
+          "tasks": 1
+        },
+        {
+          "passes": 2,
+          "repetitions": 2,
+          "tasks": 6
+        }
+      ]
+    },
+    {
+      "harness": "qwen",
+      "version": "0.22.2",
+      "bins": [
+        {
+          "passes": 0,
+          "repetitions": 2,
+          "tasks": 3
+        },
+        {
+          "passes": 1,
+          "repetitions": 2,
+          "tasks": 1
+        },
+        {
+          "passes": 2,
+          "repetitions": 2,
+          "tasks": 4
+        }
+      ]
+    }
+  ],
+  "sensitivity": [
+    {
+      "left": "[\"cline\",\"3.0.61\"]",
+      "right": "[\"codex\",\"codex-cli 0.149.1\"]",
+      "difference_pp": -81.25,
+      "omitted": [
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+          "omitted_difference_pp": -85.71428571428571
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+          "omitted_difference_pp": -85.71428571428571
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+          "omitted_difference_pp": -85.71428571428571
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+          "omitted_difference_pp": -78.57142857142857
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+          "omitted_difference_pp": -78.57142857142857
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+          "omitted_difference_pp": -78.57142857142857
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+          "omitted_difference_pp": -78.57142857142857
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+          "omitted_difference_pp": -78.57142857142857
+        }
+      ],
+      "min_pp": -85.71428571428571,
+      "max_pp": -78.57142857142857
+    },
+    {
+      "left": "[\"cline\",\"3.0.61\"]",
+      "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+      "difference_pp": -56.25,
+      "omitted": [
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+          "omitted_difference_pp": -57.142857142857146
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+          "omitted_difference_pp": -57.142857142857146
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+          "omitted_difference_pp": -57.142857142857146
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+          "omitted_difference_pp": -50
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+          "omitted_difference_pp": -64.28571428571429
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+          "omitted_difference_pp": -50
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+          "omitted_difference_pp": -64.28571428571429
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+          "omitted_difference_pp": -50
+        }
+      ],
+      "min_pp": -64.28571428571429,
+      "max_pp": -50
+    },
+    {
+      "left": "[\"cline\",\"3.0.61\"]",
+      "right": "[\"pi\",\"0.73.1\"]",
+      "difference_pp": -81.25,
+      "omitted": [
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+          "omitted_difference_pp": -78.57142857142857
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+          "omitted_difference_pp": -85.71428571428571
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+          "omitted_difference_pp": -78.57142857142857
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+          "omitted_difference_pp": -78.57142857142857
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+          "omitted_difference_pp": -92.85714285714286
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+          "omitted_difference_pp": -78.57142857142857
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+          "omitted_difference_pp": -78.57142857142857
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+          "omitted_difference_pp": -78.57142857142857
+        }
+      ],
+      "min_pp": -92.85714285714286,
+      "max_pp": -78.57142857142857
+    },
+    {
+      "left": "[\"cline\",\"3.0.61\"]",
+      "right": "[\"qwen\",\"0.22.2\"]",
+      "difference_pp": -56.25,
+      "omitted": [
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+          "omitted_difference_pp": -50
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+          "omitted_difference_pp": -64.28571428571429
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+          "omitted_difference_pp": -50
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+          "omitted_difference_pp": -50
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+          "omitted_difference_pp": -64.28571428571429
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+          "omitted_difference_pp": -57.142857142857146
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+          "omitted_difference_pp": -64.28571428571429
+        },
+        {
+          "left": "[\"cline\",\"3.0.61\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+          "omitted_difference_pp": -50
+        }
+      ],
+      "min_pp": -64.28571428571429,
+      "max_pp": -50
+    },
+    {
+      "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+      "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+      "difference_pp": 25,
+      "omitted": [
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+          "omitted_difference_pp": 28.571428571428573
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+          "omitted_difference_pp": 28.571428571428573
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+          "omitted_difference_pp": 28.571428571428573
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+          "omitted_difference_pp": 28.571428571428573
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+          "omitted_difference_pp": 14.285714285714286
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+          "omitted_difference_pp": 28.571428571428573
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+          "omitted_difference_pp": 14.285714285714286
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+          "omitted_difference_pp": 28.571428571428573
+        }
+      ],
+      "min_pp": 14.285714285714286,
+      "max_pp": 28.571428571428573
+    },
+    {
+      "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+      "right": "[\"pi\",\"0.73.1\"]",
+      "difference_pp": 0,
+      "omitted": [
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+          "omitted_difference_pp": 7.142857142857143
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+          "omitted_difference_pp": 0
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+          "omitted_difference_pp": 7.142857142857143
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+          "omitted_difference_pp": 0
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+          "omitted_difference_pp": -14.285714285714286
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+          "omitted_difference_pp": 0
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+          "omitted_difference_pp": 0
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+          "omitted_difference_pp": 0
+        }
+      ],
+      "min_pp": -14.285714285714286,
+      "max_pp": 7.142857142857143
+    },
+    {
+      "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+      "right": "[\"qwen\",\"0.22.2\"]",
+      "difference_pp": 25,
+      "omitted": [
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+          "omitted_difference_pp": 35.714285714285715
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+          "omitted_difference_pp": 21.428571428571427
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+          "omitted_difference_pp": 35.714285714285715
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+          "omitted_difference_pp": 28.571428571428573
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+          "omitted_difference_pp": 14.285714285714286
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+          "omitted_difference_pp": 21.428571428571427
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+          "omitted_difference_pp": 14.285714285714286
+        },
+        {
+          "left": "[\"codex\",\"codex-cli 0.149.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+          "omitted_difference_pp": 28.571428571428573
+        }
+      ],
+      "min_pp": 14.285714285714286,
+      "max_pp": 35.714285714285715
+    },
+    {
+      "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+      "right": "[\"pi\",\"0.73.1\"]",
+      "difference_pp": -25,
+      "omitted": [
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+          "omitted_difference_pp": -21.428571428571427
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+          "omitted_difference_pp": -28.571428571428573
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+          "omitted_difference_pp": -21.428571428571427
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+          "omitted_difference_pp": -28.571428571428573
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+          "omitted_difference_pp": -28.571428571428573
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+          "omitted_difference_pp": -28.571428571428573
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+          "omitted_difference_pp": -14.285714285714286
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"pi\",\"0.73.1\"]",
+          "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+          "omitted_difference_pp": -28.571428571428573
+        }
+      ],
+      "min_pp": -28.571428571428573,
+      "max_pp": -14.285714285714286
+    },
+    {
+      "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+      "right": "[\"qwen\",\"0.22.2\"]",
+      "difference_pp": 0,
+      "omitted": [
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+          "omitted_difference_pp": 7.142857142857143
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+          "omitted_difference_pp": -7.142857142857143
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+          "omitted_difference_pp": 7.142857142857143
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+          "omitted_difference_pp": 0
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+          "omitted_difference_pp": 0
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+          "omitted_difference_pp": -7.142857142857143
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+          "omitted_difference_pp": 0
+        },
+        {
+          "left": "[\"hermes\",\"Hermes Agent v0.20.5 (2026.8.19)\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+          "omitted_difference_pp": 0
+        }
+      ],
+      "min_pp": -7.142857142857143,
+      "max_pp": 7.142857142857143
+    },
+    {
+      "left": "[\"pi\",\"0.73.1\"]",
+      "right": "[\"qwen\",\"0.22.2\"]",
+      "difference_pp": 25,
+      "omitted": [
+        {
+          "left": "[\"pi\",\"0.73.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"cattrs-partial-structuring-recovery\",\"91df27b2a20f26c35777a92f4555438b62c06345\"]",
+          "omitted_difference_pp": 28.571428571428573
+        },
+        {
+          "left": "[\"pi\",\"0.73.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"happy-dom-deterministic-intersectionobserver\",\"32b2a8e60eab482c023af377160bf294d6da0318\"]",
+          "omitted_difference_pp": 21.428571428571427
+        },
+        {
+          "left": "[\"pi\",\"0.73.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"ink-grid-box-layout\",\"477fda7df7781406d2ba046eb48dd5391e964b72\"]",
+          "omitted_difference_pp": 28.571428571428573
+        },
+        {
+          "left": "[\"pi\",\"0.73.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"psd-tools-blend-range-api\",\"01595992c5f4d4695251fdf58b3edb5302d3ba46\"]",
+          "omitted_difference_pp": 28.571428571428573
+        },
+        {
+          "left": "[\"pi\",\"0.73.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"superjson-error-stack-serialization\",\"f143004734ea2dd4090e45013a07f091f5bbaee7\"]",
+          "omitted_difference_pp": 28.571428571428573
+        },
+        {
+          "left": "[\"pi\",\"0.73.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"textual-richlog-follow-state\",\"a12215b791587a6d94227bd30a0e9291de932106\"]",
+          "omitted_difference_pp": 21.428571428571427
+        },
+        {
+          "left": "[\"pi\",\"0.73.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"tomlkit-toml-table-converters\",\"962de91aaf103135f400e5108a798a59a10dc17e\"]",
+          "omitted_difference_pp": 14.285714285714286
+        },
+        {
+          "left": "[\"pi\",\"0.73.1\"]",
+          "right": "[\"qwen\",\"0.22.2\"]",
+          "task_key": "[\"true-myth-iterable-collection-combinators\",\"5945ad1b96e228ff716275d8a273282101152508\"]",
+          "omitted_difference_pp": 28.571428571428573
+        }
+      ],
+      "min_pp": 14.285714285714286,
+      "max_pp": 28.571428571428573
+    }
+  ],
+  "uncertainty": [
+    {
+      "harness": "cline",
+      "version": "3.0.61",
+      "reference_cost_mean": {
+        "estimate": 0.30820311562499986,
+        "lower": 0.17296157212499996,
+        "upper": 0.4682856419999997,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      },
+      "input_tokens_mean": {
+        "estimate": 19816878.6875,
+        "lower": 11382633.1875,
+        "upper": 29375545.5625,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      },
+      "output_tokens_mean": {
+        "estimate": 227535.1875,
+        "lower": 138877.8125,
+        "upper": 329059.25,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      }
+    },
+    {
+      "harness": "codex",
+      "version": "codex-cli 0.149.1",
+      "reference_cost_mean": {
+        "estimate": 0.07716122587499999,
+        "lower": 0.067972861875,
+        "upper": 0.08643599625,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      },
+      "input_tokens_mean": {
+        "estimate": 6668421.0625,
+        "lower": 5343578.75,
+        "upper": 7972482.125,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      },
+      "output_tokens_mean": {
+        "estimate": 73882.9375,
+        "lower": 65155.5625,
+        "upper": 83247.25,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      }
+    },
+    {
+      "harness": "hermes",
+      "version": "Hermes Agent v0.20.5 (2026.8.19)",
+      "reference_cost_mean": {
+        "estimate": 0.10281589837499999,
+        "lower": 0.07256952112499998,
+        "upper": 0.13960377675000002,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      },
+      "input_tokens_mean": {
+        "estimate": 12445570.0625,
+        "lower": 7015851.75,
+        "upper": 18977853.4375,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      },
+      "output_tokens_mean": {
+        "estimate": 84660.875,
+        "lower": 65719.875,
+        "upper": 108521.9375,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      }
+    },
+    {
+      "harness": "pi",
+      "version": "0.73.1",
+      "reference_cost_mean": {
+        "estimate": 0.06232532999999999,
+        "lower": 0.05310094274999999,
+        "upper": 0.07186463062500001,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      },
+      "input_tokens_mean": {
+        "estimate": 4686961.5,
+        "lower": 3501199.5625,
+        "upper": 5868286.6875,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      },
+      "output_tokens_mean": {
+        "estimate": 63143.375,
+        "lower": 53425.5625,
+        "upper": 74158.375,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      }
+    },
+    {
+      "harness": "qwen",
+      "version": "0.22.2",
+      "reference_cost_mean": {
+        "estimate": 0.08001148462499999,
+        "lower": 0.064296482625,
+        "upper": 0.09731973149999999,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      },
+      "input_tokens_mean": {
+        "estimate": 8597038.4375,
+        "lower": 5995636,
+        "upper": 11444424.5625,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      },
+      "output_tokens_mean": {
+        "estimate": 71308.625,
+        "lower": 58886.125,
+        "upper": 85078.0625,
+        "task_clusters": 8,
+        "measured": 16,
+        "missing": 0,
+        "method": "task-cluster-percentile-10000"
+      }
+    }
+  ],
+  "failures": [
+    {
+      "run_id": "pinned:cline:cattrs-partial-structuring-recovery:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:cattrs-partial-structuring-recovery:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:happy-dom-deterministic-intersectionobserver:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:happy-dom-deterministic-intersectionobserver:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:ink-grid-box-layout:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:ink-grid-box-layout:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:psd-tools-blend-range-api:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:psd-tools-blend-range-api:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:superjson-error-stack-serialization:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:superjson-error-stack-serialization:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:textual-richlog-follow-state:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:textual-richlog-follow-state:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:tomlkit-toml-table-converters:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:tomlkit-toml-table-converters:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:true-myth-iterable-collection-combinators:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:cline:true-myth-iterable-collection-combinators:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:cattrs-partial-structuring-recovery:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:cattrs-partial-structuring-recovery:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:happy-dom-deterministic-intersectionobserver:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:happy-dom-deterministic-intersectionobserver:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:ink-grid-box-layout:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:ink-grid-box-layout:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:psd-tools-blend-range-api:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:psd-tools-blend-range-api:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:superjson-error-stack-serialization:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:superjson-error-stack-serialization:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:textual-richlog-follow-state:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:textual-richlog-follow-state:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:tomlkit-toml-table-converters:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:tomlkit-toml-table-converters:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:true-myth-iterable-collection-combinators:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:codex:true-myth-iterable-collection-combinators:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:cattrs-partial-structuring-recovery:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:cattrs-partial-structuring-recovery:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:happy-dom-deterministic-intersectionobserver:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:happy-dom-deterministic-intersectionobserver:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:ink-grid-box-layout:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:ink-grid-box-layout:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:psd-tools-blend-range-api:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:psd-tools-blend-range-api:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:superjson-error-stack-serialization:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:superjson-error-stack-serialization:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:textual-richlog-follow-state:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:textual-richlog-follow-state:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:tomlkit-toml-table-converters:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:tomlkit-toml-table-converters:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:true-myth-iterable-collection-combinators:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:hermes:true-myth-iterable-collection-combinators:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:cattrs-partial-structuring-recovery:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:cattrs-partial-structuring-recovery:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:happy-dom-deterministic-intersectionobserver:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:happy-dom-deterministic-intersectionobserver:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:ink-grid-box-layout:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:ink-grid-box-layout:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:psd-tools-blend-range-api:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:psd-tools-blend-range-api:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:superjson-error-stack-serialization:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:superjson-error-stack-serialization:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:textual-richlog-follow-state:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:textual-richlog-follow-state:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:tomlkit-toml-table-converters:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:tomlkit-toml-table-converters:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:true-myth-iterable-collection-combinators:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:pi:true-myth-iterable-collection-combinators:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:cattrs-partial-structuring-recovery:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:cattrs-partial-structuring-recovery:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:happy-dom-deterministic-intersectionobserver:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:happy-dom-deterministic-intersectionobserver:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:ink-grid-box-layout:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:ink-grid-box-layout:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:psd-tools-blend-range-api:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:psd-tools-blend-range-api:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:superjson-error-stack-serialization:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:superjson-error-stack-serialization:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:textual-richlog-follow-state:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:textual-richlog-follow-state:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:tomlkit-toml-table-converters:0",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:tomlkit-toml-table-converters:1",
+      "original_outcome": "verify_error",
+      "category": "verification-unknown",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:true-myth-iterable-collection-combinators:0",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    },
+    {
+      "run_id": "pinned:qwen:true-myth-iterable-collection-combinators:1",
+      "original_outcome": "completed",
+      "category": "pass",
+      "audit_dataset": null,
+      "evidence": []
+    }
+  ],
+  "audit_coverage": null,
+  "collection": {
+    "reference_book": "deepseek-v41-1017-reference-2026-10-18",
+    "items": [
+      {
+        "run_id": "pinned:cline:tomlkit-toml-table-converters:1",
+        "run_sha256": null,
+        "events_sha256": "sha256:34400bbae5fbda186f0ffe04d84101008821b1ba8fd8b3119f89ea2b098f5b00",
+        "class": "interrupted",
+        "cost_status": "unknown",
+        "known_reference_usd": null,
+        "source_dataset": "linux-results-2026-10-24"
+      },
+      {
+        "run_id": "pinned:pi:textual-richlog-follow-state:0",
+        "run_sha256": null,
+        "events_sha256": "sha256:93906cf568e8d7424599cef415b7bb1d378da5739f7757ffa93938588f362c37",
+        "class": "interrupted",
+        "cost_status": "unknown",
+        "known_reference_usd": null,
+        "source_dataset": "linux-results-2026-10-24"
+      },
+      {
+        "run_id": "pinned:cline:cattrs-partial-structuring-recovery:0",
+        "run_sha256": "sha256:f6d72227d7c4ea192ef34a7de56fb8bdba1065a249fe074b5e5259f0440ff7d4",
+        "events_sha256": "sha256:17d77a7d315ddab3e0923bd36eca3e9634ac675410e92e4213c60e646b6fcdb4",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.5731096380000005
+      },
+      {
+        "run_id": "pinned:cline:cattrs-partial-structuring-recovery:1",
+        "run_sha256": "sha256:bd5febcd72ffe67d9a4dcb9ac37292b55e2f90b393095c6d4eadc7122356cbd8",
+        "events_sha256": "sha256:d3dfa38d24cc64842723534fa44d8c63a27a7f1f1ae3a0bb9f680d454d78cff7",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.130842168
+      },
+      {
+        "run_id": "pinned:cline:happy-dom-deterministic-intersectionobserver:0",
+        "run_sha256": "sha256:1eea12bdf18654d5a696878d9ecab486b1605bc742a25369e7cd02d5f6aa9dae",
+        "events_sha256": "sha256:0bfe94da994f116b0baa4a3742953d2d0f9e1f1854b7a64155c6d72b1150bcab",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.09470885399999998
+      },
+      {
+        "run_id": "pinned:cline:happy-dom-deterministic-intersectionobserver:1",
+        "run_sha256": "sha256:c88b76dd023d9bf3b5879e27353ef71ed46b9dff75de0dd9bbff2d2e2ced1fc3",
+        "events_sha256": "sha256:70e50197f2916d05664f7be47ea04a87466b3047186f0e7bf94ba678e053c4b6",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.26829011999999997
+      },
+      {
+        "run_id": "pinned:cline:ink-grid-box-layout:0",
+        "run_sha256": "sha256:dff7a1e09dbca793d1d8af94baab9da10cbb882d8d482534e3ad6a451efd27aa",
+        "events_sha256": "sha256:3e6ab3e7c476c2df68aa4286b3ac524fadf0f836e558233c8718cbaee3ded467",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.15499435199999984
+      },
+      {
+        "run_id": "pinned:cline:ink-grid-box-layout:1",
+        "run_sha256": "sha256:4e7c63a12c71b54df498f0233589674fc6eac05fccf8d79a267d675db361e8e3",
+        "events_sha256": "sha256:44c2723a325471ad1383959bb146d24e13347cb1ccb95a11de715eab7142a8aa",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.2516303099999998
+      },
+      {
+        "run_id": "pinned:cline:psd-tools-blend-range-api:0",
+        "run_sha256": "sha256:75437fad7a095f0e389dcd8723b4baa2d98ce69e79ff676ea1fb63cc16cce336",
+        "events_sha256": "sha256:ec819914fadec181fd59ef7942812cfe297ec981cc1f099556423d8268075670",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.3361372859999999
+      },
+      {
+        "run_id": "pinned:cline:psd-tools-blend-range-api:1",
+        "run_sha256": "sha256:0b84cf7e26aeb355159d4ce96f8adc9a1227b3bf8f32b03b79b24a2394329771",
+        "events_sha256": "sha256:3261e1f1eb3853794a81303e15a1c56c16a898eee501da27e02cac5808026807",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.17179967399999999
+      },
+      {
+        "run_id": "pinned:cline:superjson-error-stack-serialization:0",
+        "run_sha256": "sha256:3e704b70b7d1a6d70b725cf8eda09e327e9c967d0db53c2f4f88013f45c4ed9b",
+        "events_sha256": "sha256:95a88297ef0c113807ce921d77e1485f64ff7afee52db1ec53712e3021c7e22b",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.10867799399999994
+      },
+      {
+        "run_id": "pinned:cline:superjson-error-stack-serialization:1",
+        "run_sha256": "sha256:a50bc9f5c6f02747f8546bc7a4492b442dd0bc09d5d370107a3ca7efbc8ceb88",
+        "events_sha256": "sha256:a6f3e31b97bec80852db3fc1922e07f27bcf56682e76f488aaa75d43650d87b8",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.08779019399999996
+      },
+      {
+        "run_id": "pinned:cline:textual-richlog-follow-state:0",
+        "run_sha256": "sha256:54be11874fba10e52ec39f67ee30678706cfa142f7211252637d3663be2625df",
+        "events_sha256": "sha256:fd79064385f5141cfd7b552ba5b2bc8216edca29c4d96d79d66c3ba87b273f8c",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.9580861919999988
+      },
+      {
+        "run_id": "pinned:cline:textual-richlog-follow-state:1",
+        "run_sha256": "sha256:6939996502763afbbba24a96a98c3dd7b81c3c62e82904a10c80869f20614bfd",
+        "events_sha256": "sha256:26c30024766301381f32c76ca114ab34df9bcb9fef8649bac2e8fb8da035016f",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.6023075999999998
+      },
+      {
+        "run_id": "pinned:cline:tomlkit-toml-table-converters:0",
+        "run_sha256": "sha256:4a9adb51d6998525451d535859e9374e232bd5dd48282801eb650e794d6708ab",
+        "events_sha256": "sha256:09153e8f9a2b3ee894deb97386c9c4ec14dcc4ab0f2475644d8719ec7ede4601",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.7917267719999999
+      },
+      {
+        "run_id": "pinned:cline:tomlkit-toml-table-converters:1",
+        "run_sha256": "sha256:e80462bbaa93ed03d35e3db0172366ee81dbb963273885f55e998f5903e96a77",
+        "events_sha256": "sha256:821ce9aeb2b29cbbd58a4a110e4d2bb19d379ba3244695c07de119e722cb664b",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.2126029440000002
+      },
+      {
+        "run_id": "pinned:cline:true-myth-iterable-collection-combinators:0",
+        "run_sha256": "sha256:d28adb783c730a691ce0d263d177e0218e45088ec78bd469cb55c9776c852b03",
+        "events_sha256": "sha256:fc0751d681adfbc4cd6a614303e485d490976d19fdbab8bf7157e3c4edbdc299",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.09397075799999996
+      },
+      {
+        "run_id": "pinned:cline:true-myth-iterable-collection-combinators:1",
+        "run_sha256": "sha256:912c0af77fa02d607338a61d44194f8f4d9d0429627c4324180b179101b580f4",
+        "events_sha256": "sha256:9b98561755388c7f9ce1f2d0ba35774d70048f9fec31037a4a52200ceaff0f55",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.09457499399999998
+      },
+      {
+        "run_id": "pinned:codex:cattrs-partial-structuring-recovery:0",
+        "run_sha256": "sha256:e73addda90f555aeb0fed4e1654284189ae9d8300a0ef6299bea60fcc305cce0",
+        "events_sha256": "sha256:3b528664dfb80455fb9d5f0d928b677f783bf2229ca27c11b8cf4b9c7090d79b",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.057531059999999995
+      },
+      {
+        "run_id": "pinned:codex:cattrs-partial-structuring-recovery:1",
+        "run_sha256": "sha256:e781a21b581bcfa1ddb338673b3d6ad12f5bd543ea96e33b1c53e0d3be2fb320",
+        "events_sha256": "sha256:23725a9092793adc1be1ae7d33bd0f5215f09bcdec86d2043d854e179f7f9de5",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.07950974399999998
+      },
+      {
+        "run_id": "pinned:codex:happy-dom-deterministic-intersectionobserver:0",
+        "run_sha256": "sha256:94d0cf462c581a46c18a6aa54756cedee976faab3a3b7d2dcc2ecb079cc845f4",
+        "events_sha256": "sha256:1f1a9262cc354595fda4c3111e029df0c2171577cf4be94098d0cca0a95878ba",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.071663274
+      },
+      {
+        "run_id": "pinned:codex:happy-dom-deterministic-intersectionobserver:1",
+        "run_sha256": "sha256:dcf4604b29863eaf593862bbf79979273773e4512f8bf860f225145b4d51ca50",
+        "events_sha256": "sha256:d4d8430d8abeb79c0c6e7de8262b028aa3cfefe089fc2677b75b45e9e65e2ccd",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.06032268
+      },
+      {
+        "run_id": "pinned:codex:ink-grid-box-layout:0",
+        "run_sha256": "sha256:8a0f209b8df4a963ebad8f4ff4c88729d688ff3c64cd0541cbb13b090f135406",
+        "events_sha256": "sha256:93de83380993293049b5b888c601524325f72ae2d101e1bb3cb5f514236a797b",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.09200226000000002
+      },
+      {
+        "run_id": "pinned:codex:ink-grid-box-layout:1",
+        "run_sha256": "sha256:311a9c627e1b76a6cba882045d86bdbfb64f26d7ff003eb7a7e8b19fcd97df66",
+        "events_sha256": "sha256:bd0c5e3d9c5ebb8696035ce56c860ce66b298ee89628aeb568e2aa4f9039173d",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.08878677000000001
+      },
+      {
+        "run_id": "pinned:codex:psd-tools-blend-range-api:0",
+        "run_sha256": "sha256:bd0fd3d66769ed0d09de493766ee8aa792ab04d7fdc3af27e29f8c36fab17f10",
+        "events_sha256": "sha256:9895e7d5294b0aed078bfcb8e89a6f81f0ad98c982bc6780d19ea2dc529eab0d",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.07898230799999997
+      },
+      {
+        "run_id": "pinned:codex:psd-tools-blend-range-api:1",
+        "run_sha256": "sha256:1351b5c18f509ae869ff337d1cff8ddc38da77b989e8c848afc70e1e899ecdd0",
+        "events_sha256": "sha256:c7310e60bd67ce1b10e2e6fbed7791c8b16cf8498102dd161b4deff41a883c56",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.08189678999999998
+      },
+      {
+        "run_id": "pinned:codex:superjson-error-stack-serialization:0",
+        "run_sha256": "sha256:0f81bb1d4e740eec61b024a2c9d81f8a1891905c66491fc10f444040810db415",
+        "events_sha256": "sha256:c8b324f1ba2d08381be0a01e9def1bdddcda7c527a592341f11e32be139e5ad9",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.063481668
+      },
+      {
+        "run_id": "pinned:codex:superjson-error-stack-serialization:1",
+        "run_sha256": "sha256:4764bfc39919938e4ba9478f483d64d310b9ddec6c2c5361f275f4810980ea55",
+        "events_sha256": "sha256:98779153107f82255e3e5cf0fc147a3da16fb617103e2c0ef3949490304e9b59",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.058924067999999996
+      },
+      {
+        "run_id": "pinned:codex:textual-richlog-follow-state:0",
+        "run_sha256": "sha256:ef30d864e6ebb3dc96a3b4380d3022f92fabdc4dbeba50c275c9b56be3bbf916",
+        "events_sha256": "sha256:c3a91e41f34de4bd80e69530820437c0751f05217ec8b14f478f742e35180ed9",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.08420427599999994
+      },
+      {
+        "run_id": "pinned:codex:textual-richlog-follow-state:1",
+        "run_sha256": "sha256:660fe21779f113e36430cf646806281d59e74a4db85539dbb3289786a10ec4b9",
+        "events_sha256": "sha256:1e3f9096267fd7226bc447583662e171ea3492c9a411b87491066b4014f16268",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.10767100800000003
+      },
+      {
+        "run_id": "pinned:codex:tomlkit-toml-table-converters:0",
+        "run_sha256": "sha256:76b234cf40131662ae2255affec560bd0b05870ebd6166cf2762dc0b4a0e530f",
+        "events_sha256": "sha256:1cdb80cb88e489b703eec1d6455f9e9cb080522af0438b971abbd2989a68d402",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.08455031999999997
+      },
+      {
+        "run_id": "pinned:codex:tomlkit-toml-table-converters:1",
+        "run_sha256": "sha256:7a5e28ea2d89d10af490fa6e4bc8a042d1e60288b903efcf87ada8ecfc539fc3",
+        "events_sha256": "sha256:9226cdc36dc854ba70691e76e5ff809de2a725ef1314ac253638b7b39ff5a0d8",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.101775168
+      },
+      {
+        "run_id": "pinned:codex:true-myth-iterable-collection-combinators:0",
+        "run_sha256": "sha256:59c6810b60bbeea1ca31d7943f33a81cdbfda63aa9064cf2b482b6f873d563ae",
+        "events_sha256": "sha256:a47c2ffdda98691ca4e3919f358c23216fa22bd86002c768ec3b772896dae6a1",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.07849252800000003
+      },
+      {
+        "run_id": "pinned:codex:true-myth-iterable-collection-combinators:1",
+        "run_sha256": "sha256:12977945e81d36138696b05ab1fcef08c983b93415310e644928ba101c3b595b",
+        "events_sha256": "sha256:2dc9e5c7a748a0b233ed1bdf50c2814693b31d86e9556fb8fc70bdcb62835ab7",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.044785692
+      },
+      {
+        "run_id": "pinned:hermes:cattrs-partial-structuring-recovery:0",
+        "run_sha256": "sha256:7e6547cca7d54920b37731664d06dcc5b282e51541a107391f6e2c8da1e1b17b",
+        "events_sha256": "sha256:4835771493277176aea7f0da30d27f780670b98e0111fae54fcc093c2b45b818",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.10644725999999996
+      },
+      {
+        "run_id": "pinned:hermes:cattrs-partial-structuring-recovery:1",
+        "run_sha256": "sha256:cf83802394aa40b1187b0c815bc58d2dab875a1784616b84ed2a5e844ec8187d",
+        "events_sha256": "sha256:233cf116587b130b39284d33e416cb38c3e0d5717a6f6e60c88a36011342bc86",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.070678344
+      },
+      {
+        "run_id": "pinned:hermes:happy-dom-deterministic-intersectionobserver:0",
+        "run_sha256": "sha256:1f0301391a5993a0e69b686b024af49144b3d5a2dcf19857d0e59cca56106162",
+        "events_sha256": "sha256:42667a9b672c402865ba846738501b0630547a97569c44ccc004c5a11e4ee1fd",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.068760522
+      },
+      {
+        "run_id": "pinned:hermes:happy-dom-deterministic-intersectionobserver:1",
+        "run_sha256": "sha256:e5f819081b467848d80383fb71cccbda098b2407ea1a59cfd48b73641f13e175",
+        "events_sha256": "sha256:2ab78324306964a5e27022f7c9484e4f7635a836e791285475bc7dba7d616f25",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.085040016
+      },
+      {
+        "run_id": "pinned:hermes:ink-grid-box-layout:0",
+        "run_sha256": "sha256:bcf303d6062ec053b9b0616c38ca1b030181ca04fbd10f149230de6794c54c0a",
+        "events_sha256": "sha256:a5d3d4379091c56886f19e81ceadba7ebf5b1d93f13aa83847ccefa86a17b94a",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.10536085799999993
+      },
+      {
+        "run_id": "pinned:hermes:ink-grid-box-layout:1",
+        "run_sha256": "sha256:305d1a9c7f9be283c8527f01fe4c2fabcf0b2a4713d2ce91675e9b2102c3d8e7",
+        "events_sha256": "sha256:99ef7d06d4f2bf42bda92e9f2cd466e5a34990781ca24e5f144c2a7c1183fe0a",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.043536144
+      },
+      {
+        "run_id": "pinned:hermes:psd-tools-blend-range-api:0",
+        "run_sha256": "sha256:684846bc2ca20a13a0b454b498de0abeb907af5cde6df3600936369ad2ee990f",
+        "events_sha256": "sha256:e5e8a20236b072d324eb45b3be10b9fa80dff94b53c59e4ed2ea31272288a475",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.08345305799999994
+      },
+      {
+        "run_id": "pinned:hermes:psd-tools-blend-range-api:1",
+        "run_sha256": "sha256:bb003ae2c5ffd1dd1fb4df0e1d8d0a5c013164cf1396ae0bdcae2141cfbe98b3",
+        "events_sha256": "sha256:72fa1ecfc06708ab3f50d106c1a891a2c4f6ecdcee98ca6db30a8800b32d5914",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.073685538
+      },
+      {
+        "run_id": "pinned:hermes:superjson-error-stack-serialization:0",
+        "run_sha256": "sha256:9d677252c8240a7e5f89d194e7d7543ba57c265c7678ca2b7c39d6b95c5d6226",
+        "events_sha256": "sha256:bddec5be9db1c1fc0fc8cf9a2ba934cae82ef7fbeb758da5069f87c2cacdea49",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.04761616799999999
+      },
+      {
+        "run_id": "pinned:hermes:superjson-error-stack-serialization:1",
+        "run_sha256": "sha256:a2b4565f27cb869ac03b153f267ebf91a24a5b15887c15ab70c68d9c0d3bae5d",
+        "events_sha256": "sha256:08296b226557084e378cdb155e1ce6cbd50497c5a904a26246927c5b06a69ac1",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.041095871999999985
+      },
+      {
+        "run_id": "pinned:hermes:textual-richlog-follow-state:0",
+        "run_sha256": "sha256:027db98a98dae03423e8b08b755d86e1723b7c5d44ae03d9b4fc6918e05a2389",
+        "events_sha256": "sha256:cdcf90f804622ef9fcd1523a454cff0793625ebaaf58027ec9a06a0c0ac704e7",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.14206344000000007
+      },
+      {
+        "run_id": "pinned:hermes:textual-richlog-follow-state:1",
+        "run_sha256": "sha256:44ee647b3e66874433da7c57ea72582f7aaf093e52be477839e52448c288ddc7",
+        "events_sha256": "sha256:3b211d5c74ba8db32435fe008a20b1f2bbe9a037d0e6ada6405e925d4240e983",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.17279794200000007
+      },
+      {
+        "run_id": "pinned:hermes:tomlkit-toml-table-converters:0",
+        "run_sha256": "sha256:be9c687bff00a4aafed6089370d81bd75eae4a247127e4b90f2929bbbe23c799",
+        "events_sha256": "sha256:128d349506aa70ea6d5b8cb06c192892cc316e493e37093019293f58b863021b",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.275979882
+      },
+      {
+        "run_id": "pinned:hermes:tomlkit-toml-table-converters:1",
+        "run_sha256": "sha256:b4fa138810f89f2e72491f2776cdf4625eed04f695978ab56406c427b0c95779",
+        "events_sha256": "sha256:973b6ed225e9a99f82fed28b59162918977b967b3efc771c76d8c51126e37f44",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.13501730399999998
+      },
+      {
+        "run_id": "pinned:hermes:true-myth-iterable-collection-combinators:0",
+        "run_sha256": "sha256:4f3bb473a5cc9bfa6a93f5568ab6a4a32c61a09e6b6ce1b0951ff1833d631553",
+        "events_sha256": "sha256:11fe62ba652eba25db0b108c31cdbf151d20bf95269bc8d0683d71f552bb615a",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.10599315000000006
+      },
+      {
+        "run_id": "pinned:hermes:true-myth-iterable-collection-combinators:1",
+        "run_sha256": "sha256:9e6f61fa5abe05311205852248d7cfc4b18af761c4eabf0934cc0e40507848d8",
+        "events_sha256": "sha256:bca009661cf50289846dc0a3345f315ff000e0febc4cf65e49b6b984182e5601",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.087528876
+      },
+      {
+        "run_id": "pinned:pi:cattrs-partial-structuring-recovery:0",
+        "run_sha256": "sha256:e612b159fbec721bb769a0f49ba05d57f53c1d2819d702f4a2f4468adbfe7329",
+        "events_sha256": "sha256:07e4cc000f867bb3956dcb9b430e0257764b16160150e8b979f762f94d7f0552",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.038211798
+      },
+      {
+        "run_id": "pinned:pi:cattrs-partial-structuring-recovery:1",
+        "run_sha256": "sha256:b1ec8bcc05820401bc04cc55e909f6cc9422b35c8a34063a318788eee365a316",
+        "events_sha256": "sha256:c6a5581b513ff583dd2892223951c2bd51a4eb3876e625c1750f0111724a0d29",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.05085976199999998
+      },
+      {
+        "run_id": "pinned:pi:happy-dom-deterministic-intersectionobserver:0",
+        "run_sha256": "sha256:a8002f059a81cb9f04cd2c670faf9d6787e0260ac6994120305dae83e3c65f72",
+        "events_sha256": "sha256:42879b43e18c555803fd490dbc92989ead69ad67b1bb0e506a3994a42391bb78",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.06698440799999998
+      },
+      {
+        "run_id": "pinned:pi:happy-dom-deterministic-intersectionobserver:1",
+        "run_sha256": "sha256:5a6b12cb5fd818c1a6dbc281a3717563dc960a904f261f0c426a5095158eaa09",
+        "events_sha256": "sha256:74579ebb014a7333e79fe9bcd448912cc944839c9338e32fdce4bb32f0966d93",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.05078427
+      },
+      {
+        "run_id": "pinned:pi:ink-grid-box-layout:0",
+        "run_sha256": "sha256:aaa9ada95ed14723e52eeeec4e2dd17e7d78c7415405a2f51c76b724ad34b21e",
+        "events_sha256": "sha256:bd39b70538a98954816bb1d058d21866a3dde334b444a56b47c0cac2ad004adc",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.05285300400000001
+      },
+      {
+        "run_id": "pinned:pi:ink-grid-box-layout:1",
+        "run_sha256": "sha256:84fcf898b10c3d3ac1d95654ae4e4bb452b402c10d1adbf58f7f1b9ea8d6a5c8",
+        "events_sha256": "sha256:11a7cc2cd7fe441f68780671e5bd7e4612d2df913e590c696e1fd8e164477562",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.10002086999999998
+      },
+      {
+        "run_id": "pinned:pi:psd-tools-blend-range-api:0",
+        "run_sha256": "sha256:759b095c234d4f0f5a17c33e220ddc9578593d809b0d9f8a211fdb3a3b6d521e",
+        "events_sha256": "sha256:ad3d188cf9a2b2fef3c781cbc95bb69c2214eae3a1270f7c6f45d764fdc21b76",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.054244727999999985
+      },
+      {
+        "run_id": "pinned:pi:psd-tools-blend-range-api:1",
+        "run_sha256": "sha256:b42dadd3962235d29bd2700eac3b685f5c55a45e8d891eb96a292f922ad484d9",
+        "events_sha256": "sha256:a0347bcafa528ee4cde9924ba82f5618bbfda0f9253520da46415e83f42a124e",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.04056440999999999
+      },
+      {
+        "run_id": "pinned:pi:superjson-error-stack-serialization:0",
+        "run_sha256": "sha256:ca8dbbd7599876beab480f21c13f3625aa44daca954160bff894a1702723dfdb",
+        "events_sha256": "sha256:f4d608264210c9b3ed4dec1ee154e41959e06218ac62ae614d6ee6eb1fbff1bc",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.054675372
+      },
+      {
+        "run_id": "pinned:pi:superjson-error-stack-serialization:1",
+        "run_sha256": "sha256:f294369428cbfc8ab01d06c8c6bde00f4ada4fc7832f15f4965456789d8a1ffc",
+        "events_sha256": "sha256:f91be10a24e223da014030a85e5cdd1cf580e41d7c7b56d33b4caede6e8e8a26",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.051873114000000005
+      },
+      {
+        "run_id": "pinned:pi:textual-richlog-follow-state:0",
+        "run_sha256": "sha256:ef6930f0ad6e5e9490924c8c9a63b981fc987c36825a4ffa82b218affabd28cb",
+        "events_sha256": "sha256:f0d11066375fb9f6542235c910cecebd97c1b1d2bfcaaba406c153c1f2f6cbc1",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.06912499799999999
+      },
+      {
+        "run_id": "pinned:pi:textual-richlog-follow-state:1",
+        "run_sha256": "sha256:5a800b618a1ffeb5302c867fb5558cde5f03430ce21d27481784dc7584810ead",
+        "events_sha256": "sha256:f0dafa95b12c850fdf8db4efa2aee44a8c4792faee2f213a2bef3dd76ceae98b",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.058752156000000014
+      },
+      {
+        "run_id": "pinned:pi:tomlkit-toml-table-converters:0",
+        "run_sha256": "sha256:56179b1a620163c4fc68d53984e4da9a0e4cb98158c5b3b8d50023b85bc54783",
+        "events_sha256": "sha256:b8d34cfe7ac84ec31fdb185d7e16b2c173f1476bef5a8c8f3471cf051b75a0cf",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.087625476
+      },
+      {
+        "run_id": "pinned:pi:tomlkit-toml-table-converters:1",
+        "run_sha256": "sha256:c228621f79d8d2ded96512ad39bf0a30304552970cc1c554a3209febfaef9d1f",
+        "events_sha256": "sha256:288fd4bcadfcc1b1e7b67006cb368a0bf3796fa704da99020d828038b7fd4e39",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.086498952
+      },
+      {
+        "run_id": "pinned:pi:true-myth-iterable-collection-combinators:0",
+        "run_sha256": "sha256:d1da631813340f11ebce73dd366ce5c8f2de22108ffa318dadc94335171b8e68",
+        "events_sha256": "sha256:52ca3473661cf1baf328ef3b28916732b40c9b751eed884b77b3d107f66034f0",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.062896896
+      },
+      {
+        "run_id": "pinned:pi:true-myth-iterable-collection-combinators:1",
+        "run_sha256": "sha256:36234fe25318ee85bc43407f88f68cfa7da3f0fa0e60105e03e377b93e87304c",
+        "events_sha256": "sha256:db855b34ea41a19330880223382ac06f2a03512404105ab7afbc6e97b9e729f7",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.07123506599999999
+      },
+      {
+        "run_id": "pinned:qwen:cattrs-partial-structuring-recovery:0",
+        "run_sha256": "sha256:ca526979fc363b3113ec22fadbc0f10f9736d505c4f7b42d8ce7efed5fd1962b",
+        "events_sha256": "sha256:3ce0b9c884368524117ec391b160745c8f0ec47b34752631183e9f67b5e4188f",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.05772735599999998
+      },
+      {
+        "run_id": "pinned:qwen:cattrs-partial-structuring-recovery:1",
+        "run_sha256": "sha256:280f6ea9e7493277e0362326b94cc3d395161a410f549f1743c92853f92c290f",
+        "events_sha256": "sha256:e0054768a1fb8c0f0a48903b509e1d1cb8be0bbf7833bf6270f0d94e061c9339",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.09108412799999999
+      },
+      {
+        "run_id": "pinned:qwen:happy-dom-deterministic-intersectionobserver:0",
+        "run_sha256": "sha256:2965cf62c9778276c9df71a87b8b7811de0475c272260b9f4aa38abff43c683c",
+        "events_sha256": "sha256:1c7b12670bb0d939e9e77d01d3692701097353a8b22a338789b5b5f171723a6c",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.08024488799999999
+      },
+      {
+        "run_id": "pinned:qwen:happy-dom-deterministic-intersectionobserver:1",
+        "run_sha256": "sha256:0846f63e2bdfb2289db57eb71b00151f6856e97b03d72dfad9eef8e1a8fff57e",
+        "events_sha256": "sha256:5192615e1b0e5817ae8bb0a2ffa46f33ecbca0062a560d53973d5fc4d44fb4df",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.07185308399999998
+      },
+      {
+        "run_id": "pinned:qwen:ink-grid-box-layout:0",
+        "run_sha256": "sha256:58a801444e3cdcfed6abd9dbdb9963e5cd9b949c82fc6017f53dcd23c70bd810",
+        "events_sha256": "sha256:4873a65548d0f32d158c65e46f17ebc8d18f0a9d626010a1928e5e9804ada039",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.11442990599999997
+      },
+      {
+        "run_id": "pinned:qwen:ink-grid-box-layout:1",
+        "run_sha256": "sha256:7a397bdc2c292a1828fab7c85b26cc4a4ee1ddd8141ad38ada630eb1e23a9934",
+        "events_sha256": "sha256:ecc84daa0c8212a0cc304bfc3f8d86a931ed963b16d8ca66f2413cd5fcb30534",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.10352354399999995
+      },
+      {
+        "run_id": "pinned:qwen:psd-tools-blend-range-api:0",
+        "run_sha256": "sha256:c81299bd81e1fd0e0fa33c1e7684e8f9d1b1bd01db666ba013abefe23af6ccc3",
+        "events_sha256": "sha256:d9bc7043271fa7d80484e42e18dba301cb585f2b3eb96578e3436d173d6e5f2f",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.051427836
+      },
+      {
+        "run_id": "pinned:qwen:psd-tools-blend-range-api:1",
+        "run_sha256": "sha256:1c1463835c17b68bf3cbc49d8f9a4f4db9e129196d5d02c85dda5411abb32a89",
+        "events_sha256": "sha256:0475e5c85158033b0e3471aa770360ca53bec8139f12315b89d454daf131b2e3",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.05513466599999999
+      },
+      {
+        "run_id": "pinned:qwen:superjson-error-stack-serialization:0",
+        "run_sha256": "sha256:93ecc1050c26256094319571f60fb7699fbf37287ec7a7210e383d0fcf1a24ae",
+        "events_sha256": "sha256:4c55ea933bf5052de9d1b62cee9411235a9a0de797689c3e63da822b7b534ebb",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.05172999600000001
+      },
+      {
+        "run_id": "pinned:qwen:superjson-error-stack-serialization:1",
+        "run_sha256": "sha256:b11ca21420e34c4ee317b80a539169d16020185f348c437ef91fa9c7bc9e56bc",
+        "events_sha256": "sha256:884338c28c708a3c5bbfbeded5383a4b41127266c398676f2512bccba1a230ea",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.045845448
+      },
+      {
+        "run_id": "pinned:qwen:textual-richlog-follow-state:0",
+        "run_sha256": "sha256:54352d7e2301478636d688cf47f6283736d04d91da0e7393f177f712cf8c73e5",
+        "events_sha256": "sha256:212957053ce5341f5584ecc8c93eab55dace848dc52227fecfda009d01397cac",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.087680634
+      },
+      {
+        "run_id": "pinned:qwen:textual-richlog-follow-state:1",
+        "run_sha256": "sha256:a6cf983ea30ac891431e44847a7c843d0c5e3069a7810e48f84f9781600cbdb0",
+        "events_sha256": "sha256:02ae06ee11d14f3c970e6af8e538ad80678a2aaf78f6643df05eb5e644fdb7b7",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.08729757000000006
+      },
+      {
+        "run_id": "pinned:qwen:tomlkit-toml-table-converters:0",
+        "run_sha256": "sha256:0229a6b1aaefa6882268823db2d3430d83707d1dc595762fb430e8e7ca0b7f8a",
+        "events_sha256": "sha256:7ffcd7d6e33ede506a34c3ea3654a1b3a9ec752a1f3ca529f813074cc6783c98",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.09339193199999998
+      },
+      {
+        "run_id": "pinned:qwen:tomlkit-toml-table-converters:1",
+        "run_sha256": "sha256:72724ca0648fb547245692aba54641258bab0b9f3dcb5d7ec1eca52feb6c0cc2",
+        "events_sha256": "sha256:a6d20e8a60f5cf352fc85e0c35578822c1a466beb5b1befbcf4f26a51a8f3513",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.15321965399999998
+      },
+      {
+        "run_id": "pinned:qwen:true-myth-iterable-collection-combinators:0",
+        "run_sha256": "sha256:8ab0466c2730bd0cd9213bbbe1eabb8f9b6907263c4db20f124fc60c945e78e2",
+        "events_sha256": "sha256:1c8b5ecba2b24fc245f516404dd30e26bd93f00f837ba6c0706797eb004814f4",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.08473685399999997
+      },
+      {
+        "run_id": "pinned:qwen:true-myth-iterable-collection-combinators:1",
+        "run_sha256": "sha256:106965020ed0cc29c05b424627324c4c038ce2aaa44fc1429fa5284034a1323c",
+        "events_sha256": "sha256:4a401dcdbbc608e270df7ed0d178a2956359da976c5890970ec6e1b9124b79d9",
+        "class": "selected",
+        "source_dataset": "linux-results-2026-10-24",
+        "cost_status": "complete",
+        "known_reference_usd": 0.05085625800000001
+      },
+      {
+        "run_id": "pinned:cline:textual-richlog-follow-state:0",
+        "run_sha256": "sha256:56221fd738e399d7c5509dbd5da0579d4532ca7a94bc46818e23b151410fb009",
+        "events_sha256": "sha256:b1db6e4c387c2a4c4fc450c4cb7c6a53db5ad642ae23c8248f138fe7e4c84791",
+        "class": "superseded",
+        "source_dataset": "remaining-three-1017-20261021-r2",
+        "cost_status": "known-lower-bound",
+        "known_reference_usd": 1.8362037540000007
+      }
+    ],
+    "selected_count": 80,
+    "superseded_count": 1,
+    "interrupted_count": 2,
+    "known_reference_usd": 11.924476625999995,
+    "missing_cost_count": 3,
+    "complete_total_usd": null,
+    "historical_excluded_scope": "unknown",
+    "historical_excluded_count": null,
+    "historical_excluded_cost_usd": null
+  }
+}

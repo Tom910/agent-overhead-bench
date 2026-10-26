@@ -14,7 +14,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
-      - run: npm test
+      - name: Run all offline tests with bounded worker concurrency
+        run: npm run test --workspaces --if-present -- --maxWorkers=1 && node --test "scripts/*.test.mjs"
       - name: Verify current report matches canonical data (offline)
         run: npm run report:check
       - name: Build and validate zero-spend adapter images

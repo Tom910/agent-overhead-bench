@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "kind": "five-cli-1017-descriptive-snapshot",
+  "dataset": "linux-results-2026-10-24",
+  "artifacts": {
+    "analysis.json": "sha256:c66eff9528e366dd0e8af2c050086e98770c1424c0a969298a93d071415e4fba",
+    "summary.json": "sha256:839eea3f4d13bf60efea502dc1506f1035d093680e6ce7c611628903b6a9dc4e",
+    "cohorts.json": "sha256:2c5e4e6ba813f4061529c887e3ee9443c659041d4040ffda59855856872b1428",
+    "native-evidence.json": "sha256:25020676c958116a567e08640b7612709f62cdf6fb22778e12f0cdb3757d0eeb",
+    "extra-attempts.json": "sha256:19198777df4994e6ebf098e64de54a853ced25c67535806eea28d10f1c16891a",
+    "collection-ledger.json": "sha256:ced1f409b87bc1ca5f33eb0b4889ac030c11797f1f67555499201ac195628702"
+  },
+  "source_bindings": {
+    "prior_analysis_sha256": "sha256:29fb9ce495eaa70626695911eb220f2af8e005469ed03d0511db76928d666047",
+    "prior_capture_sha256": "sha256:29198fbfba2aa6b9ab27bdb3e75454d6990c899ccebb314e0afa5a3080467622",
+    "extension_completion_sha256": "sha256:b45ef0541b17241450fb68d1adaafe9f962bf509ee5fca1600263c4c535b2222",
+    "extension_verification_sha256": "sha256:9e4b3e5883178fbbb41d6d6857ad32f381a3fbf10b3b95861ed536453a56892e",
+    "recovery_manifest_sha256": "sha256:eb1dbd307c0c52c335aafac5cc868bfc2acd7df36f9f917ad35283faf11ccd73",
+    "zero_request_start_sha256": "sha256:26c3a550948ed210624f7850fcc53eb184b480c5103d66915f6da58b84c5e97f",
+    "rejected_proxy_calibration_log_sha256": "sha256:c006559d466c5e536027af1b4730d2d1a9c769e2621c0484546ad90d55b5460b"
+  },
+  "producer_sha256": "sha256:db6e6e31c9cd1a2ca0d7be7acde313e0c357c36e3abae8fb077d6ccb5aba6e4a"
+}

@@ -202,7 +202,19 @@
         "harness": "codex",
         "rep": 0,
         "original": 0,
-        "corrected": 1
+        "corrected": 1,
+        "run_sha256": "sha256:ea20104d278c2cf2721fdfe7cf4fd0ba18a821822d32ca6df3e244b8547b18d9",
+        "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+        "evidence": [
+          "audit.json#/attempts/55/original_verify_log_sha256@sha256:16f91408cfe89b3bde6dc0deb72b1a42a41aa334e8edceca2a65edc522a27b11",
+          "audit.json#/attempts/55/original_replay/patch_sha256@sha256:604bdade893a56ba8fa59c77b7babacad4b5df05ecf00d99cc88cd42ceacd917",
+          "audit.json#/attempts/55/original_replay/stdout_sha256@sha256:fe59e6865b69f99deb748e5b3e3e3a6871b86d1240be9a376c354a7916c85b72",
+          "audit.json#/attempts/55/original_replay/stderr_sha256@sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "audit.json#/attempts/55/corrected_replay/patch_sha256@sha256:604bdade893a56ba8fa59c77b7babacad4b5df05ecf00d99cc88cd42ceacd917",
+          "audit.json#/attempts/55/corrected_replay/stdout_sha256@sha256:ec0c86de7db4789e8cddb03a3bfc6f91936f43f0b5ea3459c7a9ac21631c5d69",
+          "audit.json#/attempts/55/corrected_replay/stderr_sha256@sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "audit.json#/attempts/55/corrected_replay/amended_test_patch_sha256@sha256:26d29959b1522a2862205782cefc12b56117c6fe52cadde04cab2781b03f3867"
+        ]
       },
       {
         "run_id": "pinned:codex:textual-richlog-follow-state:1:linux-only-20260918",
@@ -210,7 +222,19 @@
         "harness": "codex",
         "rep": 1,
         "original": 0,
-        "corrected": 1
+        "corrected": 1,
+        "run_sha256": "sha256:52dd8e9cec78e0cf8f22dd602c687bdc7e0bd7cec8ab10487873e74b13a5c040",
+        "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+        "evidence": [
+          "audit.json#/attempts/56/original_verify_log_sha256@sha256:e990590f70b1d61467fef4101602c44ab6ec6be5ce67c6dca71d990bf9463827",
+          "audit.json#/attempts/56/original_replay/patch_sha256@sha256:4bb54c685bb1db156c82f11163e06bde0f6139d409a8c8c10c6531c7c26bc29d",
+          "audit.json#/attempts/56/original_replay/stdout_sha256@sha256:47a739ae0dba1e064f5bbe57b507853b762ec1439c05ffc80515787aca7e2d6d",
+          "audit.json#/attempts/56/original_replay/stderr_sha256@sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "audit.json#/attempts/56/corrected_replay/patch_sha256@sha256:4bb54c685bb1db156c82f11163e06bde0f6139d409a8c8c10c6531c7c26bc29d",
+          "audit.json#/attempts/56/corrected_replay/stdout_sha256@sha256:58847e8477a756ffc0c6fc04ee91953500a7f92ef9ce30c24f5983a8740e5d7b",
+          "audit.json#/attempts/56/corrected_replay/stderr_sha256@sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "audit.json#/attempts/56/corrected_replay/amended_test_patch_sha256@sha256:26d29959b1522a2862205782cefc12b56117c6fe52cadde04cab2781b03f3867"
+        ]
       },
       {
         "run_id": "pinned:pi:textual-richlog-follow-state:0:usage-replacements-20260919",
@@ -218,7 +242,19 @@
         "harness": "pi",
         "rep": 0,
         "original": 0,
-        "corrected": 1
+        "corrected": 1,
+        "run_sha256": "sha256:f5eda1101a408ef580720c589f7812eda68c93491e38916c3b64a5961f3c984c",
+        "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+        "evidence": [
+          "audit.json#/attempts/65/original_verify_log_sha256@sha256:f6df932481c8aedc35444ea2f313f78e7360628a70cff73c335c45326563a2bd",
+          "audit.json#/attempts/65/original_replay/patch_sha256@sha256:b22efac158d6038856a1c18a94ce173592775d25bf5dc074d76f89c97a7926d7",
+          "audit.json#/attempts/65/original_replay/stdout_sha256@sha256:d4caa1a11648fca87a8401e9437f05e7d9b779a32b56f92ea9942d430953dde9",
+          "audit.json#/attempts/65/original_replay/stderr_sha256@sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "audit.json#/attempts/65/corrected_replay/patch_sha256@sha256:b22efac158d6038856a1c18a94ce173592775d25bf5dc074d76f89c97a7926d7",
+          "audit.json#/attempts/65/corrected_replay/stdout_sha256@sha256:51fed16979077f4f9df8aae0412a1b6060b93bfce05d5be1b0881d0d4c34bcf0",
+          "audit.json#/attempts/65/corrected_replay/stderr_sha256@sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "audit.json#/attempts/65/corrected_replay/amended_test_patch_sha256@sha256:26d29959b1522a2862205782cefc12b56117c6fe52cadde04cab2781b03f3867"
+        ]
       },
       {
         "run_id": "pinned:qwen:textual-richlog-follow-state:0:linux-only-20260918",
@@ -226,7 +262,19 @@
         "harness": "qwen",
         "rep": 0,
         "original": 0,
-        "corrected": 1
+        "corrected": 1,
+        "run_sha256": "sha256:01a800fd16f68bbaa47e42f44c1403a05442af7a01089a6bfbc06f4f955129f3",
+        "verifier_image": "sha256:6c43ffe7837bea49f812f13adf8d5cd8a953d38ac3f8e2b97dfacc9f7bf4634b",
+        "evidence": [
+          "audit.json#/attempts/70/original_verify_log_sha256@sha256:7ac822fc5c769748cf502810e15b8cb4713597db9f0aa6b525fff2f8d53953ad",
+          "audit.json#/attempts/70/original_replay/patch_sha256@sha256:76206007befff9891cce0f27765c915011e265f382a13062887ca14bb2368c5f",
+          "audit.json#/attempts/70/original_replay/stdout_sha256@sha256:5eb8b24db669d1e7efe8d8259822c3c3e0d8ab654bfb07a1c47107b2ded90676",
+          "audit.json#/attempts/70/original_replay/stderr_sha256@sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "audit.json#/attempts/70/corrected_replay/patch_sha256@sha256:76206007befff9891cce0f27765c915011e265f382a13062887ca14bb2368c5f",
+          "audit.json#/attempts/70/corrected_replay/stdout_sha256@sha256:0d3de7a38dadafc0070d87385eecdd906c053cbdd151715bbddd7d03b9b933fa",
+          "audit.json#/attempts/70/corrected_replay/stderr_sha256@sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "audit.json#/attempts/70/corrected_replay/amended_test_patch_sha256@sha256:26d29959b1522a2862205782cefc12b56117c6fe52cadde04cab2781b03f3867"
+        ]
       }
     ],
     "storage_failures": 1

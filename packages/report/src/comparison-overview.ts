@@ -1,28 +1,13 @@
-import { readFileSync } from "node:fs";
-import { ConfigError } from "@aob/contracts";
 import { analysisPopulationKey, type AnalysisAttempt, type AnalysisExport, type AnalysisPopulation } from "./analysis.js";
 import { costUsd, type PriceRates } from "./aggregate.js";
-import { priceBookPath } from "./price-books.js";
+import { referencePricing, type ReferencePricing } from "./reference-pricing.js";
+export { REFERENCE_BOOK } from "./reference-pricing.js";
 import type { OverviewRow } from "./overview.js";
 
-export const REFERENCE_BOOK = "deepseek-v41-low-2026-09-10";
 export type ComparisonGroup = {
   key: string; attempts: AnalysisAttempt[]; originals: AnalysisPopulation[];
   rates: PriceRates | null; reference_book: string | null;
 };
-
-function referenceModels(): Record<string, PriceRates> {
-  try {
-    const book = JSON.parse(readFileSync(priceBookPath(REFERENCE_BOOK), "utf8")) as { id: string; models: Record<string, PriceRates> };
-    if (book.id !== REFERENCE_BOOK || !book.models || typeof book.models !== "object" || Array.isArray(book.models)) throw new ConfigError("Invalid reference price book");
-    for (const rates of Object.values(book.models)) {
-      if (!rates || ![rates.input, rates.cached_input, rates.output].every(v => typeof v === "number" && Number.isFinite(v) && v >= 0)) throw new ConfigError("Invalid reference rates");
-    }
-    return book.models;
-  } catch (error) {
-    throw new ConfigError(`Cannot load reference price book: ${error instanceof Error ? error.message : String(error)}`);
-  }
-}
 
 /** Hypothetical same-rate price, not a replacement for original recorded costs. */
 export function referenceCost(attempt: AnalysisAttempt, rates: PriceRates): number | null {
@@ -39,17 +24,18 @@ export function referenceCost(attempt: AnalysisAttempt, rates: PriceRates): numb
 
 /** Price-book differences alone do not split the token/reference-cost overview. */
 export function comparisonGroups(data: AnalysisExport): ComparisonGroup[] {
-  const models = referenceModels();
+  const prices = new Map<string, ReferencePricing | null>();
   const groups = new Map<string, ComparisonGroup>();
   for (const population of data.populations) {
     const ids = new Set(population.attempts);
     const attempts = data.attempts.filter(attempt => ids.has(attempt.run_id));
     const first = attempts[0];
     if (!first) continue;
-    const rates = Object.hasOwn(models, first.model) ? models[first.model]! : null;
+    if (!prices.has(first.model)) prices.set(first.model, referencePricing(first.model));
+    const pricing = prices.get(first.model)!, rates = pricing?.rates ?? null;
     // Temporary key projection only. Original attempts, prices and identities stay untouched.
-    const key = rates === null ? population.key : analysisPopulationKey({ ...first, price_book: REFERENCE_BOOK });
-    const group = groups.get(key) ?? { key, attempts: [], originals: [], rates, reference_book: rates === null ? null : REFERENCE_BOOK };
+    const key = rates === null ? population.key : analysisPopulationKey({ ...first, price_book: pricing!.reference_book });
+    const group = groups.get(key) ?? { key, attempts: [], originals: [], rates, reference_book: pricing?.reference_book ?? null };
     group.attempts.push(...attempts);
     group.originals.push(population);
     groups.set(key, group);

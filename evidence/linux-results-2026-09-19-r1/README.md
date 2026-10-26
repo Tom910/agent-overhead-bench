@@ -21,3 +21,18 @@ Use `npm run report:refresh` and `npm run report:check` from the repository root
 The [canonical data](analysis.json), [detailed tables](analysis.md), and
 [interactive report](analysis.html) use the same source. The historical snapshot
 remains preserved. This is not an official frozen v1 release.
+
+[diagnostics.json](diagnostics.json) adds repeat reliability, leave-one-task-out
+pass differences, and exploratory 95% task-cluster intervals for secondary mean
+reference cost, input tokens and output tokens. These are equal-task means,
+not the headline token medians. The deterministic 10,000-resample intervals
+use task/base-revision clusters; five repetitions do not create five independent
+tasks. Missing observations block that metric's interval and preserve its counts.
+No multiple-comparison correction or winner-selection claim is made.
+
+Failure labels retain the original outcome. Only validated changed grades in the
+separate audit receive the confirmed-verifier-false-negative label, with replay
+and amendment hash references. Other verification errors retain an unknown cause.
+The collection ledger inventories the 200 selected runs, four superseded runs
+and one events-only interrupted startup. It reports known reference costs and
+missing-cost counts; total historical collection cost remains unavailable.

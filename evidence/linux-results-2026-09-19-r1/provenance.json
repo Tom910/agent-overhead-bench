@@ -9,6 +9,7 @@
     "analysis.json": "sha256:c13a8cf19cd07da3c4de9b88f79b849d316fac5722cf867ac783c7f0f292ef36",
     "analysis.md": "sha256:a3c64c256eb9bdc4e8a4b59d6ff166aab87475eb28baa246f2406238aacd5a68",
     "analysis.html": "sha256:d012de600ebb2478dadd884451df92b411ce0719ad786808fdf9598ec00294c3",
-    "comparison.json": "sha256:9c2803319f58ae4f4c3524cb575e55cbd0b0bf4181207b83e976f8365f1006f5"
+    "comparison.json": "sha256:1ffd531cda2b53dfebfc9aaa3f0f19934b8642ef867472bfedf549cbde492689",
+    "diagnostics.json": "sha256:e7cb19b27f1c200fca5d5970f79953e9f0d4303ff89571b7727766ac348d7fc0"
   }
 }

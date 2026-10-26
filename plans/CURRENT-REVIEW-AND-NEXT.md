@@ -1,5 +1,22 @@
 # Current Review and Next Work
 
+## October 25 — Five-CLI 1017 descriptive snapshot
+
+The current pointer selects 80 verified trials: 44 native passes and 36 failures,
+with 16 trials per CLI. Results, cost/time interpretation and Cline's commit-check
+finding are in the [public snapshot note](../docs/snapshots/2026-10-24-five-cli.md).
+The selected reference estimate is $10.088272872; full cost remains unknown.
+The original 32 Pi/Qwen facts and 41 imported/seven fresh extension outcomes are
+preserved. All 83 observed primary attempts, 52 prerequisites and three partial
+native captures remain disclosed. Historical 200-trial selected facts are unchanged.
+
+The maintainer requested fresh subagent verification and posting the report.
+The reviewed publication uses a narrow report-only projection of the engineering
+work, not the private collection/operator history. Source-specific review and
+native verifier gates remain enabled. Official release status remains false.
+See the [publication plan](S8-five-cli-1017-publication-plan.md) and GitHub Pages
+workflow for deployment. No new paid benchmark run is required.
+
 ## GitHub push-ready — 2026-09-15
 
 `main` is a single unpublished-source commit. The only remaining operator

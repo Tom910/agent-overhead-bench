@@ -1,13 +1,19 @@
-import { renderResultsSite } from "./results-site.js";
+import { publish1017Snapshot } from "./current-1017-publication.js";
+import { loadValidated1017Snapshot, SNAPSHOT_DATASET, type SnapshotFacts } from "./current-1017-snapshot.js";
+import { renderCampaignResultsSite } from "./results-site.js";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import type { ValidatedCampaign } from "./validated-campaign-registry.js";
+import type { AnalysisAttempt } from "./analysis.js";
+import { buildCollectionLedger } from "./collection-ledger.js";
+import { buildValidityDiagnostics } from "./validity-diagnostics.js";
 import { summarizeBenchmarkCosts } from "./benchmark-cost.js";
 import { ConfigError } from "@aob/contracts";
 import { replayAnalysis } from "./analysis-replay.js";
 import { benchmarkTotalNote, overviewMarkdown, renderAnalysisHtml, renderAnalysisMarkdown } from "./analysis-render.js";
-import { comparisonGroups, referenceCost, REFERENCE_BOOK } from "./comparison-overview.js";
+import { comparisonGroups, referenceCost } from "./comparison-overview.js";
 import { assessComparisonConditions } from "./comparison-conditions.js";
 import { validateTaskAudit } from "./task-audit.js";
 import { CONFIDENCE_METHOD, pairwiseConfidence } from "./comparison-confidence.js";
@@ -29,9 +35,14 @@ function json(path: string): Record<string, unknown> {
   } catch (error) { throw new ConfigError(`current campaign: cannot read ${path}: ${error instanceof Error ? error.message : String(error)}`); }
 }
 
-/** One canonical attempt export drives all current presentation; check never writes. */
-export function publishCurrentCampaign(root: string, check = false): void {
+export type CurrentCampaign = ValidatedCampaign & { publication: { exported: string; replacementNote: string; collectionNote: string;
+  provenance: Record<string, unknown>; artifacts: Record<string, unknown>; evidenceHashes: Record<string, string>; snapshot?: SnapshotFacts } };
+
+/** Read-only source owner. Derive mode repairs no files and still validates all raw bindings. */
+export function loadValidatedCurrentCampaign(root: string, diagnosticsMode: "stored" | "derive" = "stored"): CurrentCampaign {
+  requireValid(diagnosticsMode === "stored" || diagnosticsMode === "derive", "invalid diagnostics loading mode");
   const pointer = json(join(root, "evidence/current-campaign.json"));
+  if (pointer.schema_version !== undefined || pointer.dataset === SNAPSHOT_DATASET) return loadValidated1017Snapshot(root, pointer, diagnosticsMode);
   requireValid(typeof pointer.dataset === "string" && DATASET.test(pointer.dataset), "invalid dataset pointer");
   const dir = join(root, "evidence", pointer.dataset);
   const source = readFileSync(join(dir, "analysis.json"));
@@ -101,8 +112,9 @@ export function publishCurrentCampaign(root: string, check = false): void {
       evidence.audit = validateTaskAudit(data.attempts, document, hashes);
     }
   }
-  const pairwise = pairwiseConfidence(data.attempts);
   let replacementNote = "";
+  let priorDataset: string | null = null;
+  const superseded: AnalysisAttempt[] = [];
   let collectionNote = "All 200 unique slots are from the same Linux host: 104 retained attempts and 96 previously missing slots. Completed attempts were not rerun.";
   if (summary.replacements !== undefined) {
     requireValid(typeof summary.prior_dataset === "string" && DATASET.test(summary.prior_dataset) && summary.prior_dataset !== pointer.dataset, "invalid prior dataset");
@@ -131,6 +143,7 @@ export function publishCurrentCampaign(root: string, check = false): void {
       const next = newById.get(old.run_id);
       requireValid(next !== undefined && JSON.stringify(next) === JSON.stringify(old), "unselected attempt changed during replacement");
     }
+    priorDataset = summary.prior_dataset; superseded.push(...oldAttempts);
     const extra = summarizeBenchmarkCosts(oldAttempts, group.rates);
     const subtotal = extra.reduce((sum, h) => sum + (h.known_usd ?? 0), 0);
     replacementNote = `Four user-authorized replacements repaired incomplete accounting. The benchmark columns cover the selected 200 runs. The four superseded runs consumed **at least $${subtotal.toFixed(3)}** in additional reference cost (${extra.map(h => `${h.harness}: ≥ $${(h.known_usd ?? 0).toFixed(3)}`).join("; ")}), excluded from those columns. Their full costs remain unknown. [Original measurements](evidence/${summary.prior_dataset}/analysis.json) and [replacement mapping](evidence/${pointer.dataset}/summary.json) remain available. Replacements are selected for complete accounting, regardless of pass/fail outcome.\n\n`;
@@ -140,8 +153,46 @@ export function publishCurrentCampaign(root: string, check = false): void {
     }
     collectionNote = "All 200 selected slots are from the same Linux host. The original collection reused 104 attempts and filled 96 missing slots. Four incomplete-measurement slots were subsequently rerun with explicit user authorization; all other slots are unchanged.";
   }
+  const interrupted: Array<{ run_id: string; events_sha256: string; event_count: number }> = [];
+  requireValid(summary.interrupted_recovery_note === undefined ||
+    Array.isArray(summary.interrupted_recovery_evidence) && summary.interrupted_recovery_evidence.length === 1, "interrupted startup note requires bound evidence");
+  if (summary.interrupted_recovery_evidence !== undefined) {
+    requireValid(Array.isArray(summary.interrupted_recovery_evidence), "invalid interrupted evidence");
+    for (const record of summary.interrupted_recovery_evidence) {
+      requireValid(typeof record === "object" && record !== null && typeof record.run_id === "string" &&
+        typeof record.events_sha256 === "string" && typeof record.event_count === "number", "invalid interrupted record");
+      interrupted.push({ run_id: record.run_id, events_sha256: record.events_sha256, event_count: record.event_count });
+    }
+  }
+  // Summary bytes (including event-only identities) and prior replacement inputs
+  // have been validated above. No historical-directory scan implies completeness.
+  const collection = buildCollectionLedger({ selected: data.attempts, superseded, interrupted,
+    selected_dataset: pointer.dataset, prior_dataset: priorDataset, rates: group.rates });
+  const diagnostics = buildValidityDiagnostics({ dataset: pointer.dataset, analysis_sha256: digest(source),
+    attempts: data.attempts, population_key: group.key, rates: group.rates, audit: evidence.audit,
+    audit_dataset: evidence.audit_dataset, collection });
+  if (diagnosticsMode === "stored") {
+    const path = join(dir, "diagnostics.json");
+    requireValid(existsSync(path), "missing diagnostics.json");
+    const saved = readFileSync(path);
+    requireValid(artifacts["diagnostics.json"] === digest(saved), "diagnostics.json hash mismatch");
+    requireValid(saved.toString() === `${JSON.stringify(diagnostics, null, 2)}\n`, "diagnostics.json binding or reproducibility mismatch");
+  }
+  return { dataset: pointer.dataset, analysis_sha256: digest(source), analysis: data, diagnostics, evidence, groups,
+    publication: { exported: new Date(summary.as_of).toISOString(), replacementNote, collectionNote, provenance, artifacts, evidenceHashes } };
+}
+
+/** One canonical source drives current presentation; check never writes. */
+export function publishCurrentCampaign(root: string, check = false): void {
+  const campaign = loadValidatedCurrentCampaign(root, "derive");
+  if (campaign.publication.snapshot) return publish1017Snapshot(root, campaign, check);
+  const { analysis: data, evidence } = campaign;
+  const { exported, replacementNote, collectionNote, provenance, artifacts, evidenceHashes } = campaign.publication;
+  const dir = join(root, "evidence", campaign.dataset), group = campaign.groups[0]!;
+  const diagnostics = `${JSON.stringify(campaign.diagnostics, null, 2)}\n`;
+  const pairwise = pairwiseConfidence(data.attempts);
   const passes = data.attempts.filter(a => a.outcome === "completed").length;
-  const path = `evidence/${pointer.dataset}`;
+  const path = `evidence/${campaign.dataset}`;
   const rates = group.rates!;
   const block = `${START}
 ## Linux results — completed campaign
@@ -173,7 +224,7 @@ ${evidence.conditions ? "Recorded model/provider facts match, but request settin
 <details>
 <summary>Conditions, provenance and how to refresh</summary>
 
-${replacementNote}**Reference cost:** $${rates.input * 1e6}/M uncached input + $${rates.cached_input * 1e6}/M cached input + $${rates.output * 1e6}/M output, from \`${REFERENCE_BOOK}\`. Exact request tokens are priced across all selected requests. Lower token usage alone does not establish better task performance. K = 1,000; M = 1,000,000.
+${replacementNote}**Reference cost:** $${rates.input * 1e6}/M uncached input + $${rates.cached_input * 1e6}/M cached input + $${rates.output * 1e6}/M output, from \`${group.reference_book}\`. Exact request tokens are priced across all selected requests. Lower token usage alone does not establish better task performance. K = 1,000; M = 1,000,000.
 
 [Full interactive report](${path}/analysis.html) · [Provenance and reproduction](${path}/README.md)
 
@@ -190,7 +241,7 @@ overhead. This is not the frozen v1 dataset or a capabilities leaderboard.
 One pointer, [current-campaign.json](evidence/current-campaign.json), selects the
 canonical export. This table, the website and both detailed views are generated from its
 validated attempt facts. The selection summary binds raw evidence hashes.
-Snapshot exported at ${new Date(summary.as_of).toISOString()}.
+Snapshot exported at ${exported}.
 
 Refresh every current view offline, without API keys or model calls:
 
@@ -211,13 +262,13 @@ ${END}`;
   const markdown = renderAnalysisMarkdown(data) + comparisonMarkdown(data.attempts, evidence);
   const baseline = [...new Set(data.attempts.map(a => a.harness))].sort().at(-1)!;
   const html = renderAnalysisHtml(data).replace("</main>", `<section><h2>How convincing are the differences?</h2>${confidenceTable(pairwise, baseline)}<p>${CONFIDENCE_METHOD}</p></section>${evidenceHtml(evidence)}</main>`);
-  const comparison = `${JSON.stringify({ schema_version: 1, dataset: pointer.dataset, analysis_sha256: digest(source), evidence_hashes: evidenceHashes, method: CONFIDENCE_METHOD, pairwise, ...evidence }, null, 2)}\n`;
-  const updatedProvenance = { ...provenance, artifacts: { ...artifacts, "analysis.md": digest(markdown), "analysis.html": digest(html), "comparison.json": digest(comparison) } };
+  const comparison = `${JSON.stringify({ schema_version: 1, dataset: campaign.dataset, analysis_sha256: campaign.analysis_sha256, evidence_hashes: evidenceHashes, method: CONFIDENCE_METHOD, pairwise, ...evidence }, null, 2)}\n`;
+  const updatedProvenance = { ...provenance, artifacts: { ...artifacts, "analysis.md": digest(markdown), "analysis.html": digest(html), "comparison.json": digest(comparison), "diagnostics.json": digest(diagnostics) } };
   const outputs = new Map([
-    [join(root, "site/index.html"), renderResultsSite(data, pointer.dataset, new Date(summary.as_of).toISOString(), replacementNote, evidence)],
+    [join(root, "site/index.html"), renderCampaignResultsSite([campaign], exported, replacementNote)],
     [readmePath, updatedReadme], [join(dir, "analysis.md"), markdown], [join(dir, "analysis.html"), html],
     [join(dir, "provenance.json"), `${JSON.stringify(updatedProvenance, null, 2)}\n`],
-    [join(dir, "comparison.json"), comparison],
+    [join(dir, "comparison.json"), comparison], [join(dir, "diagnostics.json"), diagnostics],
   ]);
   if (check) {
     for (const [path, bytes] of outputs) requireValid(existsSync(path) && readFileSync(path, "utf8") === bytes, `stale generated view: ${path}; run npm run report:refresh`);
