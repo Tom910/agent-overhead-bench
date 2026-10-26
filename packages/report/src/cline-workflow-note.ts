@@ -20,6 +20,7 @@ type Audit = {
 /** A separately approved trace estimate. Never replaces a native grade or analysis input. */
 export function clineWorkflowNote(dir: string): {
   hash: string; markdown: string; repositoryMarkdown: string; html: (prefix?: string) => string;
+  detailsHtml: (prefix?: string) => string; passEstimates: ReadonlyMap<string, boolean>;
 } {
   try {
     const bytes = readFileSync(join(dir, CLINE_WORKFLOW_AUDIT));
@@ -44,12 +45,11 @@ export function clineWorkflowNote(dir: string): {
       audit.cells.filter(row => row.native_functional_failure_count === 0).length === 8 &&
       audit.cells.filter(row => row.observed_successful_commit).length === 15 &&
       audit.cells.filter(row => row.trace_estimated_workflow_pass).length === 14, "Cline trace audit counts differ");
-    const title = "Cline verifier correction";
-    const estimate = "Cline trace estimate: 6/16 (37.5%).";
-    const body = "The recorded result is 0/16, affected by a verifier defect: Cline's private cache was counted as uncommitted task work. This estimate covers all 16 Cline runs. Eight runs passed all code assertions; two of those still had real commit failures. Original Git metadata was overwritten, so an exact regrade is unavailable. Four of the six estimated passes lack a complete final Git status. Do not use Cline's recorded pass rate for a performance comparison. Original grades, costs, time and cache data are unchanged.";
-    const markdown = (prefix: string) => `## ${title}\n\n**${estimate}** ${body}\n\n[Read the trace audit and per-run limits](${prefix}${CLINE_WORKFLOW_AUDIT}).\n\n`;
+    const markdown = (prefix: string) => `Cline: **37.5% estimated (6/16)**. [Method notes](${prefix}${CLINE_WORKFLOW_AUDIT}).\n\n`;
     return { hash: APPROVED_AUDIT, markdown: markdown(""), repositoryMarkdown: markdown(`evidence/${audit.dataset}/`),
-      html: (prefix = "") => `<section id="cline-workflow-correction" style="border:1px solid currentColor;padding:16px;margin:16px 0"><h2>${title}</h2><p><strong>${estimate}</strong></p><p>${body}</p><p><a href="${prefix}${CLINE_WORKFLOW_AUDIT}">Read the trace audit and per-run limits</a></p></section>` };
+      passEstimates: new Map(audit.cells.map(row => [row.run_id, row.trace_estimated_combined_pass])),
+      html: (prefix = "") => `<p class="scope-note">Cline: <strong>37.5% estimated (6/16)</strong>. <a href="${prefix}${CLINE_WORKFLOW_AUDIT}">Method notes</a>.</p>`,
+      detailsHtml: (prefix = "") => `<details id="cline-result-notes"><summary>Cline method notes</summary><p>The table keeps recorded pass rates and shows a separate estimate from retained run traces. The estimate excludes Cline's private cache from the commit check; the original Git state is incomplete.</p><p><a href="${prefix}${CLINE_WORKFLOW_AUDIT}">Calculation and per-run evidence</a></p></details>` };
   } catch (error) {
     if (error instanceof ConfigError) throw error;
     throw new ConfigError("Cline trace audit is unavailable or invalid");

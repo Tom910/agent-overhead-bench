@@ -2,11 +2,7 @@
 
 80 completion-selected outcomes across two tool cohorts; 83 observed paid primary attempts and 52 prerequisites. This is a descriptive snapshot, not one randomized five-CLI experiment. Full experiment cost is unknown. Three partial native captures retain valid required grade artifacts. Native tool timing remains partial.
 
-## Cline verifier correction
-
-**Cline trace estimate: 6/16 (37.5%).** The recorded result is 0/16, affected by a verifier defect: Cline's private cache was counted as uncommitted task work. This estimate covers all 16 Cline runs. Eight runs passed all code assertions; two of those still had real commit failures. Original Git metadata was overwritten, so an exact regrade is unavailable. Four of the six estimated passes lack a complete final Git status. Do not use Cline's recorded pass rate for a performance comparison. Original grades, costs, time and cache data are unchanged.
-
-[Read the trace audit and per-run limits](cline-workflow-audit.json).
+Cline: **37.5% estimated (6/16)**. [Method notes](cline-workflow-audit.json).
 
 Selected reference estimates total $10.088272872. Original C1/C4 hashes and native outcomes are unchanged. The source owner pins [source.json](source.json) to its independently reviewed hash and checks all immutable inputs before generating views. Generated views can be repaired; edited source facts cannot.
 

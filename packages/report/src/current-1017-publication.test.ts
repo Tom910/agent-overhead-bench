@@ -51,19 +51,39 @@ it("checks without writes, repairs generated views, and preserves every immutabl
   expect(() => f.run()).toThrow(/immutable/); expect(() => f.run(true)).toThrow(/immutable/);
 }, 30000);
 
-it("shows the Cline trace estimate on every report without replacing native grades", () => {
+it("shows compact Cline estimates for each scope without replacing native grades", () => {
   const f = fixture(), original = readFileSync(join(f.dir, "analysis.json")); f.run();
   for (const path of [join(f.root, "README.md"), join(f.root, "site/index.html"), ...["README.md", "analysis.md", "analysis.html", "report.html", "index.html"].map(name => join(f.dir, name))]) {
     const page = readFileSync(path, "utf8");
-    expect(page, path).toContain("Cline verifier correction");
-    expect(page, path).toContain("trace estimate: 6/16 (37.5%)");
-    expect(page, path).toContain("exact regrade is unavailable");
+    expect(page, path).not.toContain("Cline verifier correction");
+    expect(page, path).not.toContain('id="cline-workflow-correction"');
+    expect(page, path).not.toContain("Do not use Cline's recorded pass rate");
+    expect(page, path).toContain("37.5%");
+    expect(page, path).toContain("estimated");
     expect(page, path).toContain("cline-workflow-audit.json");
     expect(page, path).not.toContain("No separate corrected-verifier audit is bound.");
   }
   expect(readFileSync(join(f.dir, "analysis.json")).equals(original)).toBe(true);
   const data = loadValidatedCurrentCampaign(f.root).analysis.attempts;
   expect(data.filter(a => a.harness === "cline" && a.outcome === "completed")).toHaveLength(0);
+  const html = readFileSync(join(f.root, "site/index.html"), "utf8");
+  const panels = JSON.parse(html.match(/<script id="site-data" type="application\/json">([\s\S]*?)<\/script>/)![1]!).panels;
+  const views = panels[0].views;
+  const all = views[0].rows.find((r: { harness: string }) => r.harness === "cline");
+  expect(all.pass_rate).toBe(0); expect(all.scores.pass).toBe(0);
+  expect(all.pass_estimate).toEqual({ passed: 6, total: 16, rate: 37.5 });
+  for (const view of views.slice(1)) {
+    const row = view.rows.find((r: { harness: string }) => r.harness === "cline");
+    expect(row.pass_estimate.total).toBe(2);
+    const passed = view.task.startsWith("psd-tools") || view.task.startsWith("superjson") ? 2
+      : view.task.startsWith("textual") || view.task.startsWith("true-myth") ? 1 : 0;
+    expect(row.pass_estimate.passed).toBe(passed);
+    expect(row.pass_estimate.rate).toBe(passed / 2 * 100);
+  }
+  expect(views[0].rows.filter((r: { harness: string; pass_estimate: unknown }) => r.harness !== "cline").every((r: { pass_estimate: unknown }) => r.pass_estimate === null)).toBe(true);
+  const table = html.split('<tbody id="results-body">')[1]!.split('</tbody>')[0]!;
+  expect(table).toContain("37.5% estimated");
+  expect(table).toContain("6/16");
 });
 
 it("rejects an edited Cline trace dossier instead of approving a new pass count", () => {
