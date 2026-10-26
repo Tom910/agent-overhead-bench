@@ -84,3 +84,19 @@ source schemas and public artifact safety pass. Final downloads and all 79 local
 links pass. Exact projection workspace tests pass 1,059/1,059. All 161 script tests finish
 with 159 passes and two platform skips. Actual deployment and live verification
 are the final gates.
+
+## Hosted-runner check
+
+The first website build at 4bbc61e stopped in the existing historical current-
+campaign test: nine complete report generations exceeded its five-second test
+limit. The dataset, source/hash checks and separate publication tests passed.
+Split its independent initial-generation, stale-website and stale-report cases
+into three bounded tests. Every original assertion remains; stale website
+no-write behavior now has an explicit byte assertion. No test or production
+timeout changed. Verify the whole report suite and hosted build before claiming
+the website is posted. The repository narrative/proof already return 200 with
+exact committed bytes; the old Pages report remains until deployment succeeds.
+
+The split tests and the entire 488-test report suite pass locally with the
+original five-second deadlines and one worker. Source/report/download checks
+remain unchanged. The hosted workflow is the final environment check.

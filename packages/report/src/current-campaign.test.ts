@@ -40,23 +40,31 @@ it("binds separate audit and condition evidence and publishes consistent compari
   writeFileSync(path, readFileSync(path, "utf8") + "\n");
   expect(f.run).toThrow(/audit.*hash|hash.*audit/);
 });
-it("generates all current views from one source and detects drift without writing", () => {
+it("generates current views from one source and preserves README content", () => {
   const f = fixture();
   expect(() => f.run(true)).toThrow(/stale/);
   expect(readFileSync(join(f.root, "README.md"), "utf8")).toContain("stale");
   f.run(); f.run(true);
-  const site = join(f.root, "site/index.html");
-  expect(readFileSync(site, "utf8")).toContain("side by side.</span>");
-  writeFileSync(site, "stale site");
-  expect(() => f.run(true)).toThrow(/stale/);
-  f.run(); f.run(true);
+  expect(readFileSync(join(f.root, "site/index.html"), "utf8")).toContain("side by side.</span>");
   const readme = readFileSync(join(f.root, "README.md"), "utf8");
   expect(readme).toContain("All harnesses combined:"); expect(readme).toContain("Avg cost / task"); expect(readme).toContain("Whole benchmark");
   expect(readme).toContain("200/200"); expect(readme).toContain("62.5%");
   expect(readme).toContain("**100.0%**"); expect(readme).not.toContain("\\*\\*"); expect(readme).toContain("Intro\n"); expect(readme).toContain("Footer\n");
-  writeFileSync(join(f.dir, "analysis.html"), "stale");
+});
+it("detects stale website content without writing and repairs it on refresh", () => {
+  const f = fixture(); f.run();
+  const site = join(f.root, "site/index.html");
+  writeFileSync(site, "stale site");
   expect(() => f.run(true)).toThrow(/stale/);
-  expect(readFileSync(join(f.dir, "analysis.html"), "utf8")).toBe("stale");
+  expect(readFileSync(site, "utf8")).toBe("stale site");
+  f.run(); f.run(true);
+});
+it("detects stale detailed report content without writing and repairs it on refresh", () => {
+  const f = fixture(); f.run();
+  const report = join(f.dir, "analysis.html");
+  writeFileSync(report, "stale");
+  expect(() => f.run(true)).toThrow(/stale/);
+  expect(readFileSync(report, "utf8")).toBe("stale");
   f.run(); f.run(true);
 });
 it("rejects changed canonical bytes and selection hashes", () => {
